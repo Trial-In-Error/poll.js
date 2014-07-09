@@ -1,0 +1,27 @@
+{
+  "name": "poll.js",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "prestart": "START \"\" mongod --dbpath C:/Users/Ashton/Documents/Code/poll.js/data",
+    "start": "forever ./bin/server.js"
+  },
+  "dependencies": {
+    "express": "~4.2.0",
+    "static-favicon": "~1.0.0",
+    "morgan": "~1.0.0",
+    "cookie-parser": "~1.0.1",
+    "body-parser": "~1.0.0",
+    "debug": "~0.7.4",
+    "jade": "~1.3.0",
+    "mongodb": "*",
+    "mongoskin": "*",
+    "grunt": "*",
+    "grunt-forever": "*",
+    "grunt-contrib-jshint": "*",
+    "grunt-contrib-uglify": "*",
+    "grunt-contrib-nodeunit": "*",
+    "forever": "*",
+    "forever-win": "*"
+  }
+}
