@@ -35,6 +35,7 @@
     "grunt-contrib-uglify": "*",
     "grunt-contrib-nodeunit": "*",
     "forever": "*",
+    // Do we need forever-win? Test this!
     "forever-win": "*"
   }
 }
