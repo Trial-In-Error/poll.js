@@ -1,6 +1,7 @@
 poll.js
 =======
 To install:
+
 1. Clone repository.
 
 2. Install [mongoDB](http://www.mongodb.org/downloads).
