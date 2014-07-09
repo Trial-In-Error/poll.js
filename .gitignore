@@ -1,0 +1,22 @@
+# Ignore top-level logs (typically npm-debug.log)
+*.log
+
+# Ignore the database (it'll make one on first run)
+/data/*
+
+# Ignore the server logs
+/log/*
+
+# Ignore node.js runtime data
+pids
+*.pid
+*.seed
+
+# Ignore Grunt intermediate storage (http://gruntjs.com/creating-plugins#storing-task-files)
+.grunt
+
+# Ignore module (dependency) directory (https://npmjs.org/doc/faq.html#Should-I-check-my-node_modules-folder-into-git)
+node_modules
+
+# Users Environment Variables
+.lock-wscript
