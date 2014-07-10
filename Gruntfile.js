@@ -102,9 +102,9 @@ module.exports = function(grunt) {
   });
 
   grunt.registerTask('default', ['stripJsonComments', 'replace', 'lineending', 'uglify']);
-  grunt.registerTask('lint', ['jshint']);
+  grunt.registerTask('linter', ['jshint']);
 
   // https://github.com/gruntjs/grunt-contrib-clean/issues/32
-  grunt.registerTask('cleaning', ['clean']);
+  grunt.registerTask('cleaner', ['clean']);
 
 };
