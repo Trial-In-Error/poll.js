@@ -8,7 +8,7 @@ To install:
   * On Mac OS X, it may be necessary to ``sudo chown -R `whoami` ~/.npm``
 4. From the repository's directory, `npm install`.
 5. Get a coffee while `npm` does all the hard work.
-6. Modify `package.json`'s prestart to point to the repository's data directory.
+6. If on a mac, modify `package.json`'s prestart to be `"prestart": "mongod --dbpath ./data &",`.
 7. From the repository's directory, `npm start`.
 8. Point a web browser at `localhost:3000` and enjoy!
 

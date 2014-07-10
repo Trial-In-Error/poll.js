@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "prestart": "START \"\" mongod --dbpath C:/Users/Ashton/Documents/Code/poll.js/data",
+    "prestart": "START \"\" mongod --dbpath ./data",
     "start": "forever --minUptime 1000 --spinSleepTime 1000 -e ./logs/server_errors.log -l ./logs/forever.log -o ./logs/server_stdout.log ./bin/server.js"
   },
   "dependencies": {

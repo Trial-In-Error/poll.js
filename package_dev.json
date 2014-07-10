@@ -9,12 +9,10 @@
   //"license": {"license" : "SPDX LICENSE ID"}
   //"author": { "name" : "Ashton Eby", "email" : "", "url" : "" }
   "scripts": {
-    // HARD-CODES PROJECT DIRECTORY!!!
-    // Also, does NOT forever the database
+    // Does NOT forever the database
+    // Also presumes windows without doing any checking
     // Write a node.js script to do the prestart stuff
-    // This also presumes windows without doing any checking
-    // Lulz
-    "prestart": "START \"\" mongod --dbpath C:/Users/Ashton/Documents/Code/poll.js/data",
+    "prestart": "START \"\" mongod --dbpath ./data",
     // minUptime and spinSleepTime set to defaults to prevent warnings
     // Not fully sure what the two parameters do (!!!)
     "start": "forever --minUptime 1000 --spinSleepTime 1000 -e ./logs/server_errors.log -l ./logs/forever.log -o ./logs/server_stdout.log ./bin/server.js"
