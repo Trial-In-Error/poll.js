@@ -15,7 +15,7 @@ module.exports = function(grunt) {
  //   },
     clean: {
       dist: {
-        src: ['./logs/*', './*.log', './dist/*']
+        src: ['./logs/*', './*.log', './public/dist/*']
       }
     },
     uglify: {
@@ -27,8 +27,8 @@ module.exports = function(grunt) {
         files: [{
           expand: true, //what does this field do???
           cwd: './public/javascripts',
-          src: '**/*.js',
-          dest: './dist/js'
+          src: '**/*.javascripts',
+          dest: './public/dist/javascripts'
         }]
       }
     },
@@ -82,13 +82,15 @@ module.exports = function(grunt) {
           overwrite: true
         },
         files: {
-          '': ['*.js', '*.json', '*.md', '*.gitignore', './bin/*', './public/javascripts/*', './public/stylesheets/*','./routes/*', './views/*']
+          '': ['*.js', '*.json', '*.md', '*.gitignore', './bin/*', './public/javascripts/*', 'public/dist/javascripts/*', './public/stylesheets/*','./routes/*', './views/*']
         }
       }
     }
   });
 
   grunt.registerTask('default', ['stripJsonComments', 'replace', 'lineending', 'uglify']);
-  grunt.registerTask('clean', ['clean'])
+
+  // https://github.com/gruntjs/grunt-contrib-clean/issues/32
+  grunt.registerTask('cleaning', ['clean']);
 
 };
