@@ -26,4 +26,4 @@ This project is built with grunt. Most files have two versions, one called `foo_
 
 Known Issues
 ------------
-* server_stdout.log contains color escape codes and other garbage.
+* `server_stdout.log` contains color escape codes and other garbage.
