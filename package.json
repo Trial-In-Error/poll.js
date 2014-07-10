@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "prestart": "START \"\" mongod --dbpath C:/Users/Ashton/Documents/Code/poll.js/data",
-    "start": "forever ./bin/server.js"
+    "start": "forever --minUptime 1000 --spinSleepTime 1000 -e ./logs/server_errors.log -l ./logs/forever.log -o ./logs/server_stdout.log ./bin/server.js"
   },
   "dependencies": {
     "express": "~4.2.0",

@@ -19,3 +19,7 @@ To install:
 8. From the repository's directory, `npm start`.
 
 9. Point a web browser at `localhost:3000` and enjoy!
+
+Known Issues
+------------
+* server_stdout.log contains color escape codes and other garbage.

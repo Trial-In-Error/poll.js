@@ -15,7 +15,9 @@
     // This also presumes windows without doing any checking
     // Lulz
     "prestart": "START \"\" mongod --dbpath C:/Users/Ashton/Documents/Code/poll.js/data",
-    "start": "forever ./bin/server.js"
+    // minUptime and spinSleepTime set to defaults to prevent warnings
+    // Not fully sure what the two parameters do (!!!)
+    "start": "forever --minUptime 1000 --spinSleepTime 1000 -e ./logs/server_errors.log -l ./logs/forever.log -o ./logs/server_stdout.log ./bin/server.js"
   },
   "dependencies": {
     // Split these into dependencies and devDependencies
