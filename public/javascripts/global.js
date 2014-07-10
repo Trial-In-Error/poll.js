@@ -1,23 +1,6 @@
 // Userlist data array for filling in info box
 var userListData = [];
 
-// DOM Ready =============================================================
-$(document).ready(function() {
-
-	// Populate the user table on initial page load
-	populateTable();
-
-	// Username link click
-	$('#userList table tbody').on('click', 'td a.linkshowuser', showUserInfo);
-
-	// Add User button click
-	$('#btnAddUser').on('click', addUser);
-
-	// Delete User link click
-    $('#userList table tbody').on('click', 'td a.linkdeleteuser', deleteUser);
-
-});
-
 // Functions =============================================================
 
 // Fill table with data
@@ -44,7 +27,7 @@ function populateTable() {
 		// Inject the whole content string into our existing HTML table
 		$('#userList table tbody').html(tableContent);
 	});
-};
+}
 
 // Show User info
 function showUserInfo(event){
@@ -65,7 +48,7 @@ function showUserInfo(event){
 	$('#userInfoAge').text(thisUserObject.age);
 	$('#userInfoGender').text(thisUserObject.gender);
 	$('#userInfoLocation').text(thisUserObject.location);
-};
+}
 
 // Add User
 function addUser(event){
@@ -74,7 +57,7 @@ function addUser(event){
 	// Basic validation - increase errorCount for each blank field
 	var errorCount = 0;
 	$('#addUser input').each(function(index, val){
-		if($(this).val() === '') { errorCount++; }
+		if($(this).val() === '') { errorCount += 1; }
 	});
 
 	// Check and make sure errorCount is zero
@@ -87,7 +70,7 @@ function addUser(event){
 			'age': $('#addUser fieldset input#inputUserAge').val(),
 			'location': $('#addUser fieldset input#inputUserLocation').val(),
 			'gender': $('#addUser fieldset input#inputUserGender').val()
-		}
+		};
 
 		// Use AJAX to post the object to adduser service
 		$.ajax({
@@ -113,7 +96,7 @@ function addUser(event){
 			alert('Please fill in all fields.');
 			return false;
 	}
-};
+}
 
 // Delete User
 function deleteUser(event) {
@@ -152,4 +135,21 @@ function deleteUser(event) {
 
     }
 
-};
+}
+
+// DOM Ready =============================================================
+$(document).ready(function() {
+
+	// Populate the user table on initial page load
+	populateTable();
+
+	// Username link click
+	$('#userList table tbody').on('click', 'td a.linkshowuser', showUserInfo);
+
+	// Add User button click
+	$('#btnAddUser').on('click', addUser);
+
+	// Delete User link click
+    $('#userList table tbody').on('click', 'td a.linkdeleteuser', deleteUser);
+
+});

@@ -36,9 +36,22 @@ module.exports = function(grunt) {
       files: ['test/**/*.html']
     },
     jshint: {
-      files: ['Gruntfile.js', 'public/javascripts/*.js', 'test/**/*.js'],
+      files: ['Gruntfile.js', 'public/javascripts/*.js', 'routes/*.js', 'test/**/*.js'],
+
+      // Custom options
       options: {
-        // options here to override JSHint defaults
+        'immed': true,
+        'latedef': true,
+        'newcap': true,
+        'nonew': true,
+        'plusplus': true,
+        'quotmark': true,
+
+        // Environments
+        'jquery': true,
+        'node': true,
+
+        // Custom globals
         globals: {
           jQuery: true,
           console: true,
@@ -89,6 +102,7 @@ module.exports = function(grunt) {
   });
 
   grunt.registerTask('default', ['stripJsonComments', 'replace', 'lineending', 'uglify']);
+  grunt.registerTask('lint', ['jshint']);
 
   // https://github.com/gruntjs/grunt-contrib-clean/issues/32
   grunt.registerTask('cleaning', ['clean']);
