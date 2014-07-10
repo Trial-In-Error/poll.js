@@ -7,6 +7,9 @@
 # Ignore the server logs
 /log/*
 
+# Ignore minified .js files
+/dest/js/*
+
 # Ignore node.js runtime data
 pids
 *.pid
