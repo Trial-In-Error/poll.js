@@ -1,4 +1,6 @@
 module.exports = function(grunt) {
+  require('load-grunt-tasks')(grunt);
+
 
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
@@ -76,18 +78,6 @@ module.exports = function(grunt) {
       }
     }
   });
-
-  grunt.loadNpmTasks('grunt-contrib-uglify');
-  grunt.loadNpmTasks('grunt-contrib-jshint');
-  grunt.loadNpmTasks('grunt-contrib-qunit');
-  grunt.loadNpmTasks('grunt-contrib-watch');
-  grunt.loadNpmTasks('grunt-contrib-concat');
-  grunt.loadNpmTasks('grunt-forever');
-  grunt.loadNpmTasks('grunt-strip-json-comments');
-  grunt.loadNpmTasks('grunt-jsbeautifier');
-  grunt.loadNpmTasks('grunt-line-remover');
-  grunt.loadNpmTasks('grunt-text-replace');
-  grunt.loadNpmTasks('grunt-lineending');
 
   grunt.registerTask('default', ['stripJsonComments', 'replace', 'lineending']);
 
