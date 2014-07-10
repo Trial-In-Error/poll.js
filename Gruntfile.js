@@ -63,6 +63,17 @@ module.exports = function(grunt) {
           to: ''
         }]
       }
+    },
+    lineending: {
+      dist: {
+        options: {
+          eol: 'lf',
+          overwrite: true
+        },
+        files: {
+          '': ['*.js', '*.json', '*.md', '*.gitignore', './bin/*', './public/javascripts/*', './public/stylesheets/*','./routes/*', './views/*']
+        }
+      }
     }
   });
 
@@ -76,7 +87,8 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-jsbeautifier');
   grunt.loadNpmTasks('grunt-line-remover');
   grunt.loadNpmTasks('grunt-text-replace');
+  grunt.loadNpmTasks('grunt-lineending');
 
-  grunt.registerTask('default', ['stripJsonComments', 'replace']);
+  grunt.registerTask('default', ['stripJsonComments', 'replace', 'lineending']);
 
 };
