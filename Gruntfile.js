@@ -4,19 +4,19 @@ module.exports = function(grunt) {
 
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
-    concat: {
-      options: {
-        separator: ';'
-      },
-      dist: {
-        src: ['src/**/*.js'],
-        dest: 'dist/<%= pkg.name %>.js'
-      }
-    },
+//    concat: {
+//      options: {
+//        separator: ';'
+//      },
+//      dist: {
+//        src: ['src/**/*.js'],
+//        dest: 'dist/<%= pkg.name %>.js'
+//      }
+ //   },
     uglify: {
       options: {
         banner: '/*! <%= pkg.name %> <%= grunt.template.today("dd-mm-yyyy") %> */\n',
-        mangle: false //see mangle: except: {} once you know more!
+        mangle: true //see mangle: except: {} once you know more!
       },
       dist: {
         files: [{
