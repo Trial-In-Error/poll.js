@@ -20,8 +20,7 @@
     "start": "forever --minUptime 1000 --spinSleepTime 1000 -e ./logs/server_errors.log -l ./logs/forever.log -o ./logs/server_stdout.log ./bin/server.js"
   },
   "dependencies": {
-    // Split these into dependencies and devDependencies
-    // Also, fix the version numbers to specific releases
+    // Fix the version numbers to specific releases
     "express": "~4.2.0",
     "static-favicon": "~1.0.0",
     "morgan": "~1.0.0",
@@ -31,6 +30,9 @@
     "jade": "~1.3.0",
     "mongodb": "*",
     "mongoskin": "*",
+    "forever": "*"
+  },
+  "devDependencies": {
     "grunt": "*",
     "grunt-forever": "*",
     "grunt-contrib-jshint": "*",
@@ -40,9 +42,6 @@
     "grunt-contrib-qunit": "*",
     "grunt-contrib-watch": "*",
     "grunt-contrib-concat": "*",
-    "forever": "*"
-  },
-  "devDependencies": {
     "grunt-jsbeautifier": "^0.2.7",
     "grunt-lineending": "^0.2.2",
     "grunt-text-replace": "*"
