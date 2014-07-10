@@ -3,22 +3,23 @@ poll.js
 To install:
 
 1. Clone repository.
-
 2. Install [mongoDB](http://www.mongodb.org/downloads). Add mongodb/bin to the system path.
-
 3. Install [node.js](http://nodejs.org/download/). Add node.js/ to the system path.
-
   * On Mac OS X, it may be necessary to ``sudo chown -R `whoami` ~/.npm``
-
 4. From the repository's directory, `npm install`.
-
 5. Get a coffee while npm does all the hard work.
-
 6. Modify `package.json`'s prestart to point to the repository's data directory.
-
 7. From the repository's directory, `npm start`.
-
 8. Point a web browser at `localhost:3000` and enjoy!
+
+1. Item 1
+  1. A corollary to the above item.
+  2. Yet another point to consider.
+2. Item 2
+  * A corollary that does not need to be ordered.
+    * This is indented four spaces, because it's two spaces further than the item above.
+    * You might want to consider making a new list.
+3. Item 3
 
 Using Grunt
 -----------
