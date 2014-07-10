@@ -15,12 +15,16 @@ module.exports = function(grunt) {
     },
     uglify: {
       options: {
-        banner: '/*! <%= pkg.name %> <%= grunt.template.today("dd-mm-yyyy") %> */\n'
+        banner: '/*! <%= pkg.name %> <%= grunt.template.today("dd-mm-yyyy") %> */\n',
+        mangle: false //see mangle: except: {} once you know more!
       },
       dist: {
-        files: {
-          'dist/<%= pkg.name %>.min.js': ['<%= concat.dist.dest %>']
-        }
+        files: [{
+          expand: true, //what does this field do???
+          cwd: './public/javascripts',
+          src: '**/*.js',
+          dest: './dest/js'
+        }]
       }
     },
     qunit: {
@@ -79,6 +83,6 @@ module.exports = function(grunt) {
     }
   });
 
-  grunt.registerTask('default', ['stripJsonComments', 'replace', 'lineending']);
+  grunt.registerTask('default', ['stripJsonComments', 'replace', 'lineending', 'uglify']);
 
 };
