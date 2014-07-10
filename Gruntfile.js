@@ -46,6 +46,23 @@ module.exports = function(grunt) {
     watch: {
       files: ['<%= jshint.files %>'],
       tasks: ['jshint', 'qunit']
+    },
+    stripJsonComments: {                                // Task
+        dist: {                                         // Target
+            files: {                                    // Dictionary of files
+                'package.json': 'package_dev.json'    // 'destination': 'source'
+            }
+        }
+    },
+    replace: {
+      cleanjson: {
+        src: ['package.json'],
+        dest: 'package.json',
+        replacements: [{
+          from: /[ ]{2,}[\n]/gm,
+          to: ''
+        }]
+      }
     }
   });
 
@@ -55,11 +72,11 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-forever');
+  grunt.loadNpmTasks('grunt-strip-json-comments');
+  grunt.loadNpmTasks('grunt-jsbeautifier');
+  grunt.loadNpmTasks('grunt-line-remover');
+  grunt.loadNpmTasks('grunt-text-replace');
 
-  grunt.registerTask('test', ['jshint', 'qunit']);
-
-  grunt.registerTask('default', ['jshint', 'qunit', 'concat', 'uglify']);
-
-  grunt.registerTask('forever', ['forever']);
+  grunt.registerTask('default', ['stripJsonComments', 'replace']);
 
 };

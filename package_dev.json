@@ -1,13 +1,13 @@
 {
   "name": "poll.js",
   "version": "0.0.1",
+  "private": true,
   // Update fields below once project is public
   //"description": "Prototyping a polling service.",
   //"keywords": ["poll", "polling"]
   //"homepage": "http://..."
   //"license": {"license" : "SPDX LICENSE ID"}
   //"author": { "name" : "Ashton Eby", "email" : "", "url" : "" }
-  "private": true,
   "scripts": {
     // HARD-CODES PROJECT DIRECTORY!!!
     // Also, does NOT forever the database
@@ -36,8 +36,14 @@
     "grunt-contrib-jshint": "*",
     "grunt-contrib-uglify": "*",
     "grunt-contrib-nodeunit": "*",
-    "forever": "*",
-    // Do we need forever-win? Test this!
-    "forever-win": "*"
+    "grunt-strip-json-comments": "*",
+    "grunt-contrib-qunit": "*",
+    "grunt-contrib-watch": "*",
+    "grunt-contrib-concat": "*",
+    "forever": "*"
+  },
+  "devDependencies": {
+    "grunt-jsbeautifier": "^0.2.7",
+    "grunt-text-replace": "*"
   }
 }

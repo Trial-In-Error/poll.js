@@ -21,7 +21,14 @@
     "grunt-contrib-jshint": "*",
     "grunt-contrib-uglify": "*",
     "grunt-contrib-nodeunit": "*",
-    "forever": "*",
-    "forever-win": "*"
+    "grunt-strip-json-comments": "*",
+    "grunt-contrib-qunit": "*",
+    "grunt-contrib-watch": "*",
+    "grunt-contrib-concat": "*",
+    "forever": "*"
+  },
+  "devDependencies": {
+    "grunt-jsbeautifier": "^0.2.7",
+    "grunt-text-replace": "*"
   }
 }
