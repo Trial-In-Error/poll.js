@@ -12,15 +12,6 @@ To install:
 7. From the repository's directory, `npm start`.
 8. Point a web browser at `localhost:3000` and enjoy!
 
-1. Item 1
-  1. A corollary to the above item.
-  2. Yet another point to consider.
-2. Item 2
-  * A corollary that does not need to be ordered.
-    * This is indented four spaces, because it's two spaces further than the item above.
-    * You might want to consider making a new list.
-3. Item 3
-
 Using Grunt
 -----------
 This project is built with grunt. Most files have two versions, one called `foo_dev`, and one called `foo`. Make edits to `foo_dev` and then, from the project directory, type `grunt` to have the edits moved into `foo` and formatted for deployment. This will minify javascript, remove comments from JSON, check line endings, etc. In other words, good stuff! Note that on Windows, you may have to type `grunt.cmd`.
