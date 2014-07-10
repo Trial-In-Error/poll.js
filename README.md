@@ -8,6 +8,8 @@ To install:
 
 3. Install [node.js](http://nodejs.org/download/). Add node.js/ to the system path.
 
+    * On Mac OS X, it may be necessary to `sudo chown -R \`whoami\` ~/.npm`
+
 4. From the repository's directory, `npm install`.
 
 5. Get a coffee while npm does all the hard work.
@@ -20,7 +22,7 @@ To install:
 
 Using Grunt
 -----------
-This project is built with grunt. Most files have two versions, one called foo_dev, and one called foo. Make edits to foo_dev and then, from the project directory, type 'grunt' to have the edits moved into foo and formatted for deployment. This will minify javascript, remove comments from JSON, check line endings, etc. In other words, good stuff!
+This project is built with grunt. Most files have two versions, one called `foo_dev`, and one called `foo`. Make edits to `foo_dev` and then, from the project directory, type 'grunt` to have the edits moved into `foo` and formatted for deployment. This will minify javascript, remove comments from JSON, check line endings, etc. In other words, good stuff! Note that on Windows, you may have to type `grunt.cmd`.
 
 Known Issues
 ------------
