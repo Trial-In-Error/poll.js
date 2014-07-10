@@ -8,7 +8,7 @@ To install:
 
 3. Install [node.js](http://nodejs.org/download/). Add node.js/ to the system path.
 
-    * On Mac OS X, it may be necessary to `sudo chown -R \`whoami\` ~/.npm`
+    * On Mac OS X, it may be necessary to ``sudo chown -R `whoami` ~/.npm``
 
 4. From the repository's directory, `npm install`.
 
