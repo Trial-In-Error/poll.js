@@ -24,6 +24,7 @@
     "grunt-contrib-jshint": "*",
     "grunt-contrib-uglify": "*",
     "grunt-contrib-nodeunit": "*",
+    "grunt-contrib-clean": "*",
     "grunt-strip-json-comments": "*",
     "grunt-contrib-qunit": "*",
     "grunt-contrib-watch": "*",

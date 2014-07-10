@@ -13,6 +13,11 @@ module.exports = function(grunt) {
 //        dest: 'dist/<%= pkg.name %>.js'
 //      }
  //   },
+    clean: {
+      dist: {
+        src: ['./logs/*', './*.log', './dist/*']
+      }
+    },
     uglify: {
       options: {
         banner: '/*! <%= pkg.name %> <%= grunt.template.today("dd-mm-yyyy") %> */\n',
@@ -23,7 +28,7 @@ module.exports = function(grunt) {
           expand: true, //what does this field do???
           cwd: './public/javascripts',
           src: '**/*.js',
-          dest: './dest/js'
+          dest: './dist/js'
         }]
       }
     },
@@ -84,5 +89,6 @@ module.exports = function(grunt) {
   });
 
   grunt.registerTask('default', ['stripJsonComments', 'replace', 'lineending', 'uglify']);
+  grunt.registerTask('clean', ['clean'])
 
 };
