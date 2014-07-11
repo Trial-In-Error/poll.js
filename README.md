@@ -8,8 +8,9 @@ To install:
   * On Mac OS X, it may be necessary to ``sudo chown -R `whoami` ~/.npm``
 4. From the repository's directory, `npm install`.
 5. Get a coffee while `npm` does all the hard work.
-6. From the repository's directory, `npm start`.
-7. Point a web browser at `localhost:3000` and enjoy!
+6. Prep the app to run with `grunt`.
+7. Start the app from the repository's directory with `npm start`.
+8. Point a web browser at `localhost:3000` and enjoy!
 
 Using Grunt
 ---------------------------------
