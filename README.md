@@ -23,3 +23,4 @@ This project is built with grunt. Most files have two versions, one called `foo_
 Known Issues
 ---------------------------------
 * `server_stdout.log` contains color escape codes and other garbage.
+* Minified javascript is essential for the server to run. A fresh clone of the repository or one that has recently `grunt cleaner`ed won't work until running `grunt`.
