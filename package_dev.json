@@ -9,11 +9,8 @@
   //"license": {"license" : "SPDX LICENSE ID"}
   //"author": { "name" : "Ashton Eby", "email" : "", "url" : "" }
   "scripts": {
-    // Does NOT forever the database
-    // Also presumes windows without doing any checking
-    // Write a node.js script to do the prestart stuff
-    // "prestart": "START \"\" mongod --dbpath ./data",
     // NOTE: -l logging is not done because of path conflicts; try to find a work-around?
+    // Consider working `nohup` in conditionally?
     "prestart": "forever start --minUptime 1000 --spinSleepTime 1000 -e ./logs/database_errors.log -o ./logs/database_stdout.log ./bin/database_init_helper.js",
     // minUptime and spinSleepTime set to defaults to prevent warnings
     // Not fully sure what the two parameters do (!!!)
