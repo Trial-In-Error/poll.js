@@ -8,9 +8,8 @@ To install:
   * On Mac OS X, it may be necessary to ``sudo chown -R `whoami` ~/.npm``
 4. From the repository's directory, `npm install`.
 5. Get a coffee while `npm` does all the hard work.
-6. If using a unix or os x system, modify `package.json`'s prestart to be `"prestart": "mongod --dbpath ./data &",`.
-7. From the repository's directory, `npm start`.
-8. Point a web browser at `localhost:3000` and enjoy!
+6. From the repository's directory, `npm start`.
+7. Point a web browser at `localhost:3000` and enjoy!
 
 Using Grunt
 ---------------------------------
