@@ -36,7 +36,7 @@ module.exports = function(grunt) {
       files: ['test/**/*.html']
     },
     jshint: {
-      files: ['Gruntfile.js', 'public/javascripts/*.js', 'routes/*.js', 'test/**/*.js'],
+      files: ['Gruntfile.js', 'public/javascripts/*.js', 'routes/*.js', 'test/**/*.js', 'bin/*.js'],
 
       // Custom options
       options: {

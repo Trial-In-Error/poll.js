@@ -8,7 +8,7 @@
 /log/*
 
 # Ignore minified .js files
-/public/dist/js/*
+/public/dist/javascripts/*
 
 # Ignore node.js runtime data
 pids
