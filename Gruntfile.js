@@ -27,7 +27,7 @@ module.exports = function(grunt) {
         files: [{
           expand: true, //what does this field do???
           cwd: './public/javascripts',
-          src: '**/*.javascripts',
+          src: '**/*.js',
           dest: './public/dist/javascripts'
         }]
       }

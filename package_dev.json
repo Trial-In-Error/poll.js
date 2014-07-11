@@ -33,6 +33,7 @@
   },
   "devDependencies": {
     "grunt": "*",
+    "load-grunt-tasks": "*",
     "grunt-forever": "*",
     "grunt-contrib-jshint": "*",
     "grunt-contrib-uglify": "*",
