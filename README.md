@@ -9,6 +9,7 @@ To install:
 5. Get a coffee while `npm` does all the hard work.
 6. Start the app from the repository's directory with `npm start`.
 7. Point a web browser at `localhost:3000` and enjoy!
+Note that `npm run godbless` will start the server but not the database. This is useful for debugging changes without having to deal with `mongodb` and `forever`.
 
 Using Grunt
 ---------------------------------
