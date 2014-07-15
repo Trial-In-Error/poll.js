@@ -14,7 +14,9 @@
     "prestart": "forever start --minUptime 1000 --spinSleepTime 1000 -e ./logs/database_errors.log -o ./logs/database_stdout.log -c node ./bin/database_init_helper.js",
     // minUptime and spinSleepTime set to defaults to prevent warnings
     // Not fully sure what the two parameters do (!!!)
-    "start": "forever --minUptime 1000 --spinSleepTime 1000 -e ./logs/server_errors.log -l ./logs/forever.log -o ./logs/server_stdout.log -c node ./bin/server.js"
+    "start": "forever --minUptime 1000 --spinSleepTime 1000 -e ./logs/server_errors.log -l ./logs/forever.log -o ./logs/server_stdout.log -c node ./bin/server.js",
+    // Starts the server without the database
+    "startdbless": "forever --minUptime 1000 --spinSleepTime 1000 -e ./logs/server_errors.log -l ./logs/forever.log -o ./logs/server_stdout.log -c node ./bin/server.js"
   },
   "dependencies": {
     // Fix the version numbers to specific releases

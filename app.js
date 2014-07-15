@@ -4,6 +4,7 @@ var favicon = require('static-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var util = require('util');
 
 // Database
 var mongo = require('mongoskin');
@@ -36,7 +37,8 @@ app.use('/users', users);
 
 /// catch 404 and forward to error handler
 app.use(function(req, res, next) {
-    var err = new Error('Not Found');
+    //console.log(util.inspect(req.url.slice(-3)));
+    var err = new Error('Not Found\n'+'req: '+req.originalUrl);
     err.status = 404;
     next(err);
 });
