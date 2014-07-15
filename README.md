@@ -5,7 +5,6 @@ To install:
 1. Clone repository.
 2. Install [mongoDB](http://www.mongodb.org/downloads). Add mongodb/bin to the system path.
 3. Install [node.js](http://nodejs.org/download/). Add node.js/ to the system path.
-  * On Mac OS X, it may be necessary to ``sudo chown -R `whoami` ~/.npm``
 4. From the repository's directory, `npm install`.
 5. Get a coffee while `npm` does all the hard work.
 6. Start the app from the repository's directory with `npm start`.
@@ -22,4 +21,3 @@ This project is built with grunt. Most files have two versions, one called `foo_
 Known Issues
 ---------------------------------
 * `server_stdout.log` contains color escape codes and other garbage.
-* Minified javascript is essential for the server to run. A fresh clone of the repository or one that has recently `grunt cleaner`ed won't work until running `grunt`.
