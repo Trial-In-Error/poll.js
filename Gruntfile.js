@@ -36,83 +36,38 @@ module.exports = function(grunt) {
       files: ['test/**/*.html']
     },
     jshint: {
+      // Custom options
+      options: {
+        'immed': true,
+        'latedef': true,
+        'newcap': true,
+        'nonew': true,
+        'plusplus': true,
+        'quotmark': true,
+
+        // Environments
+        'jquery': true,
+        'node': true,
+
+        // Custom globals
+        globals: {
+          jQuery: true,
+          console: true,
+          module: true,
+          document: true
+        }
+      },
       dist:
       {
         src: ['Gruntfile.js', 'public/javascripts/*.js', 'routes/*.js', 'test/**/*.js', 'bin/*.js'],
-
-        // Custom options
-        options: {
-          'immed': true,
-          'latedef': true,
-          'newcap': true,
-          'nonew': true,
-          'plusplus': true,
-          'quotmark': true,
-
-          // Environments
-          'jquery': true,
-          'node': true,
-
-          // Custom globals
-          globals: {
-            jQuery: true,
-            console: true,
-            module: true,
-            document: true
-          }
-        }
       },
       clientsrc:
       {
         src: ['public/javascripts/*.js'],
-
-        // Custom options
-        options: {
-          'immed': true,
-          'latedef': true,
-          'newcap': true,
-          'nonew': true,
-          'plusplus': true,
-          'quotmark': true,
-
-          // Environments
-          'jquery': true,
-          'node': true,
-
-          // Custom globals
-          globals: {
-            jQuery: true,
-            console: true,
-            module: true,
-            document: true
-          }
-        }
       },
       serversrc:
       {
         src: ['routes/*.js', 'test/**/*.js', 'bin/*.js'],
-
-        // Custom options
-        options: {
-          'immed': true,
-          'latedef': true,
-          'newcap': true,
-          'nonew': true,
-          'plusplus': true,
-          'quotmark': true,
-
-          // Environments
-          'jquery': true,
-          'node': true,
-
-          // Custom globals
-          globals: {
-            jQuery: true,
-            console: true,
-            module: true,
-            document: true
-          }
-        }
       }
     },
     watch: {
@@ -201,9 +156,7 @@ module.exports = function(grunt) {
 
   grunt.registerTask('default', ['dist']);
   grunt.registerTask('linter', ['jshint:dist']);
-
   grunt.registerTask('dist', ['clean', 'stripJsonComments:packagejson', 'replace:json', 'lineending:dist', 'jshint:dist'/*, 'qunit'*/, 'uglify:dist']);
-
   // https://github.com/gruntjs/grunt-contrib-clean/issues/32
   grunt.registerTask('cleaner', ['clean']);
 
