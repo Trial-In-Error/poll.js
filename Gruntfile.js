@@ -36,50 +36,112 @@ module.exports = function(grunt) {
       files: ['test/**/*.html']
     },
     jshint: {
-      files: ['Gruntfile.js', 'public/javascripts/*.js', 'routes/*.js', 'test/**/*.js', 'bin/*.js'],
+      dist:
+      {
+        src: ['Gruntfile.js', 'public/javascripts/*.js', 'routes/*.js', 'test/**/*.js', 'bin/*.js'],
 
-      // Custom options
-      options: {
-        'immed': true,
-        'latedef': true,
-        'newcap': true,
-        'nonew': true,
-        'plusplus': true,
-        'quotmark': true,
-
-        // Environments
-        'jquery': true,
-        'node': true,
-
-        // Custom globals
-        globals: {
-          jQuery: true,
-          console: true,
-          module: true,
-          document: true
-        }
-      }
-    },
-    forever: {
-      server1: {
+        // Custom options
         options: {
-          index: 'app.js'
+          'immed': true,
+          'latedef': true,
+          'newcap': true,
+          'nonew': true,
+          'plusplus': true,
+          'quotmark': true,
+
+          // Environments
+          'jquery': true,
+          'node': true,
+
+          // Custom globals
+          globals: {
+            jQuery: true,
+            console: true,
+            module: true,
+            document: true
+          }
+        }
+      },
+      clientsrc:
+      {
+        src: ['public/javascripts/*.js'],
+
+        // Custom options
+        options: {
+          'immed': true,
+          'latedef': true,
+          'newcap': true,
+          'nonew': true,
+          'plusplus': true,
+          'quotmark': true,
+
+          // Environments
+          'jquery': true,
+          'node': true,
+
+          // Custom globals
+          globals: {
+            jQuery: true,
+            console: true,
+            module: true,
+            document: true
+          }
+        }
+      },
+      serversrc:
+      {
+        src: ['routes/*.js', 'test/**/*.js', 'bin/*.js'],
+
+        // Custom options
+        options: {
+          'immed': true,
+          'latedef': true,
+          'newcap': true,
+          'nonew': true,
+          'plusplus': true,
+          'quotmark': true,
+
+          // Environments
+          'jquery': true,
+          'node': true,
+
+          // Custom globals
+          globals: {
+            jQuery: true,
+            console: true,
+            module: true,
+            document: true
+          }
         }
       }
     },
     watch: {
-      files: ['<%= jshint.files %>'],
-      tasks: ['jshint', 'qunit']
+      gruntfile: {
+        files: 'Gruntfile.js',
+        tasks: ['jshint:gruntfile', 'lineending:gruntfile']
+      },
+      json: {
+        files: 'package.json',
+        tasks: ['stripJsonComments:packagejson', 'replace:json', 'lineending:json']
+      },
+      serversrc: {
+        files: ['app.js', 'bin/*.js'],
+        tasks: ['jshint:serversrc', 'qunit:serversrc', 'lineending:serversrc']
+      },
+      clientsrc: {
+        files: ['app.js', 'bin/*.js'],
+        tasks: ['jshint:clientsrc', 'qunit:clientsrc', 'lineending:clientsrc']
+      }
     },
     stripJsonComments: {                                // Task
-        dist: {                                         // Target
+        packagejson: {                                         // Target
             files: {                                    // Dictionary of files
                 'package.json': 'package_dev.json'    // 'destination': 'source'
             }
         }
     },
     replace: {
-      cleanjson: {
+      json: {
         src: ['package.json'],
         dest: 'package.json',
         replacements: [{
@@ -95,14 +157,52 @@ module.exports = function(grunt) {
           overwrite: true
         },
         files: {
-          '': ['*.js', '*.json', '*.md', '*.gitignore', './bin/*', './public/javascripts/*', 'public/dist/javascripts/*', './public/stylesheets/*','./routes/*', './views/*']
+          '': ['**/.js', '**/.json', '**/.md', '**/*.gitignore', 'bin/*', 'public/javascripts/*', 'public/dist/javascripts/*', 'public/stylesheets/*','routes/*', 'views/*']
+        }
+      },
+      gruntfile: {
+        options: {
+          eol: 'lf',
+          overwrite: true
+        },
+        files: {
+          '': ['Gruntfile.js']
+        }
+      },
+      json: {
+        options: {
+          eol: 'lf',
+          overwrite: true
+        },
+        files: {
+          '': ['package.json', 'package_dev.json']
+        }
+      },
+      clientsrc: {
+        options: {
+          eol: 'lf',
+          overwrite: true
+        },
+        files: {
+          '': ['public/javascripts/*']
+        }
+      },
+      serversrc: {
+        options: {
+          eol: 'lf',
+          overwrite: true
+        },
+        files: {
+          '': ['app.js', '/bin/*.js', 'routes/*.js', 'views/*', 'test/**/*.js']
         }
       }
     }
   });
 
-  grunt.registerTask('default', ['stripJsonComments', 'replace', 'lineending', 'uglify']);
-  grunt.registerTask('linter', ['jshint']);
+  grunt.registerTask('default', ['dist']);
+  grunt.registerTask('linter', ['jshint:dist']);
+
+  grunt.registerTask('dist', ['clean', 'stripJsonComments:packagejson', 'replace:json', 'lineending:dist', 'jshint:dist'/*, 'qunit'*/, 'uglify:dist']);
 
   // https://github.com/gruntjs/grunt-contrib-clean/issues/32
   grunt.registerTask('cleaner', ['clean']);

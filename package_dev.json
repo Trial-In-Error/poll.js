@@ -37,15 +37,15 @@
   "devDependencies": {
     "grunt": "*",
     "load-grunt-tasks": "*",
-    "grunt-forever": "*",
     "grunt-contrib-jshint": "*",
     "grunt-contrib-uglify": "*",
     "grunt-contrib-nodeunit": "*",
     "grunt-contrib-clean": "*",
-    "grunt-strip-json-comments": "*",
     "grunt-contrib-qunit": "*",
     "grunt-contrib-watch": "*",
     "grunt-contrib-concat": "*",
+    "grunt-forever": "*",
+    "grunt-strip-json-comments": "*",
     "grunt-jsbeautifier": "^0.2.7",
     "grunt-lineending": "^0.2.2",
     "grunt-text-replace": "*"

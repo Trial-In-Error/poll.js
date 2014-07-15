@@ -5,7 +5,7 @@
   "scripts": {
     "prestart": "forever start --minUptime 1000 --spinSleepTime 1000 -e ./logs/database_errors.log -o ./logs/database_stdout.log -c node ./bin/database_init_helper.js",
     "start": "forever --minUptime 1000 --spinSleepTime 1000 -e ./logs/server_errors.log -l ./logs/forever.log -o ./logs/server_stdout.log -c node ./bin/server.js",
-    "startdbless": "forever --minUptime 1000 --spinSleepTime 1000 -e ./logs/server_errors.log -l ./logs/forever.log -o ./logs/server_stdout.log -c node ./bin/server.js"
+    "godbless": "forever --minUptime 1000 --spinSleepTime 1000 -e ./logs/server_errors.log -l ./logs/forever.log -o ./logs/server_stdout.log -c node ./bin/server.js"
   },
   "dependencies": {
     "express": "~4.2.0",
@@ -22,15 +22,15 @@
   "devDependencies": {
     "grunt": "*",
     "load-grunt-tasks": "*",
-    "grunt-forever": "*",
     "grunt-contrib-jshint": "*",
     "grunt-contrib-uglify": "*",
     "grunt-contrib-nodeunit": "*",
     "grunt-contrib-clean": "*",
-    "grunt-strip-json-comments": "*",
     "grunt-contrib-qunit": "*",
     "grunt-contrib-watch": "*",
     "grunt-contrib-concat": "*",
+    "grunt-forever": "*",
+    "grunt-strip-json-comments": "*",
     "grunt-jsbeautifier": "^0.2.7",
     "grunt-lineending": "^0.2.2",
     "grunt-text-replace": "*"
