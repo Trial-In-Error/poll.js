@@ -1,7 +1,6 @@
 module.exports = function(grunt) {
   require('load-grunt-tasks')(grunt);
 
-
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
 //    concat: {
@@ -32,9 +31,21 @@ module.exports = function(grunt) {
         }]
       }
     },
-    qunit: {
-      files: ['test/**/*.html']
-    },
+    /*qunit: {
+      dist:
+      {
+
+      },
+      clientsrc:
+      {
+
+      },
+      serversrc:
+      {
+
+      },*/
+      //files: ['test/**/*.html']
+    //},
     jshint: {
       // Custom options
       options: {
@@ -68,6 +79,10 @@ module.exports = function(grunt) {
       serversrc:
       {
         src: ['routes/*.js', 'test/**/*.js', 'bin/*.js'],
+      },
+      gruntfile:
+      {
+        src: ['Gruntfile.js']
       }
     },
     watch: {
@@ -76,16 +91,16 @@ module.exports = function(grunt) {
         tasks: ['jshint:gruntfile', 'lineending:gruntfile']
       },
       json: {
-        files: 'package.json',
+        files: 'package_dev.json',
         tasks: ['stripJsonComments:packagejson', 'replace:json', 'lineending:json']
       },
       serversrc: {
-        files: ['app.js', 'bin/*.js'],
-        tasks: ['jshint:serversrc', 'qunit:serversrc', 'lineending:serversrc']
+        files: ['app.js', 'bin/*.js', 'routes/*.js', 'test/**/*.js'],
+        tasks: ['jshint:serversrc', /*'qunit:serversrc',*/ 'lineending:serversrc']
       },
       clientsrc: {
-        files: ['app.js', 'bin/*.js'],
-        tasks: ['jshint:clientsrc', 'qunit:clientsrc', 'lineending:clientsrc']
+        files: ['public/javascripts/*.js'],
+        tasks: ['jshint:clientsrc', /*'qunit:clientsrc',*/ 'lineending:clientsrc']
       }
     },
     stripJsonComments: {                                // Task
