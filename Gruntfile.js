@@ -174,5 +174,6 @@ module.exports = function(grunt) {
   grunt.registerTask('dist', ['clean', 'stripJsonComments:packagejson', 'replace:json', 'lineending:dist', 'jshint:dist'/*, 'qunit'*/, 'uglify:dist']);
   // https://github.com/gruntjs/grunt-contrib-clean/issues/32
   grunt.registerTask('cleaner', ['clean']);
+  grunt.registerTask('ender', ['lineending:dist']);
 
 };
