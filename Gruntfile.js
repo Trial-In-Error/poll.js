@@ -70,7 +70,7 @@ module.exports = function(grunt) {
       },
       dist:
       {
-        src: ['Gruntfile.js', 'public/javascripts/*.js', 'routes/*.js', 'test/**/*.js', 'bin/*.js'],
+        src: ['Gruntfile.js', 'public/javascripts/*.js', 'routes/*.js', 'test/**/*.js', 'bin/*.js', '!public/javascripts/*.min.js'],
       },
       clientsrc:
       {

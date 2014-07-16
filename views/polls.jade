@@ -1,7 +1,10 @@
 extends layout
 
 block content
-    script(src='/javascripts/client_polls.js')
+    if globalExists
+        script(src='dist/javascripts/client_polls.js')
+    else
+        script(src='/javascripts/client_polls.js')
     //h1= title
     //p Welcome to a strange place of polls.
 

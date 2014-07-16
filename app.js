@@ -22,6 +22,7 @@ var pollroute = require('./routes/pollroute');
 var app = express();
 
 var globaljsexists;
+var clientpollsjsexists;
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
