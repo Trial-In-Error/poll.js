@@ -19,6 +19,7 @@ This project is built with grunt. Most files have two versions, one called `foo_
 * `grunt` or `grunt dist` does it all. Cleans log files, removes comments from package.json, checks line endings, lints source, and uglifies public javascript.
 * `grunt cleaner` removes all log files and uglified public javascript. Note that this undoes the uglification of `grunt`.
 * `grunt linter` lints all javascript files.
+* `grunt ender` fixes all files' line endings to unix standard.
 * `grunt watch` automatically lints, uglifies, etc., as files are edited.
 
 Known Issues
