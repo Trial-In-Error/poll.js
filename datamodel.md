@@ -51,6 +51,7 @@ I'm considering tacking the resulting answers onto `Response` objects. This will
 	* `situationally_explainable` boolean; renders a text field beneath it when chosen
 	* `must_explain` boolean; whether or not the rendered text field must have some contents
 	* `metadata` list of tag objects
+	* `change_next_to` number; changes parent `Question`'s next field to allow branching.
 
 * `Tag` object describing some word and intensity associated with a response
 	* `tag` string
