@@ -18,6 +18,9 @@ A core design decision: How do we store the resulting answers? We could store th
 I'm considering tacking the resulting answers onto `Response` objects. This will make cloning `Poll` objects more work, but will hopefully lead to a more easily conceptualized look-up process. If you have a poll id and want to know how many people answered question #3, you would: database.findpollbyid(id).question_list[2].sumRespondersHelperFunction(). This model will put a large number of helper functions in the `Question` object so that it can give useful information about its `Response` objects.
 
 * `Poll` object
+	* `name` string for description
+	* `opening_slide` question object of type `not_a_question`, guaranteed to be first
+	* `closing_slide` queston object of type `not_a_question`, guaranteed to be last
 	* `id` number for lookup
 	* `question_list` list of question objects; defaults to question_list[0] as the first question
 	* `open` boolean; open or closed, presently?
