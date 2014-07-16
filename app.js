@@ -8,6 +8,7 @@ var util = require('util');
 
 // Database
 var mongo = require('mongoskin');
+
 // Rename this database!
 var db = mongo.db("mongodb://localhost:27017/nodetest2", {native_parse:true});
 
@@ -16,7 +17,7 @@ var users = require('./routes/users');
 var test = require('./routes/test');
 var transientlogin = require('./routes/transient-login');
 var pollindex = require('./routes/pollindex');
-var polls = require('./routes/polls');
+var pollroute = require('./routes/pollroute');
 
 var app = express();
 
@@ -44,7 +45,7 @@ app.use('/users', users);
 app.use('/test', test);
 app.use('/transient-login', transientlogin);
 app.use('/polls', pollindex);
-app.use('/pollroute', polls)
+app.use('/pollroute', pollroute)
 
 /// catch 404 and forward to error handler
 app.use(function(req, res, next) {
