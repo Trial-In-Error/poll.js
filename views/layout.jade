@@ -1,12 +1,22 @@
 doctype html
 html
-  head
-    title= title
-    link(rel='stylesheet', href='/stylesheets/style.css')
-  body
-    block content
-    script(src='http://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js')
-    if globalExists
-        script(src='dist/javascripts/global.js')
-    else
-        script(src='/javascripts/global.js')
+	head
+		title= title
+		link(rel='stylesheet', href='/stylesheets/style.css')
+		link(rel='stylesheet', href='/stylesheets/jquery.mobile-1.4.3.min.css')
+		script(src='/javascripts/jquery.mobile-1.4.3.min.js')
+		script(src='http://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js')
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		if globalExists
+			script(src='dist/javascripts/global.js')
+		else
+			script(src='/javascripts/global.js')
+	body(class="ui-mobile-viewport ui-overlay-c")
+		div(data-role="page")
+		div(data-role="header", class="ui-header ui-bar-b")
+			h1
+				p poll.js
+		div(data-role='content', class='ui-content')
+			block content
+		div(data-role='footer', class='ui-header ui-bar-b')
+			h4= 'built in node.js'

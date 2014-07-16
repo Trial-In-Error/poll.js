@@ -14,6 +14,7 @@ var db = mongo.db("mongodb://localhost:27017/nodetest2", {native_parse:true});
 var routes = require('./routes/index');
 var users = require('./routes/users');
 var test = require('./routes/test');
+var transientlogin = require('./routes/transient-login');
 
 var app = express();
 
@@ -35,9 +36,11 @@ app.use(function(req, res, next){
     next();
 })
 
+
 app.use('/', routes);
 app.use('/users', users);
 app.use('/test', test);
+app.use('/transient-login', transientlogin);
 
 /// catch 404 and forward to error handler
 app.use(function(req, res, next) {
