@@ -1,0 +1,52 @@
+extends layout
+
+block content
+    script(src='/javascripts/polls.js')
+    //h1= title
+    //p Welcome to a strange place of polls.
+
+    // Wrapper
+    #wrapper
+
+        // USER INFO
+        //#pollInfo
+        //    h2 User Info
+        //    p
+        //        strong Poll ID:
+        //        |  <span id='pollID'></span>
+        //        br
+        //        strong Status:
+        //        |  <span id='pollStatus'></span>
+        //        br
+        //        strong Owner:
+        //        |  <span id='pollOwner'></span>
+        // /USER INFO
+
+        // USER LIST
+        h1 Poll List
+        #listpoll
+            table
+                thead
+                    th Poll ID
+                    th Status
+                    th Owner
+                tbody
+        // /USER LIST
+
+        // ADD USER
+        //h2 Add User
+        //#addUser
+        //    fieldset
+        //        input#inputUserName(type='text', placeholder='Username')
+        //        input#inputUserEmail(type='text', placeholder='Email')
+        //        br
+        //        input#inputUserFullname(type='text', placeholder='Full Name')
+        //        input#inputUserAge(type='text', placeholder='Age')
+        //        br
+        //        input#inputUserLocation(type='text', placeholder='Location')
+        //        input#inputUserGender(type='text', placeholder='gender')
+        //        br
+        //        button#btnAddUser Add User
+        // /ADD USER
+
+    // /WRAPPER

@@ -1,6 +1,15 @@
 Datamodel
 =========
 
+MongoDB
+---------
+The database consists of several collections.
+
+* `userlist`, from a prior tutorial. This should be removed soon.
+* `userdb`, containing the users for poll.js.
+* `polldb`, containing the polls for poll.js.
+
+
 Polls
 ---------
 
@@ -11,6 +20,7 @@ I'm considering tacking the resulting answers onto `Response` objects. This will
 * `Poll` object
 	* `id` number for lookup
 	* `question_list` list of question objects; defaults to question_list[0] as the first question
+	* `open` boolean; open or closed, presently?
 	* `theme` string describing optional themes
 	* `widgets` list of widget objects to render
 	* `expiry` date; when does the poll close?

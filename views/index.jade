@@ -1,6 +1,10 @@
 extends layout
 
 block content
+    if globalExists
+        script(src='dist/javascripts/global.js')
+    else
+        script(src='/javascripts/global.js')
     h1= title
     p Welcome to a strange place.
 
