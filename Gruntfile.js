@@ -169,7 +169,7 @@ module.exports = function(grunt) {
     }
   });
 
-  grunt.registerTask('default', ['dist']);
+  grunt.registerTask('default', ['clean', 'uglify:dist']);
   grunt.registerTask('linter', ['jshint:dist']);
   grunt.registerTask('dist', ['clean', 'stripJsonComments:packagejson', 'replace:json', 'lineending:dist', 'jshint:dist'/*, 'qunit'*/, 'uglify:dist']);
   // https://github.com/gruntjs/grunt-contrib-clean/issues/32
