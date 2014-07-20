@@ -11,30 +11,17 @@ block content
     // Wrapper
     #wrapper
 
-        // USER INFO
-        //#pollInfo
-        //    h2 User Info
-        //    p
-        //        strong Poll ID:
-        //        |  <span id='pollID'></span>
-        //        br
-        //        strong Status:
-        //        |  <span id='pollStatus'></span>
-        //        br
-        //        strong Owner:
-        //        |  <span id='pollOwner'></span>
-        // /USER INFO
-
         // USER LIST
         h1 Poll List
         #listpoll
-            table
+            table(data-role="table" data-mode="columntoggle" class="ui-responsive")
                 thead
-                    th Poll ID
-                    th Status
-                    th Owner
+                    th(data-priority="1") Poll ID
+                    th(data-priority="2") Status
+                    th(data-priority="3") Owner
                 tbody
         // /USER LIST
+
 
         // ADD USER
         //h2 Add User
