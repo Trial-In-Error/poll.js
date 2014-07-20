@@ -24,6 +24,7 @@ var app = express();
 
 var globaljsexists;
 var clientpollsjsexists;
+var clientpolljsexists;
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
