@@ -21,7 +21,7 @@ function populateTable() {
 			tableContent += '<td><a href="/poll/' + this._id + '"> '+ this.id + '</a></td>';
 			tableContent += '<td>' + this.open + '</td>';
 			tableContent += '<td>' + this.owner + '</td>';
-			//tableContent += '<td><a href="#" class="linkdeleteuser" rel="' + this._id + '">delete</a></td>';
+			tableContent += '<td><a href="#" class="linkdeletepoll" rel="' + this._id + '">delete</a></td>';
 			tableContent += '</tr>';
 		});
 
@@ -100,12 +100,12 @@ function populateTable() {
 }*/
 
 // Delete User
-/*function deleteUser(event) {
+function deletePoll(event) {
 
     event.preventDefault();
 
     // Pop up a confirmation dialog
-    var confirmation = confirm('Are you sure you want to delete this user?');
+    var confirmation = confirm('Are you sure you want to delete this poll?');
 
     // Check and make sure the user confirmed
     if (confirmation === true) {
@@ -113,7 +113,7 @@ function populateTable() {
         // If they did, do our delete
         $.ajax({
             type: 'DELETE',
-            url: '/users/deleteuser/' + $(this).attr('rel')
+            url: '/pollroute/deletepoll/' + $(this).attr('rel')
         }).done(function( response ) {
 
             // Check for a successful (blank) response
@@ -136,7 +136,7 @@ function populateTable() {
 
     }
 
-}*/
+}
 
 // DOM Ready =============================================================
 $(document).ready(function() {
@@ -145,12 +145,12 @@ $(document).ready(function() {
 	populateTable();
 
 	// Username link click
-	$('#userList table tbody').on('click', 'td a.linkshowuser', showUserInfo);
+	//$('#listpoll table tbody').on('click', 'td a.linkshowuser', showUserInfo);
 
 	// Add User button click
-	$('#btnAddUser').on('click', addUser);
+	// $('#btnAddUser').on('click', addUser);
 
-	// Delete User link click
-    $('#userList table tbody').on('click', 'td a.linkdeleteuser', deleteUser);
+	// Delete Poll link click
+    $('#listpoll table tbody').on('click', 'td a.linkdeletepoll', deletePoll);
 
 });
