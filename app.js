@@ -18,6 +18,7 @@ var test = require('./routes/test');
 var transientlogin = require('./routes/transient-login');
 var pollindex = require('./routes/pollindex');
 var pollroute = require('./routes/pollroute');
+var poll = require('./routes/poll');
 
 var app = express();
 
@@ -46,7 +47,8 @@ app.use('/users', users);
 app.use('/test', test);
 app.use('/transient-login', transientlogin);
 app.use('/polls', pollindex);
-app.use('/pollroute', pollroute)
+app.use('/pollroute', pollroute);
+app.use('/poll', poll);
 
 /// catch 404 and forward to error handler
 app.use(function(req, res, next) {
