@@ -1,4 +1,5 @@
 var express = require('express');
+    //expose = require('express-expose');
 var path = require('path');
 var favicon = require('static-favicon');
 var logger = require('morgan');
@@ -36,6 +37,13 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded());
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+
+app.use(function(req, res, next){
+  res.locals.expose = {};
+  // you could alias this as req or res.expose
+  // to make it shorter and less annoying
+  next();
+});
 
 app.use(function(req, res, next){
     req.db = db;

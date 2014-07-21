@@ -17,6 +17,7 @@
     "jade": "~1.3.0",
     "mongodb": "*",
     "mongoskin": "*",
+    "express-expose": "*",
     "forever": "*" 
   },
   "devDependencies": {

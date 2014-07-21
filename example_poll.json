@@ -1,0 +1,91 @@
+{
+	"name": "A trial poll.",
+	"id": "5",
+	"open": true,
+	"owner": "adminefarious",
+	"question_list":
+	[
+		{
+			"body": "Is this a good question?",
+			"type":
+			{
+				"name": "pick_n",
+				"n": 1,
+				"allow_zero": false,
+				"require_n": true,
+				"response_list":
+				[
+					{
+						"body": "Yes.",
+						"answers": [],
+						"always_explainable": false,
+						"situationally_explainable": false
+					},
+					{
+						"body": "No.",
+						"answers": [],
+						"always_explainable": false,
+						"situationally_explainable": true
+					}
+				]
+			},
+			"id": 0
+		},
+		{
+			"body": "Pick all of the answers that are awesome.",
+			"type":
+			{
+				"name": "pick_n",
+				"n": 4,
+				"allow_zero": true,
+				"require_n": false,
+				"response_list":
+				[
+					{
+						"body": "Coffee.",
+						"answers": [],
+						"always_explainable": false,
+						"situationally_explainable": false
+					},
+					{
+						"body": "Video-games.",
+						"answers": [],
+						"always_explainable": false,
+						"situationally_explainable": false
+					},
+					{
+						"body": "Cats.",
+						"answers": [],
+						"always_explainable": false,
+						"situationally_explainable": false
+					},
+					{
+						"body": "Beer.",
+						"answers": [],
+						"always_explainable": false,
+						"situationally_explainable": false
+					}
+				]
+			}
+		},
+		{
+			"body": "How good is this poll, on a scale of 1 to 10?",
+			"type":
+			{
+				"name": "slider",
+				"min": 1,
+				"max": 10,
+				"step": 1,
+				"up_and_up": true,
+				"response_list":
+				[
+					{
+						"answers": [],
+						"always_explainable": false,
+						"situationally_explainable": false
+					}
+				]
+			}
+		}
+	]
+}
