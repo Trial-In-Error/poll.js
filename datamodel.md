@@ -29,6 +29,7 @@ I'm considering tacking the resulting answers onto `Response` objects. This will
 	* `expiry` date; when does the poll close?
 	* `auto_renew` boolean; does this poll generate a new, identical (but for id) one when it expires?
 	* `time_to_live` number; when auto-renewed, how long does this poll last?
+	* `allow_skipping` boolean; can every question be skipped?
 	* `question_list` list of question objects; defaults to question_list[0] as the first question
 
 * `Question` object describing a single question
