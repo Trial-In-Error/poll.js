@@ -70,7 +70,7 @@ module.exports = function(grunt) {
       },
       dist:
       {
-        src: ['Gruntfile.js', 'public/javascripts/*.js', 'routes/*.js', 'test/**/*.js', 'bin/*.js', '!public/javascripts/*.min.js'],
+        src: ['Gruntfile.js', 'public/javascripts/*.js', 'routes/*.js', 'test/**/*.js', 'bin/*.js', '!public/javascripts/*.min.js', '!javascripts/qjuery_mobile'],
       },
       clientsrc:
       {
@@ -127,7 +127,7 @@ module.exports = function(grunt) {
           overwrite: true
         },
         files: {
-          '': ['**/.js', '**/.json', '**/.md', '**/*.gitignore', 'bin/*', 'public/javascripts/*', 'public/dist/javascripts/*', 'public/stylesheets/*','routes/*', 'views/*']
+          '': ['**/.js', '**/.json', '**/.md', '**/*.gitignore', 'bin/*', 'public/javascripts/*.js', 'public/dist/javascripts/*', 'public/stylesheets/*', 'routes/*', 'views/*', '!/public/javascripts/qjuery_mobile']
         }
       },
       gruntfile: {
@@ -154,7 +154,7 @@ module.exports = function(grunt) {
           overwrite: true
         },
         files: {
-          '': ['public/javascripts/*']
+          '': ['public/javascripts/*.js']
         }
       },
       serversrc: {

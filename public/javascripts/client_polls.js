@@ -19,7 +19,12 @@ function populateTable() {
 		$.each(data, function(){
 			tableContent += '<tr>';
 			tableContent += '<td><a href="/poll/' + this._id + '"> '+ this.id + '</a></td>';
-			tableContent += '<td>' + this.open + '</td>';
+			if(this.open)
+			{
+				tableContent += '<td>open</td>';
+			}else{
+				tableContent += '<td>closed</td>';
+			}				
 			tableContent += '<td>' + this.owner + '</td>';
 			tableContent += '<td><a href="#" class="linkdeletepoll" rel="' + this._id + '">delete</a></td>';
 			tableContent += '</tr>';
