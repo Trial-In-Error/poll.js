@@ -28,3 +28,17 @@ for (var entry in poll.question_list) {
 }
 
 $('#question table tbody').html(tableContent);
+
+
+if (poll.question_list[current_question].type.name === "pick_n") {
+	// For each answer, draw a button
+	for (entry in poll.question_list[current_question].type.response_list) {
+		// Create a button to click!
+			// The text should be = entry.body
+			// It should update entry.answers
+			// It should check entry.*_explainable when rendering
+	}
+	// Render a 'back' button
+	// Render a 'next' button
+	// Check to see if you should render a 'skip' button
+}
