@@ -3,7 +3,7 @@ var current_question = 0;
 //eval(alert($('#data')[0].innerHTML)); // jshint ignore:line
 eval($('#data')[0].innerHTML); // jshint ignore:line
 
-renderCurrentQuestion(0);
+renderCurrentQuestion(2);
 
 /*for (entry in Object.keys(poll.question_list)) {
 	if(poll[String(entry)] !== undefined) {
@@ -77,15 +77,18 @@ function renderCurrentQuestion(qtr)
 	//alert(poll.question_list[current_question].body)
 
 	$('#lead p').html(poll.question_list[current_question].body);
-	temp += '<fieldset data-role="controlgroup">'
 	if (poll.question_list[current_question].type.name === "pick_n") {
 		// For each answer, draw a button
+		temp += '<fieldset data-role="controlgroup">'
 		var counter = 0;
 		for (entry in poll.question_list[current_question].type.response_list) {
 			// Create a button to click!
 			// If N > 1, use check boxes, else use radio buttons
 			if (poll.question_list[current_question].type.n === 1)
 			{
+
+				//MISSING OPEN FORM!!!
+
 				// Draw radio buttons
 				//alert(poll.question_list[current_question].type.response_list[entry].body);
 				temp += '<input type="radio" name="radio-choice-'+
@@ -103,6 +106,21 @@ function renderCurrentQuestion(qtr)
 				// It should check entry.*_explainable when rendering
 				counter += 1;
 		}
+	}
+		if (poll.question_list[current_question].type.name === "slider") {
+			//alert('min: '+ String(poll.question_list[current_question].type.min))
+			//alert('max: '+ String(poll.question_list[current_question].type.max))
+			// Draw slider
+			// TERRIBLE AWFUL DIRTY HACK: ASSUMED THAT STARTING POSITION = MIN + MAX / 2
+
+			temp += '<form class="full-width-slider">'
+			temp += '<input type="range" name="slider-1" id="slider-1"'
+			temp += 'min="'+String(poll.question_list[current_question].type.min)+'"'
+			temp += 'max="'+String(poll.question_list[current_question].type.max)+'"'
+			temp += 'value="'+String((poll.question_list[current_question].type.max - poll.question_list[current_question].type.min + 1)/2)+'"'
+			temp += 'data-popup-enabled="true">'
+		}
+
 
 		temp += '</fieldset>'
 		temp += '</form>'
@@ -119,5 +137,4 @@ function renderCurrentQuestion(qtr)
 		$('#bottombuttons').html(temp);
 		$('#bottombuttons').trigger('create');
 
-	}
 }
