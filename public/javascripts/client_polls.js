@@ -17,24 +17,27 @@ function populateTable() {
 
 		// For each item in our JSON, add a table row and cells to the content string
 		$.each(data, function(){
-			tableContent += '<tr>';
-			tableContent += '<td><a href="/poll/' + this._id + '"> '+ this.id + '</a></td>';
-			//if(this.open)
-			//{
-			tableContent += '<td>open</td>';
-			//}else{
-			//	tableContent += '<td>closed</td>';
-			//}				
-			tableContent += '<td>' + this.owner + '</td>';
+			tableContent += '<li>';
+			tableContent += '<a href="/poll/' + this._id + '">';
+			tableContent += '<h2>Poll '+ this.id + '</h2>';
+			tableContent += '<p>';
+			if(this.open)
+			{
+				tableContent += 'Open';
+			}else{
+				tableContent += 'Closed';
+			}				
+			tableContent += ', owned by ' + this.owner + ', and has the database hash ' + this._id+'</p></a>';
 			//tableContent += '<td><a href="#" class="ui-btn ui-icon-delete ui-mini ui-btn-icon-notext ui-corner-all" rel="'+this._id+'">No text</a></td>'
-			tableContent += '<td><a href="#" class="linkdeletepoll ui-mini ui-icon-delete ui-btn ui-btn-icon-notext ui-corner-all ui-btn-inline" rel="' + this._id + '">delete</a></td>';
+			tableContent += '<a href="#" class="linkdeletepoll" rel="' + this._id + '">delete</a>';
 			//tableContent += '<td><form><button type="ui-btn" value="Delete" style="width:100%"></form></td>'
-			tableContent += '</tr>';
+			tableContent += '</li>';
 		});
 
 		// Inject the whole content string into our existing HTML table
-		$('#listpoll table tbody').html(tableContent);
-		$('#listpoll table tbody').trigger('create');
+		$('#listpoll ul').html(tableContent);
+		//$('#listpoll ul').trigger('create');
+		$("#listpoll ul").listview("refresh");
 	});
 }
 
@@ -159,6 +162,7 @@ $(document).ready(function() {
 	// $('#btnAddUser').on('click', addUser);
 
 	// Delete Poll link click
-    $('#listpoll table tbody').on('click', 'td a.linkdeletepoll', deletePoll);
+    //$('#listpoll table tbody').on('click', 'td a.linkdeletepoll', deletePoll);
+    $('#listpoll ul').on('click', 'li a.linkdeletepoll', deletePoll);
 
 });
