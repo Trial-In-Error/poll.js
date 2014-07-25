@@ -1,6 +1,15 @@
 Datamodel
 =========
 
+MongoDB
+---------
+The database consists of several collections.
+
+* `userlist`, from a prior tutorial. This should be removed soon.
+* `userdb`, containing the users for poll.js.
+* `polldb`, containing the polls for poll.js.
+
+
 Polls
 ---------
 
@@ -9,24 +18,31 @@ A core design decision: How do we store the resulting answers? We could store th
 I'm considering tacking the resulting answers onto `Response` objects. This will make cloning `Poll` objects more work, but will hopefully lead to a more easily conceptualized look-up process. If you have a poll id and want to know how many people answered question #3, you would: database.findpollbyid(id).question_list[2].sumRespondersHelperFunction(). This model will put a large number of helper functions in the `Question` object so that it can give useful information about its `Response` objects.
 
 * `Poll` object
+	* `name` string for description
+	* `opening_slide` question object of type `not_a_question`, guaranteed to be first
+	* `closing_slide` queston object of type `not_a_question`, guaranteed to be last
 	* `id` number for lookup
-	* `question_list` list of question objects; defaults to question_list[0] as the first question
+	* `open` boolean; open or closed, presently?
+	* `owner` number; user id of poll creator
 	* `theme` string describing optional themes
 	* `widgets` list of widget objects to render
 	* `expiry` date; when does the poll close?
 	* `auto_renew` boolean; does this poll generate a new, identical (but for id) one when it expires?
 	* `time_to_live` number; when auto-renewed, how long does this poll last?
-	* `owner` number; user id of poll creator
+	* `allow_skipping` boolean; can every question be skipped?
+	* `question_list` list of question objects; defaults to question_list[0] as the first question
 
 * `Question` object describing a single question
 	* `Body` object containing some text, image, sound, video, etc
 	* `Type` object describing how the user responds to a question and how the page is rendered
 		* `pick_n` user responds by picking up to `n` items
+			* `name` string; `pick_n`
 			* `n` number; rendering changes when n = 1 from check box to radio button
 			* `allow_zero` boolean; can user pick 0 items?
 			* `require_n` boolean; must user pick `n` items?
 			* `response_list` list of response objects
 		* `slider` user responds by choosing a position along a slider
+			* `name` string; `slider`
 			* `min` number; inclusive
 			* `max` number; inclusive
 			* `step` number

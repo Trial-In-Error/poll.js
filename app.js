@@ -1,4 +1,5 @@
 var express = require('express');
+    //expose = require('express-expose');
 var path = require('path');
 var favicon = require('static-favicon');
 var logger = require('morgan');
@@ -8,6 +9,7 @@ var util = require('util');
 
 // Database
 var mongo = require('mongoskin');
+
 // Rename this database!
 var db = mongo.db("mongodb://localhost:27017/nodetest2", {native_parse:true});
 
@@ -15,10 +17,15 @@ var routes = require('./routes/index');
 var users = require('./routes/users');
 var test = require('./routes/test');
 var transientlogin = require('./routes/transient-login');
+var pollindex = require('./routes/pollindex');
+var pollroute = require('./routes/pollroute');
+var poll = require('./routes/poll');
 
 var app = express();
 
 var globaljsexists;
+var clientpollsjsexists;
+var clientpolljsexists;
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -32,6 +39,13 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(function(req, res, next){
+  res.locals.expose = {};
+  // you could alias this as req or res.expose
+  // to make it shorter and less annoying
+  next();
+});
+
+app.use(function(req, res, next){
     req.db = db;
     next();
 })
@@ -41,6 +55,9 @@ app.use('/', routes);
 app.use('/users', users);
 app.use('/test', test);
 app.use('/transient-login', transientlogin);
+app.use('/polls', pollindex);
+app.use('/pollroute', pollroute);
+app.use('/poll', poll);
 
 /// catch 404 and forward to error handler
 app.use(function(req, res, next) {

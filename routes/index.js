@@ -14,7 +14,7 @@ router.get('/', function(req, res) {
     console.log('WARNING!!! Did not find minified global.js file. Using full file.');
     console.log('Run `grunt` to construct minified .js files.');
   }
-  res.render('index', { title: 'Express', globalExists: global });
+  res.render('index', { title: 'Express', globalExists: globaljsexists });
 });
 
 module.exports = router;

@@ -1,0 +1,27 @@
+//doctype html
+extends layout
+
+block content
+	#lead
+		h1= title
+		p Hah! This is poll number #{poll.id}. It has a database hash of #{poll._id} and is owned by #{poll.owner}.
+
+	#form
+	
+	#bottombuttons
+
+	script(type="text/javascript", id="data").
+		var poll = !{JSON.stringify(poll)};
+	if jsexists
+		script(src= '../dist/javascripts/client_poll.js')
+	else
+		script(src= '../javascripts/client_poll.js')
+
+
+//	#question
+//		table
+//			thead
+//				th Question Number
+//				th Question Prompt
+//				th Question Type
+//			tbody

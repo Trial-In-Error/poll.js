@@ -70,7 +70,7 @@ module.exports = function(grunt) {
       },
       dist:
       {
-        src: ['Gruntfile.js', 'public/javascripts/*.js', 'routes/*.js', 'test/**/*.js', 'bin/*.js'],
+        src: ['Gruntfile.js', 'public/javascripts/*.js', 'routes/*.js', 'test/**/*.js', 'bin/*.js', '!public/javascripts/*.min.js', '!javascripts/qjuery_mobile'],
       },
       clientsrc:
       {
@@ -127,7 +127,7 @@ module.exports = function(grunt) {
           overwrite: true
         },
         files: {
-          '': ['**/.js', '**/.json', '**/.md', '**/*.gitignore', 'bin/*', 'public/javascripts/*', 'public/dist/javascripts/*', 'public/stylesheets/*','routes/*', 'views/*']
+          '': ['**/.js', '**/.json', '**/.md', '**/*.gitignore', 'bin/*', 'public/javascripts/*.js', 'public/dist/javascripts/*', 'public/stylesheets/*', 'routes/*', 'views/*', '!/public/javascripts/qjuery_mobile']
         }
       },
       gruntfile: {
@@ -154,7 +154,7 @@ module.exports = function(grunt) {
           overwrite: true
         },
         files: {
-          '': ['public/javascripts/*']
+          '': ['public/javascripts/*.js']
         }
       },
       serversrc: {
@@ -169,7 +169,7 @@ module.exports = function(grunt) {
     }
   });
 
-  grunt.registerTask('default', ['dist']);
+  grunt.registerTask('default', ['clean', 'uglify:dist']);
   grunt.registerTask('linter', ['jshint:dist']);
   grunt.registerTask('dist', ['clean', 'stripJsonComments:packagejson', 'replace:json', 'lineending:dist', 'jshint:dist'/*, 'qunit'*/, 'uglify:dist']);
   // https://github.com/gruntjs/grunt-contrib-clean/issues/32
