@@ -9,15 +9,15 @@ block content
     //p Welcome to a strange place of polls.
 
     // Wrapper
-    //#wrapper
+    #wrapper
 
-    // USER LIST
-    h1 Poll List
-    #listpoll
-        table
-            thead
-                th Poll ID
-                th Status
-                th Owner
-                th Delete
-            tbody
+        // USER LIST
+        h1 Poll List
+        #listpoll
+            table(data-role="table" data-mode="columntoggle" class="ui-responsive")
+                thead
+                    th(data-priority="1") Poll ID
+                    th(data-priority="2") Status
+                    th(data-priority="3") Owner
+                    th(data-priority="4") Delete
+                tbody

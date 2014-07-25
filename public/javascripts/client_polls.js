@@ -26,12 +26,15 @@ function populateTable() {
 			//	tableContent += '<td>closed</td>';
 			//}				
 			tableContent += '<td>' + this.owner + '</td>';
-			tableContent += '<td><a href="#" class="linkdeletepoll" rel="' + this._id + '">delete</a></td>';
+			//tableContent += '<td><a href="#" class="ui-btn ui-icon-delete ui-mini ui-btn-icon-notext ui-corner-all" rel="'+this._id+'">No text</a></td>'
+			tableContent += '<td><a href="#" class="linkdeletepoll ui-mini ui-icon-delete ui-btn ui-btn-icon-notext ui-corner-all ui-btn-inline" rel="' + this._id + '">delete</a></td>';
+			//tableContent += '<td><form><button type="ui-btn" value="Delete" style="width:100%"></form></td>'
 			tableContent += '</tr>';
 		});
 
 		// Inject the whole content string into our existing HTML table
 		$('#listpoll table tbody').html(tableContent);
+		$('#listpoll table tbody').trigger('create');
 	});
 }
 
