@@ -118,6 +118,7 @@ function renderCurrentQuestion(qtr)
 			temp += 'min="'+String(poll.question_list[current_question].type.min)+'"'
 			temp += 'max="'+String(poll.question_list[current_question].type.max)+'"'
 			temp += 'value="'+String((poll.question_list[current_question].type.max - poll.question_list[current_question].type.min + 1)/2)+'"'
+			temp += 'step="'+String(poll.question_list[current_question].type.step)+'"'
 			temp += 'data-popup-enabled="true">'
 		}
 
