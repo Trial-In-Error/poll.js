@@ -70,15 +70,18 @@ function demoButtons(){
 	//AWARENESS OF THE 'beginning of the line'
 function nextQuestion()
 {
-	current_question += 1;
-	$('#lastquestion').removeClass( 'ui-state-disabled' );
-	if(current_question >= poll.question_list.length-1)
+	if(validateCurrentQuestion())
 	{
-		//2 vs 3 => true
-		$('#nextquestion').addClass('ui-state-disabled');
-		$('#skipquestion').addClass('ui-state-disabled');
+		current_question += 1;
+		$('#lastquestion').removeClass( 'ui-state-disabled' );
+		if(current_question >= poll.question_list.length-1)
+		{
+			//2 vs 3 => true
+			$('#nextquestion').addClass('ui-state-disabled');
+			$('#skipquestion').addClass('ui-state-disabled');
+		}
+		renderCurrentQuestion(current_question);
 	}
-	renderCurrentQuestion(current_question);
 }
 
 function lastQuestion()
@@ -109,6 +112,7 @@ function skipQuestion()
 function renderCurrentQuestion(qtr)
 {
 	var temp = ''
+	temp += '<form>'
 	current_question = qtr
 
 	//alert(poll.question_list[current_question].body)
@@ -128,8 +132,7 @@ function renderCurrentQuestion(qtr)
 
 				// Draw radio buttons
 				//alert(poll.question_list[current_question].type.response_list[entry].body);
-				temp += '<input type="radio" name="radio-choice-'+
-						counter+'" id="radio-choice-'+counter+'" value="on">'
+				temp += '<input type="radio" name="radio-choice" id="radio-choice-'+counter+'" value="off">'
 				temp += '<label for="radio-choice-'+counter+'">'+
 						String(poll.question_list[current_question].type.response_list[entry].body)+'</label>'
 			} else {
@@ -165,6 +168,47 @@ function renderCurrentQuestion(qtr)
 		$('#form').html(temp);
 		$('#form').trigger('create');
 
+}
+
+function validateCurrentQuestion()
+{
+	var counter = 0;
+	if (poll.question_list[current_question].type.name === "pick_n") {
+			if (poll.question_list[current_question].type.n === 1) {
+				for (i = 0; i < poll.question_list[current_question].type.response_list.length; i++) {
+					if($('#radio-choice-'+String(i)).is(':checked')) {
+						counter += 1;	
+					}
+				}
+				if(counter === 1) {
+					return true;
+				} else {
+					if(counter === 0) {
+						alert("Please pick an option.");
+					} else {
+						alert("Please pick only one option.");
+					}
+				}
+			} else {
+				for (entry in $('#form div div')) {
+					if(entry.value === "on") {
+						counter += 1;	
+					}
+				}
+				if(counter === poll.question_list[current_question].type.n) {
+					return true;
+				} else if (counter === 0 && poll.question_list[current_question].type.allow_zero) {
+					return true;
+				//} else if (counter > 0 && counter < n poll.question_list[current_question].type.require_n) {
+				//	return true;
+				} else {
+					return false;
+				}
+			}
+		}
+		if (poll.question_list[current_question].type.name === "slider") {
+			return true;
+		}
 }
 
 function renderBottomButtons()
