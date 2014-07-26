@@ -1,5 +1,4 @@
 var express = require('express');
-    //expose = require('express-expose');
 var path = require('path');
 var favicon = require('static-favicon');
 var logger = require('morgan');
@@ -11,6 +10,7 @@ var util = require('util');
 var mongo = require('mongoskin');
 
 // Rename this database!
+//WARN: Rename this database.
 var db = mongo.db("mongodb://localhost:27017/nodetest2", {native_parse:true});
 
 var routes = require('./routes/index');

@@ -166,6 +166,15 @@ module.exports = function(grunt) {
           '': ['app.js', '/bin/*.js', 'routes/*.js', 'views/*', 'test/**/*.js']
         }
       }
+    },
+    match: {
+      files: {
+        src: ['app.js', '/public/**/*.js', '!public/dist/javascripts/*']
+      },
+      options: {
+        str: '//WARN',
+        fail: false
+      }
     }
   });
 
@@ -174,6 +183,8 @@ module.exports = function(grunt) {
   grunt.registerTask('dist', ['clean', 'stripJsonComments:packagejson', 'replace:json', 'lineending:dist', 'jshint:dist'/*, 'qunit'*/, 'uglify:dist']);
   // https://github.com/gruntjs/grunt-contrib-clean/issues/32
   grunt.registerTask('cleaner', ['clean']);
+  grunt.registerTask('packager', ['stripJsonComments:packagejson', 'replace:json']);
   grunt.registerTask('ender', ['lineending:dist']);
+  grunt.registerTask('matcher', ['match']);
 
 };
