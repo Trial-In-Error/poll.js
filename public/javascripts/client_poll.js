@@ -62,21 +62,47 @@ function demoButtons(){
 	$('#form').trigger('create');
 }
 
+
+//THESE THREE FUNCTIONS NEED:
+	//INPUT VALIDATION
+	//ANSWER LOGGING
+	//AWARENESS OF THE 'end of the line'
+	//AWARENESS OF THE 'beginning of the line'
 function nextQuestion()
 {
 	current_question += 1;
+	$('#lastquestion').removeClass( 'ui-state-disabled' );
+	if(current_question >= poll.question_list.length-1)
+	{
+		//2 vs 3 => true
+		$('#nextquestion').addClass('ui-state-disabled');
+		$('#skipquestion').addClass('ui-state-disabled');
+	}
 	renderCurrentQuestion(current_question);
 }
 
 function lastQuestion()
 {
 	current_question -= 1;
+	$('#nextquestion').removeClass( 'ui-state-disabled' );
+	$('#skipquestion').removeClass('ui-state-disabled');
+	if(current_question <= 0)
+	{
+		$('#lastquestion').addClass( 'ui-state-disabled' );
+	}
 	renderCurrentQuestion(current_question);
 }
 
 function skipQuestion()
 {
 	current_question += 1;
+	$('#lastquestion').removeClass( 'ui-state-disabled' );
+	if(current_question >= poll.question_list.length-1)
+	{
+		//2 vs 3 => true
+		$('#nextquestion').addClass('ui-state-disabled');
+		$('#skipquestion').addClass('ui-state-disabled');
+	}
 	renderCurrentQuestion(current_question);
 }
 
@@ -146,11 +172,12 @@ function renderBottomButtons()
 	// Render 'back' and 'next' buttons
 	var temp = ''
 	temp += '<div data-role="controlgroup" data-type="horizontal" text-align="center" margin-left="auto" margin-right="auto" align="center">'
-	temp += '<a href="#" class="lastquestion" data-role="button" data-icon="carat-l" data-iconpos="left">Back</a>'
+	temp += '<a href="#" class="lastquestion ui-state-disabled" id="lastquestion" data-role="button" data-icon="carat-l" data-iconpos="left">Back</a>'
 	// Check to see if you should render a 'skip' button
-	temp += '<a href="#" class="skipquestion" data-role="button">Skip</a>'
-	temp += '<a href="#" class="nextquestion" data-role="button" data-icon="carat-r" data-iconpos="right">Next</a>'
+	temp += '<a href="#" class="skipquestion" id="skipquestion" data-role="button">Skip</a>'
+	temp += '<a href="#" class="nextquestion" id="nextquestion" data-role="button" data-icon="carat-r" data-iconpos="right">Next</a>'
 	$('#bottombuttons').html(temp);
+	//$('#lastquestion').button();
 	$('#bottombuttons').trigger('create');
 }
 
