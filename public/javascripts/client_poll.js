@@ -1,4 +1,8 @@
 var current_question = 0;
+var value = Math.floor((Math.random() * 1000000)+1);
+var user_token = ("00000000" + value).slice(-8);
+
+
 
 //eval(alert($('#data')[0].innerHTML)); // jshint ignore:line
 eval($('#data')[0].innerHTML); // jshint ignore:line
