@@ -3,7 +3,8 @@ var current_question = 0;
 //eval(alert($('#data')[0].innerHTML)); // jshint ignore:line
 eval($('#data')[0].innerHTML); // jshint ignore:line
 
-renderCurrentQuestion(2);
+renderCurrentQuestion(0);
+renderBottomButtons();
 
 /*for (entry in Object.keys(poll.question_list)) {
 	if(poll[String(entry)] !== undefined) {
@@ -61,13 +62,23 @@ function demoButtons(){
 	$('#form').trigger('create');
 }
 
-//<form>
-//    <label>
-//        <input type="checkbox" name="checkbox-0 ">Check me
-//    </label>
-//</form>
+function nextQuestion()
+{
+	current_question += 1;
+	renderCurrentQuestion(current_question);
+}
 
+function lastQuestion()
+{
+	current_question -= 1;
+	renderCurrentQuestion(current_question);
+}
 
+function skipQuestion()
+{
+	current_question += 1;
+	renderCurrentQuestion(current_question);
+}
 
 function renderCurrentQuestion(qtr)
 {
@@ -128,14 +139,37 @@ function renderCurrentQuestion(qtr)
 		$('#form').html(temp);
 		$('#form').trigger('create');
 
-		// Render 'back' and 'next' buttons
-		var temp = ''
-		temp += '<div data-role="controlgroup" data-type="horizontal" text-align="center" margin-left="auto" margin-right="auto" align="center">'
-		temp += '<a href="" data-role="button" data-icon="carat-l" data-iconpos="left">Back</a>'
-		// Check to see if you should render a 'skip' button
-		temp += '<a href="" data-role="button">Skip</a>'
-		temp += '<a href="" data-role="button" data-icon="carat-r" data-iconpos="right">Next</a>'
-		$('#bottombuttons').html(temp);
-		$('#bottombuttons').trigger('create');
-
 }
+
+function renderBottomButtons()
+{
+	// Render 'back' and 'next' buttons
+	var temp = ''
+	temp += '<div data-role="controlgroup" data-type="horizontal" text-align="center" margin-left="auto" margin-right="auto" align="center">'
+	temp += '<a href="#" class="lastquestion" data-role="button" data-icon="carat-l" data-iconpos="left">Back</a>'
+	// Check to see if you should render a 'skip' button
+	temp += '<a href="#" class="skipquestion" data-role="button">Skip</a>'
+	temp += '<a href="#" class="nextquestion" data-role="button" data-icon="carat-r" data-iconpos="right">Next</a>'
+	$('#bottombuttons').html(temp);
+	$('#bottombuttons').trigger('create');
+}
+
+// DOM Ready =============================================================
+$(document).ready(function() {
+
+	// Populate the user table on initial page load
+	renderCurrentQuestion(current_question);
+
+	// Username link click
+	//$('#listpoll table tbody').on('click', 'td a.linkshowuser', showUserInfo);
+
+	// Add User button click
+	// $('#btnAddUser').on('click', addUser);
+
+	// Delete Poll link click
+    //$('#listpoll table tbody').on('click', 'td a.linkdeletepoll', deletePoll);
+    $('#bottombuttons div div').on('click', 'a.nextquestion', nextQuestion);
+    $('#bottombuttons div div').on('click', 'a.lastquestion', lastQuestion);
+    $('#bottombuttons div div').on('click', 'a.skipquestion', skipQuestion);
+
+});
