@@ -50,7 +50,7 @@ app.use(function(req, res, next){
 })
 
 
-app.use('/', routes);
+app.use('/', pollindex);
 app.use('/users', users);
 app.use('/test', test);
 app.use('/transient-login', transientlogin);
