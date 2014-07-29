@@ -3,9 +3,11 @@ html
 	head
 		title= title
 
-		//link(rel='stylesheet', href='/stylesheets/style.css')
+		link(rel='stylesheet', href='/stylesheets/style.css')
 
 		link(rel='stylesheet', href='/stylesheets/jquery.mobile-1.4.3.min.css')
+		//link(rel='stylesheet', href='/stylesheets/jquery.mobile.theme-1.4.3.min.css')
+
 
 
 		// JQUERY MUST BE INCLUDED BEFORE JQUERY MOBILE
@@ -15,9 +17,9 @@ html
 	body(class="ui-mobile-viewport ui-overlay-c")
 		div(data-role="page")
 			div(data-role="header", class="ui-header ui-bar-b")
-				h1
-					p poll.js
+					h1
+						a(class="heading-hyperlink" href="/") poll.js
 			div(data-role='content', class='ui-content')
 				block content
 			div(data-role='footer', class='ui-header ui-bar-b')
-				h4= 'built in node.js'
+					h4= 'built in node.js'
