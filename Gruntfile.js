@@ -129,7 +129,7 @@ module.exports = function(grunt) {
           overwrite: true
         },
         files: {
-          '': ['**/.js', '**/.json', '**/.md', '**/*.gitignore', 'bin/*', 'public/javascripts/*.js', 'public/dist/javascripts/*', 'public/stylesheets/*', 'routes/*', 'views/*', '!/public/javascripts/qjuery_mobile']
+          '': ['**/.js', '**/.json', '**/.md', '**/*.gitignore', 'bin/*', 'public/javascripts/*.js', 'public/dist/javascripts/*.js', 'public/stylesheets/*.css', 'routes/*', 'views/*', '!*.png', '!*.svg', '!*.jpg', '!*.jpeg']
         }
       },
       gruntfile: {
