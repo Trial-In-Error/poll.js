@@ -12,16 +12,10 @@ block content
 
 	script(type="text/javascript", id="data").
 		var poll = !{JSON.stringify(poll)};
-	if jsexists
+
+		//WARN: THIS COMMENT IS STRUCTURALLY NECESSARY OR ELSE THIS JADE FILE DOES NOT WORK
+
+	if locals.expose['client_poll.js']
 		script(src= '../dist/javascripts/client_poll.js')
 	else
 		script(src= '../javascripts/client_poll.js')
-
-
-//	#question
-//		table
-//			thead
-//				th Question Number
-//				th Question Prompt
-//				th Question Type
-//			tbody

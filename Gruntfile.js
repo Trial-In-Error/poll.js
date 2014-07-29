@@ -5,31 +5,31 @@ module.exports = function(grunt) {
     pkg: grunt.file.readJSON('package.json'),
     concat: {
       options: {
-        separator: ';'
+        //separator: ''
       },
       distcss: {
-        src: ['./public/dist/*.min.css'],
+        src: ['./public/dist/stylesheets/*.css'],
         dest: './public/dist/stylesheets/combined_style.css'
       }
     },
     clean: {
       dist: {
-        src: ['./logs/*', './*.log', './public/dist/**/*.min.js', './public/dist/**/*.min.css', '!*.gitignore']
+        src: ['./logs/*', './*.log', './public/dist/**/*.js', './public/dist/**/*.css', '!*.gitignore']
       }
     },
     uglify: {
       options: {
         banner: '/*! <%= pkg.name %> <%= grunt.template.today("dd-mm-yyyy") %> */\n',
         mangle: true, //see mangle: except: {} once you know more!
-        report: 'min'
+        //report: 'min'
       },
       dist: {
         files: [{
           expand: true, //what does this field do???
           cwd: './public/javascripts',
           src: '**/*.js',
-          dest: './public/dist/javascripts',
-          ext: '.min.js'
+          dest: './public/dist/javascripts'
+          //ext: '.min.js'
         }]
       }
     },
@@ -72,11 +72,11 @@ module.exports = function(grunt) {
       },
       dist:
       {
-        src: ['Gruntfile.js', 'public/javascripts/*.js', 'routes/*.js', 'test/**/*.js', 'bin/*.js', '!public/javascripts/*.min.js', '!public/javascripts/jquery-2.1.1.js', '!public/javascripts/jquery.mobile-1.4.3.js'],
+        src: ['Gruntfile.js', 'public/javascripts/*.js', 'routes/*.js', 'test/**/*.js', 'bin/*.js', '!public/javascripts/*.js', '!public/javascripts/jquery_2_1_1.js', '!public/javascripts/jquery_mobile_1_4_3.js'],
       },
       clientsrc:
       {
-        src: ['public/javascripts/*.js', '!public/javascripts/jquery-2.1.1.js', '!public/javascripts/jquery.mobile-1.4.3.js'],
+        src: ['public/javascripts/*.js', '!public/javascripts/jquery_2_1_1.js', '!public/javascripts/jquery_mobile_1_4_3.js'],
       },
       serversrc:
       {
@@ -173,16 +173,16 @@ module.exports = function(grunt) {
       dist: {
         expand: true, //what does this do??
         cwd: './public/stylesheets',
-        src: ['*.css', '!*.min.css'],
-        dest: './public/dist/stylesheets',
-        ext: '.min.css'
+        src: ['*.css'],
+        dest: './public/dist/stylesheets'
+        //ext: '.min.css'
       }
     }
   });
 
   grunt.registerTask('default', ['clean', 'uglify:dist', 'cssmin:dist']);
   grunt.registerTask('linter', ['jshint:dist']);
-  grunt.registerTask('dist', ['clean', 'stripJsonComments:packagejson', 'replace:json', 'lineending:dist', 'jshint:dist'/*, 'qunit'*/, 'uglify:dist', 'cssmin:dist', 'concat:cssmin']);
+  grunt.registerTask('dist', ['clean', 'stripJsonComments:packagejson', 'replace:json', 'lineending:dist', 'jshint:dist'/*, 'qunit'*/, 'uglify:dist', 'cssmin:dist', 'concat:distcss']);
 
   // https://github.com/gruntjs/grunt-contrib-clean/issues/32
   grunt.registerTask('cleaner', ['clean']);

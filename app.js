@@ -5,6 +5,7 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var util = require('util');
+var fs = require('fs');
 
 // Database
 var mongo = require('mongoskin');
@@ -12,7 +13,6 @@ var mongo = require('mongoskin');
 // Use the mongo database named 'polljs'
 var db = mongo.db("mongodb://localhost:27017/polljs", {native_parse:true});
 
-var routes = require('./routes/index');
 var users = require('./routes/users');
 var test = require('./routes/test');
 var transientlogin = require('./routes/transient-login');
@@ -21,6 +21,53 @@ var pollroute = require('./routes/pollroute');
 var poll = require('./routes/poll');
 
 var app = express();
+
+var exists_list = {};
+
+
+function build_min_list(exists_list){
+    var files_needed = ['client_polls.js', 'client_poll.js', 'jquery_mobile_1_4_3.js', 'jquery_2_1_1.js', 'combined_style.css'];
+
+    console.log('Looking from: '+String(__dirname));
+
+    for (var entry in files_needed) {
+        //console.log('Looking for '+files_needed[entry]);
+
+        // inefficient!
+        var exists = false;
+        console.log(files_needed[entry].split(".").slice(-1)[0]);
+        if (files_needed[entry].split(".").slice(-1)[0] === 'js') {
+            console.log('Looked for '+files_needed[entry]);
+
+            exists = fs.existsSync(path.join(__dirname + '/public/dist/javascripts/'+files_needed[entry]));
+            if(exists) {
+                console.log('Found it!');
+            } else {
+                console.log('Didn\'t find it!');
+            }
+        } else if (files_needed[entry].split(".").slice(-1)[0] === 'css') {
+            console.log('Looked for '+files_needed[entry]);
+            exists = fs.existsSync(path.join(__dirname + '/public/dist/stylesheets/'+files_needed[entry]));
+            if(exists) {
+                console.log('Found it!');
+            } else {
+                console.log('Didn\'t find it!');
+            }
+        }else {
+            console.log('Did not find '+files_needed[entry]);
+        }
+        exists_list[files_needed[entry]] = exists;
+    }
+    return exists_list;
+};
+
+
+
+var passin = build_min_list(exists_list);
+
+//console.log(exists_list);
+
+// var passin = exists_list;
 
 var globaljsexists;
 var clientpollsjsexists;
@@ -38,7 +85,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(function(req, res, next){
-  res.locals.expose = {};
+  res.locals.expose = {exists: passin};
   // you could alias this as req or res.expose
   // to make it shorter and less annoying
   next();
