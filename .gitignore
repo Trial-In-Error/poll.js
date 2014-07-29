@@ -10,6 +10,9 @@
 # Ignore minified .js files
 /public/dist/javascripts/*
 
+# Ignore minified .css files
+/public/dist/stylesheets/*
+
 # Ignore node.js runtime data
 pids
 *.pid

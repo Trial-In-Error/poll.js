@@ -5,13 +5,6 @@ html
 
 		
 
-		if locals.expose.exists['combined_style.css']
-			link(rel='stylesheet', href='/dist/stylesheets/combined_style.css')
-		else 
-			link(rel='stylesheet', href='/stylesheets/jquery.mobile-1.4.3.css')
-			link(rel='stylesheet', href='/stylesheets/style.css')
-
-
 		// JQUERY MUST BE INCLUDED BEFORE JQUERY MOBILE
 		// JQUERY NOT RESILIANT TO BUILD PROCESS
 		if locals.expose.exists['jquery_2_1_1.js']
@@ -19,11 +12,17 @@ html
 		else
 			script(src='/javascripts/jquery_2_1_1.js')
 
+		if locals.expose.exists['combined_style.css']
+			link(rel='stylesheet', href='/dist/stylesheets/combined_style.css')
+		else 
+			link(rel='stylesheet', href='/stylesheets/jquery.mobile-1.4.3.css')
+			link(rel='stylesheet', href='/stylesheets/style.css')
+
 
 		if locals.expose.exists['jquery_mobile_1_4_3.js']
 			script(src='/dist/javascripts/jquery_mobile_1_4_3.js')
 		else
-			script(src='/dist/javascripts/jquery_mobile_1_4_3.js')
+			script(src='/javascripts/jquery_mobile_1_4_3.js')
 
 
 		<meta name="viewport" content="width=device-width, initial-scale=1">
