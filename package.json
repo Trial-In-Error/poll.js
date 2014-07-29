@@ -29,6 +29,7 @@
     "grunt-contrib-qunit": "*",
     "grunt-contrib-watch": "*",
     "grunt-contrib-concat": "*",
+    "grunt-contrib-cssmin": "*",
     "grunt-forever": "*",
     "grunt-strip-json-comments": "*",
     "grunt-jsbeautifier": "^0.2.7",

@@ -3,16 +3,20 @@ html
 	head
 		title= title
 
+
 		link(rel='stylesheet', href='/stylesheets/style.css')
 
-		link(rel='stylesheet', href='/stylesheets/jquery.mobile-1.4.3.min.css')
-		//link(rel='stylesheet', href='/stylesheets/jquery.mobile.theme-1.4.3.min.css')
+		link(rel='stylesheet', href='/dist/stylesheets/jquery.mobile-1.4.3.min.css')
+		
 
 
 
 		// JQUERY MUST BE INCLUDED BEFORE JQUERY MOBILE
-		script(src='http://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js')
+		// JQUERY NOT RESILIANT TO BUILD PROCESS
+		script(src='../dist/javascripts/jquery-2.1.1.min_official.js')
 		script(src='../dist/javascripts/jquery_mobile/jquery.mobile-1.4.3.min.js')
+
+
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 	body(class="ui-mobile-viewport ui-overlay-c")
 		div(data-role="page")

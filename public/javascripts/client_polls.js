@@ -37,7 +37,7 @@ function populateTable() {
 		// Inject the whole content string into our existing HTML table
 		$('#listpoll ul').html(tableContent);
 		//$('#listpoll ul').trigger('create');
-		$("#listpoll ul").listview("refresh");
+		$('#listpoll ul').listview('refresh');
 	});
 }
 
