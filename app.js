@@ -9,9 +9,8 @@ var util = require('util');
 // Database
 var mongo = require('mongoskin');
 
-// Rename this database!
-//WARN: Rename this database.
-var db = mongo.db("mongodb://localhost:27017/nodetest2", {native_parse:true});
+// Use the mongo database named 'polljs'
+var db = mongo.db("mongodb://localhost:27017/polljs", {native_parse:true});
 
 var routes = require('./routes/index');
 var users = require('./routes/users');

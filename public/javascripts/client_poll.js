@@ -141,8 +141,7 @@ function renderCurrentQuestion(qtr)
 						String(poll.question_list[current_question].type.response_list[entry].body)+'</label>'
 			} else {
 				// Draw check boxes
-				temp += '<input type="checkbox" name="checkbox-'+
-						counter+'" id="checkbox-'+counter+'">'
+				temp += '<input type="checkbox" name="checkbox" id="checkbox-'+counter+'">'
         		temp += '<label for="checkbox-'+counter+'">'+
         				String(poll.question_list[current_question].type.response_list[entry].body)+'</label>'
 			}

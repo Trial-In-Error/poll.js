@@ -12,6 +12,11 @@ To install:
 
 Note that `npm run godbless` will start the server but not the database. This is useful for debugging changes without having to deal with `mongodb` and `forever`.
 
+Adding a Poll
+---------------------------------
+1. Write a poll as a valid `.json` file, corresponding to the data model in `datamodel.md`.
+2. From the terminal, `mongoimport --db polljs --collection polldb --jsonArray < pollname.json`.
+
 Using Grunt
 ---------------------------------
 This project is built with grunt. Most files have two versions, one called `foo_dev`, and one called `foo`. Make edits to `foo_dev` and then, from the project directory, type `grunt` to have the edits moved into `foo` and formatted for deployment. This will minify javascript, remove comments from JSON, check line endings, etc. In other words, good stuff! Note that on Windows, you may have to type `grunt.cmd`. Additionally, if using `grunt watch`, the work done by `grunt` is done automatically.
