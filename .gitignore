@@ -1,3 +1,5 @@
+# Note: Underscores in directory names seem to make in-traversable?
+
 # Ignore top-level logs (typically npm-debug.log)
 *.log
 
@@ -14,7 +16,7 @@
 /public/dist/stylesheets/*
 
 # Ignore 'unknown use' files saved locally only in case of 404's
-/public/stylesheets/unknown_use
+/public/stylesheets/unknown/*
 
 # Ignore node.js runtime data
 pids
