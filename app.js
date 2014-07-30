@@ -23,6 +23,7 @@ var poll = require('./routes/poll');
 // To support https, this will have to change.
 //WARN: Support HTTPS by changing this as per:
 //https://github.com/strongloop/express/wiki/Migrating-from-2.x-to-3.x
+//http://www.hacksparrow.com/express-js-https.html
 var app = express();
 
 var exists_list = {};
