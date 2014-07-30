@@ -5,7 +5,6 @@ MongoDB
 ---------
 The database consists of several collections.
 
-* `userlist`, from a prior tutorial. This should be removed soon.
 * `userdb`, containing the users for poll.js.
 * `polldb`, containing the polls for poll.js.
 
@@ -20,7 +19,7 @@ I'm considering tacking the resulting answers onto `Response` objects. This will
 * `Poll` object
 	* `name` string for description
 	* `opening_slide` question object of type `not_a_question`, guaranteed to be first
-	* `closing_slide` queston object of type `not_a_question`, guaranteed to be last
+	* `closing_slide` question object of type `not_a_question`, guaranteed to be last
 	* `id` number for lookup
 	* `open` boolean; open or closed, presently?
 	* `owner` number; user id of poll creator
