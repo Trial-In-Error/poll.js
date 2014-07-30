@@ -26,7 +26,12 @@ This project is built with grunt. Most files have two versions, one called `foo_
 * `grunt linter` lints all javascript files.
 * `grunt ender` fixes all files' line endings to unix standard.
 * `grunt watch` automatically lints, uglifies, etc., as files are edited.
-    * Note that `grunt watch` is currently not supported, and is likely to break things! Don't use it! 
+    * Note that `grunt watch` is currently not supported, and is likely to break things! Don't use it!
+
+
+The Future
+---------------------------------
+* http://www.w3schools.com/html/html5_geolocation.asp
 
 Known Issues
 ---------------------------------
