@@ -19,6 +19,14 @@ var pollindex = require('./routes/pollindex');
 var pollroute = require('./routes/pollroute');
 var poll = require('./routes/poll');
 
+// In prior versions of Express, this was a call express.createServer();
+// To support https, this will have to change.
+//WARN: Support HTTPS by changing this as per:
+//https://github.com/strongloop/express/wiki/Migrating-from-2.x-to-3.x
+//http://www.hacksparrow.com/express-js-https.html
+//http://stackoverflow.com/questions/5998694/how-to-create-an-https-server-in-node-js
+//http://docs.nodejitsu.com/articles/HTTP/servers/how-to-create-a-HTTPS-server
+//http://stackoverflow.com/questions/11744975/enabling-https-on-express-js
 var app = express();
 
 var exists_list = {};
