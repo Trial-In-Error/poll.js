@@ -13,6 +13,9 @@
 # Ignore minified .css files
 /public/dist/stylesheets/*
 
+# Ignore 'unknown use' files saved locally only in case of 404's
+/public/stylesheets/unknown_use
+
 # Ignore node.js runtime data
 pids
 *.pid
