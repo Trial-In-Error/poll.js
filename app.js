@@ -27,7 +27,7 @@ var poll = require('./routes/poll');
 //http://stackoverflow.com/questions/5998694/how-to-create-an-https-server-in-node-js
 //http://docs.nodejitsu.com/articles/HTTP/servers/how-to-create-a-HTTPS-server
 //http://stackoverflow.com/questions/11744975/enabling-https-on-express-js
-var app = express();
+//var app = express();
 
 var exists_list = {};
 
