@@ -15,7 +15,7 @@ module.exports = {
 
             console.log(files_needed[entry].split(".").slice(-1)[0]);
             if (files_needed[entry].split(".").slice(-1)[0] === 'js') {
-                console.log('Looked for '+String(path.join(__dirname + '/../public/dist/javascripts'+files_needed[entry])));
+                console.log('Looked for '+String(path.join(__dirname + '/../public/dist/javascripts/'+files_needed[entry])));
 
                 exists = fs.existsSync(path.join(__dirname + '/../public/dist/javascripts/'+files_needed[entry]));
                 if(exists) {

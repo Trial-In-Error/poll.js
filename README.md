@@ -42,3 +42,7 @@ The Future
 Known Issues
 ---------------------------------
 * `server_stdout.log` contains color escape codes and other garbage.
+* Skype defaults to listening on port 443, blocking server.js from starting the HTTP server.
+	* Right now, this crashes fatally for both servers.
+* MongoDB under Mac OSX will not get as many file descriptors as it would like.
+	* See: http://docs.mongodb.org/manual/reference/ulimit/
