@@ -32,6 +32,12 @@ This project is built with grunt. Most files have two versions, one called `foo_
 The Future
 ---------------------------------
 * http://www.w3schools.com/html/html5_geolocation.asp
+* http://stackoverflow.com/questions/15051712/how-to-do-authentication-with-a-rest-api-right-browser-native-clients
+* http://stackoverflow.com/questions/176264/whats-the-difference-between-a-uri-and-a-url/1984225#1984225
+* http://stackoverflow.com/questions/630453/put-vs-post-in-rest/630475#630475
+* http://stackoverflow.com/questions/107390/whats-the-difference-between-a-post-and-a-put-http-request
+* http://stackoverflow.com/questions/1058880/can-iphone-web-apps-get-gps-position
+* http://ionicframework.com/getting-started/
 
 Known Issues
 ---------------------------------
