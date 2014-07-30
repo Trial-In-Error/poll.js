@@ -48,5 +48,7 @@ Known Issues
 	* See: http://docs.mongodb.org/manual/reference/ulimit/
 * None of the keys are packaged with the app. Generate them like so:
 	`openssl genrsa -out polljs-key.pem 1024`
+
 	`openssl req -new -key polljs-key.pem -out certrequest.csr`
+	
 	`openssl x509 -req -in certrequest.csr -signkey polljs-key.pem -out polljs-cert.pem`
