@@ -13,29 +13,28 @@ module.exports = {
             //WARN: inefficient!
             var exists = false;
 
-            console.log(files_needed[entry].split(".").slice(-1)[0]);
-            if (files_needed[entry].split(".").slice(-1)[0] === 'js') {
-                console.log('Looked for '+String(path.join(__dirname + '/../public/dist/javascripts/'+files_needed[entry])));
-
+            //console.log(files_needed[entry].split('.').slice(-1)[0]);
+            if (files_needed[entry].split('.').slice(-1)[0] === 'js') {
+                //console.log('Looked for '+String(path.join(__dirname + '/../public/dist/javascripts/'+files_needed[entry])));
                 exists = fs.existsSync(path.join(__dirname + '/../public/dist/javascripts/'+files_needed[entry]));
-                if(exists) {
+                /*if(exists) {
                     console.log('Found it!');
                 } else {
                     console.log('Didn\'t find it!');
-                }
-            } else if (files_needed[entry].split(".").slice(-1)[0] === 'css') {
-                console.log('Looked for '+files_needed[entry]);
-                exists = fs.existsSync(path.join(__dirname + '../public/dist/stylesheets/'+files_needed[entry]));
-                if(exists) {
+                }*/
+            } else if (files_needed[entry].split('.').slice(-1)[0] === 'css') {
+                //console.log('Looked for '+String(path.join(__dirname + '/../public/dist/javascripts/'+files_needed[entry])));
+                exists = fs.existsSync(path.join(__dirname + '/../public/dist/stylesheets/'+files_needed[entry]));
+                /*if(exists) {
                     console.log('Found it!');
                 } else {
                     console.log('Didn\'t find it!');
-                }
+                }*/
             }else {
-                console.log('Did not find '+files_needed[entry]);
+                //console.log('Cannot find '+files_needed[entry] + ' because the extension .'+ files_needed[entry].split('.').slice(-1)[0] + ' is not known.');
             }
             exists_list[files_needed[entry]] = exists;
         }
         return exists_list;
     }
-}
+};
