@@ -57,7 +57,7 @@ I'm considering tacking the resulting answers onto `Response` objects. This will
 		* `sound`
 	* `id` number for look-up
 	* `demographics_name` string specifying what this question describes (age, gender); used to set User.demographcs(`demographics_name`) = `response_chosen.body()`. In short, questions with `demographics_name` set to non-null will edit Users' demographics fields. 
-	* `next` number of next question's `id`; allows branching; defaults to `this.id` + 1
+	* `next` the `id` label to jump to when this question is answered; overwritten by `response.next`
 
 * `Response` object describing a single possible response to a single question
 	* `Body` object containing some text, image, sound, video, etc.

@@ -1,0 +1,181 @@
+{
+	"name": "Winter is Here",
+	"id": "10",
+	"open": true,
+	"owner": "#swedish_summer_sucks",
+	"allow_skipping": false,
+	"question_list":
+	[
+		{
+			"body": "Welcome to this poll!",
+			"type":
+			{
+				"name": "not_a_question"
+			},
+			"opening_slide": true
+		},
+		{
+			"body": "When are these questions explainable?",
+			"type":
+			{
+				"name": "pick_n",
+				"n": 1,
+				"response_list":
+				[
+					{
+						"body": "Never.",
+						"answers": [],
+						"always_explainable": false,
+						"situationally_explainable": false
+					},
+					{
+						"body": "When selected.",
+						"answers": [],
+						"always_explainable": false,
+						"explain_text": "Enter some stuff.",
+						"situationally_explainable": true
+					},
+					{
+						"body": "Always",
+						"answers": [],
+						"always_explainable": true,
+						"explain_text": "Enter more stuff.",
+						"situationally_explainable": true
+					}
+				]
+			}
+		},
+		{
+			"body": "This page is the only one that's skippable.",
+			"type":
+			{
+				"name": "not_a_question"
+			},
+			"allow_skipping": true
+		},
+		{
+			"body": "Please select between 2 and 5 words.",
+			"type":
+			{
+				"name": "pick_n",
+				"n": 5,
+				"require": 2,
+				"response_list":
+				[
+					{
+						"body": "Zero.",
+						"answers": [],
+						"always_explainable": false,
+						"situationally_explainable": false
+					},
+					{
+						"body": "Lilt.",
+						"answers": [],
+						"always_explainable": false,
+						"situationally_explainable": false
+					},
+					{
+						"body": "Wiser.",
+						"answers": [],
+						"always_explainable": false,
+						"situationally_explainable": false
+					},
+					{
+						"body": "Orange.",
+						"answers": [],
+						"always_explainable": false,
+						"situationally_explainable": false
+					},
+					{
+						"body": "Agrarian.",
+						"answers": [],
+						"always_explainable": false,
+						"situationally_explainable": false
+					},
+					{
+						"body": "Silly.",
+						"answers": [],
+						"always_explainable": false,
+						"situationally_explainable": false
+					},
+					{
+						"body": "Obelisk.",
+						"answers": [],
+						"always_explainable": false,
+						"situationally_explainable": false
+					},
+					{
+						"body": "Quaff.",
+						"answers": [],
+						"always_explainable": false,
+						"situationally_explainable": false
+					}
+				]
+			}
+		},
+		{
+			"body": "Pick your two favorite.",
+			"type":
+			{
+				"name": "pick_n",
+				"n": 2,
+				"require": 2,
+				"response_list":
+				[
+					{
+						"body": "Coffee.",
+						"answers": [],
+						"always_explainable": false,
+						"situationally_explainable": false
+					},
+					{
+						"body": "Video-games.",
+						"answers": [],
+						"always_explainable": false,
+						"situationally_explainable": false
+					},
+					{
+						"body": "Cats.",
+						"answers": [],
+						"always_explainable": false,
+						"situationally_explainable": false
+					},
+					{
+						"body": "Beer.",
+						"answers": [],
+						"always_explainable": false,
+						"situationally_explainable": false
+					}
+				]
+			},
+			"next": "slider"
+		},
+		{
+			"body": "This question should have been passed over by 'next'.",
+			"type":
+			{
+				"name": "not_a_question"
+			}
+		},
+		{
+			"body": "Explain what you think of this slider.",
+			"type":
+			{
+				"name": "slider",
+				"min": -5,
+				"max": 5,
+				"step": 1.5,
+				"up_and_up": true,
+				"response_list":
+				[
+					{
+						"answers": [],
+						"always_explainable": true
+					}
+				]
+			},
+			"id": "slider",
+			"closing_slide": true
+		}
+	]
+}

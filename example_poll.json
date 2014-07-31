@@ -3,6 +3,7 @@
 	"id": "5",
 	"open": true,
 	"owner": "adminefarious",
+	"allow_skipping": true,
 	"question_list":
 	[
 		{
@@ -11,8 +12,6 @@
 			{
 				"name": "pick_n",
 				"n": 1,
-				"allow_zero": false,
-				"require_n": true,
 				"response_list":
 				[
 					{
@@ -29,7 +28,7 @@
 					}
 				]
 			},
-			"id": 0
+			"opening_slide": true
 		},
 		{
 			"body": "Pick all of the answers that are awesome.",
@@ -37,8 +36,7 @@
 			{
 				"name": "pick_n",
 				"n": 4,
-				"allow_zero": true,
-				"require_n": false,
+				"require": 0,
 				"response_list":
 				[
 					{
@@ -85,7 +83,8 @@
 						"situationally_explainable": false
 					}
 				]
-			}
+			},
+			"closing_slide": true
 		}
 	]
 }

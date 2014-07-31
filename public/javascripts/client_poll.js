@@ -1,70 +1,57 @@
-var current_question = 0;
-//var value = Math.floor((Math.random() * 1000000)+1);
-//var user_token = ('00000000' + value).slice(-8);
+var current_question;
+var value = Math.floor((Math.random() * 1000000)+1);
+var user_token = ('00000000' + value).slice(-8);
 
 
 
 //eval(alert($('#data')[0].innerHTML)); // jshint ignore:line
 eval($('#data')[0].innerHTML); // jshint ignore:line
 
-/*for (entry in Object.keys(poll.question_list)) {
-	if(poll[String(entry)] !== undefined) {
-		alert(entry+': '+poll[entry]);
-	}
-}*/
 
-//$('#question p').text('This poll has the hash: '+ poll._id);
-
-function tableOfQuestions()
-{
-	var tableContent = '';
-	for (var entry in poll.question_list) {
-	//	alert(entry);
-	//	alert(poll['question_list']['body'])
-
-	//	if(poll.question_list[String(entry)] !== undefined) {
-	//		alert(entry+': '+poll.question_list[entry]);
-	//	}
-
-		tableContent += '<tr>';
-		tableContent += '<td>' + String(entry) + '</td>';
-		tableContent += '<td>' + poll.question_list[entry].body + '</td>';
-		tableContent += '<td>' + poll.question_list[entry].type.name + '</td>';
-		tableContent += '</tr>';
-	}
-	$('#question table tbody').html(tableContent);
+//WARN: This is not in use right now; it ASSUMES that you support HTML5 storage!
+function supports_html5_storage() {
+  try {
+    return 'localStorage' in window && 'sessionStorage' in window && window['sessionStorage'] !== null && window['localStorage'] !== null;
+  } catch (e) {
+    return false;
+  }
 }
 
+var can_store = supports_html5_storage();
 
-
-
-//temp += '<form><label><input type = "checkbox" name="checkbox-0">Check me.</label></form>'
-
-/*$('#createButton').bind('click', function() {
-    $('#buttonPlaceHolder').append('<a href="#" data-role="button">'+$('#buttonText').val()+'</a>');
-
-    // refresh jQM controls
-    $('#home').trigger('create');
-});*/
-
-function demoButtons(){
-	var temp = '';
-	temp += '<fieldset data-role="controlgroup">';
-	temp += '<legend>Vertical:</legend>';
-	temp += '<input type="radio" name="radio-choice-v-2" id="radio-choice-v-2a" value="on" checked="checked">';
-	temp += '<label for="radio-choice-v-2a">One</label>';
-	temp += '<input type="radio" name="radio-choice-v-2" id="radio-choice-v-2b" value="off">';
-	temp += '<label for="radio-choice-v-2b">Two</label>';
-	temp += '<input type="radio" name="radio-choice-v-2" id="radio-choice-v-2c" value="other">';
-	temp += '<label for="radio-choice-v-2c">Three</label>';
-	temp += '</fieldset>';
-	temp += '</form>';
-	$('#form').html(temp);
-	$('#form').trigger('create');
+function store_poll() {
+	if (can_store) {
+		window.localStorage['poll'+poll._id] = JSON.stringify(poll);
+		window.localStorage['current'+poll._id] = JSON.stringify(current_question);
+	} else {
+		//UNTESTED: fall back on window.namespace clobbering
+		window['polljspoll'+poll._id] = poll;
+		window['polljscurrent'+poll._id] = current_question;
+	}
 }
 
-function renderCurrentQuestion(qtr)
-{
+function load_poll() {
+	if(can_store) {
+		poll = JSON.parse(window.localStorage['poll'+window.location.pathname.split('poll/').slice(-1)]);
+		current_question = parseInt(window.localStorage['current'+window.location.pathname.split('poll/').slice(-1)]);
+	} else {
+		//UNTESTED: load from window.namespace
+		poll = window['polljspoll'+poll._id];
+		current_question = window['polljscurrent'+poll._id];
+	}
+}
+
+function poll_is_stored() {
+	if(can_store) {
+		return typeof window.localStorage["poll"+poll._id] !== 'undefined';
+	} else {
+		//UNTESTED: return window.namespace's existance
+		return (typeof window['polljspoll'+poll._id] !== 'undefined'
+			&& typeof window['polljscurrent'+poll._id] !== 'undefined');
+	}
+}
+
+function renderCurrentQuestion(qtr) {
 	var temp = '';
 	temp += '<form>';
 	current_question = qtr;
@@ -84,15 +71,17 @@ function renderCurrentQuestion(qtr)
 
 				//MISSING OPEN FORM!!!
 
+				//WARN: WAIT, AREN'T COUNTER AND ENTRY THE FUCKING SAME THING?
+
 				// Draw radio buttons
 				//alert(poll.question_list[current_question].type.response_list[entry].body);
-				temp += '<input type="radio" name="radio-choice" id="radio-choice-'+counter+'" value="off">';
-				temp += '<label for="radio-choice-'+counter+'">'+
+				temp += '<input type="radio" name="pick-choice" id="pick-choice-'+counter+'" value="off">';
+				temp += '<label for="pick-choice-'+counter+'">'+
 						String(poll.question_list[current_question].type.response_list[entry].body)+'</label>';
 			} else {
 				// Draw check boxes
-				temp += '<input type="checkbox" name="checkbox" id="checkbox-'+counter+'">';
-        		temp += '<label for="checkbox-'+counter+'">'+
+				temp += '<input type="checkbox" name="checkbox" id="pick-choice-'+counter+'">';
+        		temp += '<label for="pick-choice-'+counter+'">'+
         				String(poll.question_list[current_question].type.response_list[entry].body)+'</label>';
 			}
 				// It should update entry.answers <---this happens in DOM ready
@@ -104,10 +93,10 @@ function renderCurrentQuestion(qtr)
 			//alert('min: '+ String(poll.question_list[current_question].type.min))
 			//alert('max: '+ String(poll.question_list[current_question].type.max))
 			// Draw slider
-			// TERRIBLE AWFUL DIRTY HACK: ASSUMED THAT STARTING POSITION = MIN + MAX / 2
+			// WARN: TERRIBLE AWFUL DIRTY HACK: ASSUMED THAT STARTING POSITION = MIN + MAX / 2
 
 			temp += '<form class="full-width-slider">';
-			temp += '<input type="range" name="slider-1" id="slider-1"';
+			temp += '<input type="range" name="slider" id="slider"';
 			temp += 'min="'+String(poll.question_list[current_question].type.min)+'"';
 			temp += 'max="'+String(poll.question_list[current_question].type.max)+'"';
 			temp += 'value="'+String((poll.question_list[current_question].type.max - poll.question_list[current_question].type.min + 1)/2)+'"';
@@ -120,129 +109,237 @@ function renderCurrentQuestion(qtr)
 		temp += '</form>';
 		$('#form').html(temp);
 		$('#form').trigger('create');
+		modify_current_question();
 
 }
 
-function validateCurrentQuestion()
-{
+function modify_current_question() {
+	for (var counter in poll.question_list[current_question].type.response_list) {
+		if (poll.question_list[current_question].type.name === "pick_n") {
+			if( typeof poll.question_list[current_question].type.response_list[counter] !== 'undefined' && typeof poll.question_list[current_question].type.response_list[counter].answers[0] !== 'undefined') {
+				$('#pick-choice-'+String(counter)).prop('checked', value);
+				$("#pick-choice-"+String(counter)).checkboxradio("refresh");
+				//alert('Matched for counter '+counter+' and question '+current_question+'.');
+			} else {
+				//alert('No match for counter '+counter+' and question '+current_question+'.');
+			}
+		} else if (poll.question_list[current_question].type.name === "slider") {
+			if( typeof poll.question_list[current_question].type.response_list[0] !== 'undefined' && typeof poll.question_list[current_question].type.response_list[0].answers[0] !== 'undefined') {
+				$("#slider").val(poll.question_list[current_question].type.response_list[0].answers[0][1]);
+				$( "#slider" ).slider("refresh");
+			}	
+		}
+	}
+}
+
+
+function validateCurrentQuestion(forward) {
 	var counter = 0;
 	if (poll.question_list[current_question].type.name === 'pick_n') {
-			if (poll.question_list[current_question].type.n === 1) {
-				for (i = 0; i < poll.question_list[current_question].type.response_list.length; i += 1) {
-					if($('#radio-choice-'+String(i)).is(':checked')) {
-						counter += 1;	
-					}
-				}
-				if(counter === 1) {
-					return true;
-				} else {
-					if(counter === 0) {
+		for (i = 0; i < poll.question_list[current_question].type.response_list.length; i += 1) {
+			if($('#pick-choice-'+String(i)).is(':checked')) {
+				counter += 1;	
+			}
+		}
+		if (poll.question_list[current_question].type.n === 1) {
+			if(counter === 1) {
+				return true;
+			} else {
+				if(counter === 0) {
+					if (forward) {
 						alert('Please pick an option.');
-					} else {
+					}
+				} else {
+					if (forward) {
 						alert('Please pick only one option.');
 					}
 				}
-			} else {
-				for (var entry in $('#form div div')) {
-					if(entry.value === 'on') {
-						counter += 1;	
-					}
-				}
-				if(counter === poll.question_list[current_question].type.n) {
-					return true;
-				} else if (counter === 0 && poll.question_list[current_question].type.allow_zero) {
-					return true;
-				//} else if (counter > 0 && counter < n poll.question_list[current_question].type.require_n) {
-				//	return true;
-				} else {
-					return false;
-				}
 			}
+		} else if (poll.question_list[current_question].type.n > 1){
+			// STUB: You should really ASSERT that counter >= 0 and counter <= ...response_list.length
+			if(counter < 0) {
+				if (forward) {
+					alert('Something has gone terribly wrong; you\'ve selected less than zero answers.');	
+				}
+			} else if (counter > poll.question_list[current_question].type.response_list.length) {
+				if (forward) {
+					alert('Something has gone terribly wrong; you\'ve selected more answers than exist.');
+				}
+			} else if (counter > poll.question_list[current_question].type.n) {
+				if (forward) {
+					alert('Please select no more than '+poll.question_list[current_question].type.n+' options.');
+				}
+			} else if (counter < poll.question_list[current_question].type.require) {
+				if (forward) {
+					alert('Please select at least '+poll.question_list[current_question].type.require+' options.');
+				}
+			} else {
+				return true;
+			}
+			return false;
 		}
-		if (poll.question_list[current_question].type.name === 'slider') {
-			return true;
-		}
+	} else if (poll.question_list[current_question].type.name === 'slider') {
+		// STUB: Check to see if slider is in valid range and divisible by increment. It's silly, I know...
+		return true;
+	} else if (poll.question_list[current_question].type.name === 'not_a_question') {
+		return true;
+	}
 }
 
-function renderBottomButtons()
-{
+function updateBottomButtons() {
+	if(poll.question_list[current_question].closing_slide) {
+		//$('#nextquestion').addClass('ui-state-disabled');
+		$('#nextquestion').hide();
+		temp = $('#verybottombuttons div').html();
+		temp += '<a href="/polls" class="submit" id="submit" data-role="button" data-icon="carat-r" data-iconpos="right">Submit</a>';
+		$('#verybottombuttons div').html(temp);
+		$('#verybottombuttons div').trigger('create');
+		$('#skipquestion').addClass('ui-state-disabled');
+		$('#lastquestion').removeClass('ui-state-disabled');
+	} else if(poll.question_list[current_question].opening_slide) {
+		$('#nextquestion').removeClass('ui-state-disabled');
+		$('#skipquestion').removeClass('ui-state-disabled');
+		$('#lastquestion').addClass( 'ui-state-disabled' );
+	} else {
+		$('#nextquestion').removeClass('ui-state-disabled');
+		$('#skipquestion').removeClass('ui-state-disabled');
+		$('#lastquestion').removeClass('ui-state-disabled');
+	}
+	if ( !poll.allow_skipping && (typeof poll.question_list[current_question].allow_skipping === 'undefined' || !poll.question_list[current_question].allow_skipping)) {
+		// STUB: Consider hiding the text on Skip in this case
+		$('#skipquestion').addClass('ui-state-disabled');
+		$('#skipquestion').innerHTML = '';
+	}
+	if ( !poll.allow_skipping && (typeof poll.question_list[current_question].allow_skipping !== 'undefined' && poll.question_list[current_question].allow_skipping)) {
+		$('#skipquestion').removeClass('ui-state-disabled');
+		$('#skipquestion').innerHTML = 'Skip';
+	}
+}
+
+function findWithAttr(array, attr, value) {
+    for(var i = 0; i < array.length; i += 1) {
+        if(array[i][attr] === value) {
+            return i;
+        }
+    }
+}
+function renderBottomButtons() {
 	// Render 'back' and 'next' buttons
 	var temp = '';
-	temp += '<div data-role="controlgroup" data-type="horizontal" text-align="center" margin-left="auto" margin-right="auto" align="center">';
-	temp += '<a href="#" class="lastquestion ui-state-disabled" id="lastquestion" data-role="button" data-icon="carat-l" data-iconpos="left">Back</a>';
+	temp += '<div id="verybottombuttons" data-role="controlgroup" data-type="horizontal" text-align="center" margin-left="auto" margin-right="auto" align="center">';
+	temp += '<a href="#" class="lastquestion" id="lastquestion" data-role="button" data-icon="carat-l" data-iconpos="left">Back</a>';
+
 	// Check to see if you should render a 'skip' button
 	temp += '<a href="#" class="skipquestion" id="skipquestion" data-role="button">Skip</a>';
 	temp += '<a href="#" class="nextquestion" id="nextquestion" data-role="button" data-icon="carat-r" data-iconpos="right">Next</a>';
 	$('#bottombuttons').html(temp);
 	//$('#lastquestion').button();
 	$('#bottombuttons').trigger('create');
+	updateBottomButtons();
+}
+
+function answer_question(forward) {
+	if(validateCurrentQuestion(forward)) {
+		if(poll.question_list[current_question].type.name === 'pick_n') {
+			for (var i = 0; i < poll.question_list[current_question].type.response_list.length; i += 1) {
+				if ($('#pick-choice-'+String(i)).is(':checked')) {
+					//STUB: This is where you'd save the variable explanation fields, too, if present
+					poll.question_list[current_question].type.response_list[i].answers = [[user_token, true]];
+	
+					if(poll.question_list[current_question].type.n === 1) {
+						for (var j = 0; j < poll.question_list[current_question].type.response_list.length; j += 1) {
+							if(i !== j) {
+								poll.question_list[current_question].type.response_list[j].answers = [];
+							}
+						}
+						if (forward && typeof poll.question_list[current_question].type.response_list[i]['next'] !== 'undefined') {
+							current_question = poll.question_list[current_question].type.response_list[i]['next'];
+							return true;
+						}
+					}
+					
+				} else {
+					poll.question_list[current_question].type.response_list[i].answers = [];
+				}
+			}
+		} else if(poll.question_list[current_question].type.name === 'slider') {
+			poll.question_list[current_question].type.response_list[0].answers = [[user_token, $('#slider').val()]];
+		}
+		if (forward && typeof poll.question_list[current_question]['next'] !== 'undefined') {
+			current_question = findWithAttr(poll.question_list, 'id', poll.question_list[current_question]['next']);
+		} else if (forward) {
+			current_question += 1;
+		} else {
+			current_question -= 1;
+		}
+		return true
+	} else {
+		if (!forward) {
+			current_question -= 1;	
+		}
+		return false
+	}
+}
+
+function skip_question() {
+	if(poll.question_list[current_question].type.name === 'pick_n') {
+		for (var i = 0; i < poll.question_list[current_question].type.response_list.length; i += 1) {
+				poll.question_list[current_question].type.response_list[i].answers = [[user_token, undefined]];
+		}
+	} else if(poll.question_list[current_question].type.name === 'slider') {
+		poll.question_list[current_question].type.response_list[0].answers = [[user_token, undefined]];
+	}
 }
 
 //THESE THREE FUNCTIONS NEED:
-	//INPUT VALIDATION
 	//ANSWER LOGGING
 	//AWARENESS OF THE 'end of the line'
 	//AWARENESS OF THE 'beginning of the line'
-function nextQuestion()
-{
-	if(validateCurrentQuestion())
-	{
-		current_question += 1;
-		$('#lastquestion').removeClass( 'ui-state-disabled' );
-		if(current_question >= poll.question_list.length-1)
-		{
-			//2 vs 3 => true
-			$('#nextquestion').addClass('ui-state-disabled');
-			$('#skipquestion').addClass('ui-state-disabled');
-		}
+function nextQuestion() {
+	if(answer_question(true)) {
+		store_poll();
+		updateBottomButtons();
 		renderCurrentQuestion(current_question);
 	}
 }
 
-function lastQuestion()
-{
-	current_question -= 1;
-	$('#nextquestion').removeClass( 'ui-state-disabled' );
-	$('#skipquestion').removeClass('ui-state-disabled');
-	if(current_question <= 0)
-	{
-		$('#lastquestion').addClass( 'ui-state-disabled' );
-	}
+function lastQuestion() {
+	// WARN: Currently, you 'lose' invalid answers when you hit back, but keep them if they're valid
+	answer_question(false);
+	store_poll();
+	updateBottomButtons();
 	renderCurrentQuestion(current_question);
 }
 
-function skipQuestion()
-{
+function skipQuestion() {
+	//UNTESTED: skip_question()
+	skip_question();
+	
+	store_poll();
 	current_question += 1;
-	$('#lastquestion').removeClass( 'ui-state-disabled' );
-	if(current_question >= poll.question_list.length-1)
-	{
-		//2 vs 3 => true
-		$('#nextquestion').addClass('ui-state-disabled');
-		$('#skipquestion').addClass('ui-state-disabled');
-	}
+	updateBottomButtons();
 	renderCurrentQuestion(current_question);
+}
+
+function clear_storage() {
+	window.localStorage.removeItem('poll'+poll._id);
 }
 
 // DOM Ready =============================================================
 $(document).ready(function() {
-
+	if (poll_is_stored()) {
+		load_poll();
+	} else {
+		current_question = 0;
+		store_poll();
+	}
+	
 	// Populate the user table on initial page load
 	renderCurrentQuestion(current_question);
-
-	// Username link click
-	//$('#listpoll table tbody').on('click', 'td a.linkshowuser', showUserInfo);
-
-	// Add User button click
-	// $('#btnAddUser').on('click', addUser);
-
-	// Delete Poll link click
-    //$('#listpoll table tbody').on('click', 'td a.linkdeletepoll', deletePoll);
+	renderBottomButtons();
+	
     $('#bottombuttons div div').on('click', 'a.nextquestion', nextQuestion);
     $('#bottombuttons div div').on('click', 'a.lastquestion', lastQuestion);
-    $('#bottombuttons div div').on('click', 'a.skipquestion', skipQuestion);
+    $('#bottombuttons div div').on('click', 'a.skipquestion', clear_storage);
 
 });
-
-renderCurrentQuestion(0);
-renderBottomButtons();
