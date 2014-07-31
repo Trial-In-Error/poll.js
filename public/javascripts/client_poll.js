@@ -187,20 +187,31 @@ function validateCurrentQuestion(forward) {
 }
 
 function updateBottomButtons() {
+	//alert('lol');
 	if(poll.question_list[current_question].closing_slide) {
 		//$('#nextquestion').addClass('ui-state-disabled');
 		$('#nextquestion').hide();
-		temp = $('#verybottombuttons div').html();
-		temp += '<a href="/polls" class="submit" id="submit" data-role="button" data-icon="carat-r" data-iconpos="right">Submit</a>';
-		$('#verybottombuttons div').html(temp);
-		$('#verybottombuttons div').trigger('create');
+		if(document.getElementById('submit') === null) {
+			//temp = $('#verybottombuttons div').html();
+			$('#verybottombuttons div').append('<a href="/polls" class="submit" id="submit" data-role="button" data-icon="carat-r" data-iconpos="right">Submit</a>');
+			//$('#verybottombuttons div').html(temp);
+		} else {
+			$('#submit').show();
+		}
+		$('#frontpage').trigger('create');
 		$('#skipquestion').addClass('ui-state-disabled');
 		$('#lastquestion').removeClass('ui-state-disabled');
 	} else if(poll.question_list[current_question].opening_slide) {
+		$('#submit').hide();
+		$('#nextquestion').show();
+		$('#frontpage').trigger('create');
 		$('#nextquestion').removeClass('ui-state-disabled');
 		$('#skipquestion').removeClass('ui-state-disabled');
 		$('#lastquestion').addClass( 'ui-state-disabled' );
 	} else {
+		$('#submit').hide();
+		$('#nextquestion').show();
+		$('#frontpage').trigger('create');
 		$('#nextquestion').removeClass('ui-state-disabled');
 		$('#skipquestion').removeClass('ui-state-disabled');
 		$('#lastquestion').removeClass('ui-state-disabled');
@@ -341,5 +352,4 @@ $(document).ready(function() {
     $('#bottombuttons div div').on('click', 'a.nextquestion', nextQuestion);
     $('#bottombuttons div div').on('click', 'a.lastquestion', lastQuestion);
     $('#bottombuttons div div').on('click', 'a.skipquestion', clear_storage);
-
 });
