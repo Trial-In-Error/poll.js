@@ -10,11 +10,11 @@ eval($('#data')[0].innerHTML); // jshint ignore:line
 
 //WARN: This is not in use right now; it ASSUMES that you support HTML5 storage!
 function supports_html5_storage() {
-  try {
-    return 'localStorage' in window && 'sessionStorage' in window && window['sessionStorage'] !== null && window['localStorage'] !== null;
-  } catch (e) {
-    return false;
-  }
+ 	try {
+		return 'localStorage' in window && 'sessionStorage' in window && window['sessionStorage'] !== null && window['localStorage'] !== null;
+	} catch (e) {
+		return false;
+	}
 }
 
 var can_store = supports_html5_storage();
@@ -113,7 +113,7 @@ function render_pick_n(temp) {
 			// It should update entry.answers <---this happens in DOM ready
 			// It should check entry.*_explainable when rendering
 			//counter += 1;
-			temp += render_text_field(entry);
+			//temp += render_text_field(entry);
 			//alert('Rendered counter '+entry+' as:'+temp);
 	}
 	return temp
@@ -155,10 +155,16 @@ function renderCurrentQuestion() {
 	temp = '<form>'.concat(temp);
 	//alert('Injecting '+temp);
 	$('#form').html(temp);
-	$('#form fieldset').trigger('create');
-	
+	//$('#form fieldset').trigger('create');
+	init_current_question();
 	
 	modify_current_question();
+
+
+}
+
+function init_current_question() {
+	$('#form').trigger('create');
 
 
 }
@@ -166,26 +172,33 @@ function renderCurrentQuestion() {
 function modify_current_question() {
 	for (var counter in poll.question_list[current_question].type.response_list) {
 		//$('#form fieldset').trigger('create');
-		//$('#form').trigger('create');
 		if (poll.question_list[current_question].type.name === "pick_n") {
 			if( typeof poll.question_list[current_question].type.response_list[counter] !== 'undefined' && typeof poll.question_list[current_question].type.response_list[counter].answers[0] !== 'undefined') {
-				$('#pick-choice-'+String(counter)).parent().trigger('create');
-				$('#pick-choice-'+String(counter)).parent().checkboxradio();
-				$('#pick-choice-'+String(counter)).prop('checked', value);
-				//if(poll.question_list[current_question].type.n === 1 ) {
-				//}
+				//$('#pick-choice-'+String(counter)).parent().trigger('create');
+				//$('#pick-choice-'+String(counter)).parent().checkboxradio();
+
+				$('#pick-choice-'+String(counter)).checkboxradio();
+				//$('#pick-choice-'+String(counter)).prop('checked', value);
+
 				//$('#pick-choice-'+String(counter)).checkboxradio({ defaults: true});
-				$("#pick-choice-"+String(counter)).checkboxradio("refresh");
+
+
+
+				//$("#pick-choice-"+String(counter)).checkboxradio("refresh");
+
+
+
+
 				//alert('Matched for counter '+counter+' and question '+current_question+'.');
 			} else {
 				//alert('No match for counter '+counter+' and question '+current_question+'.');
 			}
-		} else if (poll.question_list[current_question].type.name === "slider") {
+		} /*else if (poll.question_list[current_question].type.name === "slider") {
 			if( typeof poll.question_list[current_question].type.response_list[0] !== 'undefined' && typeof poll.question_list[current_question].type.response_list[0].answers[0] !== 'undefined') {
 				$("#slider").val(poll.question_list[current_question].type.response_list[0].answers[0][1]);
 				$( "#slider" ).slider("refresh");
 			}	
-		}
+		}*/
 	}
 }
 
@@ -244,9 +257,9 @@ function validateCurrentQuestion(forward) {
 }
 
 function updateBottomButtons() {
-	alert('Updating bottom buttons with current question'+current_question);
+	
 	if(poll.question_list[current_question].closing_slide) {
-		alert('foo');
+	
 		//$('#nextquestion').addClass('ui-state-disabled');
 		$('#nextquestion').hide();
 		if(document.getElementById('submit') === null) {
@@ -256,36 +269,32 @@ function updateBottomButtons() {
 		} else {
 			$('#submit').show();
 		}
-		//$('#frontpage').trigger('create');
 		$('#skipquestion').addClass('ui-state-disabled');
 		$('#lastquestion').removeClass('ui-state-disabled');
 	} else if(poll.question_list[current_question].opening_slide) {
-		alert('bas');
+	
 		$('#submit').hide();
 		$('#nextquestion').show();
-		//$('#frontpage').trigger('create');
 		$('#nextquestion').removeClass('ui-state-disabled');
 		$('#skipquestion').removeClass('ui-state-disabled');
 		$('#lastquestion').addClass( 'ui-state-disabled' );
 	} else {
-		alert('bar');
-		//T1 $('#submit').hide();
+	
+		$('#submit').hide();
 		$('#nextquestion').show();
-		//$('#frontpage').trigger('create');
 		$('#nextquestion').removeClass('ui-state-disabled');
 		$('#skipquestion').removeClass('ui-state-disabled');
 		$('#lastquestion').removeClass('ui-state-disabled');
 	}
-	alert('esc');
+	
 	if ( !poll.allow_skipping && (typeof poll.question_list[current_question].allow_skipping === 'undefined' || !poll.question_list[current_question].allow_skipping)) {
 		// STUB: Consider hiding the text on Skip in this case
-		alert('bing');
+	
 		$('#skipquestion').addClass('ui-state-disabled');
 		$('#skipquestion').innerHTML = '';
 	}
-	alert('boop');
+	
 	if ( !poll.allow_skipping && (typeof poll.question_list[current_question].allow_skipping !== 'undefined' && poll.question_list[current_question].allow_skipping)) {
-		alert('bin');
 		$('#skipquestion').removeClass('ui-state-disabled');
 		$('#skipquestion').innerHTML = 'Skip';
 	}
@@ -298,6 +307,7 @@ function findWithAttr(array, attr, value) {
         }
     }
 }
+
 function renderBottomButtons() {
 	// Render 'back' and 'next' buttons
 	var temp = '';
@@ -308,12 +318,14 @@ function renderBottomButtons() {
 	temp += '<a href="#" class="skipquestion" id="skipquestion" data-role="button">Skip</a>';
 	temp += '<a href="#" class="nextquestion" id="nextquestion" data-role="button" data-icon="carat-r" data-iconpos="right">Next</a>';
 	$('#bottombuttons').html(temp);
-	//$('#lastquestion').button();
-	$('#bottombuttons').trigger('create');
-	//$('#skipquestion').button();
-	//$('#netquestion').button();
-	//$('#lastquestion').button();
+	initBottomButtons();
 	updateBottomButtons();
+}
+
+function initBottomButtons() {
+	$('#bottombuttons').trigger('create');
+	$(':checkbox').checkboxradio({ defaults: true});
+  	$(':radio').checkboxradio({ defaults: true});
 }
 
 function answer_question(forward) {
@@ -407,18 +419,14 @@ function clear_storage() {
 $(document).ready(function() {
 
 
-		if (poll_is_stored()) {
+	if (poll_is_stored()) {
 		load_poll();
 	} else {
 		current_question = 0;
 		store_poll();
 	}
-	try {
-		renderCurrentQuestion();
-		renderBottomButtons();	
-	} catch (err) {
-		alert(err);
-	}
+	renderCurrentQuestion();
+	renderBottomButtons();	
 	
 	//renderCurrentQuestion(/*current_question*/);
 	//renderBottomButtons();
