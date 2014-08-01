@@ -51,73 +51,130 @@ function poll_is_stored() {
 	}
 }
 
-function renderCurrentQuestion(qtr) {
-	var temp = '';
-	temp += '<form>';
-	current_question = qtr;
+function render_text_field(counter) {
+	// Renders a text field IFF it's needed. Safe to call when a text field is unnecessary.
+	//counter -= 1;
+	temp = '';
+	var current_response = poll.question_list[current_question].type.response_list[counter];
+	//temp += '<form>';
+	if(typeof current_response !== 'undefined') {
+		if ( typeof current_response['explanation'] !== 'undefined' ) {
+			// WARN: ONLY PICK-N WILL CONDITIONALLY WORK
+			// BECAUSE OF PICK-CHOICE+i
+			// STUB: COLUMNS AND ROWS NOT MUTABLE
+			// STUB: data-clear-btn="true" DOES NOT WORK WITH TEXTAREAS
+			if ( current_response.explanation.always_explainable || ($('#pick-choice-'+String(counter)).is(':checked')) ) {
+				if ( typeof current_response.explanation['label'] !== 'undefined' ) {
+					temp += '<label for="text-'+counter+'">'+current_response.explanation['label']+'</label>';
+				} else {
+					temp += '<label for="text-'+counter+'" class="ui-hidden-accessible"></label>';
+				}
+				if ( typeof current_response.explanation['text'] !== 'undefined' ) {
+					temp += '<textarea cols="40" rows="8" type="text" name="text-'+counter+'" id="text-'+counter+'" value="" placeholder="'+current_response.explanation['text']+'"></textarea>'
+				} else {
+					temp += '<textarea cols="40" rows="8" type="text" name="text-'+counter+'" id="text-'+counter+'" value=""></textarea>'
+				}
+			}
+		}
+		//temp += '</form>';
+	} else {
+		// WARN: This should be dev mode only
+		alert('What the hell? We found an invalid call to render_text_field with counter = '+counter);
+	}
+	return temp;
+}
 
+
+function render_pick_n(temp) {
+	// For each answer, draw a button
+	temp += '<fieldset data-role="controlgroup">';
+	
+	//var counter = 0;
+	for (var entry in poll.question_list[current_question].type.response_list) {
+		// Create a button to click!
+		// If N > 1, use check boxes, else use radio buttons
+		if (poll.question_list[current_question].type.n === 1) {
+
+			//MISSING OPEN FORM!!!
+
+			//WARN: WAIT, AREN'T COUNTER AND ENTRY THE FUCKING SAME THING?
+
+			// Draw radio buttons
+			//alert(poll.question_list[current_question].type.response_list[entry].body);
+			temp += '<input type="radio" name="pick-choice" id="pick-choice-'+entry+'" value="off">';
+			temp += '<label for="pick-choice-'+entry+'">'+
+					String(poll.question_list[current_question].type.response_list[entry].body)+'</label>';
+		} else {
+			// Draw check boxes
+			temp += '<input type="checkbox" name="checkbox" id="pick-choice-'+entry+'">';
+    		temp += '<label for="pick-choice-'+entry+'">'+
+    				String(poll.question_list[current_question].type.response_list[entry].body)+'</label>';
+		}
+			// It should update entry.answers <---this happens in DOM ready
+			// It should check entry.*_explainable when rendering
+			//counter += 1;
+			temp += render_text_field(entry);
+			//alert('Rendered counter '+entry+' as:'+temp);
+	}
+	return temp
+}
+
+function render_slider(temp) {
+	//alert('min: '+ String(poll.question_list[current_question].type.min))
+	//alert('max: '+ String(poll.question_list[current_question].type.max))
+	// Draw slider
+	// WARN: TERRIBLE AWFUL DIRTY HACK: ASSUMED THAT STARTING POSITION = MIN + MAX / 2
+	temp += '<form class="full-width-slider">';
+	temp += '<input type="range" name="slider" id="slider"';
+	temp += 'min="'+String(poll.question_list[current_question].type.min)+'"';
+	temp += 'max="'+String(poll.question_list[current_question].type.max)+'"';
+	temp += 'value="'+String((poll.question_list[current_question].type.max - poll.question_list[current_question].type.min + 1)/2)+'"';
+	temp += 'step="'+String(poll.question_list[current_question].type.step)+'"';
+	temp += 'data-popup-enabled="true">';
+	return temp;
+}
+
+function renderCurrentQuestion() {
+	alert('rendered!');
+	var temp = '';
+	//temp += '<form>';
+	//current_question = qtr;
 	//alert(poll.question_list[current_question].body)
 
 	$('#lead p').html(poll.question_list[current_question].body);
+
 	if (poll.question_list[current_question].type.name === 'pick_n') {
-		// For each answer, draw a button
-		temp += '<fieldset data-role="controlgroup">';
-		var counter = 0;
-		for (var entry in poll.question_list[current_question].type.response_list) {
-			// Create a button to click!
-			// If N > 1, use check boxes, else use radio buttons
-			if (poll.question_list[current_question].type.n === 1)
-			{
-
-				//MISSING OPEN FORM!!!
-
-				//WARN: WAIT, AREN'T COUNTER AND ENTRY THE FUCKING SAME THING?
-
-				// Draw radio buttons
-				//alert(poll.question_list[current_question].type.response_list[entry].body);
-				temp += '<input type="radio" name="pick-choice" id="pick-choice-'+counter+'" value="off">';
-				temp += '<label for="pick-choice-'+counter+'">'+
-						String(poll.question_list[current_question].type.response_list[entry].body)+'</label>';
-			} else {
-				// Draw check boxes
-				temp += '<input type="checkbox" name="checkbox" id="pick-choice-'+counter+'">';
-        		temp += '<label for="pick-choice-'+counter+'">'+
-        				String(poll.question_list[current_question].type.response_list[entry].body)+'</label>';
-			}
-				// It should update entry.answers <---this happens in DOM ready
-				// It should check entry.*_explainable when rendering
-				counter += 1;
-		}
+		temp += temp.concat(render_pick_n(temp));
 	}
-		if (poll.question_list[current_question].type.name === 'slider') {
-			//alert('min: '+ String(poll.question_list[current_question].type.min))
-			//alert('max: '+ String(poll.question_list[current_question].type.max))
-			// Draw slider
-			// WARN: TERRIBLE AWFUL DIRTY HACK: ASSUMED THAT STARTING POSITION = MIN + MAX / 2
+	else if (poll.question_list[current_question].type.name === 'slider') {
+		temp += temp.concat(render_slider(temp));
+	}
+	
+	temp += '</fieldset>';
+	temp += '</form>';
+	temp = '<form>'.concat(temp);
+	//alert('Injecting '+temp);
+	$('#form').html(temp);
+	$('#form fieldset').trigger('create');
+	
+	
+	modify_current_question();
 
-			temp += '<form class="full-width-slider">';
-			temp += '<input type="range" name="slider" id="slider"';
-			temp += 'min="'+String(poll.question_list[current_question].type.min)+'"';
-			temp += 'max="'+String(poll.question_list[current_question].type.max)+'"';
-			temp += 'value="'+String((poll.question_list[current_question].type.max - poll.question_list[current_question].type.min + 1)/2)+'"';
-			temp += 'step="'+String(poll.question_list[current_question].type.step)+'"';
-			temp += 'data-popup-enabled="true">';
-		}
-
-
-		temp += '</fieldset>';
-		temp += '</form>';
-		$('#form').html(temp);
-		$('#form').trigger('create');
-		modify_current_question();
 
 }
 
 function modify_current_question() {
 	for (var counter in poll.question_list[current_question].type.response_list) {
+		//$('#form fieldset').trigger('create');
+		//$('#form').trigger('create');
 		if (poll.question_list[current_question].type.name === "pick_n") {
 			if( typeof poll.question_list[current_question].type.response_list[counter] !== 'undefined' && typeof poll.question_list[current_question].type.response_list[counter].answers[0] !== 'undefined') {
+				$('#pick-choice-'+String(counter)).parent().trigger('create');
+				$('#pick-choice-'+String(counter)).parent().checkboxradio();
 				$('#pick-choice-'+String(counter)).prop('checked', value);
+				//if(poll.question_list[current_question].type.n === 1 ) {
+				//}
+				//$('#pick-choice-'+String(counter)).checkboxradio({ defaults: true});
 				$("#pick-choice-"+String(counter)).checkboxradio("refresh");
 				//alert('Matched for counter '+counter+' and question '+current_question+'.');
 			} else {
@@ -187,8 +244,9 @@ function validateCurrentQuestion(forward) {
 }
 
 function updateBottomButtons() {
-	//alert('lol');
+	alert('Updating bottom buttons with current question'+current_question);
 	if(poll.question_list[current_question].closing_slide) {
+		alert('foo');
 		//$('#nextquestion').addClass('ui-state-disabled');
 		$('#nextquestion').hide();
 		if(document.getElementById('submit') === null) {
@@ -198,30 +256,36 @@ function updateBottomButtons() {
 		} else {
 			$('#submit').show();
 		}
-		$('#frontpage').trigger('create');
+		//$('#frontpage').trigger('create');
 		$('#skipquestion').addClass('ui-state-disabled');
 		$('#lastquestion').removeClass('ui-state-disabled');
 	} else if(poll.question_list[current_question].opening_slide) {
+		alert('bas');
 		$('#submit').hide();
 		$('#nextquestion').show();
-		$('#frontpage').trigger('create');
+		//$('#frontpage').trigger('create');
 		$('#nextquestion').removeClass('ui-state-disabled');
 		$('#skipquestion').removeClass('ui-state-disabled');
 		$('#lastquestion').addClass( 'ui-state-disabled' );
 	} else {
-		$('#submit').hide();
+		alert('bar');
+		//T1 $('#submit').hide();
 		$('#nextquestion').show();
-		$('#frontpage').trigger('create');
+		//$('#frontpage').trigger('create');
 		$('#nextquestion').removeClass('ui-state-disabled');
 		$('#skipquestion').removeClass('ui-state-disabled');
 		$('#lastquestion').removeClass('ui-state-disabled');
 	}
+	alert('esc');
 	if ( !poll.allow_skipping && (typeof poll.question_list[current_question].allow_skipping === 'undefined' || !poll.question_list[current_question].allow_skipping)) {
 		// STUB: Consider hiding the text on Skip in this case
+		alert('bing');
 		$('#skipquestion').addClass('ui-state-disabled');
 		$('#skipquestion').innerHTML = '';
 	}
+	alert('boop');
 	if ( !poll.allow_skipping && (typeof poll.question_list[current_question].allow_skipping !== 'undefined' && poll.question_list[current_question].allow_skipping)) {
+		alert('bin');
 		$('#skipquestion').removeClass('ui-state-disabled');
 		$('#skipquestion').innerHTML = 'Skip';
 	}
@@ -246,6 +310,9 @@ function renderBottomButtons() {
 	$('#bottombuttons').html(temp);
 	//$('#lastquestion').button();
 	$('#bottombuttons').trigger('create');
+	//$('#skipquestion').button();
+	//$('#netquestion').button();
+	//$('#lastquestion').button();
 	updateBottomButtons();
 }
 
@@ -310,7 +377,7 @@ function nextQuestion() {
 	if(answer_question(true)) {
 		store_poll();
 		updateBottomButtons();
-		renderCurrentQuestion(current_question);
+		renderCurrentQuestion(/*current_question*/);
 	}
 }
 
@@ -319,7 +386,7 @@ function lastQuestion() {
 	answer_question(false);
 	store_poll();
 	updateBottomButtons();
-	renderCurrentQuestion(current_question);
+	renderCurrentQuestion(/*current_question*/);
 }
 
 function skipQuestion() {
@@ -329,7 +396,7 @@ function skipQuestion() {
 	store_poll();
 	current_question += 1;
 	updateBottomButtons();
-	renderCurrentQuestion(current_question);
+	renderCurrentQuestion(/*current_question*/);
 }
 
 function clear_storage() {
@@ -338,18 +405,50 @@ function clear_storage() {
 
 // DOM Ready =============================================================
 $(document).ready(function() {
+
+
+		if (poll_is_stored()) {
+		load_poll();
+	} else {
+		current_question = 0;
+		store_poll();
+	}
+	try {
+		renderCurrentQuestion();
+		renderBottomButtons();	
+	} catch (err) {
+		alert(err);
+	}
+	
+	//renderCurrentQuestion(/*current_question*/);
+	//renderBottomButtons();
+
+
+	$('#form input').on('click', renderCurrentQuestion);
+
+    $('#bottombuttons div div').on('click', 'a.nextquestion', nextQuestion);
+    $('#bottombuttons div div').on('click', 'a.lastquestion', lastQuestion);
+    $('#bottombuttons div div').on('click', 'a.skipquestion', clear_storage);
+});
+
+/*$( document ).delegate("#frontpage", "pagebeforecreate", function() {
 	if (poll_is_stored()) {
 		load_poll();
 	} else {
 		current_question = 0;
 		store_poll();
 	}
+	try {
+		renderCurrentQuestion();
+		renderBottomButtons();	
+	} catch (err) {
+		alert(err);
+	}
 	
-	// Populate the user table on initial page load
-	renderCurrentQuestion(current_question);
-	renderBottomButtons();
-	
-    $('#bottombuttons div div').on('click', 'a.nextquestion', nextQuestion);
-    $('#bottombuttons div div').on('click', 'a.lastquestion', lastQuestion);
-    $('#bottombuttons div div').on('click', 'a.skipquestion', clear_storage);
 });
+
+$( document ).delegate("#frontpage", "pagecreate", function() {
+  //$(':checkbox').checkboxradio({ defaults: true});
+  //$(':radio').checkboxradio({ defaults: true});
+  //$(':button').button({ defaults: true});
+});*/
