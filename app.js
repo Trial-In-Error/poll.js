@@ -10,7 +10,11 @@ var util = require('util');
 var mongo = require('mongoskin');
 
 // Use the mongo database named 'polljs'
-var db = mongo.db("mongodb://localhost:27017/polljs", {native_parse:true});
+if(typeof process.env.MONGOLAB_URI !== 'undefined') {
+    console.log(process.env.MONGOLAB_URI);    
+}
+
+var db = mongo.db(process.env.MONGOLAB_URI || "mongodb://localhost:27017/polljs", {native_parse:true});
 
 var users = require('./routes/users');
 var test = require('./routes/test');
