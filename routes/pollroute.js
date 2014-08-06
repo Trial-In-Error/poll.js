@@ -10,11 +10,12 @@ router.get('/listpolls', function(req, res){
 });
 
 /* POST to add poll */
-router.post('/addpoll', function(req, res) {
+router.post('/answerpoll', function(req, res) {
     var db = req.db;
     db.collection('polldb').insert(req.body, function(err, result){
         res.send(
-            (err === null) ? { msg: '' } : { msg: err }
+            // WARN: THESE COULD LEAK STACK TRACES
+            (err === null) ? { msg: '' } : { msg: 'Error: ' + err }
         );
     });
 });
@@ -26,6 +27,7 @@ router.delete('/deletepoll/:id', function(req, res) {
     var db = req.db;
     var userToDelete = req.params.id;
     db.collection('polldb').removeById(userToDelete, function(err, result) {
+        // WARN: THESE COULD LEAK STACK TRACES
         res.send((result === 1) ? { msg: '' } : { msg:'error: ' + err });
     });
 });

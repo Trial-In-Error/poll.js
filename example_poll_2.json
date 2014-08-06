@@ -24,23 +24,25 @@
 				[
 					{
 						"body": "Never.",
-						"answers": [],
-						"always_explainable": false,
-						"situationally_explainable": false
+						"answers": []
 					},
 					{
-						"body": "When selected.",
+						"body": "When selected and required.",
 						"answers": [],
-						"always_explainable": false,
-						"explain_text": "Enter some stuff.",
-						"situationally_explainable": true
+						"explanation": {
+							"always_explainable": false,
+							"explain_text": "Enter some stuff.",
+							"required": true
+						}
 					},
 					{
-						"body": "Always",
+						"body": "Always but not required.",
 						"answers": [],
-						"always_explainable": true,
-						"explain_text": "Enter more stuff.",
-						"situationally_explainable": true
+						"explanation": {
+							"always_explainable": true,
+							"explain_text": "Enter more stuff.",
+							"required": false
+						}
 					}
 				]
 			}
@@ -64,51 +66,35 @@
 				[
 					{
 						"body": "Zero.",
-						"answers": [],
-						"always_explainable": false,
-						"situationally_explainable": false
+						"answers": []
 					},
 					{
 						"body": "Lilt.",
-						"answers": [],
-						"always_explainable": false,
-						"situationally_explainable": false
+						"answers": []
 					},
 					{
 						"body": "Wiser.",
-						"answers": [],
-						"always_explainable": false,
-						"situationally_explainable": false
+						"answers": []
 					},
 					{
 						"body": "Orange.",
-						"answers": [],
-						"always_explainable": false,
-						"situationally_explainable": false
+						"answers": []
 					},
 					{
 						"body": "Agrarian.",
-						"answers": [],
-						"always_explainable": false,
-						"situationally_explainable": false
+						"answers": []
 					},
 					{
 						"body": "Silly.",
-						"answers": [],
-						"always_explainable": false,
-						"situationally_explainable": false
+						"answers": []
 					},
 					{
 						"body": "Obelisk.",
-						"answers": [],
-						"always_explainable": false,
-						"situationally_explainable": false
+						"answers": []
 					},
 					{
 						"body": "Quaff.",
-						"answers": [],
-						"always_explainable": false,
-						"situationally_explainable": false
+						"answers": []
 					}
 				]
 			}
@@ -124,27 +110,19 @@
 				[
 					{
 						"body": "Coffee.",
-						"answers": [],
-						"always_explainable": false,
-						"situationally_explainable": false
+						"answers": []
 					},
 					{
 						"body": "Video-games.",
-						"answers": [],
-						"always_explainable": false,
-						"situationally_explainable": false
+						"answers": []
 					},
 					{
 						"body": "Cats.",
-						"answers": [],
-						"always_explainable": false,
-						"situationally_explainable": false
+						"answers": []
 					},
 					{
 						"body": "Beer.",
-						"answers": [],
-						"always_explainable": false,
-						"situationally_explainable": false
+						"answers": []
 					}
 				]
 			},
@@ -170,7 +148,11 @@
 				[
 					{
 						"answers": [],
-						"always_explainable": true
+						"explanation":
+						{
+							"always_explainable": true,
+							"required": true
+						}
 					}
 				]
 			},

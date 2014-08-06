@@ -16,15 +16,16 @@
 				[
 					{
 						"body": "Yes.",
-						"answers": [],
-						"always_explainable": false,
-						"situationally_explainable": false
+						"answers": []
 					},
 					{
 						"body": "No.",
 						"answers": [],
-						"always_explainable": false,
-						"situationally_explainable": true
+						"explanation":
+						{
+							"always_explainable": false,
+							"text": "Why not?"
+						}
 					}
 				]
 			},
@@ -41,27 +42,19 @@
 				[
 					{
 						"body": "Coffee.",
-						"answers": [],
-						"always_explainable": false,
-						"situationally_explainable": false
+						"answers": []
 					},
 					{
 						"body": "Video-games.",
-						"answers": [],
-						"always_explainable": false,
-						"situationally_explainable": false
+						"answers": []
 					},
 					{
 						"body": "Cats.",
-						"answers": [],
-						"always_explainable": false,
-						"situationally_explainable": false
+						"answers": []
 					},
 					{
 						"body": "Beer.",
-						"answers": [],
-						"always_explainable": false,
-						"situationally_explainable": false
+						"answers": []
 					}
 				]
 			}
@@ -78,9 +71,7 @@
 				"response_list":
 				[
 					{
-						"answers": [],
-						"always_explainable": false,
-						"situationally_explainable": false
+						"answers": []
 					}
 				]
 			},
