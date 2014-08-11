@@ -243,7 +243,7 @@ function init_current_question() {
 function modify_current_question() {
 	for (var counter in poll.question_list[current_question].type.response_list) {
 		if (poll.question_list[current_question].type.name === "pick_n") {
-			if( typeof poll.question_list[current_question].type.response_list[counter] !== 'undefined' && poll.question_list[current_question].type.response_list[counter].answers[0] !== null && typeof poll.question_list[current_question].type.response_list[counter].answers[0] !== 'undefined' && typeof poll.question_list[current_question].type.response_list[counter].answers[0][1] !== 'undefined') {
+			if( typeof poll.question_list[current_question].type.response_list[counter] !== 'undefined' && poll.question_list[current_question].type.response_list[counter].answers[0] !== null && typeof poll.question_list[current_question].type.response_list[counter].answers[0] !== 'undefined' && poll.question_list[current_question].type.response_list[counter].answers[0][1] !== null && typeof poll.question_list[current_question].type.response_list[counter].answers[0][1] !== 'undefined') {
 				$('#pick-choice-'+String(counter)).checkboxradio();
 				$('#pick-choice-'+String(counter)).prop('checked', value);
 				$("#pick-choice-"+String(counter)).checkboxradio("refresh");
@@ -433,6 +433,13 @@ function answer_question(forward) {
 							current_question = poll.question_list[current_question].type.response_list[i]['next'];
 							return true;
 						}
+					} else { // If it's a pick_n, with n > 1
+						// For each response, if it's NOT the checked response
+						poll.question_list[current_question].type.response_list[i].answers = [[user_token, true, undefined]];
+						if (forward && typeof poll.question_list[current_question].type.response_list[i]['next'] !== 'undefined') {
+							current_question = poll.question_list[current_question].type.response_list[i]['next'];
+							return true;
+						}
 					}
 					
 				} else {
@@ -504,7 +511,7 @@ function nextQuestion() {
 		updateBottomButtons();
 		//update_text_field();
 		renderCurrentQuestion(/*current_question*/);
-		$.mobile.changePage($('#frontpage'), {allowSamePageTransition: true, transition: "slide", reverse: true});
+		$.mobile.changePage($('#frontpage'), {allowSamePageTransition: true, transition: "slide"});
 	}
 	//update_text_field();
 }
@@ -516,7 +523,7 @@ function lastQuestion() {
 	updateBottomButtons();
 	//update_text_field();
 	renderCurrentQuestion(/*current_question*/);
-	$.mobile.changePage($('#frontpage'), {allowSamePageTransition: true, transition: "slide"});
+	$.mobile.changePage($('#frontpage'), {allowSamePageTransition: true, transition: "slide", reverse: true});
 }
 
 function skipQuestion() {
@@ -527,7 +534,7 @@ function skipQuestion() {
 	current_question += 1;
 	updateBottomButtons();
 	renderCurrentQuestion(/*current_question*/);
-	$.mobile.changePage($('#frontpage'), {allowSamePageTransition: true, transition: "slide", reverse: true});
+	$.mobile.changePage($('#frontpage'), {allowSamePageTransition: true, transition: "slide"});
 }
 
 function clear_storage() {
@@ -565,3 +572,17 @@ $(document).change('.ui-radio', function () {
 		update_text_field();	
 	}
 });
+
+window.onbeforeunload = function() {
+	// WARN: Unconditionally storing the poll may be a source of interesting errors!
+	//store_poll();
+	return "Do you want to leave this poll? Your progress will be saved.";
+
+	// history.pushstate and location.hash
+	// http://www.webdesignerdepot.com/2013/03/how-to-manage-the-back-button-with-javascript/
+	// https://developer.mozilla.org/en-US/docs/Web/API/Window.onhashchange
+	// https://developer.mozilla.org/en-US/docs/Web/API/window.location
+
+	// history.forward disabling
+	// http://viralpatel.net/blogs/disable-back-button-browser-javascript/
+};
