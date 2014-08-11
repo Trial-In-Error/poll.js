@@ -52,10 +52,12 @@ function load_poll() {
 	if(can_store) {
 		poll = JSON.parse(window.localStorage['poll'+window.location.pathname.split('poll/').slice(-1)]);
 		current_question = parseInt(window.localStorage['current'+window.location.pathname.split('poll/').slice(-1)]);
+		window.location += '#' + current_question;
 	} else {
 		//UNTESTED: load from window.namespace
 		poll = window['polljspoll'+poll._id];
 		current_question = window['polljscurrent'+poll._id];
+		window.location += '#' + current_question;
 	}
 }
 
@@ -212,7 +214,7 @@ function update_text_field() {
 
 function renderCurrentQuestion() {
 	var temp = '';
-
+	console.log('Current question: '+current_question);
 	$('#lead p').html(poll.question_list[current_question].body);
 
 	if (poll.question_list[current_question].type.name === 'pick_n') {
@@ -431,6 +433,7 @@ function answer_question(forward) {
 						}
 						if (forward && typeof poll.question_list[current_question].type.response_list[i]['next'] !== 'undefined') {
 							current_question = poll.question_list[current_question].type.response_list[i]['next'];
+							window.location += '#' + current_question;
 							return true;
 						}
 					}
@@ -467,18 +470,22 @@ function answer_question(forward) {
 		// If we have a hard-link to the next question, take it
 		if (forward && typeof poll.question_list[current_question]['next'] !== 'undefined') {
 			current_question = findWithAttr(poll.question_list, 'id', poll.question_list[current_question]['next']);
+			window.location += '#' + current_question;
 		// Otherwise, go forwards/backwards as appropriate
 		} else if (forward) {
 			current_question += 1;
+			window.location += '#' + current_question;
 		} else {
 			current_question -= 1;
+			window.location += '#' + current_question;
 		}
 
 
 		return true
 	} else {
 		if (!forward) {
-			current_question -= 1;	
+			current_question -= 1;
+			window.location += '#' + current_question;
 		}
 		return false
 	}
@@ -503,7 +510,7 @@ function nextQuestion() {
 		store_poll();
 		updateBottomButtons();
 		//update_text_field();
-		renderCurrentQuestion(/*current_question*/);
+		//renderCurrentQuestion(/*current_question*/);
 		$.mobile.changePage($('#frontpage'), {allowSamePageTransition: true, transition: "slide", reverse: true});
 	}
 	//update_text_field();
@@ -515,7 +522,7 @@ function lastQuestion() {
 	store_poll();
 	updateBottomButtons();
 	//update_text_field();
-	renderCurrentQuestion(/*current_question*/);
+	//renderCurrentQuestion(/*current_question*/);
 	$.mobile.changePage($('#frontpage'), {allowSamePageTransition: true, transition: "slide"});
 }
 
@@ -525,8 +532,9 @@ function skipQuestion() {
 	
 	store_poll();
 	current_question += 1;
+	window.location += '#' + current_question;
 	updateBottomButtons();
-	renderCurrentQuestion(/*current_question*/);
+	//renderCurrentQuestion(/*current_question*/);
 	$.mobile.changePage($('#frontpage'), {allowSamePageTransition: true, transition: "slide", reverse: true});
 }
 
@@ -545,9 +553,10 @@ $(document).ready(function() {
 		load_poll();
 	} else {
 		current_question = 0;
+		window.location += '#' + current_question;
 		store_poll();
 	}
-	renderCurrentQuestion();
+	//renderCurrentQuestion();
 	renderBottomButtons();	
 
     $('#bottombuttons div div').on('click', 'a.nextquestion', nextQuestion);
@@ -565,3 +574,19 @@ $(document).change('.ui-radio', function () {
 		update_text_field();	
 	}
 });
+
+window.onhashchange = function() {
+	console.log(location.hash.replace('#',''))
+    if (location.hash.length >= 0 && location.hash.length < poll.question_list.length && location.has !== "") {
+        current_question = parseInt(location.hash.replace('#',''));
+        //console.log(location.hash.replace('#',''))
+        //location.reload();
+        renderCurrentQuestion();
+        //renderBottomButtons();	
+    } else {
+    }
+}
+
+/*window.onbeforeunload = function() {
+	location.reload();
+};*/
