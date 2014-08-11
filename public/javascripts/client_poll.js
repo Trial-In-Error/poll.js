@@ -34,7 +34,7 @@ function submitPoll() {
 	$.ajax({
 		type: 'POST',
 		data: poll,
-		url: '/answerpoll',
+		url: '/pollroute/answerpoll',
 		dataType: 'JSON'
 	}).done(function(response){
 		// Check for successful (blank) response
