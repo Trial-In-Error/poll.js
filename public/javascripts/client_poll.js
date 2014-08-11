@@ -88,8 +88,8 @@ function render_text_field(counter) {
 				} else {
 					temp += '<label for="text-'+counter+'" class="ui-hidden-accessible"></label>';
 				}
-				if ( typeof current_response.explanation['text'] !== 'undefined' ) {
-					temp += '<textarea cols="40" rows="8" type="text" name="text-'+counter+'" id="text-'+counter+'" value="" placeholder="'+current_response.explanation['text']+'"></textarea>'
+				if ( typeof current_response.explanation['explain_text'] !== 'undefined' ) {
+					temp += '<textarea cols="40" rows="8" type="text" name="text-'+counter+'" id="text-'+counter+'" value="" placeholder="'+current_response.explanation['explain_text']+'"></textarea>'
 				} else {
 					temp += '<textarea cols="40" rows="8" type="text" name="text-'+counter+'" id="text-'+counter+'" value=""></textarea>'
 				}
@@ -184,8 +184,8 @@ function update_text_field() {
 					} else {
 						temp += '<label for="text-'+counter+'" class="ui-hidden-accessible"></label>';
 					}
-					if ( typeof current_response.explanation['text'] !== 'undefined' ) {
-						temp += '<textarea cols="40" rows="8" type="text" name="text-'+counter+'" id="text-'+counter+'" value="" placeholder="'+current_response.explanation['text']+'"></textarea>'
+					if ( typeof current_response.explanation['explain_text'] !== 'undefined' ) {
+						temp += '<textarea cols="40" rows="8" type="text" name="text-'+counter+'" id="text-'+counter+'" value="" placeholder="'+current_response.explanation['explain_text']+'"></textarea>'
 					} else {
 						temp += '<textarea cols="40" rows="8" type="text" name="text-'+counter+'" id="text-'+counter+'" value=""></textarea>'
 					}
