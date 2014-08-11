@@ -388,11 +388,13 @@ function renderBottomButtons() {
 	// Render 'back' and 'next' buttons
 	var temp = '';
 	temp += '<div id="verybottombuttons" data-role="controlgroup" data-type="horizontal" text-align="center" margin-left="auto" margin-right="auto" align="center">';
-	temp += '<a href="#" class="lastquestion" id="lastquestion" data-role="button" data-icon="carat-l" data-iconpos="left">Back</a>';
+	temp += '<a href="#" class="lastquestion" id="lastquestion" data-transition="slide" data-direction= "reverse" data-role="button" data-icon="carat-l" data-iconpos="left">Back</a>';
+
+	//data-transition="slide", data-direction: "reverse"
 
 	// Check to see if you should render a 'skip' button
-	temp += '<a href="#" class="skipquestion" id="skipquestion" data-role="button">Skip</a>';
-	temp += '<a href="#" class="nextquestion" id="nextquestion" data-role="button" data-icon="carat-r" data-iconpos="right">Next</a>';
+	temp += '<a href="#" class="skipquestion" id="skipquestion" data-transition="slide" data-role="button">Skip</a>';
+	temp += '<a href="#" class="nextquestion" id="nextquestion" data-transition="slide" data-role="button" data-icon="carat-r" data-iconpos="right">Next</a>';
 	$('#bottombuttons').html(temp);
 	initBottomButtons();
 	updateBottomButtons();
@@ -502,6 +504,7 @@ function nextQuestion() {
 		updateBottomButtons();
 		//update_text_field();
 		renderCurrentQuestion(/*current_question*/);
+		$.mobile.changePage($('#frontpage'), {allowSamePageTransition: true, transition: "slide", reverse: true});
 	}
 	//update_text_field();
 }
@@ -513,6 +516,7 @@ function lastQuestion() {
 	updateBottomButtons();
 	//update_text_field();
 	renderCurrentQuestion(/*current_question*/);
+	$.mobile.changePage($('#frontpage'), {allowSamePageTransition: true, transition: "slide"});
 }
 
 function skipQuestion() {
@@ -523,6 +527,7 @@ function skipQuestion() {
 	current_question += 1;
 	updateBottomButtons();
 	renderCurrentQuestion(/*current_question*/);
+	$.mobile.changePage($('#frontpage'), {allowSamePageTransition: true, transition: "slide", reverse: true});
 }
 
 function clear_storage() {
@@ -532,6 +537,9 @@ function clear_storage() {
 // DOM Ready =============================================================
 $(document).ready(function() {
 
+
+	// WARN: If problems with page transitions occur, this line is likely to blame
+	$.mobile.changePage($('#frontpage'), {allowSamePageTransition: true});
 
 	if (poll_is_stored()) {
 		load_poll();
