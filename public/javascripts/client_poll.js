@@ -153,15 +153,11 @@ function render_slider(temp) {
 	return temp;
 }
 
-function updateCurrentQuestion() {
-	update_text_field();
-	modify_current_question();
-}
-
 function update_text_field() {
 	console.log('Entered update_text_field().');
 	var temp;
 	if(typeof poll.question_list[current_question].type.response_list === 'undefined') {
+		console.log('...But did no work.');
 		return;
 	}
 
@@ -179,6 +175,7 @@ function update_text_field() {
 				if ( (current_response.explanation.always_explainable ||
 					($('#pick-choice-'+String(counter)).is(':checked')))
 					&& document.getElementById('text-'+String(counter)) === null ) {
+					console.log('We fully created text area #:'+counter)
 					if ( typeof current_response.explanation['label'] !== 'undefined' ) {
 						temp += '<label for="text-'+counter+'">'+current_response.explanation['label']+'</label>';
 					} else {
@@ -566,11 +563,12 @@ $(document).ready(function() {
 //WARN: This is a terrible hack; the function gets called twice per click
 //Once on uncheck of the old one, once on check the new one
 //But it works and I'm not in the mood to question working.
-$(document).change('.ui-radio', function () {
+$(document).change('.ui-radio-on', function () {
 	console.log(event.target.nodeName);
 	if(event.target.nodeName !== 'TEXTAREA') {
 		update_text_field();	
 	}
+
 });
 
 window.onbeforeunload = function() {
