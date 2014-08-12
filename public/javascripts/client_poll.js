@@ -30,19 +30,28 @@ function store_poll() {
 	}
 }
 
-function clean_poll() {
-	for (question in poll) {
+function clean_poll(callback) {
+	console.log('Cleaning poll.');
+	for (question in poll.question_list) {
 		for (response in poll.question_list[question].type.response_list) {
-			if(typeof poll.question_list[question].type.response_list[response].answers[0][1] === 'undefined') {
-				poll.question_list[question].type.response_list[response].answers = [[undefined, undefined, undefined]]
+			try {
+				if(typeof poll.question_list[question].type.response_list !== 'undefined' && typeof poll.question_list[question].type.response_list[response].answers !== 'undefined' && typeof poll.question_list[question].type.response_list[response].explanation !== 'undefined' && typeof poll.question_list[question].type.response_list[response].answers[0] !== 'undefined' && poll.question_list[question].type.response_list[response].answers[0][1] !== true) {
+					console.log('Question '+question+' had response '+response+' with the value of '+poll.question_list[question].type.response_list[response].answers[0]+'. Cleared.' )
+					poll.question_list[question].type.response_list[response].answers = [[undefined, undefined, undefined]]
+				}
+			} catch (err) {
+				console.log(err+' '+question+' '+response);
+				console.log(poll);
 			}
+
 		}
 	}
+	callback();
 }
 
 function submitPoll() {
-	clean_poll();
-	$.ajax({
+	clean_poll( function () {
+		$.ajax({
 		type: 'POST',
 		data: poll,
 		url: '/pollroute/answerpoll',
@@ -50,20 +59,18 @@ function submitPoll() {
 	}).done(function(response){
 		// Delete local storage of results
 		// STUB: Lock this user out of this poll in the future, server-side
-
 		// Check for successful (blank) response
 		if (response.msg === '') {
-			// Redirect to /polls
-			//STUB: !!!
+			window.onbeforeunload = function() {}
+			clear_storage();
+			poll = undefined;
 		} else {
 			// If something went wrong, alert the error message
 			alert('Error: '+response.msg);
 		}
 	})
-	window.onbeforeunload = function() {}
-	clear_storage();
-	poll = undefined;
-	console.log('LOL');
+
+})
 }
 
 function load_poll() {

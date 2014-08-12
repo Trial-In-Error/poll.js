@@ -37,6 +37,8 @@ router.post('/answerpoll', function(req, res) {
                 db.collection('polldb').update( {_id: mongo.helper.toObjectID(tid)}, result, function(err, result) {
                     if(err) {
                         console.log(err);
+                    } else {
+                        res.send((result === 1) ? { msg: '' } : { msg:'error: '+ err});
                     }
                 });
                     //console.log(JSON.stringify(result, null, 4));
