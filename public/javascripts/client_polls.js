@@ -26,7 +26,7 @@ function populateTable() {
 				tableContent += 'Open';
 			}else{
 				tableContent += 'Closed';
-			}				
+			}
 			tableContent += ', owned by ' + this.owner + ', and has the database hash ' + this._id+'</p></a>';
 			//tableContent += '<td><a href="#" class="ui-btn ui-icon-delete ui-mini ui-btn-icon-notext ui-corner-all" rel="'+this._id+'">No text</a></td>'
 			tableContent += '<a href="#" class="linkdeletepoll" rel="' + this._id + '">delete</a>';
@@ -44,39 +44,39 @@ function populateTable() {
 // Delete User
 function deletePoll(event) {
 
-    event.preventDefault();
+	event.preventDefault();
 
-    // Pop up a confirmation dialog
-    var confirmation = confirm('Are you sure you want to delete this poll?');
+	// Pop up a confirmation dialog
+	var confirmation = confirm('Are you sure you want to delete this poll?');
 
-    // Check and make sure the user confirmed
-    if (confirmation === true) {
+	// Check and make sure the user confirmed
+	if (confirmation === true) {
 
-        // If they did, do our delete
-        $.ajax({
-            type: 'DELETE',
-            url: '/pollroute/deletepoll/' + $(this).attr('rel')
-        }).done(function( response ) {
+		// If they did, do our delete
+		$.ajax({
+			type: 'DELETE',
+			url: '/pollroute/deletepoll/' + $(this).attr('rel')
+		}).done(function( response ) {
 
-            // Check for a successful (blank) response
-            if (response.msg === '') {
-            }
-            else {
-                alert('Error: ' + response.msg);
-            }
+			// Check for a successful (blank) response
+			if (response.msg === '') {
+			}
+			else {
+				alert('Error: ' + response.msg);
+			}
 
-            // Update the table
-            populateTable();
+			// Update the table
+			populateTable();
 
-        });
+		});
 
-    }
-    else {
+	}
+	else {
 
-        // If they said no to the confirm, do nothing
-        return false;
+		// If they said no to the confirm, do nothing
+		return false;
 
-    }
+	}
 
 }
 
@@ -93,7 +93,7 @@ $(document).ready(function() {
 	// $('#btnAddUser').on('click', addUser);
 
 	// Delete Poll link click
-    //$('#listpoll table tbody').on('click', 'td a.linkdeletepoll', deletePoll);
-    $('#listpoll ul').on('click', 'li a.linkdeletepoll', deletePoll);
+	//$('#listpoll table tbody').on('click', 'td a.linkdeletepoll', deletePoll);
+	$('#listpoll ul').on('click', 'li a.linkdeletepoll', deletePoll);
 
 });

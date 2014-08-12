@@ -10,7 +10,7 @@ eval($('#data')[0].innerHTML); // jshint ignore:line
 
 //WARN: This is not in use right now; it ASSUMES that you support HTML5 storage!
 function supports_html5_storage() {
- 	try {
+	try {
 		return 'localStorage' in window && 'sessionStorage' in window && window['sessionStorage'] !== null && window['localStorage'] !== null;
 	} catch (e) {
 		return false;
@@ -30,7 +30,18 @@ function store_poll() {
 	}
 }
 
+function clean_poll() {
+	for (question in poll) {
+		for (response in poll.question_list[question].type.response_list) {
+			if(typeof poll.question_list[question].type.response_list[response].answers[0][1] === 'undefined') {
+				poll.question_list[question].type.response_list[response].answers = [[undefined, undefined, undefined]]
+			}
+		}
+	}
+}
+
 function submitPoll() {
+	clean_poll();
 	$.ajax({
 		type: 'POST',
 		data: poll,
@@ -38,7 +49,7 @@ function submitPoll() {
 		dataType: 'JSON'
 	}).done(function(response){
 		// Delete local storage of results
-		// STUB: Lock this user out of this poll in the future
+		// STUB: Lock this user out of this poll in the future, server-side
 
 		// Check for successful (blank) response
 		if (response.msg === '') {
@@ -114,7 +125,7 @@ function render_text_field(counter) {
 function render_pick_n(temp) {
 	// For each answer, draw a button
 	temp += '<fieldset data-role="controlgroup">';
-	
+
 	//var counter = 0;
 	for (var entry in poll.question_list[current_question].type.response_list) {
 		// Create a button to click!
@@ -130,8 +141,8 @@ function render_pick_n(temp) {
 		} else {
 			// Draw check boxes
 			temp += '<input type="checkbox" name="checkbox" id="pick-choice-'+entry+'">';
-    		temp += '<label for="pick-choice-'+entry+'">'+
-    				String(poll.question_list[current_question].type.response_list[entry].body)+'</label>';
+			temp += '<label for="pick-choice-'+entry+'">'+
+					String(poll.question_list[current_question].type.response_list[entry].body)+'</label>';
 		}
 			// Append any relevant text fields
 			temp += render_text_field(entry);
@@ -161,7 +172,7 @@ function update_text_field() {
 	}
 
 	var current_response = poll.question_list[current_question].type.response_list[counter];
-	
+
 	for (var counter in poll.question_list[current_question].type.response_list) {
 		temp = '';
 		current_response = poll.question_list[current_question].type.response_list[counter];
@@ -199,7 +210,7 @@ function update_text_field() {
 				&& typeof poll.question_list[current_question].type.response_list[counter].answers[0][2] !== 'undefined'
 				&& $('#pick-choice-'+String(counter)).is(':checked') ) {
 					$('#text-'+String(counter)).val(poll.question_list[current_question].type.response_list[counter].answers[0][2]);
-			
+
 			} else if ( $('#text-'+String(counter)) !== 'undefined'
 				&& typeof poll.question_list[current_question].type.response_list[counter].answers !== 'undefined'
 				&& poll.question_list[current_question].type.response_list[counter].answers[0] !== null
@@ -229,13 +240,13 @@ function renderCurrentQuestion() {
 	else if (poll.question_list[current_question].type.name === 'slider') {
 		temp += temp.concat(render_slider(temp));
 	}
-	
+
 	temp += '</fieldset>';
 	temp += '</form>';
 	temp = '<form>'.concat(temp);
 	$('#form').html(temp);
 	$('#form').trigger('create');
-	
+
 	modify_current_question();
 	update_text_field();
 
@@ -257,7 +268,7 @@ function modify_current_question() {
 			if( typeof poll.question_list[current_question].type.response_list[0] !== 'undefined' && typeof poll.question_list[current_question].type.response_list[counter].answers !== 'undefined' && typeof poll.question_list[current_question].type.response_list[0].answers[0] !== 'undefined') {
 				$("#slider").val(poll.question_list[current_question].type.response_list[0].answers[0][1]);
 				$( "#slider" ).slider("refresh");
-			}	
+			}
 		}
 	}
 }
@@ -291,7 +302,7 @@ function validateCurrentQuestion(forward) {
 			// Otherwise, we're invalid, and let's find out how
 			} else if ($('#text-'+String(n_special)).val() === "") {
 				if (forward && poll.question_list[current_question].type.response_list[n_special].explanation.required) {
-					alert('Please enter some text.');	
+					alert('Please enter some text.');
 				}
 			} else if(counter === 0) {
 				if (forward) {
@@ -307,7 +318,7 @@ function validateCurrentQuestion(forward) {
 			// STUB: You should really ASSERT that counter >= 0 and counter <= ...response_list.length
 			if(counter < 0) {
 				if (forward) {
-					alert('Something has gone terribly wrong; you\'ve selected less than zero answers.');	
+					alert('Something has gone terribly wrong; you\'ve selected less than zero answers.');
 				}
 			} else if (counter > poll.question_list[current_question].type.response_list.length) {
 				if (forward) {
@@ -335,9 +346,9 @@ function validateCurrentQuestion(forward) {
 }
 
 function updateBottomButtons() {
-	
+
 	if(poll.question_list[current_question].closing_slide) {
-	
+
 		//$('#nextquestion').addClass('ui-state-disabled');
 		$('#nextquestion').hide();
 		if(document.getElementById('submit') === null) {
@@ -354,28 +365,28 @@ function updateBottomButtons() {
 		$('#skipquestion').addClass('ui-state-disabled');
 		$('#lastquestion').removeClass('ui-state-disabled');
 	} else if(poll.question_list[current_question].opening_slide) {
-	
+
 		$('#submit').hide();
 		$('#nextquestion').show();
 		$('#nextquestion').removeClass('ui-state-disabled');
 		$('#skipquestion').removeClass('ui-state-disabled');
 		$('#lastquestion').addClass( 'ui-state-disabled' );
 	} else {
-	
+
 		$('#submit').hide();
 		$('#nextquestion').show();
 		$('#nextquestion').removeClass('ui-state-disabled');
 		$('#skipquestion').removeClass('ui-state-disabled');
 		$('#lastquestion').removeClass('ui-state-disabled');
 	}
-	
+
 	if ( !poll.allow_skipping && (typeof poll.question_list[current_question].allow_skipping === 'undefined' || !poll.question_list[current_question].allow_skipping)) {
 		// STUB: Consider hiding the text on Skip in this case
-	
+
 		$('#skipquestion').addClass('ui-state-disabled');
 		$('#skipquestion').innerHTML = '';
 	}
-	
+
 	if ( !poll.allow_skipping && (typeof poll.question_list[current_question].allow_skipping !== 'undefined' && poll.question_list[current_question].allow_skipping)) {
 		$('#skipquestion').removeClass('ui-state-disabled');
 		$('#skipquestion').innerHTML = 'Skip';
@@ -383,11 +394,11 @@ function updateBottomButtons() {
 }
 
 function findWithAttr(array, attr, value) {
-    for(var i = 0; i < array.length; i += 1) {
-        if(array[i][attr] === value) {
-            return i;
-        }
-    }
+	for(var i = 0; i < array.length; i += 1) {
+		if(array[i][attr] === value) {
+			return i;
+		}
+	}
 }
 
 function renderBottomButtons() {
@@ -439,7 +450,7 @@ function answer_question(forward) {
 					}
 				// OTHERWISE, if this option is not checked
 				} else {
-					
+
 					// save only the explanation
 					if ( typeof poll.question_list[current_question].type.response_list[i].answers !== 'undefined' && typeof poll.question_list[current_question].type.response_list[i].answers[0] !== 'undefined' && typeof poll.question_list[current_question].type.response_list[i].answers[0][2] !== 'undefined' ) {
 						console.log('Soft overwriting answer '+i+'.');
@@ -474,7 +485,7 @@ function answer_question(forward) {
 	// Otherwise, if invalid and going forwards
 	} else {
 		if (!forward) {
-			current_question -= 1;	
+			current_question -= 1;
 		}
 		return false
 	}
@@ -516,7 +527,7 @@ function lastQuestion() {
 function skipQuestion() {
 	//UNTESTED: skip_question()
 	skip_question();
-	
+
 	store_poll();
 	current_question += 1;
 	updateBottomButtons();
@@ -542,11 +553,11 @@ $(document).ready(function() {
 		store_poll();
 	}
 	renderCurrentQuestion();
-	renderBottomButtons();	
+	renderBottomButtons();
 
-    $('#bottombuttons div div').on('click', 'a.nextquestion', nextQuestion);
-    $('#bottombuttons div div').on('click', 'a.lastquestion', lastQuestion);
-    $('#bottombuttons div div').on('click', 'a.skipquestion', clear_storage);
+	$('#bottombuttons div div').on('click', 'a.nextquestion', nextQuestion);
+	$('#bottombuttons div div').on('click', 'a.lastquestion', lastQuestion);
+	$('#bottombuttons div div').on('click', 'a.skipquestion', clear_storage);
 });
 
 
@@ -556,7 +567,7 @@ $(document).ready(function() {
 $(document).change('.ui-radio-on', function () {
 	//console.log(event.target.nodeName);
 	if(event.target.nodeName === 'LABEL') {
-		update_text_field();	
+		update_text_field();
 	}
 
 });

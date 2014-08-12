@@ -23,6 +23,7 @@
     "grunt": "*",
     "load-grunt-tasks": "*",
     "grunt-contrib-jshint": "*",
+    "grunt-lintspaces": "*",
     "grunt-contrib-uglify": "*",
     "grunt-contrib-nodeunit": "*",
     "grunt-contrib-clean": "*",
