@@ -190,7 +190,7 @@ function update_text_field() {
 					$('#form').trigger('create');
 					$('.ui-radio').off('click', update_text_field);
 					$('.ui-radio').on('click', update_text_field);
-					if($('#text-'+String(counter)) !== 'undefined' && poll.question_list[current_question].type.response_list[counter].answers[0] !== null && typeof poll.question_list[current_question].type.response_list[counter].answers[0] !== 'undefined' && typeof poll.question_list[current_question].type.response_list[counter].answers[0][2] !== 'undefined') {
+					if($('#text-'+String(counter)) !== 'undefined' && typeof poll.question_list[current_question].type.response_list[counter].answers !== 'undefined' && poll.question_list[current_question].type.response_list[counter].answers[0] !== null && typeof poll.question_list[current_question].type.response_list[counter].answers[0] !== 'undefined' && typeof poll.question_list[current_question].type.response_list[counter].answers[0][2] !== 'undefined') {
 						$('#text-'+String(counter)).val(poll.question_list[current_question].type.response_list[counter].answers[0][2]);
 					}
 				}else if(!current_response.explanation.always_explainable
@@ -240,14 +240,14 @@ function init_current_question() {
 function modify_current_question() {
 	for (var counter in poll.question_list[current_question].type.response_list) {
 		if (poll.question_list[current_question].type.name === "pick_n") {
-			if( typeof poll.question_list[current_question].type.response_list[counter] !== 'undefined' && poll.question_list[current_question].type.response_list[counter].answers[0] !== null && typeof poll.question_list[current_question].type.response_list[counter].answers[0] !== 'undefined' && poll.question_list[current_question].type.response_list[counter].answers[0][1] !== null && typeof poll.question_list[current_question].type.response_list[counter].answers[0][1] !== 'undefined') {
+			if( typeof poll.question_list[current_question].type.response_list[counter] !== 'undefined' && typeof poll.question_list[current_question].type.response_list[counter].answers !== 'undefined' && poll.question_list[current_question].type.response_list[counter].answers[0] !== null && typeof poll.question_list[current_question].type.response_list[counter].answers[0] !== 'undefined' && poll.question_list[current_question].type.response_list[counter].answers[0][1] !== null && typeof poll.question_list[current_question].type.response_list[counter].answers[0][1] !== 'undefined') {
 				$('#pick-choice-'+String(counter)).checkboxradio();
 				$('#pick-choice-'+String(counter)).prop('checked', value);
 				$("#pick-choice-"+String(counter)).checkboxradio("refresh");
 			} else {
 			}
 		} else if (poll.question_list[current_question].type.name === "slider") {
-			if( typeof poll.question_list[current_question].type.response_list[0] !== 'undefined' && typeof poll.question_list[current_question].type.response_list[0].answers[0] !== 'undefined') {
+			if( typeof poll.question_list[current_question].type.response_list[0] !== 'undefined' && typeof poll.question_list[current_question].type.response_list[counter].answers !== 'undefined' && typeof poll.question_list[current_question].type.response_list[0].answers[0] !== 'undefined') {
 				$("#slider").val(poll.question_list[current_question].type.response_list[0].answers[0][1]);
 				$( "#slider" ).slider("refresh");
 			}	
@@ -337,6 +337,8 @@ function updateBottomButtons() {
 			//temp = $('#verybottombuttons div').html();
 			$('#verybottombuttons div').append('<a href="/polls" class="submit" id="submit" data-role="button" data-icon="carat-r" data-iconpos="right">Submit</a>');
 			$('#verybottombuttons').trigger('create');
+			$('#submit').show();
+			$('#submit').on('click', submitPoll);
 			//$('#verybottombuttons div').html(temp);
 		} else {
 			$('#submit').show();
@@ -444,10 +446,10 @@ function answer_question(forward) {
 					// If this option is not checked, save only the explanation
 					if ( typeof poll.question_list[current_question].type.response_list[i].answers !== 'undefined' && typeof poll.question_list[current_question].type.response_list[i].answers[0] !== 'undefined' && typeof poll.question_list[current_question].type.response_list[i].answers[0][2] !== 'undefined' ) {
 						console.log('Soft overwriting answer '+i+'.')
-						poll.question_list[current_question].type.response_list[i].answers = [[undefined, undefined, poll.question_list[current_question].type.response_list[i].answers[0][2]]]
+						//poll.question_list[current_question].type.response_list[i].answers = [[undefined, undefined, poll.question_list[current_question].type.response_list[i].answers[0][2]]]
 					} else {
 						console.log('Hard overwriting answer '+i+'.')
-						console.log("typeof poll.question_list[current_question].type.response_list[i].answers !== 'undefined' : "+typeof poll.question_list[current_question].type.response_list[i].answers[0] !== 'undefined');
+						//console.log("typeof poll.question_list[current_question].type.response_list[i].answers !== 'undefined' : "+typeof poll.question_list[current_question].type.response_list[i].answers[0] !== 'undefined');
 						//console.log("typeof poll.question_list[current_question].type.response_list[i].answers[2] !== 'undefined' : "+typeof poll.question_list[current_question].type.response_list[i].answers[0][2] !== 'undefined');
 						//console.log("typeof poll.question_list[current_question].type.response_list[i].answers[0][2] !== 'undefined' : "+typeof poll.question_list[current_question].type.response_list[i].answers[0][2] !== 'undefined');
 						poll.question_list[current_question].type.response_list[i].answers = [[undefined, undefined, undefined]];
