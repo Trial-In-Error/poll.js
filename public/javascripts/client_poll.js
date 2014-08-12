@@ -37,6 +37,9 @@ function submitPoll() {
 		url: '/pollroute/answerpoll',
 		dataType: 'JSON'
 	}).done(function(response){
+		// Delete local storage of results
+		// STUB: Lock this user out of this poll in the future
+
 		// Check for successful (blank) response
 		if (response.msg === '') {
 			// Redirect to /polls
@@ -46,6 +49,9 @@ function submitPoll() {
 			alert('Error: '+response.msg);
 		}
 	})
+	clear_storage();
+	poll = undefined;
+	console.log('LOL');
 }
 
 function load_poll() {
@@ -247,7 +253,7 @@ function modify_current_question() {
 				// WARN: ?! what was supposed to be here?!
 			}
 		} else if (poll.question_list[current_question].type.name === "slider") {
-			if( typeof poll.question_list[current_question].type.response_list[0] !== 'undefined' && typeof poll.question_list[modify_current_questionion].type.response_list[counter].answers !== 'undefined' && typeof poll.question_list[current_question].type.response_list[0].answers[0] !== 'undefined') {
+			if( typeof poll.question_list[current_question].type.response_list[0] !== 'undefined' && typeof poll.question_list[current_question].type.response_list[counter].answers !== 'undefined' && typeof poll.question_list[current_question].type.response_list[0].answers[0] !== 'undefined') {
 				$("#slider").val(poll.question_list[current_question].type.response_list[0].answers[0][1]);
 				$( "#slider" ).slider("refresh");
 			}	
@@ -547,8 +553,8 @@ $(document).ready(function() {
 //Once on uncheck of the old one, once on check the new one
 //But it works and I'm not in the mood to question working.
 $(document).change('.ui-radio-on', function () {
-	console.log(event.target.nodeName);
-	if(event.target.nodeName !== 'TEXTAREA') {
+	//console.log(event.target.nodeName);
+	if(event.target.nodeName === 'LABEL') {
 		update_text_field();	
 	}
 
