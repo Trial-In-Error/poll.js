@@ -116,10 +116,7 @@ function render_pick_n(temp) {
 
 			//MISSING OPEN FORM!!!
 
-			//WARN: WAIT, AREN'T COUNTER AND ENTRY THE FUCKING SAME THING?
-
 			// Draw radio buttons
-			//alert(poll.question_list[current_question].type.response_list[entry].body);
 			temp += '<input type="radio" name="pick-choice" id="pick-choice-'+entry+'" value="off">';
 			temp += '<label for="pick-choice-'+entry+'">'+
 					String(poll.question_list[current_question].type.response_list[entry].body)+'</label>';
@@ -129,19 +126,14 @@ function render_pick_n(temp) {
     		temp += '<label for="pick-choice-'+entry+'">'+
     				String(poll.question_list[current_question].type.response_list[entry].body)+'</label>';
 		}
-			// It should update entry.answers <---this happens in DOM ready
-			// It should check entry.*_explainable when rendering
-			//counter += 1;
+			// Append any relevant text fields
 			temp += render_text_field(entry);
-			//alert('Rendered counter '+entry+' as:'+temp);
 	}
 	return temp
 }
 
 function render_slider(temp) {
-	//alert('min: '+ String(poll.question_list[current_question].type.min))
-	//alert('max: '+ String(poll.question_list[current_question].type.max))
-	// Draw slider
+	// Append slider for drawing in renderCurrentQuestion
 	// WARN: TERRIBLE AWFUL DIRTY HACK: ASSUMED THAT STARTING POSITION = MIN + MAX / 2
 	temp += '<form class="full-width-slider">';
 	temp += '<input type="range" name="slider" id="slider"';
@@ -154,10 +146,10 @@ function render_slider(temp) {
 }
 
 function update_text_field() {
-	console.log('Entered update_text_field().');
+//	console.log('Entered update_text_field().');
 	var temp;
 	if(typeof poll.question_list[current_question].type.response_list === 'undefined') {
-		console.log('...But did no work.');
+//		console.log('...But did no work.');
 		return;
 	}
 
@@ -166,41 +158,53 @@ function update_text_field() {
 	for (var counter in poll.question_list[current_question].type.response_list) {
 		temp = '';
 		current_response = poll.question_list[current_question].type.response_list[counter];
-		if(typeof current_response !== 'undefined') {
-			if ( typeof current_response['explanation'] !== 'undefined' ) {
-				// WARN: ONLY PICK-N WILL CONDITIONALLY WORK
-				// BECAUSE OF PICK-CHOICE+i
-				// STUB: COLUMNS AND ROWS NOT MUTABLE
-				// STUB: data-clear-btn="true" DOES NOT WORK WITH TEXTAREAS
-				if ( (current_response.explanation.always_explainable ||
-					($('#pick-choice-'+String(counter)).is(':checked')))
-					&& document.getElementById('text-'+String(counter)) === null ) {
-					console.log('We fully created text area #:'+counter)
-					if ( typeof current_response.explanation['label'] !== 'undefined' ) {
-						temp += '<label for="text-'+counter+'">'+current_response.explanation['label']+'</label>';
-					} else {
-						temp += '<label for="text-'+counter+'" class="ui-hidden-accessible"></label>';
-					}
-					if ( typeof current_response.explanation['explain_text'] !== 'undefined' ) {
-						temp += '<textarea cols="40" rows="8" type="text" name="text-'+counter+'" id="text-'+counter+'" value="" placeholder="'+current_response.explanation['explain_text']+'"></textarea>'
-					} else {
-						temp += '<textarea cols="40" rows="8" type="text" name="text-'+counter+'" id="text-'+counter+'" value=""></textarea>'
-					}
-					$('#pick-choice-'+String(counter)).parent().after(temp);
-					$('#form').trigger('create');
-					$('.ui-radio').off('click', update_text_field);
-					$('.ui-radio').on('click', update_text_field);
-					if($('#text-'+String(counter)) !== 'undefined' && typeof poll.question_list[current_question].type.response_list[counter].answers !== 'undefined' && poll.question_list[current_question].type.response_list[counter].answers[0] !== null && typeof poll.question_list[current_question].type.response_list[counter].answers[0] !== 'undefined' && typeof poll.question_list[current_question].type.response_list[counter].answers[0][2] !== 'undefined') {
-						$('#text-'+String(counter)).val(poll.question_list[current_question].type.response_list[counter].answers[0][2]);
-					}
-				}else if(!current_response.explanation.always_explainable
-					&& typeof $(this) !== 'undefined'
-					&& $(this).attr("id") !== 'pick-choice-'+String(counter)) {
-					$('#text-'+String(counter)).remove();
+		if(typeof current_response !== 'undefined' && typeof current_response['explanation'] !== 'undefined') {
+			// WARN: ONLY PICK-N WILL CONDITIONALLY WORK
+			// BECAUSE OF PICK-CHOICE+i
+			// STUB: COLUMNS AND ROWS NOT MUTABLE
+			// STUB: data-clear-btn="true" DOES NOT WORK WITH TEXTAREAS
 
-						if( typeof $(this) !== 'undefined') {
-	}
+			// If the question is always explainable OR (it is checked AND the text field does not exist)
+			if ( (current_response.explanation.always_explainable ||
+				($('#pick-choice-'+String(counter)).is(':checked')))
+				&& document.getElementById('text-'+String(counter)) === null ) {
+				// Then create the damn thing
+				console.log('We fully created text area #:'+counter)
+				if ( typeof current_response.explanation['label'] !== 'undefined' ) {
+					temp += '<label for="text-'+counter+'">'+current_response.explanation['label']+'</label>';
+				} else {
+					temp += '<label for="text-'+counter+'" class="ui-hidden-accessible"></label>';
 				}
+				if ( typeof current_response.explanation['explain_text'] !== 'undefined' ) {
+					temp += '<textarea cols="40" rows="8" type="text" name="text-'+counter+'" id="text-'+counter+'" value="" placeholder="'+current_response.explanation['explain_text']+'"></textarea>'
+				} else {
+					temp += '<textarea cols="40" rows="8" type="text" name="text-'+counter+'" id="text-'+counter+'" value=""></textarea>'
+				}
+				$('#pick-choice-'+String(counter)).parent().after(temp);
+				$('#form').trigger('create');
+				$('.ui-radio').off('click', update_text_field);
+				$('.ui-radio').on('click', update_text_field);
+			// STUB: COMMENT ME PROPERLY
+			} else if ( $('#text-'+String(counter)) !== 'undefined'
+				&& typeof poll.question_list[current_question].type.response_list[counter].answers !== 'undefined'
+				&& poll.question_list[current_question].type.response_list[counter].answers[0] !== null
+				&& typeof poll.question_list[current_question].type.response_list[counter].answers[0] !== 'undefined'
+				&& typeof poll.question_list[current_question].type.response_list[counter].answers[0][2] !== 'undefined'
+				&& $('#pick-choice-'+String(counter)).is(':checked') ) {
+					$('#text-'+String(counter)).val(poll.question_list[current_question].type.response_list[counter].answers[0][2]);
+			
+			} else if ( $('#text-'+String(counter)) !== 'undefined'
+				&& typeof poll.question_list[current_question].type.response_list[counter].answers !== 'undefined'
+				&& poll.question_list[current_question].type.response_list[counter].answers[0] !== null
+				&& typeof poll.question_list[current_question].type.response_list[counter].answers[0] !== 'undefined'
+				&& typeof poll.question_list[current_question].type.response_list[counter].answers[0][2] !== 'undefined'
+				&& !$('#pick-choice-'+String(counter)).is(':checked') ) {
+					$('#text-'+String(counter)).val('');
+
+			} else if ( !current_response.explanation.always_explainable
+				&& typeof $(this) !== 'undefined'
+				&& $(this).attr("id") !== 'pick-choice-'+String(counter) ) {
+				$('#text-'+String(counter)).remove();
 			}
 		}
 	}
@@ -223,7 +227,7 @@ function renderCurrentQuestion() {
 	temp += '</form>';
 	temp = '<form>'.concat(temp);
 	$('#form').html(temp);
-	init_current_question();
+	$('#form').trigger('create');
 	
 	modify_current_question();
 	update_text_field();
@@ -231,11 +235,6 @@ function renderCurrentQuestion() {
 
 }
 
-function init_current_question() {
-	$('#form').trigger('create');
-
-
-}
 
 function modify_current_question() {
 	for (var counter in poll.question_list[current_question].type.response_list) {
@@ -245,9 +244,10 @@ function modify_current_question() {
 				$('#pick-choice-'+String(counter)).prop('checked', value);
 				$("#pick-choice-"+String(counter)).checkboxradio("refresh");
 			} else {
+				// WARN: ?! what was supposed to be here?!
 			}
 		} else if (poll.question_list[current_question].type.name === "slider") {
-			if( typeof poll.question_list[current_question].type.response_list[0] !== 'undefined' && typeof poll.question_list[current_question].type.response_list[counter].answers !== 'undefined' && typeof poll.question_list[current_question].type.response_list[0].answers[0] !== 'undefined') {
+			if( typeof poll.question_list[current_question].type.response_list[0] !== 'undefined' && typeof poll.question_list[modify_current_questionion].type.response_list[counter].answers !== 'undefined' && typeof poll.question_list[current_question].type.response_list[0].answers[0] !== 'undefined') {
 				$("#slider").val(poll.question_list[current_question].type.response_list[0].answers[0][1]);
 				$( "#slider" ).slider("refresh");
 			}	
@@ -261,19 +261,19 @@ function validateCurrentQuestion(forward) {
 	// STUB: Generalize to an array to support checkbox explanations...
 	var n_special = 0;
 	// If we're doing a pick_n
-	console.log('Validating current question.');
+//	console.log('Validating current question.');
 	if (poll.question_list[current_question].type.name === 'pick_n') {
-		console.log('Validating pick_n question.');
+//		console.log('Validating pick_n question.');
 		for (i = 0; i < poll.question_list[current_question].type.response_list.length; i += 1) {
 			if($('#pick-choice-'+String(i)).is(':checked')) {
 				counter += 1;
 				n_special = i;
 			}
 		}
-		console.log(counter+' checked answers found. The last one is '+n_special+'.');
+//		console.log(counter+' checked answers found. The last one is '+n_special+'.');
 		// If we're picking 1 from a list
 		if (poll.question_list[current_question].type.n === 1) {
-			console.log('Validating pick_1 question.');
+//			console.log('Validating pick_1 question.');
 			// And we have picked 1, and (explanation not required OR explanation provided)
 			if(counter === 1 &&
 				poll.question_list[current_question].type.response_list[n_special].explanation &&
@@ -388,87 +388,70 @@ function renderBottomButtons() {
 	var temp = '';
 	temp += '<div id="verybottombuttons" data-role="controlgroup" data-type="horizontal" text-align="center" margin-left="auto" margin-right="auto" align="center">';
 	temp += '<a href="#" class="lastquestion" id="lastquestion" data-transition="slide" data-direction= "reverse" data-role="button" data-icon="carat-l" data-iconpos="left">Back</a>';
-
-	//data-transition="slide", data-direction: "reverse"
-
-	// Check to see if you should render a 'skip' button
+	// STUB: Check to see if you should render a 'skip' button
 	temp += '<a href="#" class="skipquestion" id="skipquestion" data-transition="slide" data-role="button">Skip</a>';
 	temp += '<a href="#" class="nextquestion" id="nextquestion" data-transition="slide" data-role="button" data-icon="carat-r" data-iconpos="right">Next</a>';
 	$('#bottombuttons').html(temp);
-	initBottomButtons();
+	$('#bottombuttons').trigger('create');
 	updateBottomButtons();
 }
 
-function initBottomButtons() {
-	$('#bottombuttons').trigger('create');
-}
-
 function answer_question(forward) {
-	// Only do this work if the question is valid or we're going backwards
+	// If we're valid OR we're going backwards
 	if(validateCurrentQuestion(forward)) {
-		// If we have a pick_n style question
+		// And if we have a pick_n style question
 		if(poll.question_list[current_question].type.name === 'pick_n') {
+			// For every question
 			for (var i = 0; i < poll.question_list[current_question].type.response_list.length; i += 1) {
 
-
+				// If the choice is checked
 				if ($('#pick-choice-'+String(i)).is(':checked')) {
-					//STUB: This is where you'd save the variable explanation fields, too, if present
-	
-					
-	
+					// And if it's a radiobox
 					if(poll.question_list[current_question].type.n === 1) {
-						// For each response, if it's NOT the checked response
-						for (var j = 0; j < poll.question_list[current_question].type.response_list.length; j += 1) {
-							if(i !== j) {
-								// Then 
-								if ( typeof poll.question_list[current_question].type.response_list[i].explanation !== 'undefined' ) {
-									poll.question_list[current_question].type.response_list[i].answers = [[user_token, true, $('#text-'+String(i)).val()]];
-								} else {
-									poll.question_list[current_question].type.response_list[i].answers = [[user_token, true, undefined]];
-								}
-							}
+						// Save it
+						if ( typeof poll.question_list[current_question].type.response_list[i].explanation !== 'undefined' ) {
+							poll.question_list[current_question].type.response_list[i].answers = [[user_token, true, $('#text-'+String(i)).val()]]
+						} else {
+							poll.question_list[current_question].type.response_list[i].answers = [[user_token, true, undefined]]
 						}
+
+						// Check for option-conditional branching; take it if possible
 						if (forward && typeof poll.question_list[current_question].type.response_list[i]['next'] !== 'undefined') {
 							current_question = poll.question_list[current_question].type.response_list[i]['next'];
 							return true;
 						}
-					} else { // If it's a pick_n, with n > 1
-						// For each response, if it's NOT the checked response
+					// OTHERWISE, if it's a pick_n, with n > 1
+					} else {
+						// For each response, save the current state
 						poll.question_list[current_question].type.response_list[i].answers = [[user_token, true, undefined]];
+						// Then check for option-conditional branching; take it if possible
 						if (forward && typeof poll.question_list[current_question].type.response_list[i]['next'] !== 'undefined') {
 							current_question = poll.question_list[current_question].type.response_list[i]['next'];
 							return true;
 						}
 					}
-					
+				// OTHERWISE, if this option is not checked
 				} else {
 					
-					// If this option is not checked, save only the explanation
+					// save only the explanation
 					if ( typeof poll.question_list[current_question].type.response_list[i].answers !== 'undefined' && typeof poll.question_list[current_question].type.response_list[i].answers[0] !== 'undefined' && typeof poll.question_list[current_question].type.response_list[i].answers[0][2] !== 'undefined' ) {
-						console.log('Soft overwriting answer '+i+'.')
-						//poll.question_list[current_question].type.response_list[i].answers = [[undefined, undefined, poll.question_list[current_question].type.response_list[i].answers[0][2]]]
+						console.log('Soft overwriting answer '+i+'.');
+						//poll.question_list[current_question].type.response_list[i].answers = [[undefined, undefined, $('#text-'+String(i)).val()]];
+						poll.question_list[current_question].type.response_list[i].answers = [[undefined, undefined, poll.question_list[current_question].type.response_list[i].answers[0][2]]]
 					} else {
-						console.log('Hard overwriting answer '+i+'.')
-						//console.log("typeof poll.question_list[current_question].type.response_list[i].answers !== 'undefined' : "+typeof poll.question_list[current_question].type.response_list[i].answers[0] !== 'undefined');
-						//console.log("typeof poll.question_list[current_question].type.response_list[i].answers[2] !== 'undefined' : "+typeof poll.question_list[current_question].type.response_list[i].answers[0][2] !== 'undefined');
-						//console.log("typeof poll.question_list[current_question].type.response_list[i].answers[0][2] !== 'undefined' : "+typeof poll.question_list[current_question].type.response_list[i].answers[0][2] !== 'undefined');
+						console.log('Hard overwriting answer '+i+'.');
 						poll.question_list[current_question].type.response_list[i].answers = [[undefined, undefined, undefined]];
 					}
 				}
 			}
 
-		// Otherwise, if we have a slider style question
+		// OTHERWISE, if we have a slider style question
 		} else if(poll.question_list[current_question].type.name === 'slider') {
+			// STUB: Conditionally save slider text fields
 			poll.question_list[current_question].type.response_list[0].answers = [[user_token, $('#slider').val()]];
 		}
 
 		// For all question types
-
-
-		// If there's an answer in a text field, preserve that
-		if(typeof poll.question_list[current_question].type.response_list !== 'undefined' && typeof poll.question_list[current_question].type.response_list[j] !== 'undefined' && typeof poll.question_list[current_question].type.response_list[j].answers !== 'undefined' && typeof poll.question_list[current_question].type.response_list[j].answers[0][2] !== 'undefined') {
-			poll.question_list[current_question].type.response_list[j].answers = [[undefined, undefined, poll.question_list[current_question].type.response_list[j].answers[0][2]]];
-		}
 
 		// If we have a hard-link to the next question, take it
 		if (forward && typeof poll.question_list[current_question]['next'] !== 'undefined') {
@@ -478,10 +461,10 @@ function answer_question(forward) {
 			current_question += 1;
 		} else {
 			current_question -= 1;
+			return false;
 		}
-
-
 		return true
+	// Otherwise, if invalid and going forwards
 	} else {
 		if (!forward) {
 			current_question -= 1;	
@@ -500,16 +483,13 @@ function skip_question() {
 	}
 }
 
-//THESE THREE FUNCTIONS NEED:
-	//ANSWER LOGGING
-	//AWARENESS OF THE 'end of the line'
-	//AWARENESS OF THE 'beginning of the line'
 function nextQuestion() {
 	if(answer_question(true)) {
 		store_poll();
 		updateBottomButtons();
 		//update_text_field();
 		renderCurrentQuestion(/*current_question*/);
+		update_text_field();
 		$.mobile.changePage($('#frontpage'), {allowSamePageTransition: true, transition: "slide"});
 	}
 	//update_text_field();
@@ -522,6 +502,7 @@ function lastQuestion() {
 	updateBottomButtons();
 	//update_text_field();
 	renderCurrentQuestion(/*current_question*/);
+	update_text_field();
 	$.mobile.changePage($('#frontpage'), {allowSamePageTransition: true, transition: "slide", reverse: true});
 }
 
