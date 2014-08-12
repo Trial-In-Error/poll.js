@@ -13,7 +13,7 @@ router.get('/:id', function(req, res) {
 					tr = result;
 					for(var question in tr.question_list) {
 						for(var response in tr.question_list[question].type.response_list) {
-							delete tr.question_list[question].type.response_list[response].answers
+							delete tr.question_list[question].type.response_list[response].answers;
 						}
 					}
 					res.locals.expose.result = tr;

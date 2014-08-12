@@ -11,44 +11,6 @@ router.get('/listpolls', function(req, res){
 
 
 /* POST to answer poll */
-//router.post('/answerpoll', function(req, res) {
-//    try { 
-//        var db = req.db;
-//        var tid = req.body._id;
-//        delete req.body._id;
-//        mongo = require('mongoskin');
-//        db.collection('polldb').update( {_id: mongo.helper.toObjectID(tid)}, db.collection('polldb').findOne({_id: mongo.helper.toObjectID(tid)}, {},
-//            function(err, result) {
-//                if(err) {
-//                    console.log(err);
-//                }
-//
-//                for (var question in req.body.question_list) {
-//                    for (var response in req.body.question_list[question].type.response_list) {
-//                        if(typeof req.body.question_list[question].type.response_list[response].answers !== 'undefined' && typeof req.body.question_list[question].type.response_list[response].answers[0] !== 'undefined' && typeof req.body.question_list[question].type.response_list[response].answers[0][1] !== 'undefined' && req.body.question_list[question].type.response_list[response].answers[0][1] !== null) {
-//                            console.log('Appended question '+question+' and response '+response+ '.');
-//                            console.log('Appended: '+req.body.question_list[question].type.response_list[response].answers);
-//                            //console.log(result.question_list);
-//                            //console.log(req.body.question_list);
-//                            result.question_list[question].type.response_list[response].answers.push(req.body.question_list[question].type.response_list[response].answers[0]);
-//                            console.log(result.question_list[question].type.response_list[response].answers)
-//                        }
-//                    }
-//                }
-//                    //console.log(JSON.stringify(result, null, 4));
-//            }),
-//            function(err, result) {
-//                if(err) {
-//                    console.log(err);
-//                }
-//                console.log(tid);
-//                console.log(typeof req.body);
-//            });
-//    } catch (err) {
-//        console.log(err);
-//    }
-//});
-
 router.post('/answerpoll', function(req, res) {
     try { 
         var db = req.db;
@@ -63,12 +25,12 @@ router.post('/answerpoll', function(req, res) {
                 for (var question in req.body.question_list) {
                     for (var response in req.body.question_list[question].type.response_list) {
                         if(typeof req.body.question_list[question].type.response_list[response].answers !== 'undefined' && typeof req.body.question_list[question].type.response_list[response].answers[0] !== 'undefined' && typeof req.body.question_list[question].type.response_list[response].answers[0][1] !== 'undefined' && req.body.question_list[question].type.response_list[response].answers[0][1] !== null) {
-                            console.log('Appended question '+question+' and response '+response+ '.');
-                            console.log('Appended: '+req.body.question_list[question].type.response_list[response].answers);
+                            //console.log('Appended question '+question+' and response '+response+ '.');
+                            //console.log('Appended: '+req.body.question_list[question].type.response_list[response].answers);
                             //console.log(result.question_list);
                             //console.log(req.body.question_list);
                             result.question_list[question].type.response_list[response].answers.push(req.body.question_list[question].type.response_list[response].answers[0]);
-                            console.log(result.question_list[question].type.response_list[response].answers)
+                            //console.log(result.question_list[question].type.response_list[response].answers);
                         }
                     }
                 }
