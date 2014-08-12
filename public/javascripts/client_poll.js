@@ -49,6 +49,7 @@ function submitPoll() {
 			alert('Error: '+response.msg);
 		}
 	})
+	window.onbeforeunload = function() {}
 	clear_storage();
 	poll = undefined;
 	console.log('LOL');
