@@ -26,7 +26,7 @@ This project is built with grunt. Most files have two versions, one called `foo_
 * `grunt linter` lints all javascript files.
 * `grunt ender` fixes all files' line endings to unix standard.
 * `grunt watch` automatically lints, uglifies, etc., as files are edited.
-    * Note that `grunt watch` is currently not supported, and is likely to break things! Don't use it!
+    * Note that `grunt watch` is currently not supported, and is likely to break things! Don't use it unless you've fixed it!
 
 
 The Future
@@ -42,11 +42,11 @@ The Future
 Known Issues
 ---------------------------------
 * `server_stdout.log` contains color escape codes and other garbage.
-* Skype defaults to listening on port 443, blocking server.js from starting the HTTP server.
+* Skype defaults to listening on port 443, blocking server.js from starting the HTTPS server.
 	* Right now, this crashes fatally for both servers.
 * MongoDB under Mac OSX will not get as many file descriptors as it would like.
 	* See: http://docs.mongodb.org/manual/reference/ulimit/
-* None of the keys are packaged with the app. Generate them like so:
+* None of the HTTPS keys are packaged with the app. Generate them like so:
 
 	`openssl genrsa -out polljs-key.pem 1024`
 
