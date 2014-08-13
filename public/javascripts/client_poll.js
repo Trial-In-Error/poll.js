@@ -226,14 +226,14 @@ function update_text_field() {
 				}
 				// WARN: This code happens n times for n text fields; maybe expensive
 				if(poll.question_list[current_question].type.name === 'pick_n') {
-					$('#pick-choice-'+String(counter)).parent().after(temp);	
+					$('#pick-choice-'+String(counter)).parent().after(temp);
 				} else if (poll.question_list[current_question].type.name === 'slider') {
-					$('#slider').parent().after(temp);	
+					$('#slider').parent().after(temp);
 				} else {
 					console.log('UNEXPECTED CASE!');
 					console.log(poll.question_list[current_question].type);
 				}
-				
+
 				$('#form').trigger('create');
 				$('.ui-radio').off('click', update_text_field);
 				$('.ui-radio').on('click', update_text_field);
