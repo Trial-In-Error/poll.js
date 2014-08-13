@@ -23,24 +23,21 @@
 				"response_list":
 				[
 					{
-						"body": "Never.",
-						"answers": []
+						"body": "Never."
 					},
 					{
 						"body": "When selected and required.",
-						"answers": [],
 						"explanation": {
 							"always_explainable": false,
-							"explain_text": "Enter some stuff.",
+							"explain_text": "Please enter some stuff to continue.",
 							"required": true
 						}
 					},
 					{
 						"body": "Always but not required.",
-						"answers": [],
 						"explanation": {
 							"always_explainable": true,
-							"explain_text": "Enter more stuff.",
+							"explain_text": "Optionally explain.",
 							"required": false
 						}
 					}
@@ -65,36 +62,28 @@
 				"response_list":
 				[
 					{
-						"body": "Zero.",
-						"answers": []
+						"body": "Zero."
 					},
 					{
-						"body": "Lilt.",
-						"answers": []
+						"body": "Lilt."
 					},
 					{
-						"body": "Wiser.",
-						"answers": []
+						"body": "Wiser."
 					},
 					{
-						"body": "Orange.",
-						"answers": []
+						"body": "Orange."
 					},
 					{
-						"body": "Agrarian.",
-						"answers": []
+						"body": "Agrarian."
 					},
 					{
-						"body": "Silly.",
-						"answers": []
+						"body": "Silly."
 					},
 					{
-						"body": "Obelisk.",
-						"answers": []
+						"body": "Obelisk."
 					},
 					{
-						"body": "Quaff.",
-						"answers": []
+						"body": "Quaff."
 					}
 				]
 			}
@@ -109,20 +98,16 @@
 				"response_list":
 				[
 					{
-						"body": "Coffee.",
-						"answers": []
+						"body": "Coffee."
 					},
 					{
-						"body": "Video-games.",
-						"answers": []
+						"body": "Video-games."
 					},
 					{
-						"body": "Cats.",
-						"answers": []
+						"body": "Cats."
 					},
 					{
-						"body": "Beer.",
-						"answers": []
+						"body": "Beer."
 					}
 				]
 			},
@@ -147,7 +132,6 @@
 				"response_list":
 				[
 					{
-						"answers": [],
 						"explanation":
 						{
 							"always_explainable": true,

@@ -41,5 +41,8 @@ node_modules
 # polljs-cert.pem
 # certrequest.csr
 
+# Ignore 'progress of the project' document
+status.md
+
 # This is some deep, dark voodoo, man.
 !.gitignore

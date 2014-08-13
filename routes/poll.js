@@ -10,9 +10,15 @@ router.get('/:id', function(req, res) {
 
 	var temp = db.collection('polldb').findOne({_id:mongo.helper.toObjectID(pollToDisplay)}, function (err, result) {
 					if(err) return err;
-					res.locals.expose.result = result;
+					tr = result;
+					for(var question in tr.question_list) {
+						for(var response in tr.question_list[question].type.response_list) {
+							delete tr.question_list[question].type.response_list[response].answers;
+						}
+					}
+					res.locals.expose.result = tr;
 					//res.expose(result, 'temp_poll');
-					res.render('poll', {title: 'Poll', poll: result, exists: res.locals.expose.exists});
+					res.render('poll', {title: 'Poll', poll: tr, exists: res.locals.expose.exists});
 				});
 });
 

@@ -3,10 +3,7 @@ html
 	head
 		title= title
 
-		
-
 		// JQUERY MUST BE INCLUDED BEFORE JQUERY MOBILE
-		// JQUERY NOT RESILIANT TO BUILD PROCESS
 		if locals.expose.exists['jquery_2_1_1.js']
 			script(src='/dist/javascripts/jquery_2_1_1.js')
 		else

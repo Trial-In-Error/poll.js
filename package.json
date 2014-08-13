@@ -1,39 +1,55 @@
 {
-  "name": "poll.js",
-  "version": "0.0.1",
-  "private": true,
-  "scripts": {
-    "prestart": "forever start --minUptime 1000 --spinSleepTime 1000 -e ./logs/database_errors.log -o ./logs/database_stdout.log -c node ./bin/database_init_helper.js",
-    "start": "forever --minUptime 1000 --spinSleepTime 1000 -e ./logs/server_errors.log -l ./logs/forever.log -o ./logs/server_stdout.log -c node ./bin/server.js",
-    "godbless": "forever --minUptime 1000 --spinSleepTime 1000 -e ./logs/server_errors.log -l ./logs/forever.log -o ./logs/server_stdout.log -c node ./bin/server.js"
-  },
-  "dependencies": {
-    "express": "~4.2.0",
-    "express-generator": "~4.2.0",
-    "static-favicon": "~1.0.0",
-    "morgan": "~1.0.0",
-    "cookie-parser": "~1.0.1",
-    "body-parser": "~1.0.0",
-    "debug": "~0.7.4",
-    "jade": "~1.3.0",
-    "mongodb": "*",
-    "mongoskin": "*",
-    "forever": "*" 
-  },
-  "devDependencies": {
-    "grunt": "*",
-    "load-grunt-tasks": "*",
-    "grunt-contrib-jshint": "*",
-    "grunt-contrib-uglify": "*",
-    "grunt-contrib-nodeunit": "*",
-    "grunt-contrib-clean": "*",
-    "grunt-contrib-qunit": "*",
-    "grunt-contrib-watch": "*",
-    "grunt-contrib-concat": "*",
-    "grunt-contrib-cssmin": "*",
-    "grunt-strip-json-comments": "*",
-    "grunt-jsbeautifier": "^0.2.7",
-    "grunt-lineending": "^0.2.2",
-    "grunt-text-replace": "*"
-  }
+	"name": "poll.js",
+	"version": "0.0.1",
+	"private": true,
+	
+	
+	
+	
+	
+	
+	"scripts": {
+		
+		
+		"prestart": "forever start --minUptime 1000 --spinSleepTime 1000 -e ./logs/database_errors.log -o ./logs/database_stdout.log -c node ./bin/database_init_helper.js",
+		
+		
+		"start": "forever --minUptime 1000 --spinSleepTime 1000 -e ./logs/server_errors.log -l ./logs/forever.log -o ./logs/server_stdout.log -c node ./bin/server.js",
+		
+		"godbless": "forever --minUptime 1000 --spinSleepTime 1000 -e ./logs/server_errors.log -l ./logs/forever.log -o ./logs/server_stdout.log -c node ./bin/server.js"
+	},
+	"dependencies": {
+		
+		"express": "~4.2.0",
+		"static-favicon": "~1.0.0",
+		"morgan": "~1.0.0",
+		"cookie-parser": "~1.0.1",
+		"body-parser": "~1.0.0",
+		"debug": "~0.7.4",
+		"jade": "~1.3.0",
+		"mongodb": "*",
+		"mongoskin": "*",
+		"forever": "*" 
+		
+		
+		
+	},
+	"devDependencies": {
+		"grunt": "*",
+		"load-grunt-tasks": "*",
+		"grunt-contrib-jshint": "*",
+		"grunt-lintspaces": "*",
+		"grunt-contrib-uglify": "*",
+		"grunt-contrib-nodeunit": "*",
+		"grunt-contrib-clean": "*",
+		"grunt-contrib-qunit": "*",
+		"grunt-contrib-watch": "*",
+		"grunt-contrib-concat": "*",
+		"grunt-contrib-cssmin": "*",
+		"grunt-forever": "*",
+		"grunt-strip-json-comments": "*",
+		"grunt-jsbeautifier": "^0.2.7",
+		"grunt-lineending": "^0.2.2",
+		"grunt-text-replace": "*"
+	}
 }
