@@ -17,10 +17,8 @@ function supports_html5_storage() {
 	}
 }
 
-var can_store = supports_html5_storage();
-
 function store_poll() {
-	if (can_store) {
+	if (supports_html5_storage()) {
 		window.localStorage['poll'+poll._id] = JSON.stringify(poll);
 		window.localStorage['current'+poll._id] = JSON.stringify(current_question);
 	} else {
@@ -74,7 +72,7 @@ function submitPoll() {
 }
 
 function load_poll() {
-	if(can_store) {
+	if(supports_html5_storage()) {
 		poll = JSON.parse(window.localStorage['poll'+window.location.pathname.split('poll/').slice(-1)]);
 		current_question = parseInt(window.localStorage['current'+window.location.pathname.split('poll/').slice(-1)]);
 	} else {
@@ -85,7 +83,7 @@ function load_poll() {
 }
 
 function poll_is_stored() {
-	if(can_store) {
+	if(supports_html5_storage()) {
 		return typeof window.localStorage["poll"+poll._id] !== 'undefined';
 	} else {
 		//UNTESTED: return window.namespace's existance
@@ -94,13 +92,19 @@ function poll_is_stored() {
 	}
 }
 
+
+/**
+ *	Returns HTML string, temp, to be appended to the HTML string in its caller.
+ *	This appending is the caller's responsibility. Called by render_pick_n() for every question.
+ *	This function is safe to call when unnecessary;
+ *	The actual injection, rendering, and inflation occurs in renderCurrentQuestion(), after render_pick_n() returns.
+ *	@param {int} counter - The number of the response the text field might be rendered for. Not to be confused with current_question!
+ *	@returns {string} temp - The HTML string describing the text field. Caller must append to its own HTML string.
+ */
 function render_text_field(counter) {
-	// WARN: This has a bug where it re-renders the text field if it's conditional, selected, and clicked on again
 	// Renders a text field IFF it's needed. Safe to call when a text field is unnecessary.
-	//counter -= 1;
 	temp = '';
 	var current_response = poll.question_list[current_question].type.response_list[counter];
-	//temp += '<form>';
 	if(typeof current_response !== 'undefined' && typeof current_response['explanation'] !== 'undefined' /*&& $('#text-'+String(counter)).length === 0*/ ) {
 		// WARN: ONLY PICK-N WILL CONDITIONALLY WORK
 		// BECAUSE OF PICK-CHOICE+i
@@ -118,10 +122,6 @@ function render_text_field(counter) {
 				temp += '<textarea cols="40" rows="8" type="text" name="text-'+counter+'" id="text-'+counter+'" value=""></textarea>'
 			}
 		}
-		//temp += '</form>';
-	} else {
-		// WARN: This should be dev mode only
-		alert('What the hell? We found an invalid call to render_text_field with counter = '+counter);
 	}
 	return temp;
 }
@@ -130,7 +130,8 @@ function render_text_field(counter) {
  *	Appends HTML to the string temp corresponding to this question's pick_n field.
  *	The actual injection, rendering, and inflation occurs in renderCurrentQuestion().
  *	Called in renderCurrentQuestion().
- *	@param {string} temp - The HTML string that is passed in, appended to, and returned.
+ *	@param {string} temp - The HTML string that is passed in.
+ *	@returns {string} temp - The HTML string that was passed in, after more HTML is appended to it.
  */
 function render_pick_n(temp) {
 	// For each answer, draw a button
@@ -164,7 +165,8 @@ function render_pick_n(temp) {
  *	Appends HTML to the string temp corresponding to this question's slider.
  *	The actual injection, rendering, and inflation occurs in renderCurrentQuestion().
  *	Called in renderCurrentQuestion().
- *	@param {string} temp - The HTML string that is passed in, appended to, and returned.
+ *	@param {string} temp - The HTML string that is passed in.
+ *	@returns {string} temp - The HTML string that is passed in, after being appended to.
  */
 function render_slider(temp) {
 	// Append slider for drawing in renderCurrentQuestion
@@ -215,13 +217,23 @@ function update_text_field() {
 				} else {
 					temp += '<label for="text-'+counter+'" class="ui-hidden-accessible"></label>';
 				}
-				if ( typeof current_response.explanation['explain_text'] !== 'undefined' && typeof current_response.answers[0][2] === 'undefined') {
+				if ( typeof current_response.explanation['explain_text'] !== 'undefined' && (typeof current_response.answers === 'undefined' || typeof current_response.answers[0] === 'undefined' || typeof current_response.answers[0][2] === 'undefined')) {
 					temp += '<textarea cols="40" rows="8" type="text" name="text-'+counter+'" id="text-'+counter+'" value="" placeholder="'+current_response.explanation['explain_text']+'"></textarea>'
-				} else {
+				} else if(typeof current_response.answers !== 'undefined' && typeof current_response.answers[0] !== 'undefined' & typeof current_response.answers[0][2] !== 'undefined') {
 					temp += '<textarea cols="40" rows="8" type="text" name="text-'+counter+'" id="text-'+counter+'" value="">'+current_response.answers[0][2]+'</textarea>'
+				} else {
+					temp += '<textarea cols="40" rows="8" type="text" name="text-'+counter+'" id="text-'+counter+'" value=""></textarea>'
 				}
 				// WARN: This code happens n times for n text fields; maybe expensive
-				$('#pick-choice-'+String(counter)).parent().after(temp);
+				if(poll.question_list[current_question].type.name === 'pick_n') {
+					$('#pick-choice-'+String(counter)).parent().after(temp);	
+				} else if (poll.question_list[current_question].type.name === 'slider') {
+					$('#slider').parent().after(temp);	
+				} else {
+					console.log('UNEXPECTED CASE!');
+					console.log(poll.question_list[current_question].type);
+				}
+				
 				$('#form').trigger('create');
 				$('.ui-radio').off('click', update_text_field);
 				$('.ui-radio').on('click', update_text_field);
@@ -233,7 +245,7 @@ function update_text_field() {
 				&& typeof current_response.answers[0] !== 'undefined'
 				&& typeof current_response.answers[0][2] !== 'undefined'
 				&& $('#pick-choice-'+String(counter)).is(':checked') ) {
-					// Render that text in it.
+					// Then render that explanation text in it.
 					$('#text-'+String(counter)).val(current_response.answers[0][2]);
 
 			// Else, if it is not checked, the explanation stored in local poll is undefined, and it is always renderable
