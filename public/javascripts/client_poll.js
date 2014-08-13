@@ -2,13 +2,14 @@ var current_question;
 var value = Math.floor((Math.random() * 1000000)+1);
 var user_token = ('00000000' + value).slice(-8);
 
-
-
-//eval(alert($('#data')[0].innerHTML)); // jshint ignore:line
 eval($('#data')[0].innerHTML); // jshint ignore:line
 
-
-//WARN: This is not in use right now; it ASSUMES that you support HTML5 storage!
+/**
+ *	Checks if browser supports html5's localStorage. Note that, by design, it checks for both sessionStorage and localStorage being supported.
+ *	Called as a helper in many functions; store_poll(), load_poll(), poll_is_stored(), and clear_storage().
+ *	@returns {boolean} - Whether or not HTML5 localStorage and sessionStorage are available.
+ *	//CONSIDER: simplifying to a variable
+ */
 function supports_html5_storage() {
 	try {
 		return 'localStorage' in window && 'sessionStorage' in window && window['sessionStorage'] !== null && window['localStorage'] !== null;
@@ -17,6 +18,10 @@ function supports_html5_storage() {
 	}
 }
 
+/**
+ *	Cleans the finished poll of unnecessary explanations before submitPoll() POSTs it.
+ *	Called in submitPoll(); its callback is used by the ajax POST that is the second half of submitPoll.
+ */
 function store_poll() {
 	if (supports_html5_storage()) {
 		window.localStorage['poll'+poll._id] = JSON.stringify(poll);
@@ -28,6 +33,10 @@ function store_poll() {
 	}
 }
 
+/**
+ *	Cleans the finished poll of unnecessary explanations before submitPoll() POSTs it.
+ *	Called in submitPoll(); its callback is used by the ajax POST that is the second half of submitPoll.
+ */
 function clean_poll(callback) {
 	console.log('Cleaning poll.');
 	for (question in poll.question_list) {
@@ -47,32 +56,44 @@ function clean_poll(callback) {
 	callback();
 }
 
+/**
+ *	POSTs the finished poll to the server.
+ *	Starts by cleaning the poll of unnecessary explanations, then POSTs.
+ *	Upon receiving OK from server, deletes local storage of the poll and returns to /polls/.
+ */
 function submitPoll() {
 	clean_poll( function () {
-		$.ajax({
-		type: 'POST',
-		data: poll,
-		url: '/pollroute/answerpoll',
-		dataType: 'JSON'
-	}).done(function(response){
-		// Delete local storage of results
-		// STUB: Lock this user out of this poll in the future, server-side
-		// Check for successful (blank) response
-		if (response.msg === '') {
-			window.onbeforeunload = function() {}
-			clear_storage();
-			poll = undefined;
-		} else {
-			// If something went wrong, alert the error message
-			alert('Error: '+response.msg);
-		}
+			$.ajax({
+			type: 'POST',
+			data: poll,
+			url: '/pollroute/answerpoll',
+			dataType: 'JSON'
+			}).done(function(response){
+			// STUB: Lock this user out of this poll in the future, server-side
+			// Check for successful (blank) response
+			if ( response.msg === '' ) {
+				// Delete local storage of results
+				window.onbeforeunload = function() {}
+				clear_storage();
+				poll = undefined;
+			} else {
+				// If something went wrong, alert the error message
+				alert('Error: '+response.msg);
+			}
+		})
 	})
-
-})
 }
 
+/**
+ *	Checks to see if the 'current' poll is stored locally.
+ *	Calls supports_html5_storage() to determine where to look for the locally stored poll.
+ *	Called by DOM.ready(), which uses the return type to decide to load_poll() or store_poll().
+ *	Note that the network traffic of sending the poll is done regardless of whether or not it's needed.
+ *	//STUB: This could be optimized so it only requests the poll when it will use it.
+ *	@returns {boolean} - Whether or not the poll is properly stored locally.
+ */
 function load_poll() {
-	if(supports_html5_storage()) {
+	if ( supports_html5_storage() ) {
 		poll = JSON.parse(window.localStorage['poll'+window.location.pathname.split('poll/').slice(-1)]);
 		current_question = parseInt(window.localStorage['current'+window.location.pathname.split('poll/').slice(-1)]);
 	} else {
@@ -82,6 +103,14 @@ function load_poll() {
 	}
 }
 
+/**
+ *	Checks to see if the 'current' poll is stored locally.
+ *	Calls supports_html5_storage() to determine where to look for the locally stored poll.
+ *	Called by DOM.ready(), which uses the return type to decide to load_poll() or store_poll().
+ *	Note that the network traffic of sending the poll is done regardless of whether or not it's needed.
+ *	//STUB: This could be optimized so it only requests the poll when it will use it.
+ *	@returns {boolean} - Whether or not the poll is properly stored locally.
+ */
 function poll_is_stored() {
 	if(supports_html5_storage()) {
 		return typeof window.localStorage["poll"+poll._id] !== 'undefined';
@@ -322,25 +351,30 @@ function modify_current_question() {
 	}
 }
 
-
+/**
+ *	Validates the current question, returning either true or false.
+ *	Called by answer_question() when nextQuestion() or lastQuestion() are called by clicking a bottom button.
+ *	Note that this is not called by skipQuestion(); this is intentional.
+ *	Decides if the current question should be stored, then decides if the current question should be changed.
+ *	Always changes the current question on backward (lastQuestion()), but stores the response first if it's valid.
+ *	@param {boolean} forward - Indicates if answer_question() is requesting to go forwards or backwards.
+ *	@returns {boolean} - Indicates whether or not it's acceptable to move in the direction indicated by forward.
+ */
 function validateCurrentQuestion(forward) {
 	var counter = 0;
 	// STUB: Generalize to an array to support checkbox explanations...
+	// STUB: Comment me!!!
 	var n_special = 0;
 	// If we're doing a pick_n
-//	console.log('Validating current question.');
 	if (poll.question_list[current_question].type.name === 'pick_n') {
-//		console.log('Validating pick_n question.');
 		for (i = 0; i < poll.question_list[current_question].type.response_list.length; i += 1) {
 			if($('#pick-choice-'+String(i)).is(':checked')) {
 				counter += 1;
 				n_special = i;
 			}
 		}
-//		console.log(counter+' checked answers found. The last one is '+n_special+'.');
 		// If we're picking 1 from a list
 		if (poll.question_list[current_question].type.n === 1) {
-//			console.log('Validating pick_1 question.');
 			// And we have picked 1, and (explanation not required OR explanation provided)
 			if(counter === 1 &&
 				poll.question_list[current_question].type.response_list[n_special].explanation &&
@@ -394,10 +428,13 @@ function validateCurrentQuestion(forward) {
 	}
 }
 
+/**
+ *	Updates the bottom button set. Buttons are never deleted or added, only shown, hidden, enabled, and disabled.
+ *	Called by renderButtonButtons(), nextQuestion(), lastQuestion(), and skipQuestion().
+ *	Requires that opening_slide and closing_slide are correctly labeled in the poll's .json!
+ */
 function updateBottomButtons() {
-
 	if(poll.question_list[current_question].closing_slide) {
-
 		//$('#nextquestion').addClass('ui-state-disabled');
 		$('#nextquestion').hide();
 		if(document.getElementById('submit') === null) {
@@ -431,7 +468,6 @@ function updateBottomButtons() {
 
 	if ( !poll.allow_skipping && (typeof poll.question_list[current_question].allow_skipping === 'undefined' || !poll.question_list[current_question].allow_skipping)) {
 		// STUB: Consider hiding the text on Skip in this case
-
 		$('#skipquestion').addClass('ui-state-disabled');
 		$('#skipquestion').innerHTML = '';
 	}
@@ -442,6 +478,14 @@ function updateBottomButtons() {
 	}
 }
 
+/**
+ *	Finds an element in an array by matching element[attribute] === value.
+ *	In other words, find the element that has a property with a given value.
+ *	Called as a helper in answer_question() to follow 'next' links.
+ *	@param {array} array - The array to be searched.
+ *	@param {string} attr - The field of each member of the array to match on.
+ *	@param {???} value - The value to match the attribute on.
+ */
 function findWithAttr(array, attr, value) {
 	for(var i = 0; i < array.length; i += 1) {
 		if(array[i][attr] === value) {
@@ -450,6 +494,11 @@ function findWithAttr(array, attr, value) {
 	}
 }
 
+/**
+ *	Generates the bottom buttons, injects them into #bottombuttons, and then inflates them.
+ *	Called exclusively in DOM.ready(). After that, the buttons are only modified, never deleted or created.
+ *	Calls updateBottomButtons() after creating the buttons to ensure that they're in the correct states.
+ */
 function renderBottomButtons() {
 	// Render 'back' and 'next' buttons
 	var temp = '';
@@ -463,6 +512,14 @@ function renderBottomButtons() {
 	updateBottomButtons();
 }
 
+/**
+ *	Checks the response's validity, saves it if valid, then changes the current_question as appropriate.
+ *	Always saves text fields.
+ *	Calls validateCurrentQuestion() to check validity.
+ *	Called by nextQuestion() and lastQuestion().
+ *	@param {boolean} forward - True if trying to go forwards, false if trying to go backwards.
+ *	@return {boolean} - True if you current_question++, false if current_question--
+ */
 function answer_question(forward) {
 	// If we're valid OR we're going backwards
 	if(validateCurrentQuestion(forward)) {
@@ -470,7 +527,6 @@ function answer_question(forward) {
 		if(poll.question_list[current_question].type.name === 'pick_n') {
 			// For every question
 			for (var i = 0; i < poll.question_list[current_question].type.response_list.length; i += 1) {
-
 				// If the choice is checked
 				if ($('#pick-choice-'+String(i)).is(':checked')) {
 					// And if it's a radiobox
@@ -540,51 +596,80 @@ function answer_question(forward) {
 	}
 }
 
+/**
+ *	Calls answer_question() to save the local poll, check question validity, and present alerts if input is invalid.
+ *	If input is valid, answer_question() changes the current_question
+ *	Then, updateBottomButtons(), renderCurrentQuestion, and update_text_field() do work necessary to re-render the page.
+ */
 function nextQuestion() {
 	if(answer_question(true)) {
 		store_poll();
 		updateBottomButtons();
 		//update_text_field();
-		renderCurrentQuestion(/*current_question*/);
+		renderCurrentQuestion();
 		update_text_field();
 		$.mobile.changePage($('#frontpage'), {allowSamePageTransition: true, transition: "slide"});
 	}
 	//update_text_field();
 }
 
+/**
+ *	Calls answer_question() to save the local poll, check question validity, and change the current_question.
+ *	In this case, answer_question() always changes the current_question, but only saves if input is valid.
+ *	Also note that alerts are not generated for bad inputs when going backwards.
+ *	Then, updateBottomButtons(), renderCurrentQuestion, and update_text_field() do work necessary to re-render the page.
+ */
 function lastQuestion() {
 	// WARN: Currently, you 'lose' invalid answers when you hit back, but keep them if they're valid
 	answer_question(false);
 	store_poll();
 	updateBottomButtons();
 	//update_text_field();
-	renderCurrentQuestion(/*current_question*/);
+	renderCurrentQuestion();
 	update_text_field();
 	$.mobile.changePage($('#frontpage'), {allowSamePageTransition: true, transition: "slide", reverse: true});
 }
 
+STUBSTUBSTUB
 function skipQuestion() {
-
-	if(poll.question_list[current_question].type.name === 'pick_n') {
+	if ( poll.question_list[current_question].type.name === 'pick_n' ) {
 		for (var i = 0; i < poll.question_list[current_question].type.response_list.length; i += 1) {
 				poll.question_list[current_question].type.response_list[i].answers = [[user_token, undefined]];
 		}
-	} else if(poll.question_list[current_question].type.name === 'slider') {
+	} else if (poll.question_list[current_question].type.name === 'slider' ) {
 		poll.question_list[current_question].type.response_list[0].answers = [[user_token, undefined]];
 	}
-
 	store_poll();
 	current_question += 1;
 	updateBottomButtons();
 	renderCurrentQuestion(/*current_question*/);
+	//STUB: Change transition to be distinct from 'nextQuestion'!
 	$.mobile.changePage($('#frontpage'), {allowSamePageTransition: true, transition: "slide"});
 }
 
+/**
+ *	Clears the local storage only for the poll currently stored in the local poll variable.
+ *	If supported, HTML5's localStorage is used. Otherwise, the data is appended to window directly.
+ *	As such, this function conditionally clears the type of storage used.
+ */
 function clear_storage() {
-	window.localStorage.removeItem('poll'+poll._id);
+	if ( supports_html5_storage() ) {
+		window.localStorage.removeItem('poll'+poll._id);	
+		window.localStorage.removeItem('current'+poll._id);
+	} else {
+		window['polljspoll'+poll._id] = undefined;
+		window['polljscurrent'+poll._id] = undefined;
+	}
+	
 }
 
-// DOM Ready =============================================================
+/**
+ *	Called once on page load.
+ *	Calls poll_is_stored(), load_poll(), store_poll() to manipulate the locally saved poll.
+ *	Calls renderCurrentQuestion(), renderBottomButtons() to render the current question properly.
+ *	Calls ajax.on('click'...) for each of the bottom buttons to link the click event to the proper functions.
+ *	//WARN: This may be an inappropriate way to do setup with Jquery Mobile. Look into it.
+ */
 $(document).ready(function() {
 
 
@@ -617,6 +702,10 @@ $(document).change('.ui-radio-on', function () {
 
 });
 
+/**
+ *	Asks the user to confirm leaving or refreshing the page before POSTing the answered poll.
+ *	Because it's attached to window, it must be overwritten manuallyy(i.e., will persist through to the next URI/URL visited!).
+ */
 window.onbeforeunload = function() {
 	// WARN: Unconditionally storing the poll may be a source of interesting errors!
 	//store_poll();

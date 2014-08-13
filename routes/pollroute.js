@@ -29,6 +29,9 @@ router.post('/answerpoll', function(req, res) {
                             //console.log('Appended: '+req.body.question_list[question].type.response_list[response].answers);
                             //console.log(result.question_list);
                             //console.log(req.body.question_list);
+                            if(typeof result.question_list[question].type.response_list[response].answers === 'undefined') {
+                                result.question_list[question].type.response_list[response].answers = [];
+                            }
                             result.question_list[question].type.response_list[response].answers.push(req.body.question_list[question].type.response_list[response].answers[0]);
                             //console.log(result.question_list[question].type.response_list[response].answers);
                         }
