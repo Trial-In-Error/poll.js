@@ -564,7 +564,7 @@ $(document).ready(function() {
 
 	$('#bottombuttons div div').on('click', 'a.nextquestion', nextQuestion);
 	$('#bottombuttons div div').on('click', 'a.lastquestion', lastQuestion);
-	$('#bottombuttons div div').on('click', 'a.skipquestion', clear_storage);
+	$('#bottombuttons div div').on('click', 'a.skipquestion', skipQuestion);
 });
 
 
