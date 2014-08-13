@@ -101,23 +101,21 @@ function render_text_field(counter) {
 	temp = '';
 	var current_response = poll.question_list[current_question].type.response_list[counter];
 	//temp += '<form>';
-	if(typeof current_response !== 'undefined') {
-		if ( typeof current_response['explanation'] !== 'undefined' ) {
-			// WARN: ONLY PICK-N WILL CONDITIONALLY WORK
-			// BECAUSE OF PICK-CHOICE+i
-			// STUB: COLUMNS AND ROWS NOT MUTABLE
-			// STUB: data-clear-btn="true" DOES NOT WORK WITH TEXTAREAS
-			if ( current_response.explanation.always_explainable || ($('#pick-choice-'+String(counter)).is(':checked')) ) {
-				if ( typeof current_response.explanation['label'] !== 'undefined' ) {
-					temp += '<label for="text-'+counter+'">'+current_response.explanation['label']+'</label>';
-				} else {
-					temp += '<label for="text-'+counter+'" class="ui-hidden-accessible"></label>';
-				}
-				if ( typeof current_response.explanation['explain_text'] !== 'undefined' ) {
-					temp += '<textarea cols="40" rows="8" type="text" name="text-'+counter+'" id="text-'+counter+'" value="" placeholder="'+current_response.explanation['explain_text']+'"></textarea>'
-				} else {
-					temp += '<textarea cols="40" rows="8" type="text" name="text-'+counter+'" id="text-'+counter+'" value=""></textarea>'
-				}
+	if(typeof current_response !== 'undefined' && typeof current_response['explanation'] !== 'undefined' /*&& $('#text-'+String(counter)).length === 0*/ ) {
+		// WARN: ONLY PICK-N WILL CONDITIONALLY WORK
+		// BECAUSE OF PICK-CHOICE+i
+		// STUB: COLUMNS AND ROWS NOT MUTABLE
+		// STUB: data-clear-btn="true" DOES NOT WORK WITH TEXTAREAS
+		if ( current_response.explanation.always_explainable || ($('#pick-choice-'+String(counter)).is(':checked')) ) {
+			if ( typeof current_response.explanation['label'] !== 'undefined' ) {
+				temp += '<label for="text-'+counter+'">'+current_response.explanation['label']+'</label>';
+			} else {
+				temp += '<label for="text-'+counter+'" class="ui-hidden-accessible"></label>';
+			}
+			if ( typeof current_response.explanation['explain_text'] !== 'undefined' ) {
+				temp += '<textarea cols="40" rows="8" type="text" name="text-'+counter+'" id="text-'+counter+'" value="" placeholder="'+current_response.explanation['explain_text']+'"></textarea>'
+			} else {
+				temp += '<textarea cols="40" rows="8" type="text" name="text-'+counter+'" id="text-'+counter+'" value=""></textarea>'
 			}
 		}
 		//temp += '</form>';
@@ -128,7 +126,12 @@ function render_text_field(counter) {
 	return temp;
 }
 
-
+/**
+ *	Appends HTML to the string temp corresponding to this question's pick_n field.
+ *	The actual injection, rendering, and inflation occurs in renderCurrentQuestion().
+ *	Called in renderCurrentQuestion().
+ *	@param {string} temp - The HTML string that is passed in, appended to, and returned.
+ */
 function render_pick_n(temp) {
 	// For each answer, draw a button
 	temp += '<fieldset data-role="controlgroup">';
@@ -157,6 +160,12 @@ function render_pick_n(temp) {
 	return temp
 }
 
+/**
+ *	Appends HTML to the string temp corresponding to this question's slider.
+ *	The actual injection, rendering, and inflation occurs in renderCurrentQuestion().
+ *	Called in renderCurrentQuestion().
+ *	@param {string} temp - The HTML string that is passed in, appended to, and returned.
+ */
 function render_slider(temp) {
 	// Append slider for drawing in renderCurrentQuestion
 	// WARN: TERRIBLE AWFUL DIRTY HACK: ASSUMED THAT STARTING POSITION = MIN + MAX / 2
@@ -170,72 +179,92 @@ function render_slider(temp) {
 	return temp;
 }
 
+/**
+ *	Creates and updates text fields.
+ *	Conditionally either creates a text field, updates a text field with local poll's data, sets a text field to blank, or deletes a text field.
+ *	The poll is not modified at all in this function.
+ *	Called on ui-radio-btn.change(), nextQuestion(), lastQuestion(), and renderCurrentQuestion().
+ *	Curiosly enough, it is NOT called in skipQuestion(). This is an oversight.
+ *	// WARN: This function is almost certainly being called more often than necessary.
+ */
 function update_text_field() {
-//	console.log('Entered update_text_field().');
 	var temp;
+	// If it's not_a_question, or otherwise has no responses, do no work
 	if(typeof poll.question_list[current_question].type.response_list === 'undefined') {
-//		console.log('...But did no work.');
 		return;
 	}
 
-	var current_response = poll.question_list[current_question].type.response_list[counter];
-
 	for (var counter in poll.question_list[current_question].type.response_list) {
 		temp = '';
-		current_response = poll.question_list[current_question].type.response_list[counter];
+		//WARN: Use current_response to simplify code below!!!
+		var current_response = poll.question_list[current_question].type.response_list[counter];
 		if(typeof current_response !== 'undefined' && typeof current_response['explanation'] !== 'undefined') {
 			// WARN: ONLY PICK-N WILL CONDITIONALLY WORK
 			// BECAUSE OF PICK-CHOICE+i
 			// STUB: COLUMNS AND ROWS NOT MUTABLE
-			// STUB: data-clear-btn="true" DOES NOT WORK WITH TEXTAREAS
 
-			// If the question is always explainable OR (it is checked AND the text field does not exist)
-			if ( (current_response.explanation.always_explainable ||
-				($('#pick-choice-'+String(counter)).is(':checked')))
-				&& document.getElementById('text-'+String(counter)) === null ) {
+			// If the question is (always explainable AND does not exist) OR (it is checked AND the text field does not exist)
+			if ( (current_response.explanation.always_explainable && document.getElementById('text-'+String(counter)) === null && $('#text-'+String(counter)).length === 0)  ||
+				($('#pick-choice-'+String(counter)).is(':checked')
+				&& document.getElementById('text-'+String(counter)) === null && $('#text-'+String(counter)).length === 0 )) {
 				// Then create the damn thing
+				console.log(document.getElementById('text-'+String(counter)))
 				console.log('We fully created text area #:'+counter)
 				if ( typeof current_response.explanation['label'] !== 'undefined' ) {
 					temp += '<label for="text-'+counter+'">'+current_response.explanation['label']+'</label>';
 				} else {
 					temp += '<label for="text-'+counter+'" class="ui-hidden-accessible"></label>';
 				}
-				if ( typeof current_response.explanation['explain_text'] !== 'undefined' ) {
+				if ( typeof current_response.explanation['explain_text'] !== 'undefined' && typeof current_response.answers[0][2] === 'undefined') {
 					temp += '<textarea cols="40" rows="8" type="text" name="text-'+counter+'" id="text-'+counter+'" value="" placeholder="'+current_response.explanation['explain_text']+'"></textarea>'
 				} else {
-					temp += '<textarea cols="40" rows="8" type="text" name="text-'+counter+'" id="text-'+counter+'" value=""></textarea>'
+					temp += '<textarea cols="40" rows="8" type="text" name="text-'+counter+'" id="text-'+counter+'" value="">'+current_response.answers[0][2]+'</textarea>'
 				}
+				// WARN: This code happens n times for n text fields; maybe expensive
 				$('#pick-choice-'+String(counter)).parent().after(temp);
 				$('#form').trigger('create');
 				$('.ui-radio').off('click', update_text_field);
 				$('.ui-radio').on('click', update_text_field);
-			// STUB: COMMENT ME PROPERLY
-			} else if ( $('#text-'+String(counter)) !== 'undefined'
-				&& typeof poll.question_list[current_question].type.response_list[counter].answers !== 'undefined'
-				&& poll.question_list[current_question].type.response_list[counter].answers[0] !== null
-				&& typeof poll.question_list[current_question].type.response_list[counter].answers[0] !== 'undefined'
-				&& typeof poll.question_list[current_question].type.response_list[counter].answers[0][2] !== 'undefined'
-				&& $('#pick-choice-'+String(counter)).is(':checked') ) {
-					$('#text-'+String(counter)).val(poll.question_list[current_question].type.response_list[counter].answers[0][2]);
 
+			// If the textfield exists, the explanation stored in local poll is defined, and it is checked
 			} else if ( $('#text-'+String(counter)) !== 'undefined'
-				&& typeof poll.question_list[current_question].type.response_list[counter].answers !== 'undefined'
-				&& poll.question_list[current_question].type.response_list[counter].answers[0] !== null
-				&& typeof poll.question_list[current_question].type.response_list[counter].answers[0] !== 'undefined'
-				&& typeof poll.question_list[current_question].type.response_list[counter].answers[0][2] !== 'undefined'
-				&& !$('#pick-choice-'+String(counter)).is(':checked') ) {
+				&& typeof current_response.answers !== 'undefined'
+				&& current_response.answers[0] !== null
+				&& typeof current_response.answers[0] !== 'undefined'
+				&& typeof current_response.answers[0][2] !== 'undefined'
+				&& $('#pick-choice-'+String(counter)).is(':checked') ) {
+					// Render that text in it.
+					$('#text-'+String(counter)).val(current_response.answers[0][2]);
+
+			// Else, if it is not checked, the explanation stored in local poll is undefined, and it is always renderable
+			} else if ( $('#text-'+String(counter)) !== 'undefined'
+				&& typeof current_response.answers !== 'undefined'
+				&& current_response.answers[0] !== null
+				&& typeof current_response.answers[0] !== 'undefined'
+				&& typeof current_response.answers[0][2] !== 'undefined'
+				&& !$('#pick-choice-'+String(counter)).is(':checked')
+				&& current_response.explanation.always_explainable) {
+					// Then render nothing in the textbox (allowing the hint to show through)
 					$('#text-'+String(counter)).val('');
 
+			// Else, if it is not checked, the explanation stored in local poll is undefined, and it is not always renderable
 			} else if ( !current_response.explanation.always_explainable
 				&& typeof $(this) !== 'undefined'
-				&& $(this).attr("id") !== 'pick-choice-'+String(counter) ) {
+				&& $(this).attr("id") !== 'pick-choice-'+String(counter) && !$('#pick-choice-'+String(counter)).is(':checked')) {
+				// Then delete the textbox
 				$('#text-'+String(counter)).remove();
 			}
 		}
 	}
 }
 
-
+/**
+ *	Renders the current question by calling appropriate helper functions.
+ *	Conditionally calls either render_pick_n() or render_slider() to generate HTML.
+ *	HTML is then injected inside the #form div and inflated.
+ *	Then, calls modify_current_question() and update_text_field().
+ *	Called on DOM.ready(), nextQuestion(), lastQuestion(), and skipQuestion().
+ */
 function renderCurrentQuestion() {
 	var temp = '';
 
@@ -256,11 +285,12 @@ function renderCurrentQuestion() {
 
 	modify_current_question();
 	update_text_field();
-
-
 }
 
-
+/**
+ *	Sets check boxes, radio buttons, and sliders to the values stored in the local poll object.
+ *	Called at the end of renderCurrentQuestion, and nowhere else.
+ */
 function modify_current_question() {
 	for (var counter in poll.question_list[current_question].type.response_list) {
 		if (poll.question_list[current_question].type.name === "pick_n") {
@@ -498,16 +528,6 @@ function answer_question(forward) {
 	}
 }
 
-function skip_question() {
-	if(poll.question_list[current_question].type.name === 'pick_n') {
-		for (var i = 0; i < poll.question_list[current_question].type.response_list.length; i += 1) {
-				poll.question_list[current_question].type.response_list[i].answers = [[user_token, undefined]];
-		}
-	} else if(poll.question_list[current_question].type.name === 'slider') {
-		poll.question_list[current_question].type.response_list[0].answers = [[user_token, undefined]];
-	}
-}
-
 function nextQuestion() {
 	if(answer_question(true)) {
 		store_poll();
@@ -532,8 +552,14 @@ function lastQuestion() {
 }
 
 function skipQuestion() {
-	//UNTESTED: skip_question()
-	skip_question();
+
+	if(poll.question_list[current_question].type.name === 'pick_n') {
+		for (var i = 0; i < poll.question_list[current_question].type.response_list.length; i += 1) {
+				poll.question_list[current_question].type.response_list[i].answers = [[user_token, undefined]];
+		}
+	} else if(poll.question_list[current_question].type.name === 'slider') {
+		poll.question_list[current_question].type.response_list[0].answers = [[user_token, undefined]];
+	}
 
 	store_poll();
 	current_question += 1;
