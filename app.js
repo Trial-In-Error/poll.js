@@ -1,5 +1,7 @@
 var express = require('express');
 var path = require('path');
+var passport = require('passport');
+var flash = require('connect-flash');
 var favicon = require('static-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');

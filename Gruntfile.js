@@ -153,7 +153,7 @@ module.exports = function(grunt) {
 				src: ['package.json'],
 				dest: 'package.json',
 				replacements: [{
-					from: /[ ]{2,}[\n]/gm,
+					from: /[\t]{1,}[\n]/gm,
 					to: ''
 				}]
 			}
