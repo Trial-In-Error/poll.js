@@ -630,7 +630,7 @@ function lastQuestion() {
 	$.mobile.changePage($('#frontpage'), {allowSamePageTransition: true, transition: "slide", reverse: true});
 }
 
-STUBSTUBSTUB
+//STUBSTUBSTUB
 function skipQuestion() {
 	if ( poll.question_list[current_question].type.name === 'pick_n' ) {
 		for (var i = 0; i < poll.question_list[current_question].type.response_list.length; i += 1) {
