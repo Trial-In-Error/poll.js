@@ -7,6 +7,7 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var util = require('util');
+var LocalStrategy = require('passport-local').Strategy;
 
 // Database
 var mongo = require('mongoskin');
@@ -50,6 +51,8 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded());
 app.use(cookieParser());
+//app.use(express.methodOverride()); // what does this do? tutorial for passport.js used it
+app.use(express.session({secret: 'i\'m so fucking confused'})) // WARN: this secret is bad. research this function
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(function(req, res, next){
@@ -67,6 +70,12 @@ app.use(function(req, res, next){
 // Readings to understand passport.js
 // http://toon.io/understanding-passportjs-authentication-flow/
 // https://github.com/jaredhanson/passport-local/blob/master/examples/express3/app.js
+app.use(flash());
+// Initialize Passport!  Also use passport.session() middleware, to support
+// persistent login sessions (recommended).
+app.use(passport.initialize());
+app.use(passport.session());
+
 app.use('/', pollindex);
 app.use('/users', users);
 app.use('/test', test);
