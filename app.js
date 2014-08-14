@@ -9,6 +9,7 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var util = require('util');
 var LocalStrategy = require('passport-local').Strategy;
+var chance = require('chance');
 
 // Database
 var mongo = require('mongoskin');
@@ -102,7 +103,8 @@ app.use(bodyParser.urlencoded());
 app.use(cookieParser());
 //app.use(express.methodOverride()); // what does this do? tutorial for passport.js used it
 // session() must be called before passport.session()!
-app.use(session({secret: 'i\'m so fucking confused', resave: true, saveUninitialized: true})); // WARN: this secret is bad. research this function
+//WARN: The secret SHOULD BE RANDOMLY GENERATED AT START-UP!
+app.use(session({secret: 'i\'m so fucking confused', resave: true, saveUninitialized: true}));
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(function(req, res, next){
