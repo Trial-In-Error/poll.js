@@ -8,12 +8,10 @@ var util = require('util');
 
 // Database
 var mongo = require('mongoskin');
-
-// Use the mongo database named 'polljs'
+// Use the remote mongo database if available (i.e., app is heroku hosted), else use the local one named 'polljs'
 if(typeof process.env.MONGOLAB_URI !== 'undefined') {
     console.log(process.env.MONGOLAB_URI);    
 }
-
 var db = mongo.db(process.env.MONGOLAB_URI || "mongodb://localhost:27017/polljs", {native_parse:true});
 
 var users = require('./routes/users');
@@ -64,7 +62,9 @@ app.use(function(req, res, next){
     next();
 })
 
-
+// Readings to understand passport.js
+// http://toon.io/understanding-passportjs-authentication-flow/
+// https://github.com/jaredhanson/passport-local/blob/master/examples/express3/app.js
 app.use('/', pollindex);
 app.use('/users', users);
 app.use('/test', test);
