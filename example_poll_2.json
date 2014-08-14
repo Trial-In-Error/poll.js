@@ -140,7 +140,14 @@
 					}
 				]
 			},
-			"id": "slider",
+			"id": "slider"
+		},
+		{
+			"body": "Thank you for taking the time to answer this poll!",
+			"type":
+			{
+				"name": "not_a_question"
+			},
 			"closing_slide": true
 		}
 	]

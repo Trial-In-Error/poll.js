@@ -42,6 +42,7 @@ The Future
 Known Issues
 ---------------------------------
 * `server_stdout.log` contains color escape codes and other garbage.
+	* Similarly, heroku logs for a running server are almost unreadable because of color codes.
 * Skype defaults to listening on port 443, blocking server.js from starting the HTTPS server.
 	* Right now, this crashes fatally for both servers.
 * MongoDB under Mac OSX will not get as many file descriptors as it would like.
