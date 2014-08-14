@@ -654,13 +654,12 @@ function skipQuestion() {
  */
 function clear_storage() {
 	if ( supports_html5_storage() ) {
-		window.localStorage.removeItem('poll'+poll._id);	
+		window.localStorage.removeItem('poll'+poll._id);
 		window.localStorage.removeItem('current'+poll._id);
 	} else {
 		window['polljspoll'+poll._id] = undefined;
 		window['polljscurrent'+poll._id] = undefined;
 	}
-	
 }
 
 /**

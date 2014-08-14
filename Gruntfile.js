@@ -39,6 +39,8 @@ module.exports = function(grunt) {
 							'public/javascripts/**/*.js',
 							'Gruntfile.js',
 							'package_dev.json',
+							'*.js',
+							'/bin/*.js',
 							'!public/javascripts/jquery_2_1_1.js',
 							'!public/javascripts/jquery_mobile_1_4_3.js'
 
@@ -108,7 +110,7 @@ module.exports = function(grunt) {
 			},
 			dist:
 			{
-				src: ['Gruntfile.js', 'public/javascripts/*.js', 'routes/*.js', 'test/**/*.js', 'bin/*.js', '!public/javascripts/*.js', '!public/javascripts/jquery_2_1_1.js', '!public/javascripts/jquery_mobile_1_4_3.js'],
+				src: ['Gruntfile.js', 'app.js', 'bin/*.js', 'public/javascripts/*.js', 'routes/*.js', 'test/**/*.js', 'bin/*.js', '!public/javascripts/*.js', '!public/javascripts/jquery_2_1_1.js', '!public/javascripts/jquery_mobile_1_4_3.js'],
 			},
 			clientsrc:
 			{
@@ -217,7 +219,7 @@ module.exports = function(grunt) {
 	});
 
 	grunt.registerTask('default', ['clean', 'uglify:dist', 'cssmin:dist']);
-	grunt.registerTask('linter', ['jshint:dist', 'lintspaces:javascript']);
+	grunt.registerTask('linter', ['jshint:dist', 'lintspaces:all']);
 	grunt.registerTask('dist', ['clean', 'stripJsonComments:packagejson', 'replace:json', 'lineending:dist', 'jshint:dist'/*, 'qunit'*/, 'uglify:dist', 'cssmin:dist', 'concat:distcss']);
 
 	// https://github.com/gruntjs/grunt-contrib-clean/issues/32

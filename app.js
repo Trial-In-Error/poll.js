@@ -13,9 +13,9 @@ var LocalStrategy = require('passport-local').Strategy;
 var mongo = require('mongoskin');
 // Use the remote mongo database if available (i.e., app is heroku hosted), else use the local one named 'polljs'
 if(typeof process.env.MONGOLAB_URI !== 'undefined') {
-    console.log(process.env.MONGOLAB_URI);    
+	console.log(process.env.MONGOLAB_URI);
 }
-var db = mongo.db(process.env.MONGOLAB_URI || "mongodb://localhost:27017/polljs", {native_parse:true});
+var db = mongo.db(process.env.MONGOLAB_URI || 'mongodb://localhost:27017/polljs', {native_parse:true});
 
 var users = require('./routes/users');
 var test = require('./routes/test');
@@ -36,7 +36,7 @@ var app = express();
 
 var exists_list = {};
 
-var build_min_list = require('./bin/build_min_list.js')
+var build_min_list = require('./bin/build_min_list.js');
 
 var passin = build_min_list.build(exists_list);
 
@@ -52,20 +52,20 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded());
 app.use(cookieParser());
 //app.use(express.methodOverride()); // what does this do? tutorial for passport.js used it
-app.use(express.session({secret: 'i\'m so fucking confused'})) // WARN: this secret is bad. research this function
+app.use(express.session({secret: 'i\'m so fucking confused'})); // WARN: this secret is bad. research this function
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(function(req, res, next){
-  res.locals.expose = {exists: passin};
-  // you could alias this as req or res.expose
-  // to make it shorter and less annoying
-  next();
+	res.locals.expose = {exists: passin};
+	// you could alias this as req or res.expose
+	// to make it shorter and less annoying
+	next();
 });
 
 app.use(function(req, res, next){
-    req.db = db;
-    next();
-})
+	req.db = db;
+	next();
+});
 
 // Readings to understand passport.js
 // http://toon.io/understanding-passportjs-authentication-flow/
@@ -86,10 +86,10 @@ app.use('/poll', poll);
 
 /// catch 404 and forward to error handler
 app.use(function(req, res, next) {
-    //console.log(util.inspect(req.url.slice(-3)));
-    var err = new Error('Not Found\n'+'req: '+req.originalUrl);
-    err.status = 404;
-    next(err);
+	//console.log(util.inspect(req.url.slice(-3)));
+	var err = new Error('Not Found\n'+'req: '+req.originalUrl);
+	err.status = 404;
+	next(err);
 });
 
 /// error handlers
@@ -97,23 +97,23 @@ app.use(function(req, res, next) {
 // development error handler
 // will print stacktrace
 if (app.get('env') === 'development') {
-    app.use(function(err, req, res, next) {
-        res.status(err.status || 500);
-        res.render('error', {
-            message: err.message,
-            error: err
-        });
-    });
+	app.use(function(err, req, res, next) {
+		res.status(err.status || 500);
+		res.render('error', {
+			message: err.message,
+			error: err
+		});
+	});
 }
 
 // production error handler
 // no stacktraces leaked to user
 app.use(function(err, req, res, next) {
-    res.status(err.status || 500);
-    res.render('error', {
-        message: err.message,
-        error: {}
-    });
+	res.status(err.status || 500);
+	res.render('error', {
+		message: err.message,
+		error: {}
+	});
 });
 
 
