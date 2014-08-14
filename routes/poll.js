@@ -3,8 +3,8 @@ var router = express.Router();
 var mongo = require('mongoskin');
 
 /* GET a specific poll. */
-router.get('/:id', function(req, res) {
-	//console.log('MATCHED AT /:id.');
+router.get('/:id', ensureAuthenticated, function(req, res) {
+	console.log('MATCHED AT /:id.');
 	var db = req.db;
 	var pollToDisplay = req.params.id;
 
@@ -23,3 +23,13 @@ router.get('/:id', function(req, res) {
 });
 
 module.exports = router;
+
+function ensureAuthenticated(req, res, next) {
+	if (req.isAuthenticated()) {
+		console.log('User is already authenticated. Continuing.');
+		return next();
+	}
+	console.log('User is not already authenticated. Redirecting.');
+	//req.session.returnTo = req.path;
+	res.redirect('/login')
+}

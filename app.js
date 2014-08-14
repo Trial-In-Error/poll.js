@@ -9,7 +9,8 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var util = require('util');
 var LocalStrategy = require('passport-local').Strategy;
-var chance = require('chance');
+var Chance = require('chance');
+var alea = new Chance();
 
 // Database
 var mongo = require('mongoskin');
@@ -54,13 +55,15 @@ console.log(exists_list);
 //   this will be as simple as storing the user ID when serializing, and finding
 //   the user by ID when deserializing.
 passport.serializeUser(function(user, done) {
-  done(null, user.id);
+  done(null, user);
 });
 
-passport.deserializeUser(function(id, done) {
-  findById(id, function (err, user) {
-    done(err, user);
-  });
+passport.deserializeUser(function(user, done) {
+  //findById(id, function (err, user) {
+  	//var user = {'id': 1};
+  	done(null, user);
+    //done(err, user);
+  //});
 });
 
 
@@ -69,6 +72,7 @@ passport.deserializeUser(function(id, done) {
 //   credentials (in this case, a username and password), and invoke a callback
 //   with a user object.  In the real world, this would query a database;
 //   however, in this example we are using a baked-in set of users.
+try {
 passport.use(new LocalStrategy(
   function(username, password, done) {
     // asynchronous verification, for effect...
@@ -78,16 +82,20 @@ passport.use(new LocalStrategy(
       // username, or the password is not correct, set the user to `false` to
       // indicate failure and set a flash message.  Otherwise, return the
       // authenticated `user`.
-      findByUsername(username, function(err, user) {
-        if (err) { return done(err); }
-        if (!user) { return done(null, false, { message: 'Unknown user ' + username }); }
-        if (user.password != password) { return done(null, false, { message: 'Invalid password' }); }
+
+//      findByUsername(username, function(err, user) {
+//        if (err) { return done(err); }
+//        if (!user) { return done(null, false, { message: 'Unknown user ' + username }); }
+//        if (user.password != password) { return done(null, false, { message: 'Invalid password' }); }
+		var user = {'id': 1};
         return done(null, user);
-      })
+    //  })
     });
   }
 ));
-
+} catch (err) {
+	console.log(err);
+}
 
 
 
@@ -102,9 +110,9 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded());
 app.use(cookieParser());
 //app.use(express.methodOverride()); // what does this do? tutorial for passport.js used it
+
 // session() must be called before passport.session()!
-//WARN: The secret SHOULD BE RANDOMLY GENERATED AT START-UP!
-app.use(session({secret: 'i\'m so fucking confused', resave: true, saveUninitialized: true}));
+app.use(session({secret: alea.string({length:20}), resave: true, saveUninitialized: true}));
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(function(req, res, next){
@@ -134,7 +142,7 @@ app.use('/test', test);
 app.use('/transient-login', transientlogin);
 app.use('/polls', pollindex);
 app.use('/pollroute', pollroute);
-app.use('/poll', ensureAuthenticated, poll);
+app.use('/poll', /*ensureAuthenticated,*/ poll);
 
 
 
@@ -144,7 +152,7 @@ app.get('/', function(req, res){
   res.render('index', { user: req.user });
 });
 
-app.get('/account', ensureAuthenticated, function(req, res){
+app.get('/account', /*ensureAuthenticated,*/ function(req, res){
   res.render('account', { user: req.user });
 });
 
@@ -159,25 +167,36 @@ app.get('/login', function(req, res){
 //   which, in this example, will redirect the user to the home page.
 //
 //   curl -v -d "username=bob&password=secret" http://127.0.0.1:3000/login
+try {
 app.post('/login', 
-  passport.authenticate('local', { failureRedirect: '/login', failureFlash: true }),
-  function(req, res) {
-    res.redirect('/');
-  });
+	passport.authenticate('local', { failureRedirect: '/login', failureFlash: true }),
+	function(req, res) {
+		console.log('User login successful.');
+		res.redirect('/');
+	});
+	app.get('/logout', function(req, res){
+		req.logout();
+		res.redirect('/');
+	});
+} catch (err) {
+	console.log(err);
+}
 
-app.get('/logout', function(req, res){
-  req.logout();
-  res.redirect('/');
-});
 
 // Simple route middleware to ensure user is authenticated.
 //   Use this route middleware on any resource that needs to be protected.  If
 //   the request is authenticated (typically via a persistent login session),
 //   the request will proceed.  Otherwise, the user will be redirected to the
 //   login page.
+// http://stackoverflow.com/questions/13335881/redirecting-to-previous-page-after-authentication-in-node-js-using-passport
 function ensureAuthenticated(req, res, next) {
-  if (req.isAuthenticated()) { return next(); }
-  res.redirect('/login')
+	if (req.isAuthenticated()) {
+		console.log('User is already authenticated. Continuing.');
+		return next();
+	}
+	console.log('User is not already authenticated. Redirecting.');
+	//req.session.returnTo = req.path;
+	res.redirect('/login')
 }
 
 
