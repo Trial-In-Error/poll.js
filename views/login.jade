@@ -3,11 +3,6 @@ extends layout
 block content
 	h1= title
 
-
-	if locals.expose.exists['login.js']
-		script(src='/dist/javascripts/login.js')
-	else
-		script(src='/javascripts/login.js')
 	div(style='max-width: 300px; margin:0 auto')
 		p(style='text-align: left') Please login to continue.
 		form(role='form', action='/login', method='post')

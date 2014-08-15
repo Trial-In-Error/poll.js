@@ -67,6 +67,7 @@ passport.deserializeUser(function(user, done) {
 });
 
 
+
 // Use the LocalStrategy within Passport.
 //   Strategies in passport require a `verify` function, which accept
 //   credentials (in this case, a username and password), and invoke a callback
@@ -142,7 +143,7 @@ app.use('/test', test);
 app.use('/transient-login', transientlogin);
 app.use('/polls', pollindex);
 app.use('/pollroute', pollroute);
-app.use('/poll', /*ensureAuthenticated,*/ poll);
+app.use('/poll', poll);
 
 
 
@@ -168,16 +169,16 @@ app.get('/login', function(req, res){
 //
 //   curl -v -d "username=bob&password=secret" http://127.0.0.1:3000/login
 try {
-app.post('/login', 
-	passport.authenticate('local', { failureRedirect: '/login', failureFlash: true }),
-	function(req, res) {
-		console.log('User login successful.');
-		res.redirect('/');
-	});
-	app.get('/logout', function(req, res){
-		req.logout();
-		res.redirect('/');
-	});
+	app.post('/login', 
+		passport.authenticate('local', { failureRedirect: '/login', failureFlash: true }),
+		function(req, res) {
+			console.log('User login successful.');
+			res.redirect('/');
+		});
+		app.get('/logout', function(req, res){
+			req.logout();
+			res.redirect('/');
+		});
 } catch (err) {
 	console.log(err);
 }
