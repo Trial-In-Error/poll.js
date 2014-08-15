@@ -1,0 +1,11 @@
+extends layout
+
+block content
+    h1= title
+	div(style='max-width: 300px; margin:0 auto')
+	p(style='text-align: left') Please provide a nickname to continue.
+	form(role='form', action='/login', method='post')
+		.form-group
+			input.form-control(type='text', data-clear-btn="true", name="nickname", id="nickname", value="", placeholder='Nickname')
+		.form-group
+			button(type='submit', name='submit', id='submit' class="ui-btn ui-corner-all") Submit

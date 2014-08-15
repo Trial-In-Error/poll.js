@@ -145,9 +145,18 @@ app.use('/polls', pollindex);
 app.use('/pollroute', pollroute);
 app.use('/poll', poll);
 
+//STUB: MOVE TO ANOTHER FILE LATER
+app.get('/meta-login', function(req, res) {
+	res.render('meta-login');
+})
 
+app.get('/nickname-login', function(req, res) {
+	res.render('meta-login');
+})
 
-
+//app.post('/anonymous-login', function(req, res) {
+//	res.render('meta-login');
+//})
 
 app.get('/', function(req, res){
   res.render('index', { user: req.user });
@@ -173,11 +182,15 @@ try {
 		passport.authenticate('local', { failureRedirect: '/login', failureFlash: true }),
 		function(req, res) {
 			console.log('User login successful.');
-			res.redirect('/');
+			var redirect_to = req.session.redirect_to || '/'
+			delete req.session.redirect_to;
+			res.send({redirect: String(redirect_to)})
+			//res.redirect(200, redirect_to);
+
 		});
 		app.get('/logout', function(req, res){
 			req.logout();
-			res.redirect('/');
+			res.redirect(200, '/');
 		});
 } catch (err) {
 	console.log(err);
@@ -195,6 +208,7 @@ function ensureAuthenticated(req, res, next) {
 		console.log('User is already authenticated. Continuing.');
 		return next();
 	}
+	req.session.redirect_to = req.path;
 	console.log('User is not already authenticated. Redirecting.');
 	//req.session.returnTo = req.path;
 	res.redirect('/login')

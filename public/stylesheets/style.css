@@ -1,6 +1,7 @@
 .full-width-slider input {
     display: none;
 }
+
 .full-width-slider .ui-slider-track {
     margin-left: 15px;
 }
@@ -10,7 +11,9 @@ a.heading-hyperlink {
 	data-role: "nojs";
 }
 
+
 a.heading-hyperlink:link {color: #000000 !important;}
 a.heading-hyperlink:visited {color: #000000 !important;}
 a.heading-hyperlink:hover {color: #000000 !important;}
 a.heading-hyperlink:active {color: #000000 !important;}
+

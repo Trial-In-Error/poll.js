@@ -3,6 +3,13 @@ extends layout
 block content
 	h1= title
 
+
+	if locals.expose.exists['client_login.js']
+		script(src='/dist/javascripts/client_login.js')
+	else
+		script(src='/javascripts/client_login.js')
+
+
 	div(style='max-width: 300px; margin:0 auto')
 		p(style='text-align: left') Please login to continue.
 		form(role='form', action='/login', method='post')
@@ -11,4 +18,4 @@ block content
 			.form-group
 				input.form-control(type='password', data-clear-btn="true", name="password", id="password", value="", placeholder='Password')
 			.form-group
-				button(type='submit', class="ui-btn ui-corner-all") Submit
+				button(type='submit', name='submit', id='submit' class="ui-btn ui-corner-all") Submit
