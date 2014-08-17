@@ -74,11 +74,29 @@ passport.deserializeUser(function(user, done) {
 //   credentials (in this case, a username and password), and invoke a callback
 //   with a user object.  In the real world, this would query a database;
 //   however, in this example we are using a baked-in set of users.
-try {
+//try {
 passport.use(new LocalStrategy(
-  function(username, password, done) {
-    // asynchronous verification, for effect...
-    process.nextTick(function () {
+	function(username, password, done) {
+		console.log('Authenticating user.');
+		// asynchronous verification, for effect...
+		process.nextTick(function () {
+			var user = {'id': 1};
+			console.log('Tick.');
+			if(username !== "asdf") {
+				return done(null, false, { error: 'Unknown user '+username+'.'});
+			}else if(password !== "zxcv") {
+				return done(null, false, { error: 'Invalid password.'})
+			}
+
+			return done(null, user);
+    });
+  }
+));
+//} catch (err) {
+//	console.log(err);
+//}
+
+
       
       // Find the user by username.  If there is no user with the given
       // username, or the password is not correct, set the user to `false` to
@@ -89,23 +107,6 @@ passport.use(new LocalStrategy(
 //        if (err) { return done(err); }
 //        if (!user) { return done(null, false, { message: 'Unknown user ' + username }); }
 //        if (user.password != password) { return done(null, false, { message: 'Invalid password' }); }
-		var user = {'id': 1};
-		if(username !== "asdf") {
-			return done(null, false, { error: 'Unknown user '+username+'.'});
-		}else if(password !== "zxcv") {
-			return done(null, false, { error: 'Invalid password.'})
-		}
-
-        return done(null, user);
-    //  })
-    });
-  }
-));
-} catch (err) {
-	console.log(err);
-}
-
-
 
 
 // view engine setup
@@ -173,9 +174,7 @@ app.get('/account', /*ensureAuthenticated,*/ function(req, res) {
 });
 
 app.get('/login', function(req, res) {
-	var m1 = req.flash('error')[0]
-	console.log(m1)
-	res.render('login', { user: req.user, message: String(m1), sample: "Sanity check."});
+	res.render('login', { user: req.user});
 });
 
 // POST /login
@@ -185,25 +184,32 @@ app.get('/login', function(req, res) {
 //   which, in this example, will redirect the user to the home page.
 //
 //   curl -v -d "username=bob&password=secret" http://127.0.0.1:3000/login
-//try {
-	app.post('/login', 
-		passport.authenticate('local', { failureRedirect: '/login', failureFlash: 'THIS IS A SANITY CHECK ERROR', successFlash: 'Welcome!' }),
-		function(req, res) {
+app.post('/login', function(req, res, next) {
+	// THIS NEEDS TO BE SESSION-IZED
+	var redirect_to = req.session.redirect_to || '/'
+	delete req.session.redirect_to;
+
+	console.log('login matched with username '+req.body.username+' and password '+req.body.password+'.');
+	passport.authenticate('local', function(err, user, info) {
+		console.log('Start login attempt.')
+		if (err) { return next(err); }
+		if (!user) {
+			console.log('User login failed.');
+			return res.send({ success: false, message: info});
+		}
+		req.logIn(user, function(err) {
+			if (err) { return next(err); }
 			console.log('User login successful.');
-			var redirect_to = req.session.redirect_to || '/'
-			delete req.session.redirect_to;
-			res.send({redirect: String(redirect_to)})
-			//res.redirect(200, redirect_to);
 
-		});
-		app.get('/logout', function(req, res){
-			req.logout();
-			res.redirect(200, '/');
-		});
-//} catch (err) {
-//	console.log(err);
-//}
+			return res.send({success: true, redirect: String(redirect_to)});
+		})
+	})(req, res, next);
+});
 
+app.get('/logout', function(req, res){
+	req.logout();
+	res.redirect(200, '/');
+});
 
 // Simple route middleware to ensure user is authenticated.
 //   Use this route middleware on any resource that needs to be protected.  If

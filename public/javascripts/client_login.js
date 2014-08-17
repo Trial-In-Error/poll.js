@@ -12,13 +12,23 @@ $(document).on('pageinit', function() {
 			})
 			.done(function (result) {
 				console.log('Done!');
-				window.location.replace(result.redirect);
+				//window.location.replace(result.redirect);
+				if(result.success) {
+					window.location.replace(result.redirect);
+				} else {
+					console.log(result.message.error);
+					$('#login-failure p').html(result.message.error);
+				}
 			})
 			.always(function (result) {
 				console.log('Always!');
 			})
 			.fail(function (request,error) {
 				console.log('Fail!');
+				// WARN: You can't redirect in response to an AJAX post
+				// This is a clumsy workaround that forces a page refresh
+				// It may very well break or be broken
+				//window.location.replace(window.location.href);
 				// This callback function will trigger on unsuccessful action
 				//alert('Network error has occurred please try again!');
 			})

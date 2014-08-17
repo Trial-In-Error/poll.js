@@ -12,9 +12,8 @@ block content
 
 	div(style='max-width: 300px; margin:0 auto')
 		p(style='text-align: left') Please login to continue.
-		- if(typeof message !== 'undefined' && message.length > 0)
-			p Error! #{message}
-		p= sample
+		div(id='login-failure')
+			p hallo.
 
 		form(role='form', action='/login', method='post')
 			.form-group
