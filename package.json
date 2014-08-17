@@ -21,6 +21,7 @@
 		"mongoskin": "*",
 		"passport": "*",
 		"passport-local": "*",
+		"connect-redis": "*",
 		"connect-flash": "*", 
 		"forever": "*" 
 	},

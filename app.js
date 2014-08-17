@@ -11,6 +11,7 @@ var util = require('util');
 var LocalStrategy = require('passport-local').Strategy;
 var Chance = require('chance');
 var alea = new Chance();
+var flash = require('connect-flash');
 
 // Database
 var mongo = require('mongoskin');
@@ -89,6 +90,12 @@ passport.use(new LocalStrategy(
 //        if (!user) { return done(null, false, { message: 'Unknown user ' + username }); }
 //        if (user.password != password) { return done(null, false, { message: 'Invalid password' }); }
 		var user = {'id': 1};
+		if(username !== "asdf") {
+			return done(null, false, { error: 'Unknown user '+username+'.'});
+		}else if(password !== "zxcv") {
+			return done(null, false, { error: 'Invalid password.'})
+		}
+
         return done(null, user);
     //  })
     });
@@ -114,16 +121,16 @@ app.use(cookieParser());
 
 // session() must be called before passport.session()!
 app.use(session({secret: alea.string({length:20}), resave: true, saveUninitialized: true}));
+app.use(flash());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use(function(req, res, next){
-	res.locals.expose = {exists: passin};
-	// you could alias this as req or res.expose
-	// to make it shorter and less annoying
-	next();
-});
 
 app.use(function(req, res, next){
+	// you could alias this as req or res.expose
+	// to make it shorter and less annoying
+	res.locals.expose = {exists: passin};
+	// WARN: IS THIS NECESSARY?
+	res.locals.session = req.session;
 	req.db = db;
 	next();
 });
@@ -131,7 +138,6 @@ app.use(function(req, res, next){
 // Readings to understand passport.js
 // http://toon.io/understanding-passportjs-authentication-flow/
 // https://github.com/jaredhanson/passport-local/blob/master/examples/express3/app.js
-app.use(flash());
 // Initialize Passport!  Also use passport.session() middleware, to support
 // persistent login sessions (recommended).
 app.use(passport.initialize());
@@ -158,16 +164,18 @@ app.get('/nickname-login', function(req, res) {
 //	res.render('meta-login');
 //})
 
-app.get('/', function(req, res){
-  res.render('index', { user: req.user });
+app.get('/', function(req, res) {
+	res.render('index', { user: req.user});
 });
 
-app.get('/account', /*ensureAuthenticated,*/ function(req, res){
-  res.render('account', { user: req.user });
+app.get('/account', /*ensureAuthenticated,*/ function(req, res) {
+	res.render('account', { user: req.user });
 });
 
-app.get('/login', function(req, res){
-  res.render('login', { user: req.user, message: req.flash('error') });
+app.get('/login', function(req, res) {
+	var m1 = req.flash('error')[0]
+	console.log(m1)
+	res.render('login', { user: req.user, message: String(m1), sample: "Sanity check."});
 });
 
 // POST /login
@@ -177,9 +185,9 @@ app.get('/login', function(req, res){
 //   which, in this example, will redirect the user to the home page.
 //
 //   curl -v -d "username=bob&password=secret" http://127.0.0.1:3000/login
-try {
+//try {
 	app.post('/login', 
-		passport.authenticate('local', { failureRedirect: '/login', failureFlash: true }),
+		passport.authenticate('local', { failureRedirect: '/login', failureFlash: 'THIS IS A SANITY CHECK ERROR', successFlash: 'Welcome!' }),
 		function(req, res) {
 			console.log('User login successful.');
 			var redirect_to = req.session.redirect_to || '/'
@@ -192,9 +200,9 @@ try {
 			req.logout();
 			res.redirect(200, '/');
 		});
-} catch (err) {
-	console.log(err);
-}
+//} catch (err) {
+//	console.log(err);
+//}
 
 
 // Simple route middleware to ensure user is authenticated.
