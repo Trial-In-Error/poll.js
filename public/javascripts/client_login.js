@@ -38,7 +38,7 @@ $(document).on('pageinit', function() {
 			} else if($('#username').val().length > 0 && $('#password').val().length <= 0) {
 				alert('Please fill in your password.');
 			} else {
-				alert('Please fill in your username and password.');	
+				alert('Please fill in your username and password.');
 			}
 		}
 		return false; // cancel original event to prevent form submitting

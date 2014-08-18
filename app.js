@@ -56,25 +56,32 @@ console.log(exists_list);
 //   this will be as simple as storing the user ID when serializing, and finding
 //   the user by ID when deserializing.
 passport.serializeUser(function(user, done) {
-  done(null, user);
+	done(null, user);
 });
 
 passport.deserializeUser(function(user, done) {
-  //findById(id, function (err, user) {
-  	//var user = {'id': 1};
-  	done(null, user);
-    //done(err, user);
-  //});
+	//findById(id, function (err, user) {
+	//var user = {'id': 1};
+	done(null, user);
+	//done(err, user);
+	//});
 });
 
-
+function findByUsername(username, fn) {
+	for (var i = 0, len = users.length; i < len; i+=1) {
+		var user = users[i];
+		if (user.username === username) {
+			return fn(null, user);
+		}
+	}
+	return fn(null, null);
+}
 
 // Use the LocalStrategy within Passport.
 //   Strategies in passport require a `verify` function, which accept
 //   credentials (in this case, a username and password), and invoke a callback
 //   with a user object.  In the real world, this would query a database;
 //   however, in this example we are using a baked-in set of users.
-//try {
 passport.use(new LocalStrategy(
 	function(username, password, done) {
 		console.log('Authenticating user.');
@@ -82,27 +89,31 @@ passport.use(new LocalStrategy(
 		process.nextTick(function () {
 			var user = {'id': 1};
 			console.log('Tick.');
-			if(username !== "asdf") {
-				return done(null, false, { error: 'Unknown user '+username+'.'});
-			}else if(password !== "zxcv") {
-				return done(null, false, { error: 'Invalid password.'})
-			}
-
-			return done(null, user);
-    });
-  }
+			User.findOne({ username: username}, function(err, user) {
+				if (err) {return done(err);}
+				if (!user) {
+					return done(null, false, {message: 'Unknown user '+username+'.'});
+				}
+				if (!user.validPassword(password)) {
+					return done(null, false, {message: 'Incorrect password.'});
+				}
+				return done(null, user);
+			});
+			//if(username !== "asdf") {
+			//	return done(null, false, { error: 'Unknown user '+username+'.'});
+			//}else if(password !== "zxcv") {
+			//	return done(null, false, { error: 'Invalid password.'})
+			//}
+			//return done(null, user);
+		});
+	}
 ));
-//} catch (err) {
-//	console.log(err);
-//}
 
 
-      
-      // Find the user by username.  If there is no user with the given
-      // username, or the password is not correct, set the user to `false` to
-      // indicate failure and set a flash message.  Otherwise, return the
-      // authenticated `user`.
-
+// Find the user by username.  If there is no user with the given
+// username, or the password is not correct, set the user to `false` to
+// indicate failure and set a flash message.  Otherwise, return the
+// authenticated `user`.
 //      findByUsername(username, function(err, user) {
 //        if (err) { return done(err); }
 //        if (!user) { return done(null, false, { message: 'Unknown user ' + username }); }
@@ -155,11 +166,11 @@ app.use('/poll', poll);
 //STUB: MOVE TO ANOTHER FILE LATER
 app.get('/meta-login', function(req, res) {
 	res.render('meta-login');
-})
+});
 
 app.get('/nickname-login', function(req, res) {
 	res.render('meta-login');
-})
+});
 
 //app.post('/anonymous-login', function(req, res) {
 //	res.render('meta-login');
@@ -186,12 +197,12 @@ app.get('/login', function(req, res) {
 //   curl -v -d "username=bob&password=secret" http://127.0.0.1:3000/login
 app.post('/login', function(req, res, next) {
 	// THIS NEEDS TO BE SESSION-IZED
-	var redirect_to = req.session.redirect_to || '/'
+	var redirect_to = req.session.redirect_to || '/';
 	delete req.session.redirect_to;
 
 	console.log('login matched with username '+req.body.username+' and password '+req.body.password+'.');
 	passport.authenticate('local', function(err, user, info) {
-		console.log('Start login attempt.')
+		console.log('Start login attempt.');
 		if (err) { return next(err); }
 		if (!user) {
 			console.log('User login failed.');
@@ -202,7 +213,7 @@ app.post('/login', function(req, res, next) {
 			console.log('User login successful.');
 
 			return res.send({success: true, redirect: String(redirect_to)});
-		})
+		});
 	})(req, res, next);
 });
 
@@ -225,12 +236,8 @@ function ensureAuthenticated(req, res, next) {
 	req.session.redirect_to = req.path;
 	console.log('User is not already authenticated. Redirecting.');
 	//req.session.returnTo = req.path;
-	res.redirect('/login')
+	res.redirect('/login');
 }
-
-
-
-
 
 /// catch 404 and forward to error handler
 app.use(function(req, res, next) {

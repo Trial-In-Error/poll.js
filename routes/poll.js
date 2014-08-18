@@ -2,6 +2,19 @@ var express = require('express');
 var router = express.Router();
 var mongo = require('mongoskin');
 
+//WARN: This is in a really shitty place and will lead to lots of code duplication.
+function ensureAuthenticated(req, res, next) {
+	if (req.isAuthenticated()) {
+		console.log('User is already authenticated. Continuing.');
+		return next();
+	}
+	console.log('User is not already authenticated. Redirecting.');
+	console.log('req.session ('+req.session+').redirect_to set to '+req.originalUrl);
+	req.session.redirect_to = req.originalUrl;
+	//req.session.returnTo = req.path;
+	res.redirect('/login');
+}
+
 /* GET a specific poll. */
 router.get('/:id', ensureAuthenticated, function(req, res) {
 	console.log('MATCHED AT /:id.');
@@ -24,15 +37,3 @@ router.get('/:id', ensureAuthenticated, function(req, res) {
 
 module.exports = router;
 
-//WARN: This is in a really shitty place and will lead to lots of code duplication.
-function ensureAuthenticated(req, res, next) {
-	if (req.isAuthenticated()) {
-		console.log('User is already authenticated. Continuing.');
-		return next();
-	}
-	console.log('User is not already authenticated. Redirecting.');
-	console.log('req.session ('+req.session+').redirect_to set to '+req.originalUrl);
-	req.session.redirect_to = req.originalUrl;
-	//req.session.returnTo = req.path;
-	res.redirect('/login')
-}

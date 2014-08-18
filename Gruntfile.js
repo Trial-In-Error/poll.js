@@ -41,6 +41,7 @@ module.exports = function(grunt) {
 							'package_dev.json',
 							'*.js',
 							'/bin/*.js',
+							'routes/*.js',
 							'!public/javascripts/jquery_2_1_1.js',
 							'!public/javascripts/jquery_mobile_1_4_3.js'
 

@@ -34,7 +34,7 @@ Adding an Admin User
 
 2. Access the database's shell from the `poll.js` directory with the command-line instruction `mongo`.
 2. Chooese the mongo database for this project with `use polljs`.
-3. Add an admin user with `db.userdb.insert({type:{login:{username: "asdf", password: "zxcv"}}, rights:{accessClosed: true, create: true, delete: true, clone: true, answer: true}})`. Modify the username and password fields.
+3. Add an admin user with `db.userdb.insert({type:{login:{username: "asdf", password: "zxcv"}}, rights:{accessClosed: true, create: true, delete: true, clone: true, answer: true}})`. Modify the username, password, and rights fields as necessary.
 
 The Future
 ---------------------------------
