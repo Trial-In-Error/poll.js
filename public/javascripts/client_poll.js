@@ -430,7 +430,7 @@ function validateCurrentQuestion(forward) {
 
 /**
  *	Updates the bottom button set. Buttons are never deleted or added, only shown, hidden, enabled, and disabled.
- *	Called by renderButtonButtons(), nextQuestion(), lastQuestion(), and skipQuestion().
+ *	Called by renderBottomButtons(), nextQuestion(), lastQuestion(), and skipQuestion().
  *	Requires that opening_slide and closing_slide are correctly labeled in the poll's .json!
  */
 function updateBottomButtons() {
@@ -476,6 +476,7 @@ function updateBottomButtons() {
 		$('#skipquestion').removeClass('ui-state-disabled');
 		$('#skipquestion').innerHTML = 'Skip';
 	}
+	$('#bottombuttons').trigger('create');
 }
 
 /**
