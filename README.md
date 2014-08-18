@@ -28,6 +28,13 @@ This project is built with grunt. Most files have two versions, one called `foo_
 * `grunt watch` automatically lints, uglifies, etc., as files are edited.
     * Note that `grunt watch` is currently not supported, and is likely to break things! Don't use it unless you've fixed it!
 
+Adding an Admin User
+---------------------------------
+1. Start the server with `npm run`. This will start a mongo database.
+
+2. Access the database's shell from the `poll.js` directory with the command-line instruction `mongo`.
+2. Chooese the mongo database for this project with `use polljs`.
+3. Add an admin user with `db.userdb.insert({type:{login:{username: "asdf", password: "zxcv"}}, rights:{accessClosed: true, create: true, delete: true, clone: true, answer: true}})`. Modify the username and password fields.
 
 The Future
 ---------------------------------
