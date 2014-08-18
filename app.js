@@ -22,7 +22,6 @@ if(typeof process.env.MONGOLAB_URI !== 'undefined') {
 var db = mongo.db(process.env.MONGOLAB_URI || 'mongodb://localhost:27017/polljs', {native_parse:true});
 
 var users = require('./routes/users');
-var test = require('./routes/test');
 var transientlogin = require('./routes/transient-login');
 var pollindex = require('./routes/pollindex');
 var pollroute = require('./routes/pollroute');
@@ -68,13 +67,20 @@ passport.deserializeUser(function(user, done) {
 });
 
 function findByUsername(username, fn) {
-	for (var i = 0, len = users.length; i < len; i+=1) {
-		var user = users[i];
-		if (user.username === username) {
-			return fn(null, user);
+	db.collection('userdb').findOne(function(err, result) {
+		if (err) throw err;
+		console.log(result);
+	});
+	db.collection('userdb').findOne({"type.login.username": String(username)}, function (err, user) {
+		if(err) return err;
+		if(user) {
+			console.log('User found in database.');
+			return fn(null, user);	
+		} else {
+			console.log('User not found in database.');
+			return fn(null, null);
 		}
-	}
-	return fn(null, null);
+	});
 }
 
 // Use the LocalStrategy within Passport.
@@ -87,38 +93,24 @@ passport.use(new LocalStrategy(
 		console.log('Authenticating user.');
 		// asynchronous verification, for effect...
 		process.nextTick(function () {
-			var user = {'id': 1};
+			//var user = {'id': 1};
 			console.log('Tick.');
-			User.findOne({ username: username}, function(err, user) {
+			findByUsername(username, function(err, user) {
 				if (err) {return done(err);}
 				if (!user) {
+					console.log('We\'ve failed!');
+					console.log(user);
+					console.log(!user);
 					return done(null, false, {message: 'Unknown user '+username+'.'});
 				}
-				if (!user.validPassword(password)) {
+				if (user.type.login.password !== password ) {
 					return done(null, false, {message: 'Incorrect password.'});
 				}
 				return done(null, user);
 			});
-			//if(username !== "asdf") {
-			//	return done(null, false, { error: 'Unknown user '+username+'.'});
-			//}else if(password !== "zxcv") {
-			//	return done(null, false, { error: 'Invalid password.'})
-			//}
-			//return done(null, user);
 		});
 	}
 ));
-
-
-// Find the user by username.  If there is no user with the given
-// username, or the password is not correct, set the user to `false` to
-// indicate failure and set a flash message.  Otherwise, return the
-// authenticated `user`.
-//      findByUsername(username, function(err, user) {
-//        if (err) { return done(err); }
-//        if (!user) { return done(null, false, { message: 'Unknown user ' + username }); }
-//        if (user.password != password) { return done(null, false, { message: 'Invalid password' }); }
-
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -157,7 +149,6 @@ app.use(passport.session());
 
 app.use('/', pollindex);
 app.use('/users', users);
-app.use('/test', test);
 app.use('/transient-login', transientlogin);
 app.use('/polls', pollindex);
 app.use('/pollroute', pollroute);
@@ -193,10 +184,9 @@ app.get('/login', function(req, res) {
 //   request.  If authentication fails, the user will be redirected back to the
 //   login page.  Otherwise, the primary route function function will be called,
 //   which, in this example, will redirect the user to the home page.
-//
-//   curl -v -d "username=bob&password=secret" http://127.0.0.1:3000/login
 app.post('/login', function(req, res, next) {
 	// THIS NEEDS TO BE SESSION-IZED
+	console.log('By the way, we\'re redirect to: req.session.redirect_to . If this ever looks like it\'ll go to /login, please catch that case and make it / instead.');
 	var redirect_to = req.session.redirect_to || '/';
 	delete req.session.redirect_to;
 

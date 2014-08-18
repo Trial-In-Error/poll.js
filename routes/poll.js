@@ -22,17 +22,17 @@ router.get('/:id', ensureAuthenticated, function(req, res) {
 	var pollToDisplay = req.params.id;
 
 	var temp = db.collection('polldb').findOne({_id:mongo.helper.toObjectID(pollToDisplay)}, function (err, result) {
-					if(err) return err;
-					tr = result;
-					for(var question in tr.question_list) {
-						for(var response in tr.question_list[question].type.response_list) {
-							delete tr.question_list[question].type.response_list[response].answers;
-						}
-					}
-					res.locals.expose.result = tr;
-					//res.expose(result, 'temp_poll');
-					res.render('poll', {title: 'Poll', poll: tr, exists: res.locals.expose.exists});
-				});
+		if(err) return err;
+		tr = result;
+		for(var question in tr.question_list) {
+			for(var response in tr.question_list[question].type.response_list) {
+				delete tr.question_list[question].type.response_list[response].answers;
+			}
+		}
+		res.locals.expose.result = tr;
+		//res.expose(result, 'temp_poll');
+		res.render('poll', {title: 'Poll', poll: tr, exists: res.locals.expose.exists});
+	});
 });
 
 module.exports = router;

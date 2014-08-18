@@ -13,11 +13,12 @@ $(document).on('pageinit', function() {
 			.done(function (result) {
 				console.log('Done!');
 				//window.location.replace(result.redirect);
+				console.log(result);
 				if(result.success) {
 					window.location.replace(result.redirect);
 				} else {
-					console.log(result.message.error);
-					$('#login-failure p').html(result.message.error);
+					console.log(result.message.message);
+					$('#login-failure p').html(result.message.message);
 				}
 			})
 			.always(function (result) {
