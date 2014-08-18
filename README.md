@@ -24,7 +24,7 @@ Adding an Admin User
 1. Start the server with `npm run`. This will start a mongo database.
 2. Access the database's shell from the `poll.js` directory with the command-line instruction `mongo`.
 2. Chooese the mongo database for this project with `use polljs`.
-3. Add an admin user with `db.userdb.insert({type:{login:{username: "asdf", password: "zxcv"}}, rights:{accessClosed: true, create: true, delete: true, clone: true, answer: true}})`. Modify the username, password, and rights fields as necessary.
+3. Add an admin user with `db.userdb.insert({type:{login:{username: "asdf", password: "zxcv"}}, rights:{accessClosed: true, create: true, delete: true, clone: true, answer: true}})`. Modify the username, password, and rights fields as appropriate.
 
 Using Grunt
 ---------------------------------
@@ -53,7 +53,7 @@ Deploying to Heroku
 Heroku Cheatsheet
 ---------------------------------
 * `heroku logs` view server logs.
-	Note that these will be full of color escape code garbage.
+	* Note that these will be full of color escape code garbage.
 * `heroku ps` will show the status of all running dynos.
 * `git push heroku master` will kill all running dynos and run new ones in the same basic 'formation.'
 * `heroku restart dyno_type.dyno_number` will restart a specific dyno.
@@ -67,7 +67,7 @@ Heroku Cheatsheet
 
 Files Related to Heroku
 ---------------------------------
-* `Procfile` defines process types run by `heroku ps:scale `type``=``number`
+* `Procfile` defines process types run by `heroku ps:scale `type=number`
 * `package.json` is used to build the app on heroku's servers. It must list *every* package used in the app; no packages can be used from global scope.
 
 
