@@ -52,14 +52,17 @@ Deploying to Heroku
 
 Heroku Cheatsheet
 ---------------------------------
-* `heroku logs` wiew server logs.
+* `heroku logs` view server logs.
 	Note that these will be full of color escape code garbage.
 * `heroku ps` will show the status of all running dynos.
 * `git push heroku master` will kill all running dynos and run new ones in the same basic 'formation.'
 * `heroku restart ``dyno_type``.``dyno_number` will restart a specific dyno.
+
 	[For more about dyno failure conditions, see this page.](https://devcenter.heroku.com/articles/dynos)
 * `heroku config:set ``ENV_VAR_NAME``=`` config_var_value` will set environment variables.
+
 	These are exposed to node as `process.env.``ENV_VAR_NAME`.
+	
 	Use this for things like encryption / SSL keys.
 * `heroku run ``SCRIPT/PROCESS` will spin up a new dyno running the named script or process. This dyno will automatically die from inactivity later. Changes to the filesystem on one dyno are *not* propogated to other dynos; modify a shared resource (database, queue, etc.) instead. Additionally, new dynos are *always* created from a slug (ready-to-run format created when you deploy), *not* from the state of the other dynos.
 	You can `heroku run bash` for an interactive session.
