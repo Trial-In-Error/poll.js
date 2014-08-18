@@ -67,17 +67,13 @@ passport.deserializeUser(function(user, done) {
 });
 
 function findByUsername(username, fn) {
-	db.collection('userdb').findOne(function(err, result) {
-		if (err) throw err;
-		console.log(result);
-	});
-	db.collection('userdb').findOne({"type.login.username": String(username)}, function (err, user) {
+	db.collection('userdb').findOne({'type.login.username': String(username)}, function (err, user) {
 		if(err) return err;
 		if(user) {
-			console.log('User found in database.');
-			return fn(null, user);	
+			//console.log('User found in database.');
+			return fn(null, user);
 		} else {
-			console.log('User not found in database.');
+			//console.log('User not found in database.');
 			return fn(null, null);
 		}
 	});
@@ -90,17 +86,17 @@ function findByUsername(username, fn) {
 //   however, in this example we are using a baked-in set of users.
 passport.use(new LocalStrategy(
 	function(username, password, done) {
-		console.log('Authenticating user.');
+		//console.log('Authenticating user.');
 		// asynchronous verification, for effect...
 		process.nextTick(function () {
 			//var user = {'id': 1};
-			console.log('Tick.');
+			//console.log('Tick.');
 			findByUsername(username, function(err, user) {
 				if (err) {return done(err);}
 				if (!user) {
-					console.log('We\'ve failed!');
-					console.log(user);
-					console.log(!user);
+					//console.log('We\'ve failed!');
+					//console.log(user);
+					//console.log(!user);
 					return done(null, false, {message: 'Unknown user '+username+'.'});
 				}
 				if (user.type.login.password !== password ) {
@@ -186,21 +182,22 @@ app.get('/login', function(req, res) {
 //   which, in this example, will redirect the user to the home page.
 app.post('/login', function(req, res, next) {
 	// THIS NEEDS TO BE SESSION-IZED
-	console.log('By the way, we\'re redirect to: req.session.redirect_to . If this ever looks like it\'ll go to /login, please catch that case and make it / instead.');
+	console.log('By the way, redirect is set to:'+ req.session.redirect_to+' .');
+	console.log('If this ever looks like it\'ll go to /login, please set to / instead.');
 	var redirect_to = req.session.redirect_to || '/';
 	delete req.session.redirect_to;
 
 	console.log('login matched with username '+req.body.username+' and password '+req.body.password+'.');
 	passport.authenticate('local', function(err, user, info) {
-		console.log('Start login attempt.');
+		//console.log('Start login attempt.');
 		if (err) { return next(err); }
 		if (!user) {
-			console.log('User login failed.');
+			//console.log('User login failed.');
 			return res.send({ success: false, message: info});
 		}
 		req.logIn(user, function(err) {
 			if (err) { return next(err); }
-			console.log('User login successful.');
+			//console.log('User login successful.');
 
 			return res.send({success: true, redirect: String(redirect_to)});
 		});
@@ -220,11 +217,11 @@ app.get('/logout', function(req, res){
 // http://stackoverflow.com/questions/13335881/redirecting-to-previous-page-after-authentication-in-node-js-using-passport
 function ensureAuthenticated(req, res, next) {
 	if (req.isAuthenticated()) {
-		console.log('User is already authenticated. Continuing.');
+		//console.log('User is already authenticated. Continuing.');
 		return next();
 	}
 	req.session.redirect_to = req.path;
-	console.log('User is not already authenticated. Redirecting.');
+	//console.log('User is not already authenticated. Redirecting.');
 	//req.session.returnTo = req.path;
 	res.redirect('/login');
 }
