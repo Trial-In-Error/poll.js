@@ -451,7 +451,6 @@ function updateBottomButtons() {
 		$('#skipquestion').addClass('ui-state-disabled');
 		$('#lastquestion').removeClass('ui-state-disabled');
 	} else if(poll.question_list[current_question].opening_slide) {
-
 		$('#submit').hide();
 		$('#nextquestion').show();
 		$('#nextquestion').removeClass('ui-state-disabled');

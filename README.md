@@ -8,14 +8,23 @@ To install:
 4. From the repository's directory, `npm install`.
 5. Get a coffee while `npm` does all the hard work.
 6. Start the app from the repository's directory with `npm start`.
-7. Point a web browser at `localhost:3000/polls` and enjoy!
+7. Point a web browser at `localhost:3000` and enjoy!
 
 Note that `npm run godbless` will start the server but not the database. This is useful for debugging changes without having to deal with `mongodb` and `forever`.
 
 Adding a Poll
 ---------------------------------
 1. Write a poll as a valid `.json` file, corresponding to the data model in `datamodel.md`.
-2. From the terminal, `mongoimport --db polljs --collection polldb --jsonArray < pollname.json`.
+2. From the terminal, `mongoimport --db polljs --collection polldb --jsonArray < example_poll.json`.
+
+Note that 2 example polls are included at poll.js's root directory.
+
+Adding an Admin User
+---------------------------------
+1. Start the server with `npm run`. This will start a mongo database.
+2. Access the database's shell from the `poll.js` directory with the command-line instruction `mongo`.
+2. Chooese the mongo database for this project with `use polljs`.
+3. Add an admin user with `db.userdb.insert({type:{login:{username: "asdf", password: "zxcv"}}, rights:{accessClosed: true, create: true, delete: true, clone: true, answer: true}})`. Modify the username, password, and rights fields as necessary.
 
 Using Grunt
 ---------------------------------
@@ -28,13 +37,39 @@ This project is built with grunt. Most files have two versions, one called `foo_
 * `grunt watch` automatically lints, uglifies, etc., as files are edited.
     * Note that `grunt watch` is currently not supported, and is likely to break things! Don't use it unless you've fixed it!
 
-Adding an Admin User
+Deploying to Heroku
 ---------------------------------
-1. Start the server with `npm run`. This will start a mongo database.
+1. [Sign up for heroku.]( https://signup.heroku.com/signup/dc)
+2. [Download and install the heroku toolbelt.](https://toolbelt.heroku.com/)
+3. Authenticate with heroku using `heroku login`.
+4. Commit changes via git with `git commit -m "trying heroku deployment!"`.
+5. Create a heroku project with `heroku create`.
+6. Deploy code with `git push heroku master`.
+7. Start one dyno (worker process) with `heroku ps:scale web=1`.
+8. REALLY MESSY MONGODB SETUP OH SHIT DOCUMENT THIS CRAP
+9. EVEN MESSIER SSL / HTTPS SETUP FIGURE THIS OUTTTTT
+10. Visit your app with `heroku open`!
 
-2. Access the database's shell from the `poll.js` directory with the command-line instruction `mongo`.
-2. Chooese the mongo database for this project with `use polljs`.
-3. Add an admin user with `db.userdb.insert({type:{login:{username: "asdf", password: "zxcv"}}, rights:{accessClosed: true, create: true, delete: true, clone: true, answer: true}})`. Modify the username, password, and rights fields as necessary.
+Heroku Cheatsheet
+---------------------------------
+* `heroku logs` wiew server logs.
+	Note that these will be full of color escape code garbage.
+* `heroku ps` will show the status of all running dynos.
+* `git push heroku master` will kill all running dynos and run new ones in the same basic 'formation.'
+* `heroku restart ``dyno_type``.``dyno_number` will restart a specific dyno.
+	[For more about dyno failure conditions, see this page.](https://devcenter.heroku.com/articles/dynos)
+* `heroku config:set ``ENV_VAR_NAME``=`` config_var_value` will set environment variables.
+	These are exposed to node as `process.env.``ENV_VAR_NAME`.
+	Use this for things like encryption / SSL keys.
+* `heroku run ``SCRIPT/PROCESS` will spin up a new dyno running the named script or process. This dyno will automatically die from inactivity later. Changes to the filesystem on one dyno are *not* propogated to other dynos; modify a shared resource (database, queue, etc.) instead. Additionally, new dynos are *always* created from a slug (ready-to-run format created when you deploy), *not* from the state of the other dynos.
+	You can `heroku run bash` for an interactive session.
+* `heroku logs --ps web.1 --tail` view the logs from one dyno (named web.1) and keep the connection open.
+
+Files Related to Heroku
+---------------------------------
+* `Procfile` defines process types run by `heroku ps:scale `type``=``number`
+* `package.json` is used to build the app on heroku's servers. It must list *every* package used in the app; no packages can be used from global scope.
+
 
 The Future
 ---------------------------------
@@ -51,7 +86,6 @@ Known Issues
 * `server_stdout.log` contains color escape codes and other garbage.
 	* Similarly, heroku logs for a running server are almost unreadable because of color codes.
 * Skype defaults to listening on port 443, blocking server.js from starting the HTTPS server.
-	* Right now, this crashes fatally for both servers.
 * MongoDB under Mac OSX will not get as many file descriptors as it would like.
 	* See: http://docs.mongodb.org/manual/reference/ulimit/
 * None of the HTTPS keys are packaged with the app. Generate them like so:
