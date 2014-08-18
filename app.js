@@ -230,6 +230,13 @@ function ensureAuthenticated(req, res, next) {
 app.use(function(req, res, next) {
 	//console.log(util.inspect(req.url.slice(-3)));
 	var err = new Error('Not Found\n'+'req: '+req.originalUrl);
+	console.log('404 on originalUrl:' + req.originalUrl);
+	console.log('404 on path:' + req.path.split('/').pop());
+	if(req.path.split('/').pop().slice(-3) === '.js' && passin[req.path.split('/').pop()]) {
+		console.log(req.path.split('/').pop()+' was requested but not found; marked as no longer available.');
+		passin[req.path.split('/').pop()] = false;
+		next();
+	}
 	err.status = 404;
 	next(err);
 });
