@@ -730,7 +730,7 @@ $(document).change('.ui-radio-on', function () {
 
 /**
  *	Asks the user to confirm leaving or refreshing the page before POSTing the answered poll.
- *	Because it's attached to window, it must be overwritten manuallyy(i.e., will persist through to the next URI/URL visited!).
+ *	Because it's attached to window, it must be overwritten manually(i.e., will persist through to the next URI/URL visited!).
  */
 window.onbeforeunload = function() {
 	// WARN: Unconditionally storing the poll may be a source of interesting errors!

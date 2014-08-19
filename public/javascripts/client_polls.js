@@ -1,8 +1,3 @@
-// Userlist data array for filling in info box
-var userListData = [];
-
-// Functions =============================================================
-
 // Fill table with data
 function populateTable() {
 
@@ -12,11 +7,8 @@ function populateTable() {
 	// jQuery AJAX call for JSON
 	$.getJSON( '/pollroute/listpolls', function( data ) {
 
-		// Stick our user data array into a userlist variable in the global object
-		userListData = data;
-
 		// For each item in our JSON, add a table row and cells to the content string
-		$.each(data, function(){
+		$.each(JSON.parse(data.polls), function(){
 			tableContent += '<li>';
 			tableContent += '<a href="/poll/' + this._id + '" rel="external" data-ajax="false">';
 			tableContent += '<h2>Poll '+ this.id + '</h2>';
@@ -27,7 +19,11 @@ function populateTable() {
 			}else{
 				tableContent += 'Closed';
 			}
-			tableContent += ', owned by ' + this.owner + ', and has the database hash ' + this._id+'</p></a>';
+			if ( !data.auth ) {
+				tableContent += ', owned by ' + this.owner + ', and has the database hash ' + this._id+'</p></a>';	
+			} else {
+				tableContent += 'YOU HAVE DA POWA!'+'</p></a>';
+			}
 			//tableContent += '<td><a href="#" class="ui-btn ui-icon-delete ui-mini ui-btn-icon-notext ui-corner-all" rel="'+this._id+'">No text</a></td>'
 			tableContent += '<a href="#" class="linkdeletepoll" rel="' + this._id + '">delete</a>';
 			//tableContent += '<td><form><button type="ui-btn" value="Delete" style="width:100%"></form></td>'

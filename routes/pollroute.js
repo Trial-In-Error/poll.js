@@ -4,8 +4,10 @@ var router = express.Router();
 /* GET poll list */
 router.get('/listpolls', function(req, res){
 	var db = req.db;
+	// WARN: SANITIZE THESE BEFORE SENDING THEM; THEY HAVE THE ANSWERS EMBEDDED
+	// STUB: Paginate
 	db.collection('polldb').find().toArray(function(err, items) {
-		res.json(items);
+		res.send({auth: req.isAuthenticated(), polls:JSON.stringify(items)});
 	});
 });
 

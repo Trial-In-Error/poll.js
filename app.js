@@ -131,6 +131,7 @@ app.use(function(req, res, next){
 	res.locals.expose = {exists: passin};
 	// WARN: IS THIS NECESSARY?
 	res.locals.session = req.session;
+	res.locals.user = req.user;
 	req.db = db;
 	next();
 });
@@ -198,7 +199,6 @@ app.post('/login', function(req, res, next) {
 		req.logIn(user, function(err) {
 			if (err) { return next(err); }
 			//console.log('User login successful.');
-
 			return res.send({success: true, redirect: String(redirect_to)});
 		});
 	})(req, res, next);
