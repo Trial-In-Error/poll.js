@@ -61,7 +61,12 @@ I'm considering tacking the resulting answers onto `Response` objects. This will
 
 * `Response` object describing a single possible response to a single question
 	* `Body` object containing some text, image, sound, video, etc.
-	* `answers` list of tuples in the form (User, answer_chosen, additional_data)
+	* `answers` object
+		* value; the response, varies by question type
+		* explanation; any explanation field
+		* user; identification for the user that answered the question
+		* timestamp; when the user answered the question
+		* skipped; bool
 	* `always_explainable` boolean; always has a text field beneath it
 	* `situationally_explainable` boolean; renders a text field beneath it when chosen
 	* `must_explain` boolean; whether or not the rendered text field must have some contents

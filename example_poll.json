@@ -15,12 +15,10 @@
 				"response_list":
 				[
 					{
-						"body": "Yes.",
-						"answers": []
+						"body": "Yes."
 					},
 					{
 						"body": "No.",
-						"answers": [],
 						"explanation":
 						{
 							"always_explainable": false,
@@ -41,20 +39,16 @@
 				"response_list":
 				[
 					{
-						"body": "Coffee.",
-						"answers": []
+						"body": "Coffee."
 					},
 					{
-						"body": "Video-games.",
-						"answers": []
+						"body": "Video-games."
 					},
 					{
-						"body": "Cats.",
-						"answers": []
+						"body": "Cats."
 					},
 					{
-						"body": "Beer.",
-						"answers": []
+						"body": "Beer."
 					}
 				]
 			}
@@ -71,7 +65,6 @@
 				"response_list":
 				[
 					{
-						"answers": []
 					}
 				]
 			},
