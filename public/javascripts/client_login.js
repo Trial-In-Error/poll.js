@@ -11,27 +11,25 @@ $(document).on('pageinit', function() {
 				dataType: 'json'
 			})
 			.done(function (result) {
-				console.log('Done!');
+				//console.log('Done!');
 				//window.location.replace(result.redirect);
 				console.log(result);
 				if(result.success) {
 					window.location.replace(result.redirect);
 				} else {
-					console.log(result.message.message);
 					$('#login-failure p').html(result.message.message);
+					if(result.message.message === 'Incorrect password.') {
+						$('#password').val('');
+					} else {
+						$('#username').val('');
+						$('#password').val('');
+					}
 				}
-			})
-			.always(function (result) {
-				console.log('Always!');
 			})
 			.fail(function (request,error) {
 				console.log('Fail!');
-				// WARN: You can't redirect in response to an AJAX post
-				// This is a clumsy workaround that forces a page refresh
-				// It may very well break or be broken
-				//window.location.replace(window.location.href);
 				// This callback function will trigger on unsuccessful action
-				//alert('Network error has occurred please try again!');
+				alert('Network error has occurred please try again!');
 			});
 		} else {
 			if($('#username').val().length <= 0 && $('#password').val().length > 0) {
