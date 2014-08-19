@@ -12,7 +12,7 @@ function populateTable() {
 				tableContent += '<a href="/poll/' + this._id + '" rel="external" data-ajax="false">';
 				tableContent += '<h2>Poll '+ this.id + '</h2>';
 				
-				tableContent += '<p id="open">'
+				tableContent += '<p>'
 				if(this.open)
 				{
 					tableContent += 'Open';
@@ -25,7 +25,7 @@ function populateTable() {
 				if ( data.auth ) {
 					tableContent += '<a href="#" class="linkdeletepoll split-custom-button ui-btn-icon-notext" rel="'+this._id+'" data-role="button" data-icon="delete" data-iconpos="notext">delete</a>';
 					tableContent += '<a href="#" class="linkcopypoll split-custom-button ui-btn-icon-notext" rel="'+this._id+'" data-role="button" data-icon="forward" data-iconpos="notext">copy</a>';
-					tableContent += '<a href="#" class="linkopenclosepoll split-custom-button ui-btn-icon-notext" rel="'+this._id+'" data-role="button" data-icon="lock" data-iconpos="notext">open/close</a>';
+					tableContent += '<a href="#" id="LOL" class="linkopenclosepoll split-custom-button ui-btn-icon-notext" rel="'+this._id+'" data-role="button" data-icon="lock" data-iconpos="notext">open/close</a>';
 					//tableContent += '<a href="#" class="linksharepoll split-custom-button ui-btn-icon-notext" rel="'+this._id+'" data-role="button" data-icon="action" data-iconpos="notext">link</a>';
 				} else {
 					tableContent += '<a href="/poll/' + this._id + '" class="split-custom-button ui-btn-icon-notext" data-role="button" data-icon="carat-r" data-iconpos="notext">answer</a>';
@@ -45,11 +45,13 @@ function populateTable() {
 }
 
 function openClosePoll() {
-
 	event.preventDefault();
 	var open, confirmation;
-	alert($('#open').text().search('Open') !== -1);
-	if ( $('#open').text().search('Open') !== -1) {
+	//util = require("util");
+	console.log($(this).parent().parent().children()[0].text);
+	//alert(Object.inspect(this));
+	//alert('Open: '+ String($('#open').text().search('Open') !== -1));
+	if ( $(this).parent().parent().children()[0].text.search('Open') !== -1) {
 		open = true;
 	} else {
 		open = false;
