@@ -1,5 +1,6 @@
 var express = require('express');
 var router = express.Router();
+var mongo = require('mongoskin');
 
 /* GET poll list */
 router.get('/listpolls', function(req, res){
@@ -11,6 +12,23 @@ router.get('/listpolls', function(req, res){
 	});
 });
 
+router.post('/closepoll/:id', function(req, res) {
+	var db = req.db;
+	var pollToClose = req.params.id;
+	db.collection('polldb').update({_id: mongo.helper.toObjectID(pollToClose)}, { $set: {open: false}}, function(err, result) {
+		// WARN: THESE COULD LEAK STACK TRACES
+		res.send((result === 1) ? { msg: '' } : { msg:'error: ' + err });
+	});
+});
+
+router.post('/openpoll/:id', function(req, res) {
+	var db = req.db;
+	var pollToClose = req.params.id;
+	db.collection('polldb').update({_id: mongo.helper.toObjectID(pollToClose)}, { $set: {open: true}}, function(err, result) {
+		// WARN: THESE COULD LEAK STACK TRACES
+		res.send((result === 1) ? { msg: '' } : { msg:'error: ' + err });
+	});
+});
 
 /* POST to answer poll */
 router.post('/answerpoll', function(req, res) {
@@ -18,7 +36,6 @@ router.post('/answerpoll', function(req, res) {
 		var db = req.db;
 		var tid = req.body._id;
 		delete req.body._id;
-		mongo = require('mongoskin');
 		db.collection('polldb').findOne({_id: mongo.helper.toObjectID(tid)},
 			function(err, result) {
 				if(err) {

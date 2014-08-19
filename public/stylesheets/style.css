@@ -10,10 +10,51 @@ a.heading-hyperlink {
 	text-decoration: none;
 	data-role: "nojs";
 }
-
-
 a.heading-hyperlink:link {color: #000000 !important;}
 a.heading-hyperlink:visited {color: #000000 !important;}
 a.heading-hyperlink:hover {color: #000000 !important;}
 a.heading-hyperlink:active {color: #000000 !important;}
 
+.split-custom-wrapper {
+    /* position wrapper on the right of the listitem */
+    position: absolute;
+    right: 0;
+    top: 0;
+    height: 100%;
+}
+
+.split-custom-button {
+	/*data-corners: "false";*/
+    position: relative;
+    float: right;   /* allow multiple links stacked on the right */
+    /*height: 100%;*/
+    margin:0;
+    /*top: 50%;*/
+    /*min-width:3em;*/
+    margin-left:.75em;
+    margin-right:.75em;
+    /* remove boxshadow and border */
+    border:none;
+    box-shadow: none;
+    value: "Icon only";
+    /*border-bottom-left-radius: 1em 1em;
+    border-bottom-right-radius: 1em 1em;
+    border-top-left-radius: 1em 1em;
+    border-top-right-radius: 1em 1em;*/
+
+    /* this is a badass centering fix!!! */
+	top: 50%;
+	transform: translateY(-50%);
+
+}
+
+.split-custom-button span.ui-btn-inner {
+    /* position icons in center of listitem*/
+    position: relative;
+    margin-top:50%;
+    margin-left:50%;
+    /* compensation for icon dimensions */
+    top:11px; 
+    left:-12px;
+    height:40%; /* stay within boundaries of list item */
+}

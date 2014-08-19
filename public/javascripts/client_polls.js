@@ -3,38 +3,93 @@ function populateTable() {
 
 	// Empty content string
 	var tableContent = '';
-
 	// jQuery AJAX call for JSON
 	$.getJSON( '/pollroute/listpolls', function( data ) {
-
-		// For each item in our JSON, add a table row and cells to the content string
-		$.each(JSON.parse(data.polls), function(){
-			tableContent += '<li>';
-			tableContent += '<a href="/poll/' + this._id + '" rel="external" data-ajax="false">';
-			tableContent += '<h2>Poll '+ this.id + '</h2>';
-			tableContent += '<p>';
-			if(this.open)
-			{
-				tableContent += 'Open';
-			}else{
-				tableContent += 'Closed';
-			}
-			if ( !data.auth ) {
-				tableContent += ', owned by ' + this.owner + ', and has the database hash ' + this._id+'</p></a>';	
-			} else {
-				tableContent += 'YOU HAVE DA POWA!'+'</p></a>';
-			}
-			//tableContent += '<td><a href="#" class="ui-btn ui-icon-delete ui-mini ui-btn-icon-notext ui-corner-all" rel="'+this._id+'">No text</a></td>'
-			tableContent += '<a href="#" class="linkdeletepoll" rel="' + this._id + '">delete</a>';
-			//tableContent += '<td><form><button type="ui-btn" value="Delete" style="width:100%"></form></td>'
-			tableContent += '</li>';
-		});
+		if(typeof data !== 'undefined') {
+			// For each item in our JSON, add a table row and cells to the content string
+			$.each(JSON.parse(data.polls), function(){
+				tableContent += '<li>';
+				tableContent += '<a href="/poll/' + this._id + '" rel="external" data-ajax="false">';
+				tableContent += '<h2>Poll '+ this.id + '</h2>';
+				
+				tableContent += '<p id="open">'
+				if(this.open)
+				{
+					tableContent += 'Open';
+				}else{
+					tableContent += 'Closed';
+				}
+				tableContent += ', owned by ' + this.owner + ', and has the database hash ' + this._id+'.</p>';
+				tableContent += '</a>';
+				tableContent += '<div class="split-custom-wrapper">';
+				if ( data.auth ) {
+					tableContent += '<a href="#" class="linkdeletepoll split-custom-button ui-btn-icon-notext" rel="'+this._id+'" data-role="button" data-icon="delete" data-iconpos="notext">delete</a>';
+					tableContent += '<a href="#" class="linkcopypoll split-custom-button ui-btn-icon-notext" rel="'+this._id+'" data-role="button" data-icon="forward" data-iconpos="notext">copy</a>';
+					tableContent += '<a href="#" class="linkopenclosepoll split-custom-button ui-btn-icon-notext" rel="'+this._id+'" data-role="button" data-icon="lock" data-iconpos="notext">open/close</a>';
+					//tableContent += '<a href="#" class="linksharepoll split-custom-button ui-btn-icon-notext" rel="'+this._id+'" data-role="button" data-icon="action" data-iconpos="notext">link</a>';
+				} else {
+					tableContent += '<a href="/poll/' + this._id + '" class="split-custom-button ui-btn-icon-notext" data-role="button" data-icon="carat-r" data-iconpos="notext">answer</a>';
+					//tableContent += '<a href="#" class="linksharepoll split-custom-button ui-btn-icon-notext" rel="'+this._id+'" data-role="button" data-icon="action" data-iconpos="notext">link</a>';
+				}
+				tableContent += '</div></li>';
+			});
+		} else {
+			location.reload();
+		}
 
 		// Inject the whole content string into our existing HTML table
 		$('#listpoll ul').html(tableContent);
-		//$('#listpoll ul').trigger('create');
+		$('#listpoll ul').trigger('create');
 		$('#listpoll ul').listview('refresh');
 	});
+}
+
+function openClosePoll() {
+
+	event.preventDefault();
+	var open, confirmation;
+	alert($('#open').text().search('Open') !== -1);
+	if ( $('#open').text().search('Open') !== -1) {
+		open = true;
+	} else {
+		open = false;
+	}
+	// Pop up a confirmation dialog
+	if(open) {
+		confirmation = confirm('Are you sure you want to close this poll?');	
+	} else {
+		confirmation = confirm('Are you sure you want to open this poll?');	
+	}
+	
+
+	// Check and make sure the user confirmed
+	if (confirmation === true) {
+
+		if(open) {
+			$.ajax({
+				type: 'POST',
+				url: '/pollroute/closepoll/' + $(this).attr('rel')
+			}).done(function( response ) {
+				// Check for a successful (blank) response
+				if (response.msg !== '') {
+					alert('Error: ' + response.msg);
+				}
+				populateTable();
+			});
+		} else {
+			$.ajax({
+				type: 'POST',
+				url: '/pollroute/openpoll/' + $(this).attr('rel')
+			}).done(function( response ) {
+				// Check for a successful (blank) response
+				if (response.msg !== '') {
+					alert('Error: ' + response.msg);
+				}
+				populateTable();
+			});
+		}
+
+	}
 }
 
 // Delete User
@@ -91,5 +146,6 @@ $(document).ready(function() {
 	// Delete Poll link click
 	//$('#listpoll table tbody').on('click', 'td a.linkdeletepoll', deletePoll);
 	$('#listpoll ul').on('click', 'li a.linkdeletepoll', deletePoll);
+	$('#listpoll ul').on('click', 'li a.linkopenclosepoll', openClosePoll);
 
 });

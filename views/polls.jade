@@ -13,13 +13,14 @@ block content
 
         // POLL LIST
         h1 Poll List
-        - if (user !== false && typeof user !== 'undefined')
-            p= user.rights.accessClosed
+        //- if (user !== false && typeof user //!== 'undefined')
+        //    p= user.rights.accessClosed
         #listpoll
-            ul(data-role="listview" data-filter="true" data-theme="a" style="margin-bottom: 50px;" data-inset="true")
+            ul(data-role="listview" data-icon="false" data-filter="true" style="margin-bottom: 50px;")
 
 
 
 
 
             //data-split-icon="delete"
+            // data-inset="true"
