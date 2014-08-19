@@ -32,7 +32,7 @@ $(document).on('pageinit', function() {
 				//window.location.replace(window.location.href);
 				// This callback function will trigger on unsuccessful action
 				//alert('Network error has occurred please try again!');
-			})
+			});
 		} else {
 			if($('#username').val().length <= 0 && $('#password').val().length > 0) {
 				alert('Please fill in your username.');
@@ -43,5 +43,5 @@ $(document).on('pageinit', function() {
 			}
 		}
 		return false; // cancel original event to prevent form submitting
-	})
-})
+	});
+});
