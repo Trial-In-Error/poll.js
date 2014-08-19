@@ -33,6 +33,12 @@ function store_poll() {
 	}
 }
 
+// STUB: COMMENT ME!
+// STUB: Extend for overriding (i.e., in case of skip)
+function gen_empty_answer() {
+	return {value: undefined, user: undefined, explanation: undefined, skipped: false, timestamp: undefined};
+}
+
 /**
  *	Clears the local storage only for the poll currently stored in the local poll variable.
  *	If supported, HTML5's localStorage is used. Otherwise, the data is appended to window directly.
@@ -63,7 +69,7 @@ function clean_poll(callback) {
 					&& typeof poll.question_list[question].type.response_list[response].answers[0] !== 'undefined'
 					&& poll.question_list[question].type.response_list[response].answers[0].value !== true) {
 					console.log('Question '+question+' had response '+response+' with the value of '+poll.question_list[question].type.response_list[response].answers[0]+'. Cleared.' );
-					poll.question_list[question].type.response_list[response].answers = [{value: undefined, explanation: undefined, answerer: undefined, timestamp: undefined}];
+					poll.question_list[question].type.response_list[response].answers = gen_empty_answer();
 				}
 			} catch (err) {
 				console.log(err+' '+question+' '+response);
@@ -594,7 +600,7 @@ function answer_question(forward) {
 					} else {
 						console.log('Hard overwriting answer '+i+'.');
 						poll.question_list[current_question].type.response_list[i].answers =
-							[{user: undefined, value: undefined, explanation: undefined}];
+							gen_empty_answer();
 					}
 				}
 			}
