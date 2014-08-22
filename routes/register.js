@@ -8,7 +8,8 @@ function findByUsername(req, fn) {
 	// find().limit(1) SERVING AS findOne()
 	// see: https://blog.serverdensity.com/checking-if-a-document-exists-mongodb-slow-findone-vs-find/
 	// also see: http://stackoverflow.com/questions/22364858/pagination-in-mongoskin-skip-limit
-	db.collection('userdb').findOne({'type.login.username': String(req.username)}, function (err, user) {
+	console.log('findByUsername req.username: '+req.body.username)
+	db.collection('userdb').findOne({'type.login.username': String(req.body.username)}, function (err, user) {
 		if(err) return err;
 		if(user) {
 			console.log('User found in database.');
@@ -38,15 +39,17 @@ router.post('/', function(req, res) {
 		if(user) {
 			console.log('Shit, that user already exists.');
 			res.send({msg: 'That username is already taken. Please choose another.'});	
+		}else {
+			db.collection('userdb').insert(newUser(req.body.username, req.body.password), function(err, result) {
+				res.send(
+					(err === null) ? { msg: '' } : { msg: err }
+				);
+				if(err === null) {
+					console.log('User '+req.body.username+' added with password '+req.body.password+'.');
+				}
+			})	
 		}
-		db.collection('userdb').insert(newUser(req.body.username, req.body.password), function(err, result) {
-			res.send(
-				(err === null) ? { msg: '' } : { msg: err }
-			);
-			if(err === null) {
-				console.log('User '+req.body.username+' added with password '+req.body.password+'.');
-			}	
-		});
+		;
 	});
 });
 
