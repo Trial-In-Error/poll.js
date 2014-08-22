@@ -10,7 +10,7 @@ function populateTable() {
 			$.each(JSON.parse(data.polls), function(){
 				tableContent += '<li>';
 				tableContent += '<a href="/poll/' + this._id + '" rel="external" data-ajax="false">';
-				tableContent += '<h2>Poll '+ this.id + '</h2>';
+				tableContent += '<h2>'+ this.name + '</h2>';
 				
 				tableContent += '<p>'
 				if(this.open)
@@ -47,10 +47,10 @@ function populateTable() {
 function openClosePoll() {
 	event.preventDefault();
 	var open, confirmation;
-	//util = require("util");
+
+	// WARN: THIS PATH IS REALLY UNSTABLE AND DEPENDENT ON THE DOM. BE WARY.
 	console.log($(this).parent().parent().children()[0].text);
-	//alert(Object.inspect(this));
-	//alert('Open: '+ String($('#open').text().search('Open') !== -1));
+
 	if ( $(this).parent().parent().children()[0].text.search('Open') !== -1) {
 		open = true;
 	} else {

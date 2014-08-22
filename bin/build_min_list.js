@@ -3,7 +3,13 @@ var path = require('path');
 
 module.exports = {
 	build: function build_min_list(exists_list) {
-		var files_needed = ['client_polls.js', 'client_poll.js', 'jquery_mobile_1_4_3.js', 'jquery_2_1_1.js', 'combined_style.css', 'client_login.js'];
+		var files_needed = ['client_polls.js',
+							'client_poll.js',
+							'jquery_mobile_1_4_3.js',
+							'jquery_2_1_1.js',
+							'combined_style.css',
+							'client_login.js',
+							'client_register.js'];
 
 		console.log('Looking from: '+String(__dirname));
 

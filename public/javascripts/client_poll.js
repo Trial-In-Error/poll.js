@@ -36,7 +36,7 @@ function store_poll() {
 // STUB: COMMENT ME!
 // STUB: Extend for overriding (i.e., in case of skip)
 function gen_empty_answer() {
-	return {value: undefined, user: undefined, explanation: undefined, skipped: false, timestamp: undefined};
+	return [{value: undefined, user: undefined, explanation: undefined, skipped: false, timestamp: undefined}];
 }
 
 /**
@@ -271,7 +271,9 @@ function update_text_field() {
 				} else {
 					temp += '<label for="text-'+counter+'" class="ui-hidden-accessible"></label>';
 				}
-				if ( typeof current_response.explanation.explain_text !== 'undefined' && (typeof current_response.answers === 'undefined' || typeof current_response.answers[0].explanation === 'undefined')) {
+
+				console.log('current_response.answers: '+JSON.stringify(current_response.answers, null, 4));
+				if ( typeof current_response !== 'undefined' && typeof current_response.explanation.explain_text !== 'undefined' && (typeof current_response.answers === 'undefined' || typeof current_response.answers[0].explanation === 'undefined')) {
 					temp += '<textarea cols="40" rows="8" type="text" name="text-'+counter+'" id="text-'+counter+'" value="" placeholder="'+current_response.explanation.explain_text+'"></textarea>';
 				} else if(typeof current_response.answers !== 'undefined' && typeof current_response.answers[0].explanation !== 'undefined') {
 					temp += '<textarea cols="40" rows="8" type="text" name="text-'+counter+'" id="text-'+counter+'" value="">'+current_response.answers[0].explanation+'</textarea>';

@@ -2,6 +2,18 @@ var express = require('express');
 var router = express.Router();
 var mongo = require('mongoskin');
 
+function ensureAuthenticated(req, res, next) {
+	if (req.isAuthenticated()) {
+		console.log('User is already authenticated. Continuing.');
+		return next();
+	}
+	console.log('User is not already authenticated. Redirecting.');
+	console.log('req.session ('+req.session+').redirect_to set to '+req.originalUrl);
+	req.session.redirect_to = req.originalUrl;
+	//req.session.returnTo = req.path;
+	res.redirect('/login');
+}
+
 /* GET poll list */
 router.get('/listpolls', function(req, res){
 	var db = req.db;
@@ -12,7 +24,7 @@ router.get('/listpolls', function(req, res){
 	});
 });
 
-router.post('/closepoll/:id', function(req, res) {
+router.post('/closepoll/:id', ensureAuthenticated, function(req, res) {
 	var db = req.db;
 	var pollToClose = req.params.id;
 	db.collection('polldb').update({_id: mongo.helper.toObjectID(pollToClose)}, { $set: {open: false}}, function(err, result) {
@@ -21,7 +33,7 @@ router.post('/closepoll/:id', function(req, res) {
 	});
 });
 
-router.post('/openpoll/:id', function(req, res) {
+router.post('/openpoll/:id', ensureAuthenticated, function(req, res) {
 	var db = req.db;
 	var pollToClose = req.params.id;
 	db.collection('polldb').update({_id: mongo.helper.toObjectID(pollToClose)}, { $set: {open: true}}, function(err, result) {
@@ -77,7 +89,7 @@ router.post('/answerpoll', function(req, res) {
 /*
  * DELETE poll.
  */
-router.delete('/deletepoll/:id', function(req, res) {
+router.delete('/deletepoll/:id', ensureAuthenticated, function(req, res) {
 	var db = req.db;
 	var userToDelete = req.params.id;
 	db.collection('polldb').removeById(userToDelete, function(err, result) {

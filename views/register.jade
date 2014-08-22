@@ -1,0 +1,24 @@
+extends layout
+
+block content
+	h1= title
+
+
+	if locals.expose.exists['client_register.js']
+		script(src='/dist/javascripts/client_register.js')
+	else
+		script(src='/javascripts/client_register.js')
+
+
+	div(style='max-width: 300px; margin:0 auto')
+		p(style='text-align: left') Please register to continue.
+		div(id='login-failure')
+			p
+
+		form(role='form', action='/login', method='post')
+			.form-group
+				input.form-control(type='text', data-clear-btn="true", name="username", id="username", value="", placeholder='Username')
+			.form-group
+				input.form-control(type='password', data-clear-btn="true", name="password", id="password", value="", placeholder='Password')
+			.form-group
+				button(type='submit', name='submit', id='submit' class="ui-btn ui-corner-all") Submit

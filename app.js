@@ -21,11 +21,12 @@ if(typeof process.env.MONGOLAB_URI !== 'undefined') {
 }
 var db = mongo.db(process.env.MONGOLAB_URI || 'mongodb://localhost:27017/polljs', {native_parse:true});
 
-var users = require('./routes/users');
+//var users = require('./routes/users');
 var transientlogin = require('./routes/transient-login');
 var pollindex = require('./routes/pollindex');
 var pollroute = require('./routes/pollroute');
 var poll = require('./routes/poll');
+var register = require('./routes/register');
 
 // In prior versions of Express, this was a call express.createServer();
 // To support https, this will have to change.
@@ -67,6 +68,8 @@ passport.deserializeUser(function(user, done) {
 });
 
 function findByUsername(username, fn) {
+	// find().limit(1) SERVING findOne
+	// see: https://blog.serverdensity.com/checking-if-a-document-exists-mongodb-slow-findone-vs-find/
 	db.collection('userdb').findOne({'type.login.username': String(username)}, function (err, user) {
 		if(err) return err;
 		if(user) {
@@ -145,11 +148,12 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.use('/', pollindex);
-app.use('/users', users);
+//app.use('/users', users);
 app.use('/transient-login', transientlogin);
 app.use('/polls', pollindex);
 app.use('/pollroute', pollroute);
 app.use('/poll', poll);
+app.use('/register', register);
 
 //STUB: MOVE TO ANOTHER FILE LATER
 app.get('/meta-login', function(req, res) {

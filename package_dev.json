@@ -31,6 +31,8 @@
 		"jade": "~1.3.0",
 		"mongodb": "*",
 		"mongoskin": "*",
+		"bcrypt-nodejs": "*", //consider using 'bcrypt' package
+		// but know that it requires far more to be installed
 		"passport": "*",
 		"passport-local": "*",
 		"connect-redis": "*",
