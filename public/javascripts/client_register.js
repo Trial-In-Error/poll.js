@@ -19,7 +19,7 @@ $(document).on('pageinit', function() {
 					window.location.replace(window.location.origin+'/');
 				} else {
 					alert(result.msg);
-					$('#login-failure p').html(result.message.message);
+					//$('#login-failure p').html(result.msg);
 					$('#username').val('');
 					$('#password').val('');
 				}
