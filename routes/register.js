@@ -1,5 +1,6 @@
 var express = require('express');
 var router = express.Router();
+var bcrypt = require('bcrypt-nodejs');
 //var db = req.db;
 
 //WARN: THIS IS COMPLETELY REDUNDANT FROM APP.JS!!! DON'T BE LAZY!
@@ -27,7 +28,18 @@ router.get('/', function(req, res) {
 });
 
 function newUser(name, pass) {
-	user = {type: {login: {username: name, password: pass}}, rights:{answer: true}};
+	// Store hash in your password DB.
+	//var user = undefined;
+	////var hash = ""
+	//bcrypt.hash(pass, 2, null, function(err, hash) {
+	//	if (err) { console.log(err) }
+	//	else { user = {type: {login: {username: name, passhash: hash}}, rights:{answer: true}};	}
+	//	//console.log("newUser()");
+	//});
+
+	hash = bcrypt.hashSync(pass);
+	user = {type: {login: {username: name, passhash: hash}}, rights:{answer: true}};
+	console.log('User: '+user);
 	return user;
 }
 
@@ -47,9 +59,8 @@ router.post('/', function(req, res) {
 				if(err === null) {
 					console.log('User '+req.body.username+' added with password '+req.body.password+'.');
 				}
-			})	
-		}
-		;
+			})
+		};
 	});
 });
 

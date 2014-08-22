@@ -12,6 +12,7 @@ var LocalStrategy = require('passport-local').Strategy;
 var Chance = require('chance');
 var alea = new Chance();
 var flash = require('connect-flash');
+var bcrypt = require('bcrypt-nodejs');
 
 // Database
 var mongo = require('mongoskin');
@@ -102,10 +103,16 @@ passport.use(new LocalStrategy(
 					//console.log(!user);
 					return done(null, false, {message: 'Unknown user '+username+'.'});
 				}
-				if (user.type.login.password !== password ) {
-					return done(null, false, {message: 'Incorrect password.'});
-				}
-				return done(null, user);
+				bcrypt.compare(password, user.type.login.passhash, function(err, res) {
+					if(res) {
+						return done(null, user);
+					} else {
+						return done(null, false, {message: 'Incorrect password.'});	
+					}
+				});
+				//if (user.type.login.password !== password ) {
+				//	return done(null, false, {message: 'Incorrect password.'});
+				//}
 			});
 		});
 	}
