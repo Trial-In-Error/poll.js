@@ -227,7 +227,8 @@ app.get('/logout', function(req, res){
 //   login page.
 // http://stackoverflow.com/questions/13335881/redirecting-to-previous-page-after-authentication-in-node-js-using-passport
 function ensureAuthenticated(req, res, next) {
-	if (req.isAuthenticated()) {
+	console.log('ensureAuth: '+res.locals.session.passport.user);
+	if (req.isAuthenticated() && typeof res.locals.session.passport.user.rights[priv] !== 'undefined' && res.locals.session.passport.user.rights[priv]) {
 		//console.log('User is already authenticated. Continuing.');
 		return next();
 	}

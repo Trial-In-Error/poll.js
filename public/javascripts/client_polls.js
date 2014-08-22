@@ -22,10 +22,12 @@ function populateTable() {
 				tableContent += ', owned by ' + this.owner + ', and has the database hash ' + this._id+'.</p>';
 				tableContent += '</a>';
 				tableContent += '<div class="split-custom-wrapper">';
-				if ( data.auth ) {
+				if ( data.auth && typeof data.rights.delete !== 'undefined' && data.rights.delete) {
 					tableContent += '<a href="#" class="linkdeletepoll split-custom-button ui-btn-icon-notext" rel="'+this._id+'" data-role="button" data-icon="delete" data-iconpos="notext">delete</a>';
+				} else if ( data.auth && typeof data.rights.copy !== 'undefined' && data.rights.copy) {
 					tableContent += '<a href="#" class="linkcopypoll split-custom-button ui-btn-icon-notext" rel="'+this._id+'" data-role="button" data-icon="forward" data-iconpos="notext">copy</a>';
-					tableContent += '<a href="#" id="LOL" class="linkopenclosepoll split-custom-button ui-btn-icon-notext" rel="'+this._id+'" data-role="button" data-icon="lock" data-iconpos="notext">open/close</a>';
+				} else if ( data.auth && typeof data.rights.openClose !== 'undefined' && data.rights.openClose) {
+					tableContent += '<a href="#" class="linkopenclosepoll split-custom-button ui-btn-icon-notext" rel="'+this._id+'" data-role="button" data-icon="lock" data-iconpos="notext">open/close</a>';
 					//tableContent += '<a href="#" class="linksharepoll split-custom-button ui-btn-icon-notext" rel="'+this._id+'" data-role="button" data-icon="action" data-iconpos="notext">link</a>';
 				} else {
 					tableContent += '<a href="/poll/' + this._id + '" class="split-custom-button ui-btn-icon-notext" data-role="button" data-icon="carat-r" data-iconpos="notext">answer</a>';

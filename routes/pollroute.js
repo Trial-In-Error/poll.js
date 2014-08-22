@@ -2,16 +2,32 @@ var express = require('express');
 var router = express.Router();
 var mongo = require('mongoskin');
 
+//WARN: This is in a really shitty place and will lead to lots of code duplication. It's also in poll.js
 function ensureAuthenticated(req, res, next) {
-	if (req.isAuthenticated()) {
-		console.log('User is already authenticated. Continuing.');
+	var priv = req.priv;
+	req.priv = undefined;
+	console.log('ensureAuth: '+res.locals.session.passport.user);
+	if (req.isAuthenticated() && typeof res.locals.session.passport.user.rights[priv] !== 'undefined' && res.locals.session.passport.user.rights[priv]) {
+		//console.log('User is already authenticated. Continuing.');
 		return next();
 	}
-	console.log('User is not already authenticated. Redirecting.');
-	console.log('req.session ('+req.session+').redirect_to set to '+req.originalUrl);
-	req.session.redirect_to = req.originalUrl;
+	req.session.redirect_to = req.path;
+	//console.log('User is not already authenticated. Redirecting.');
 	//req.session.returnTo = req.path;
 	res.redirect('/login');
+}
+
+function reqAnswerRight(req, res, next) {
+	req.priv = 'answer';
+	return next();
+}
+function reqOpenCloseRight(req, res, next) {
+	req.priv = 'openClose';
+	return next();
+}
+function reqDeleteRight(req, res, next) {
+	req.priv = 'delete';
+	return next();
 }
 
 /* GET poll list */
@@ -20,11 +36,16 @@ router.get('/listpolls', function(req, res){
 	// WARN: SANITIZE THESE BEFORE SENDING THEM; THEY HAVE THE ANSWERS EMBEDDED
 	// STUB: Paginate
 	db.collection('polldb').find().toArray(function(err, items) {
-		res.send({auth: req.isAuthenticated(), polls:JSON.stringify(items)});
+		if(typeof res.locals !== 'undefined' && typeof res.locals.session.passport.user !== 'undefined') {
+			console.log('LISTPOLLS:' + res.locals.session.passport.user.rights);
+			res.send({auth: req.isAuthenticated(), rights: res.locals.session.passport.user.rights, polls:JSON.stringify(items)});	
+		} else {
+			res.send({auth: req.isAuthenticated(), polls:JSON.stringify(items)});	
+		}
 	});
 });
 
-router.post('/closepoll/:id', ensureAuthenticated, function(req, res) {
+router.post('/closepoll/:id', reqOpenCloseRight, ensureAuthenticated, function(req, res) {
 	var db = req.db;
 	var pollToClose = req.params.id;
 	db.collection('polldb').update({_id: mongo.helper.toObjectID(pollToClose)}, { $set: {open: false}}, function(err, result) {
@@ -33,7 +54,7 @@ router.post('/closepoll/:id', ensureAuthenticated, function(req, res) {
 	});
 });
 
-router.post('/openpoll/:id', ensureAuthenticated, function(req, res) {
+router.post('/openpoll/:id', reqOpenCloseRight, ensureAuthenticated, function(req, res) {
 	var db = req.db;
 	var pollToClose = req.params.id;
 	db.collection('polldb').update({_id: mongo.helper.toObjectID(pollToClose)}, { $set: {open: true}}, function(err, result) {
@@ -43,6 +64,7 @@ router.post('/openpoll/:id', ensureAuthenticated, function(req, res) {
 });
 
 /* POST to answer poll */
+// STUB: AUTHENTICATE HERE?
 router.post('/answerpoll', function(req, res) {
 	try {
 		var db = req.db;
@@ -89,7 +111,7 @@ router.post('/answerpoll', function(req, res) {
 /*
  * DELETE poll.
  */
-router.delete('/deletepoll/:id', ensureAuthenticated, function(req, res) {
+router.delete('/deletepoll/:id', reqDeleteRight, ensureAuthenticated, function(req, res) {
 	var db = req.db;
 	var userToDelete = req.params.id;
 	db.collection('polldb').removeById(userToDelete, function(err, result) {
