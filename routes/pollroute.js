@@ -30,17 +30,31 @@ function reqDeleteRight(req, res, next) {
 	return next();
 }
 
+function batchSanitize(items) {
+	for(var tr in items) {
+		for(var question in items[tr].question_list) {
+			for(var response in items[tr].question_list[question].type.response_list) {
+				console.log('Deleted '+items[tr].question_list[question].type.response_list[response].answers);
+				delete items[tr].question_list[question].type.response_list[response].answers;
+				console.log('Now it\s '+ items[tr].question_list[question].type.response_list[response].answers);
+			}
+		}
+	}
+	return items;
+}
+
 /* GET poll list */
 router.get('/listpolls', function(req, res){
 	var db = req.db;
 	// WARN: SANITIZE THESE BEFORE SENDING THEM; THEY HAVE THE ANSWERS EMBEDDED
 	// STUB: Paginate
 	db.collection('polldb').find().toArray(function(err, items) {
+		// WARN: The else in this conditional is probably unnecessary and bad
 		if(typeof res.locals !== 'undefined' && typeof res.locals.session.passport.user !== 'undefined') {
-			console.log('LISTPOLLS:' + res.locals.session.passport.user.rights);
-			res.send({auth: req.isAuthenticated(), rights: res.locals.session.passport.user.rights, polls:JSON.stringify(items)});	
-		} else {
-			res.send({auth: req.isAuthenticated(), polls:JSON.stringify(items)});	
+		//	console.log('LISTPOLLS:' + res.locals.session.passport.user.rights);
+			res.send({auth: req.isAuthenticated(), rights: res.locals.session.passport.user.rights, polls:JSON.stringify(batchSanitize(items))});
+		//} else {
+		//	res.send({auth: req.isAuthenticated(), polls:JSON.stringify(items)});	
 		}
 	});
 });
