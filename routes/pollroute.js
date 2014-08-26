@@ -54,6 +54,8 @@ router.get('/listpolls', function(req, res) {
 	db.collection('polldb').find().toArray(function(err, items) {
 		if(typeof res.locals !== 'undefined' && typeof res.locals.session.passport.user !== 'undefined') {
 			res.send({auth: req.isAuthenticated(), rights: res.locals.session.passport.user.rights, polls:JSON.stringify(batchSanitize(items))});
+		} else {
+			res.send({auth: false, rights: undefined, polls:JSON.stringify(batchSanitize(items))});
 		}
 	});
 });
