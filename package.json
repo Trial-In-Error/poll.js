@@ -19,7 +19,7 @@
 		"jade": "~1.3.0",
 		"mongodb": "*",
 		"mongoskin": "*",
-		"bcrypt-nodejs": "*", 
+		"bcrypt-nodejs": "*",
 		"passport": "*",
 		"passport-local": "*",
 		"connect-redis": "*",

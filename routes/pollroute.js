@@ -33,6 +33,10 @@ function reqDeleteRight(req, res, next) {
 	req.priv = 'delete';
 	return next();
 }
+function reqCreateRight(req, res, next) {
+	req.priv = 'create';
+	return next();
+}
 
 function batchSanitize(items) {
 	for(var tr in items) {
@@ -70,7 +74,7 @@ router.get('/exportpolljson/:id', reqGetAnswersRight, ensureAuthenticated, funct
 		//console.log(err === null);
 		//console.log(typeof err === null);
 		console.log(result);
-		res.send((err === null) ? { msg: result } : { msg:'error: ' + err });
+		res.send((err === null) ? { msg: result } : { msg:'Database error: ' + err });
 	});
 });
 
@@ -80,16 +84,35 @@ router.get('/exportpolljsonclean/:id', reqGetAnswersRight, ensureAuthenticated, 
 	db.collection('polldb').findOne({_id: mongo.helper.toObjectID(pollToExport)}, function(err, result) {
 		// WARN: THESE COULD LEAK STACK TRACES
 		//console.log(err);
-		res.send((err === null) ? { msg: batchSanitize(result) } : { msg:'error: ' + err });
+		res.send((err === null) ? { msg: batchSanitize(result) } : { msg:'Database error: ' + err });
 	});
 });
+
+// JSON validation done entirely with JSON.parse; NO SCHEMA VALIDATION IS DONE HERE!
+// http://stackoverflow.com/questions/8431415/json-object-validation-in-javascript
+router.post('/importpoll', reqCreateRight, ensureAuthenticated, function(req, JSON) {
+	try {
+		var pollToImport = JSON.parse(req.body);
+	} catch (err) {
+		if (err) { res.send({msg: 'Invalid JSON: '+err}); }
+	}
+	var db = req.db;
+	db.polldb.insert(pollToImport, function(result, err) {
+		if (err) {
+			res.send({msg: 'Database error: '+err});
+		} else {
+			res.send({msg: ''});
+		}
+	});
+});
+
 
 router.post('/closepoll/:id', reqOpenCloseRight, ensureAuthenticated, function(req, res) {
 	var db = req.db;
 	var pollToClose = req.params.id;
 	db.collection('polldb').update({_id: mongo.helper.toObjectID(pollToClose)}, { $set: {open: false}}, function(err, result) {
 		// WARN: THESE COULD LEAK STACK TRACES
-		res.send((result === 1) ? { msg: '' } : { msg:'error: ' + err });
+		res.send((result === 1) ? { msg: '' } : { msg:'Database error: ' + err });
 	});
 });
 
@@ -98,7 +121,7 @@ router.post('/openpoll/:id', reqOpenCloseRight, ensureAuthenticated, function(re
 	var pollToClose = req.params.id;
 	db.collection('polldb').update({_id: mongo.helper.toObjectID(pollToClose)}, { $set: {open: true}}, function(err, result) {
 		// WARN: THESE COULD LEAK STACK TRACES
-		res.send((result === 1) ? { msg: '' } : { msg:'error: ' + err });
+		res.send((result === 1) ? { msg: '' } : { msg:'Database error: ' + err });
 	});
 });
 
@@ -137,7 +160,7 @@ router.post('/answerpoll', reqAnswerRight, ensureAuthenticated, function(req, re
 					if(err) {
 						console.log(err);
 					} else {
-						res.send((result === 1) ? { msg: '' } : { msg:'error: '+ err});
+						res.send((result === 1) ? { msg: '' } : { msg:'Database error: '+ err});
 					}
 				});
 					//console.log(JSON.stringify(result, null, 4));
@@ -156,7 +179,7 @@ router.delete('/deletepoll/:id', reqDeleteRight, ensureAuthenticated, function(r
 	var userToDelete = req.params.id;
 	db.collection('polldb').removeById(userToDelete, function(err, result) {
 		// WARN: THESE COULD LEAK STACK TRACES
-		res.send((result === 1) ? { msg: '' } : { msg:'error: ' + err });
+		res.send((result === 1) ? { msg: '' } : { msg:'Database error: ' + err });
 	});
 });
 
