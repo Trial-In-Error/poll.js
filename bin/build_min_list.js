@@ -9,6 +9,9 @@ module.exports = {
 							'jquery_2_1_1.js',
 							'combined_style.css',
 							'client_login.js',
+							'prettyPrint.js',
+							'client_export_poll_json.js',
+							'client_view_poll_json.js',
 							'client_register.js'];
 
 		console.log('Looking from: '+String(__dirname));

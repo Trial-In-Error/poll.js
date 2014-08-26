@@ -28,6 +28,8 @@ var pollindex = require('./routes/pollindex');
 var pollroute = require('./routes/pollroute');
 var poll = require('./routes/poll');
 var register = require('./routes/register');
+var exportpolljson = require('./routes/exportpolljson');
+var viewpolljson = require('./routes/viewpolljson');
 
 // In prior versions of Express, this was a call express.createServer();
 // To support https, this will have to change.
@@ -161,6 +163,8 @@ app.use('/polls', pollindex);
 app.use('/pollroute', pollroute);
 app.use('/poll', poll);
 app.use('/register', register);
+app.use('/exportpolljson', exportpolljson);
+app.use('/viewpolljson', viewpolljson);
 
 //STUB: MOVE TO ANOTHER FILE LATER
 app.get('/meta-login', function(req, res) {

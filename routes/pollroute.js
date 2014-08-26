@@ -21,6 +21,10 @@ function reqAnswerRight(req, res, next) {
 	req.priv = 'answer';
 	return next();
 }
+function reqGetAnswersRight(req, res, next) {
+	req.priv = 'getAnswers';
+	return next();
+}
 function reqOpenCloseRight(req, res, next) {
 	req.priv = 'openClose';
 	return next();
@@ -34,9 +38,9 @@ function batchSanitize(items) {
 	for(var tr in items) {
 		for(var question in items[tr].question_list) {
 			for(var response in items[tr].question_list[question].type.response_list) {
-				console.log('Deleted '+items[tr].question_list[question].type.response_list[response].answers);
+				//console.log('Deleted '+items[tr].question_list[question].type.response_list[response].answers);
 				delete items[tr].question_list[question].type.response_list[response].answers;
-				console.log('Now it\s '+ items[tr].question_list[question].type.response_list[response].answers);
+				//console.log('Now it\s '+ items[tr].question_list[question].type.response_list[response].answers);
 			}
 		}
 	}
@@ -44,20 +48,39 @@ function batchSanitize(items) {
 }
 
 /* GET poll list */
-router.get('/listpolls', function(req, res){
+router.get('/listpolls', function(req, res) {
 	var db = req.db;
-	// WARN: SANITIZE THESE BEFORE SENDING THEM; THEY HAVE THE ANSWERS EMBEDDED
 	// STUB: Paginate
 	db.collection('polldb').find().toArray(function(err, items) {
-		// WARN: The else in this conditional is probably unnecessary and bad
 		if(typeof res.locals !== 'undefined' && typeof res.locals.session.passport.user !== 'undefined') {
-		//	console.log('LISTPOLLS:' + res.locals.session.passport.user.rights);
 			res.send({auth: req.isAuthenticated(), rights: res.locals.session.passport.user.rights, polls:JSON.stringify(batchSanitize(items))});
-		//} else {
-		//	res.send({auth: req.isAuthenticated(), polls:JSON.stringify(items)});	
 		}
 	});
 });
+
+router.get('/exportpolljson/:id', reqGetAnswersRight, ensureAuthenticated, function(req, res) {
+	var db = req.db;
+	var pollToExport = req.params.id;
+	console.log('Looking for '+pollToExport)
+	db.collection('polldb').findOne({_id: mongo.helper.toObjectID(pollToExport)}, function(err, result) {
+		// WARN: THESE COULD LEAK STACK TRACES
+		//console.log(err);
+		//console.log(err === null);
+		//console.log(typeof err === null);
+		console.log(result);
+		res.send((err === null) ? { msg: result } : { msg:'error: ' + err });
+	});
+})
+
+router.get('/exportpolljsonclean/:id', reqGetAnswersRight, ensureAuthenticated, function(req, res) {
+	var db = req.db;
+	var pollToExport = req.params.id;
+	db.collection('polldb').findOne({_id: mongo.helper.toObjectID(pollToExport)}, function(err, result) {
+		// WARN: THESE COULD LEAK STACK TRACES
+		//console.log(err);
+		res.send((err === null) ? { msg: batchSanitize(result) } : { msg:'error: ' + err });
+	});
+})
 
 router.post('/closepoll/:id', reqOpenCloseRight, ensureAuthenticated, function(req, res) {
 	var db = req.db;
@@ -78,8 +101,9 @@ router.post('/openpoll/:id', reqOpenCloseRight, ensureAuthenticated, function(re
 });
 
 /* POST to answer poll */
-// STUB: AUTHENTICATE HERE?
-router.post('/answerpoll', function(req, res) {
+// UNTESTED: Authentication here
+// WARN: Consider /answerpoll/:id for flexibility?
+router.post('/answerpoll', reqAnswerRight, ensureAuthenticated, function(req, res) {
 	try {
 		var db = req.db;
 		var tid = req.body._id;
