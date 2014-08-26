@@ -63,7 +63,7 @@ router.get('/listpolls', function(req, res) {
 router.get('/exportpolljson/:id', reqGetAnswersRight, ensureAuthenticated, function(req, res) {
 	var db = req.db;
 	var pollToExport = req.params.id;
-	console.log('Looking for '+pollToExport)
+	console.log('Looking for '+pollToExport);
 	db.collection('polldb').findOne({_id: mongo.helper.toObjectID(pollToExport)}, function(err, result) {
 		// WARN: THESE COULD LEAK STACK TRACES
 		//console.log(err);
@@ -72,7 +72,7 @@ router.get('/exportpolljson/:id', reqGetAnswersRight, ensureAuthenticated, funct
 		console.log(result);
 		res.send((err === null) ? { msg: result } : { msg:'error: ' + err });
 	});
-})
+});
 
 router.get('/exportpolljsonclean/:id', reqGetAnswersRight, ensureAuthenticated, function(req, res) {
 	var db = req.db;
@@ -82,7 +82,7 @@ router.get('/exportpolljsonclean/:id', reqGetAnswersRight, ensureAuthenticated, 
 		//console.log(err);
 		res.send((err === null) ? { msg: batchSanitize(result) } : { msg:'error: ' + err });
 	});
-})
+});
 
 router.post('/closepoll/:id', reqOpenCloseRight, ensureAuthenticated, function(req, res) {
 	var db = req.db;

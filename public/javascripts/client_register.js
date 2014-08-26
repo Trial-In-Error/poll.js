@@ -15,7 +15,7 @@ $(document).on('pageinit', function() {
 				//console.log('Done!');
 				//window.location.replace(result.redirect);
 				console.log(result);
-				if(result.msg === "") {
+				if(result.msg === '') {
 					window.location.replace(window.location.origin+'/');
 				} else {
 					alert(result.msg);

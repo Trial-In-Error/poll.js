@@ -36,7 +36,7 @@ router.get('/:id', reqAnswerRight, ensureAuthenticated, function(req, res) {
 			if (req.isAuthenticated() && typeof res.locals.session.passport.user.rights.accessClosed !== 'undefined' && res.locals.session.passport.user.rights.accessClosed) {
 			} else {
 				req.session.redirect_to = req.path;
-				res.redirect('/login');				
+				res.redirect('/login');
 			}
 		}
 

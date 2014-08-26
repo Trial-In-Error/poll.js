@@ -109,7 +109,7 @@ passport.use(new LocalStrategy(
 					if(res) {
 						return done(null, user);
 					} else {
-						return done(null, false, {message: 'Incorrect password.'});	
+						return done(null, false, {message: 'Incorrect password.'});
 					}
 				});
 				//if (user.type.login.password !== password ) {

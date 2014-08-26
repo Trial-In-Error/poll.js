@@ -6,17 +6,15 @@ function populateTable() {
 	$.getJSON( '/pollroute/exportpolljson/'+window.location.href.split('/').pop(), function( data ) {
 		// Inject the whole content string into our existing HTML table
 		if(data.msg === null) {
-			$('#pollname h3').text('Error!');	
+			$('#pollname h3').text('Error!');
 			$('#polljson').html('<p>Poll with id: '+ window.location.href.split('/').pop()+' not found!</p>');
 			$('#refreshbutton').hide();
 			$('#savebutton').hide();
 			$('#clonebutton').hide();
 		} else {
 			$('#pollname h3').text(data.msg.name);
-			$('#polljson').html(prettyPrint(data.msg));	
+			$('#polljson').html(prettyPrint(data.msg));
 		}
-		
-		//$('#polljson').trigger('create');
 	});
 }
 

@@ -11,8 +11,7 @@ function populateTable() {
 				tableContent += '<li>';
 				tableContent += '<a href="/poll/' + this._id + '" rel="external" data-ajax="false">';
 				tableContent += '<h2>'+ this.name + '</h2>';
-				
-				tableContent += '<p>'
+				tableContent += '<p>';
 				if(this.open)
 				{
 					tableContent += 'Open';
@@ -60,11 +59,10 @@ function openClosePoll() {
 	}
 	// Pop up a confirmation dialog
 	if(open) {
-		confirmation = confirm('Are you sure you want to close this poll?');	
+		confirmation = confirm('Are you sure you want to close this poll?');
 	} else {
-		confirmation = confirm('Are you sure you want to open this poll?');	
+		confirmation = confirm('Are you sure you want to open this poll?');
 	}
-	
 
 	// Check and make sure the user confirmed
 	if (confirmation === true) {
