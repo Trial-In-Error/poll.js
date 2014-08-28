@@ -14,6 +14,9 @@ var alea = new Chance();
 var flash = require('connect-flash');
 var bcrypt = require('bcrypt-nodejs');
 
+// STUB: REMOVE THIS LINE!
+var helper = require('./bin/helper');
+
 // Database
 var mongo = require('mongoskin');
 // Use the remote mongo database if available (i.e., app is heroku hosted), else use the local one named 'polljs'
@@ -65,6 +68,7 @@ passport.serializeUser(function(user, done) {
 passport.deserializeUser(function(user, done) {
 	//findById(id, function (err, user) {
 	//var user = {'id': 1};
+	console.log('deserialize found: '+user);
 	done(null, user);
 	//done(err, user);
 	//});
@@ -92,12 +96,14 @@ function findByUsername(username, fn) {
 //   however, in this example we are using a baked-in set of users.
 passport.use(new LocalStrategy(
 	function(username, password, done) {
-		//console.log('Authenticating user.');
+		console.log('Authenticating user.');
 		// asynchronous verification, for effect...
 		process.nextTick(function () {
 			//var user = {'id': 1};
-			//console.log('Tick.');
+			console.log('Tick.');
 			findByUsername(username, function(err, user) {
+				console.log('localStrategy found: '+user);
+				console.log(user);
 				if (err) {return done(err);}
 				if (!user) {
 					//console.log('We\'ve failed!');
@@ -136,6 +142,33 @@ app.use(session({secret: alea.string({length:20}), resave: true, saveUninitializ
 app.use(flash());
 app.use(express.static(path.join(__dirname, 'public')));
 
+// WARN: THE API SERVER DOES SESSION-BASED AUTH!!!
+app.use(function(req, res, next) {
+	// auth is in base64(username:password)  so we need to decode the base64
+	var auth = req.headers['authorization'];
+	console.log("Authorization Header is: ", auth);
+
+	// The Authorization was passed in so now we validate it
+	if(auth) {
+		try {
+			// Split on a space, the original auth looks like  "Basic Y2hhcmxlczoxMjM0NQ==" and we need the 2nd part
+			var tmp = auth.split(' ');
+			// create a buffer and tell it the data coming in is base64
+			var buf = new Buffer(tmp[1], 'base64');
+			// read it back out as a string
+			var plain_auth = buf.toString();
+			console.log("Decoded Authorization ", plain_auth);
+			// At this point plain_auth = "username:password"
+			var creds = plain_auth.split(':');
+			req.body.username = creds[0];
+			req.body.password = creds[1];			
+		} catch (err) {
+			console.log(err);
+		}
+	}
+	next();
+});
+
 
 app.use(function(req, res, next){
 	// you could alias this as req or res.expose
@@ -145,6 +178,7 @@ app.use(function(req, res, next){
 	res.locals.session = req.session;
 	res.locals.user = req.user;
 	req.db = db;
+
 	next();
 });
 
@@ -201,7 +235,7 @@ app.post('/login', function(req, res, next) {
 	console.log('By the way, redirect is set to:'+ req.session.redirect_to+' .');
 	console.log('If this ever looks like it\'ll go to /login, please set to / instead.');
 	var redirect_to = req.session.redirect_to || '/';
-	delete req.session.redirect_to;
+	//delete req.session.redirect_to;
 
 	console.log('login matched with username '+req.body.username+' and password '+req.body.password+'.');
 	passport.authenticate('local', function(err, user, info) {
@@ -230,17 +264,31 @@ app.get('/logout', function(req, res){
 //   the request will proceed.  Otherwise, the user will be redirected to the
 //   login page.
 // http://stackoverflow.com/questions/13335881/redirecting-to-previous-page-after-authentication-in-node-js-using-passport
-function ensureAuthenticated(req, res, next) {
-	console.log('ensureAuth: '+res.locals.session.passport.user);
-	if (req.isAuthenticated() && typeof res.locals.session.passport.user.rights[priv] !== 'undefined' && res.locals.session.passport.user.rights[priv]) {
-		//console.log('User is already authenticated. Continuing.');
-		return next();
-	}
-	req.session.redirect_to = req.path;
-	//console.log('User is not already authenticated. Redirecting.');
-	//req.session.returnTo = req.path;
-	res.redirect('/login');
-}
+
+//ALSO FOUND IN POLLROUTE.JS AND IN POLL.JS
+//function ensureAuthenticated(req, res, next) {
+//	console.log('ensureLOLAuth: '+res.locals.session.passport.user);
+//	try {
+//		if (req.isAuthenticated() && typeof res.locals.session.passport.user.rights[priv] !== 'undefined' && res.locals.session.passport.user.rights[priv]) {
+//			console.log('User is already authenticated. Continuing.');
+//			return next();
+//		}
+//		console.log('239 REQ.PATH = '+req.path);
+//		if(req.path === '/login') {
+//			req.session.redirect_to = req.session.redirect_to || '/';
+//		} else {
+//			console.log('243 REQ.PATH: '+req.path);
+//			console.log('243 REQ.ORIGINALURL: '+req.originalUrl);
+//			console.log('243 REQ.BASEURL: '+req.baseUrl);
+//			req.session.redirect_to = req.path;	
+//		}
+//		console.log('User is not already authenticated. Redirecting.');
+//		//req.session.returnTo = req.path;
+//		res.redirect('/login');
+//	} catch (err) {
+//		console.log(err);
+//	}
+//}
 
 /// catch 404 and forward to error handler
 app.use(function(req, res, next) {

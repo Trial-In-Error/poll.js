@@ -1,21 +1,22 @@
 var express = require('express');
 var router = express.Router();
 var mongo = require('mongoskin');
+var helper = require('../bin/helper');
 
 //WARN: This is in a really shitty place and will lead to lots of code duplication. It's also in poll.js
-function ensureAuthenticated(req, res, next) {
-	var priv = req.priv;
-	req.priv = undefined;
-	console.log('ensureAuth: '+res.locals.session.passport.user);
-	if (req.isAuthenticated() && typeof res.locals.session.passport.user.rights[priv] !== 'undefined' && res.locals.session.passport.user.rights[priv]) {
-		//console.log('User is already authenticated. Continuing.');
-		return next();
-	}
-	req.session.redirect_to = req.path;
-	//console.log('User is not already authenticated. Redirecting.');
-	//req.session.returnTo = req.path;
-	res.redirect('/login');
-}
+//function helper.ensureAuth(req, res, next) {
+//	var priv = req.priv;
+//	req.priv = undefined;
+//	console.log('ensureAuth: '+res.locals.session.passport.user);
+//	if (req.isAuthenticated() && typeof res.locals.session.passport.user.rights[priv] !== 'undefined' && res.locals.session.passport.user.rights[priv]) {
+//		//console.log('User is already authenticated. Continuing.');
+//		return next();
+//	}
+//	req.session.redirect_to = req.path;
+//	//console.log('User is not already authenticated. Redirecting.');
+//	//req.session.returnTo = req.path;
+//	res.redirect('/login');
+//}
 
 function reqAnswerRight(req, res, next) {
 	req.priv = 'answer';
@@ -64,7 +65,7 @@ router.get('/listpolls', function(req, res) {
 	});
 });
 
-router.get('/exportpolljson/:id', reqGetAnswersRight, ensureAuthenticated, function(req, res) {
+router.get('/exportpolljson/:id', reqGetAnswersRight, helper.ensureAuth, function(req, res) {
 	var db = req.db;
 	var pollToExport = req.params.id;
 	console.log('Looking for '+pollToExport);
@@ -74,23 +75,24 @@ router.get('/exportpolljson/:id', reqGetAnswersRight, ensureAuthenticated, funct
 		//console.log(err === null);
 		//console.log(typeof err === null);
 		console.log(result);
-		res.send((err === null) ? { msg: result } : { msg:'Database error: ' + err });
+		res.send((err === null) ? result : { msg:'Database error: ' + err });
 	});
 });
 
-router.get('/exportpolljsonclean/:id', reqGetAnswersRight, ensureAuthenticated, function(req, res) {
+router.get('/exportpolljsonclean/:id', reqGetAnswersRight, helper.ensureAuth, function(req, res) {
 	var db = req.db;
 	var pollToExport = req.params.id;
 	db.collection('polldb').findOne({_id: mongo.helper.toObjectID(pollToExport)}, function(err, result) {
 		// WARN: THESE COULD LEAK STACK TRACES
 		//console.log(err);
-		res.send((err === null) ? { msg: batchSanitize(result) } : { msg:'Database error: ' + err });
+		res.send((err === null) ? batchSanitize(result) : { msg:'Database error: ' + err });
 	});
 });
 
 // JSON validation done entirely with JSON.parse; NO SCHEMA VALIDATION IS DONE HERE!
+// UNTESTED
 // http://stackoverflow.com/questions/8431415/json-object-validation-in-javascript
-router.post('/importpoll', reqCreateRight, ensureAuthenticated, function(req, JSON) {
+router.post('/importpoll', reqCreateRight, helper.ensureAuth, function(req, JSON) {
 	try {
 		var pollToImport = JSON.parse(req.body);
 	} catch (err) {
@@ -107,7 +109,7 @@ router.post('/importpoll', reqCreateRight, ensureAuthenticated, function(req, JS
 });
 
 
-router.post('/closepoll/:id', reqOpenCloseRight, ensureAuthenticated, function(req, res) {
+router.post('/closepoll/:id', reqOpenCloseRight, helper.ensureAuth, function(req, res) {
 	var db = req.db;
 	var pollToClose = req.params.id;
 	db.collection('polldb').update({_id: mongo.helper.toObjectID(pollToClose)}, { $set: {open: false}}, function(err, result) {
@@ -116,7 +118,7 @@ router.post('/closepoll/:id', reqOpenCloseRight, ensureAuthenticated, function(r
 	});
 });
 
-router.post('/openpoll/:id', reqOpenCloseRight, ensureAuthenticated, function(req, res) {
+router.post('/openpoll/:id', reqOpenCloseRight, helper.ensureAuth, function(req, res) {
 	var db = req.db;
 	var pollToClose = req.params.id;
 	db.collection('polldb').update({_id: mongo.helper.toObjectID(pollToClose)}, { $set: {open: true}}, function(err, result) {
@@ -128,7 +130,7 @@ router.post('/openpoll/:id', reqOpenCloseRight, ensureAuthenticated, function(re
 /* POST to answer poll */
 // UNTESTED: Authentication here
 // WARN: Consider /answerpoll/:id for flexibility?
-router.post('/answerpoll', reqAnswerRight, ensureAuthenticated, function(req, res) {
+router.post('/answerpoll', reqAnswerRight, helper.ensureAuth, function(req, res) {
 	try {
 		var db = req.db;
 		var tid = req.body._id;
@@ -174,7 +176,7 @@ router.post('/answerpoll', reqAnswerRight, ensureAuthenticated, function(req, re
 /*
  * DELETE poll.
  */
-router.delete('/deletepoll/:id', reqDeleteRight, ensureAuthenticated, function(req, res) {
+router.delete('/deletepoll/:id', reqDeleteRight, helper.ensureAuth, function(req, res) {
 	var db = req.db;
 	var userToDelete = req.params.id;
 	db.collection('polldb').removeById(userToDelete, function(err, result) {

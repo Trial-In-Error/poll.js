@@ -5,7 +5,7 @@ function populateTable() {
 	var tableContent = '';
 	// jQuery AJAX call for JSON
 	$.getJSON( '/pollroute/listpolls', function( data ) {
-		if(typeof data !== 'undefined') {
+		if(typeof data !== 'undefined' && typeof data.polls !== 'undefined') {
 			// For each item in our JSON, add a table row and cells to the content string
 			$.each(JSON.parse(data.polls), function(){
 				tableContent += '<li>';

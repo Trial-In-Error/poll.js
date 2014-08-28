@@ -22,6 +22,7 @@
 		"bcrypt-nodejs": "*",
 		"passport": "*",
 		"passport-local": "*",
+		"passport-http-bearer": "*",
 		"connect-redis": "*",
 		"connect-flash": "*", 
 		"forever": "*" 
