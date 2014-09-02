@@ -12,8 +12,8 @@ function populateTable() {
 			$('#savebutton').hide();
 			$('#clonebutton').hide();
 		} else {
-			$('#pollname h3').text(data.msg.name);
-			$('#polljson pre').text(JSON.stringify(data.msg, null, 4));
+			$('#pollname h3').text(data.name);
+			$('#polljson pre').text(JSON.stringify(data, null, 4));
 		}
 
 		//$('#polljson').trigger('create');

@@ -12,8 +12,8 @@ function populateTable() {
 			$('#savebutton').hide();
 			$('#clonebutton').hide();
 		} else {
-			$('#pollname h3').text(data.msg.name);
-			$('#polljson').html(prettyPrint(data.msg));
+			$('#pollname h3').text(data.name);
+			$('#polljson').html(prettyPrint(data));
 		}
 	});
 }
