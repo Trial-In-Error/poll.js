@@ -3,21 +3,6 @@ var router = express.Router();
 var mongo = require('mongoskin');
 var helper = require('../bin/helper');
 
-//WARN: This is in a really shitty place and will lead to lots of code duplication. It's also in poll.js
-//function helper.ensureAuth(req, res, next) {
-//	var priv = req.priv;
-//	req.priv = undefined;
-//	console.log('ensureAuth: '+res.locals.session.passport.user);
-//	if (req.isAuthenticated() && typeof res.locals.session.passport.user.rights[priv] !== 'undefined' && res.locals.session.passport.user.rights[priv]) {
-//		//console.log('User is already authenticated. Continuing.');
-//		return next();
-//	}
-//	req.session.redirect_to = req.path;
-//	//console.log('User is not already authenticated. Redirecting.');
-//	//req.session.returnTo = req.path;
-//	res.redirect('/login');
-//}
-
 function reqAnswerRight(req, res, next) {
 	req.priv = 'answer';
 	return next();
