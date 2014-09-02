@@ -258,38 +258,6 @@ app.get('/logout', function(req, res){
 	res.redirect(200, '/');
 });
 
-// Simple route middleware to ensure user is authenticated.
-//   Use this route middleware on any resource that needs to be protected.  If
-//   the request is authenticated (typically via a persistent login session),
-//   the request will proceed.  Otherwise, the user will be redirected to the
-//   login page.
-// http://stackoverflow.com/questions/13335881/redirecting-to-previous-page-after-authentication-in-node-js-using-passport
-
-//ALSO FOUND IN POLLROUTE.JS AND IN POLL.JS
-//function ensureAuthenticated(req, res, next) {
-//	console.log('ensureLOLAuth: '+res.locals.session.passport.user);
-//	try {
-//		if (req.isAuthenticated() && typeof res.locals.session.passport.user.rights[priv] !== 'undefined' && res.locals.session.passport.user.rights[priv]) {
-//			console.log('User is already authenticated. Continuing.');
-//			return next();
-//		}
-//		console.log('239 REQ.PATH = '+req.path);
-//		if(req.path === '/login') {
-//			req.session.redirect_to = req.session.redirect_to || '/';
-//		} else {
-//			console.log('243 REQ.PATH: '+req.path);
-//			console.log('243 REQ.ORIGINALURL: '+req.originalUrl);
-//			console.log('243 REQ.BASEURL: '+req.baseUrl);
-//			req.session.redirect_to = req.path;	
-//		}
-//		console.log('User is not already authenticated. Redirecting.');
-//		//req.session.returnTo = req.path;
-//		res.redirect('/login');
-//	} catch (err) {
-//		console.log(err);
-//	}
-//}
-
 /// catch 404 and forward to error handler
 app.use(function(req, res, next) {
 	//console.log(util.inspect(req.url.slice(-3)));
