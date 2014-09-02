@@ -145,8 +145,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 // WARN: THE API SERVER DOES SESSION-BASED AUTH!!!
 app.use(function(req, res, next) {
 	// auth is in base64(username:password)  so we need to decode the base64
-	var auth = req.headers['authorization'];
-	console.log("Authorization Header is: ", auth);
+	var auth = req.headers.authorization;
+	console.log('Authorization Header is: ', auth);
 
 	// The Authorization was passed in so now we validate it
 	if(auth) {
@@ -157,7 +157,7 @@ app.use(function(req, res, next) {
 			var buf = new Buffer(tmp[1], 'base64');
 			// read it back out as a string
 			var plain_auth = buf.toString();
-			console.log("Decoded Authorization ", plain_auth);
+			console.log('Decoded Authorization ', plain_auth);
 			// At this point plain_auth = "username:password"
 			var creds = plain_auth.split(':');
 			req.body.username = creds[0];

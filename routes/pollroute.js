@@ -93,8 +93,9 @@ router.get('/exportpolljsonclean/:id', reqGetAnswersRight, helper.ensureAuth, fu
 // UNTESTED
 // http://stackoverflow.com/questions/8431415/json-object-validation-in-javascript
 router.post('/importpoll', reqCreateRight, helper.ensureAuth, function(req, JSON) {
+	var pollToImport;
 	try {
-		var pollToImport = JSON.parse(req.body);
+		pollToImport = JSON.parse(req.body);
 	} catch (err) {
 		if (err) { res.send({msg: 'Invalid JSON: '+err}); }
 	}
