@@ -22,9 +22,10 @@ Note that 2 example polls are included at poll.js's root directory.
 Adding an Admin User
 ---------------------------------
 1. Start the server with `npm run`. This will start a mongo database.
-2. Access the database's shell from the `poll.js` directory with the command-line instruction `mongo`.
-2. Chooese the mongo database for this project with `use polljs`.
-3. Add an admin user with `db.userdb.insert({type:{login:{username: "asdf", password: "zxcv"}}, rights:{accessClosed: true, create: true, delete: true, clone: true, answer: true}})`. Modify the username, password, and rights fields as appropriate.
+2. Create a normal user via the web interface at /login.
+3. Access the database's shell from the `poll.js` directory with the command-line instruction `mongo`.
+4. Chooese the mongo database for this project with `use polljs`.
+5. Promote the user to an admin by `db.userdb.update({"type.login.username":<username>}, {$set: {"rights.<desiredRight>":true}})`. Note that you will have to do this for each right you wish to give to the admin.
 
 Using Grunt
 ---------------------------------
