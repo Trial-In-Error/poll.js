@@ -46,6 +46,7 @@ status.md
 
 # Ignore Istanbul coverage reports
 /test/coverage/*
+/coverage/*
 
 # This is some deep, dark voodoo, man.
 !.gitignore

@@ -71,6 +71,9 @@ Files Related to Heroku
 * `Procfile` defines process types run by `heroku ps:scale `type=number`
 * `package.json` is used to build the app on heroku's servers. It must list *every* package used in the app; no packages can be used from global scope.
 
+Coverage Reports
+---------------------------------
+Try `istanbul cover ./node_modules/mocha/bin/_mocha test/test.js -- -u exports -R spec` from root. This will produce a coverage report in ./coverage, which may or may not be of any use. Currently wonky.
 
 The Future
 ---------------------------------

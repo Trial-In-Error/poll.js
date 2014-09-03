@@ -13,8 +13,6 @@ var Chance = require('chance');
 var alea = new Chance();
 var flash = require('connect-flash');
 var bcrypt = require('bcrypt-nodejs');
-
-// STUB: REMOVE THIS LINE!
 var helper = require('./bin/helper');
 
 // Database
