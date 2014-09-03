@@ -60,6 +60,7 @@
 		"grunt-text-replace": "*",
 		"should": "*",
 		"mocha": "*",
-		"istanbul": "*"
+		"istanbul": "*",
+		"supertest": "*"
 	}
 }
