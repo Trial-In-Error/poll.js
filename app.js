@@ -25,8 +25,6 @@ if(typeof process.env.MONGOLAB_URI !== 'undefined') {
 }
 var db = mongo.db(process.env.MONGOLAB_URI || 'mongodb://localhost:27017/polljs', {native_parse:true});
 
-//var users = require('./routes/users');
-var transientlogin = require('./routes/transient-login');
 var pollindex = require('./routes/pollindex');
 var pollroute = require('./routes/pollroute');
 var poll = require('./routes/poll');
