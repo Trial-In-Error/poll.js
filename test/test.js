@@ -10,6 +10,7 @@ describe('Routing:', function() {
 	var pollID;
 	var db = mongo.db('mongodb://localhost:27017/polljs', {native_parse:true});
 	var pollCount;
+	var authString = 'Basic ' + new Buffer('awkward' + ':' + 'awkward').toString('base64');
 
 	// before testing, clear out our database, then populate it with the two example polls
 	before(function(done) {
@@ -21,7 +22,6 @@ describe('Routing:', function() {
 					if(err) { throw err; }
 					db.collection('polldb').findOne({'id': '10'}, function(err, result) {
 						if(err) { throw err; }
-						//console.log(result._id);
 						pollID = mongo.helper.toObjectID(result._id);
 						done();
 					});
@@ -35,6 +35,20 @@ describe('Routing:', function() {
 			request(url)
 				.post('/register')
 				.send({'username':'awkward', 'password':'awkward'})
+				.end(function(err, res) {
+					if (err) { throw err; }
+					//console.log(JSON.stringify(res.body.polls));
+					//console.log(JSON.parse(res.body.polls).length);
+					res.status.should.be.equal(200, 'incorrect HTTP response code');
+					res.body.msg.should.be.empty;
+					done();
+				});
+		});
+
+		it('should be safe to use with unusual, Swedish characters', function(done) {
+			request(url)
+				.post('/register')
+				.send({'username':'ÅåÄäÖö', 'password':'ÅåÄäÖö'})
 				.end(function(err, res) {
 					if (err) { throw err; }
 					//console.log(JSON.stringify(res.body.polls));
@@ -65,10 +79,86 @@ describe('Routing:', function() {
 				done();
 			});
 		});
-
-
 	})
 
+	describe('exportpolljson', function() {
+		it('should return the poll, in json, to authenticated users', function(done) {
+			request(url)
+				.get('/pollroute/exportpolljson/'+pollID)
+				.set('authorization', authString)
+				.end(function(err, res) {
+					if (err) { throw err; }
+					//console.log(JSON.stringify(res.body));
+					//console.log(poll2.question_list[0]);
+					JSON.stringify(res.body.question_list).should.equal(JSON.stringify(poll2.question_list));
+					done();
+				});
+		});
+
+		//it should have answer data
+
+		it('should not return the poll to unauthenticated users', function(done) {
+			request(url)
+				.get('/pollroute/exportpolljson/'+pollID)
+				.set('authorization', authString+'123')
+				.end(function(err, res) {
+					if (err) { throw err; }
+					JSON.stringify(res.body).should.equal('{}');
+					res.status.should.be.equal(302);
+					done();
+				});
+		});
+
+		it('should gracefully handle requests to export non-existant polls', function(done) {
+			request(url)
+				.get('/pollroute/exportpolljson/'+pollID+'123')
+				.set('authorization', authString+'123')
+				.end(function(err, res) {
+					if (err) { throw err; }
+					//console.log(JSON.stringify(res.body));
+					//console.log(JSON.stringify(res.status));
+					res.status.should.be.equal(302);
+					JSON.stringify(res.body).should.be.equal('{}');
+					res.header.location.should.be.equal('/login');
+					done();
+				});
+		});
+	});
+
+	describe('exportpolljsonclean', function() {
+		it('should return the poll, in json, to authenticated users', function(done) {
+			request(url)
+				.get('/pollroute/exportpolljsonclean/'+pollID)
+				.set('authorization', authString)
+				.end(function(err, res) {
+					if (err) { throw err; }
+					//console.log(JSON.stringify(res.body));
+					//console.log(poll2.question_list[0]);
+					JSON.stringify(res.body.question_list).should.equal(JSON.stringify(poll2.question_list));
+					done();
+				});
+		});
+
+		//it should have answer data
+
+		//it should not serve the poll, in json, to unauthenticated users
+
+		//it should gracefully handle requests to export non-existant polls
+	});
+
+	//describe importpoll
+
+	//describe closepoll
+
+	//describe openpoll
+
+	//describe answerpoll
+
+	//describe login
+
+	//describe logout
+
+	//describe anonymous login
 
 	describe('listpolls', function() {
 		it('should return a list of polls', function(done) {
@@ -107,13 +197,11 @@ describe('Routing:', function() {
 		});
 	});
 
-	// WARN: THIS TEST IS ABSOLUTELY GODDAMN USELESS UNTIL THE USER IS LOGGED IN
-	// ALSO ALL THE USERS ARE DUMPED WHEN THE DATABASE IS RESET, LOL
 	describe('deletepoll', function() {
 		it('should deny unauthorized users', function(done) {
 			request(url)
 				.delete('/pollroute/deletepoll/'+pollID)
-				.set('authorization', 'Basic ' + new Buffer('awkward' + ':' + 'badpass').toString('base64'))
+				.set('authorization', authString+'123')
 				.end(function(err, res) {
 					if(err) { throw err; }
 					//console.log(JSON.stringify(res.body));
@@ -124,12 +212,14 @@ describe('Routing:', function() {
 				});
 		});
 
-		it('should be able to delete a poll', function(done) {
+		it('should let authorized users delete a poll', function(done) {
 			request(url)
 				.delete('/pollroute/deletepoll/'+pollID)
-				.set('authorization', 'Basic ' + new Buffer('awkward' + ':' + 'awkward').toString('base64'))
+				.set('authorization', authString)
 				.end(function(err, res) {
 					if(err) { throw err; }
+					res.body.msg.should.not.be.ok;
+					res.status.should.be.equal(200);
 					db.collection('polldb').findById(pollID, function(err, res) {
 						should.not.exist(err);
 						//should.not.exist(res);
@@ -143,6 +233,17 @@ describe('Routing:', function() {
 					});
 				});
 		});
+
+		it('should gracefully handle requests to delete a non-existant poll', function(done) {
+			request(url)
+				.delete('/pollroute/deletepoll/'+'1234567890')
+				.set('authorization', authString)
+				.end(function(err, res) {
+					if(err) { throw err; }
+					res.body.msg.should.be.ok;
+					res.status.should.be.equal(200);
+					done();
+				});
+		});
 	});
-	//describe('')
 });
