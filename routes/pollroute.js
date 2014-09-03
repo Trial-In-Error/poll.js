@@ -3,27 +3,6 @@ var router = express.Router();
 var mongo = require('mongoskin');
 var helper = require('../bin/helper');
 
-function reqAnswerRight(req, res, next) {
-	req.priv = 'answer';
-	return next();
-}
-function reqGetAnswersRight(req, res, next) {
-	req.priv = 'getAnswers';
-	return next();
-}
-function reqOpenCloseRight(req, res, next) {
-	req.priv = 'openClose';
-	return next();
-}
-function reqDeleteRight(req, res, next) {
-	req.priv = 'delete';
-	return next();
-}
-function reqCreateRight(req, res, next) {
-	req.priv = 'create';
-	return next();
-}
-
 function batchSanitize(items) {
 	for(var tr in items) {
 		for(var question in items[tr].question_list) {
@@ -50,7 +29,7 @@ router.get('/listpolls', function(req, res) {
 	});
 });
 
-router.get('/exportpolljson/:id', reqGetAnswersRight, helper.ensureAuth, function(req, res) {
+router.get('/exportpolljson/:id', helper.reqGetAnswersRight, helper.ensureAuth, function(req, res) {
 	var db = req.db;
 	var pollToExport = req.params.id;
 	console.log('Looking for '+pollToExport);
@@ -64,7 +43,7 @@ router.get('/exportpolljson/:id', reqGetAnswersRight, helper.ensureAuth, functio
 	});
 });
 
-router.get('/exportpolljsonclean/:id', reqGetAnswersRight, helper.ensureAuth, function(req, res) {
+router.get('/exportpolljsonclean/:id', helper.reqGetAnswersRight, helper.ensureAuth, function(req, res) {
 	var db = req.db;
 	var pollToExport = req.params.id;
 	db.collection('polldb').findOne({_id: mongo.helper.toObjectID(pollToExport)}, function(err, result) {
@@ -77,7 +56,7 @@ router.get('/exportpolljsonclean/:id', reqGetAnswersRight, helper.ensureAuth, fu
 // JSON validation done entirely with JSON.parse; NO SCHEMA VALIDATION IS DONE HERE!
 // UNTESTED
 // http://stackoverflow.com/questions/8431415/json-object-validation-in-javascript
-router.post('/importpoll', reqCreateRight, helper.ensureAuth, function(req, JSON) {
+router.post('/importpoll', helper.reqCreateRight, helper.ensureAuth, function(req, JSON) {
 	var pollToImport;
 	try {
 		pollToImport = JSON.parse(req.body);
@@ -95,7 +74,7 @@ router.post('/importpoll', reqCreateRight, helper.ensureAuth, function(req, JSON
 });
 
 
-router.post('/closepoll/:id', reqOpenCloseRight, helper.ensureAuth, function(req, res) {
+router.post('/closepoll/:id', helper.reqOpenCloseRight, helper.ensureAuth, function(req, res) {
 	var db = req.db;
 	var pollToClose = req.params.id;
 	db.collection('polldb').update({_id: mongo.helper.toObjectID(pollToClose)}, { $set: {open: false}}, function(err, result) {
@@ -104,7 +83,7 @@ router.post('/closepoll/:id', reqOpenCloseRight, helper.ensureAuth, function(req
 	});
 });
 
-router.post('/openpoll/:id', reqOpenCloseRight, helper.ensureAuth, function(req, res) {
+router.post('/openpoll/:id', helper.reqOpenCloseRight, helper.ensureAuth, function(req, res) {
 	var db = req.db;
 	var pollToClose = req.params.id;
 	db.collection('polldb').update({_id: mongo.helper.toObjectID(pollToClose)}, { $set: {open: true}}, function(err, result) {
@@ -116,7 +95,7 @@ router.post('/openpoll/:id', reqOpenCloseRight, helper.ensureAuth, function(req,
 /* POST to answer poll */
 // UNTESTED: Authentication here
 // WARN: Consider /answerpoll/:id for flexibility?
-router.post('/answerpoll', reqAnswerRight, helper.ensureAuth, function(req, res) {
+router.post('/answerpoll', helper.reqAnswerRight, helper.ensureAuth, function(req, res) {
 	try {
 		var db = req.db;
 		var tid = req.body._id;
@@ -162,7 +141,7 @@ router.post('/answerpoll', reqAnswerRight, helper.ensureAuth, function(req, res)
 /*
  * DELETE poll.
  */
-router.delete('/deletepoll/:id', reqDeleteRight, helper.ensureAuth, function(req, res) {
+router.delete('/deletepoll/:id', helper.reqDeleteRight, helper.ensureAuth, function(req, res) {
 	var db = req.db;
 	var userToDelete = req.params.id;
 	db.collection('polldb').removeById(userToDelete, function(err, result) {

@@ -48,3 +48,28 @@ exports.ensureAuth = function(req, res, next) {
 		console.log(err);
 	}
 };
+
+exports.reqAnswerRight = function(req, res, next) {
+	req.priv = 'answer';
+	return next();
+};
+
+exports.reqGetAnswersRight = function(req, res, next) {
+	req.priv = 'getAnswers';
+	return next();
+};
+
+exports.reqOpenCloseRight = function(req, res, next) {
+	req.priv = 'openClose';
+	return next();
+};
+
+exports.reqDeleteRight = function(req, res, next) {
+	req.priv = 'delete';
+	return next();
+};
+
+exports.reqCreateRight = function(req, res, next) {
+	req.priv = 'create';
+	return next();
+};

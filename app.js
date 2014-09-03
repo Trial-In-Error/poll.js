@@ -189,8 +189,6 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.use('/', pollindex);
-//app.use('/users', users);
-app.use('/transient-login', transientlogin);
 app.use('/polls', pollindex);
 app.use('/pollroute', pollroute);
 app.use('/poll', poll);

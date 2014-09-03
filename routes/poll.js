@@ -3,13 +3,8 @@ var router = express.Router();
 var mongo = require('mongoskin');
 var helper = require('../bin/helper');
 
-function reqAnswerRight(req, res, next) {
-	req.priv = 'answer';
-	return next();
-}
-
 /* GET a specific poll. */
-router.get('/:id', reqAnswerRight, helper.ensureAuth, function(req, res) {
+router.get('/:id', helper.reqAnswerRight, helper.ensureAuth, function(req, res) {
 	console.log('MATCHED AT /:id.');
 	var db = req.db;
 	var pollToDisplay = req.params.id;
