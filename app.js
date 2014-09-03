@@ -24,6 +24,17 @@ if(typeof process.env.MONGOLAB_URI !== 'undefined') {
 	console.log(process.env.MONGOLAB_URI);
 }
 var db = mongo.db(process.env.MONGOLAB_URI || 'mongodb://localhost:27017/polljs', {native_parse:true});
+db.open(function(err, db) {
+	if(err) { throw err };
+	db.collection('polldb').ensureIndex({'id':1}, function(err, res) {
+		if(err) { throw err};
+	});
+	db.collection('userdb').ensureIndex({'type.login.username':1}, function(err, res) {
+		if(err) { throw err};
+	});	
+})
+
+
 
 var pollindex = require('./routes/pollindex');
 var pollroute = require('./routes/pollroute');
@@ -128,7 +139,7 @@ passport.use('anonymous', new LocalStrategy(
 		console.log('Logging in anonymous user.');
 		// asynchronous verification, for effect...
 		process.nextTick(function () {
-			return done(null, {type: "anonymous", rights: {answer: true}});
+			return done(null, {type: 'anonymous', rights: {answer: true}});
 		});
 	}
 ));

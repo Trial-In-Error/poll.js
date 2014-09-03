@@ -42,6 +42,7 @@ module.exports = function(grunt) {
 							'*.js',
 							'bin/*.js',
 							'routes/*.js',
+							'test/*.js',
 							'!public/javascripts/jquery_2_1_1.js',
 							'!public/javascripts/jquery_mobile_1_4_3.js',
 							'!public/javascripts/prettyprint.js'
@@ -50,22 +51,6 @@ module.exports = function(grunt) {
 					options: {
 							trailingspaces: true,
 							//trailingspacesSkipBlanks: true,
-							indentation: 'tabs',
-							ignores: ['js-comments'],
-							showValid: true,
-							showTypes: true,
-							showCodes: true
-					}
-			},
-			javascript: {
-					src: [
-							'public/javascripts/**/*.js',
-							'!public/javascripts/jquery_2_1_1.js',
-							'!public/javascripts/jquery_mobile_1_4_3.js',
-							'!public/javascripts/prettyprint.js'
-					],
-					options: {
-							trailingspaces: true,
 							indentation: 'tabs',
 							ignores: ['js-comments'],
 							showValid: true,
@@ -113,7 +98,7 @@ module.exports = function(grunt) {
 			},
 			dist:
 			{
-				src: ['Gruntfile.js', 'app.js', 'bin/*.js', 'public/javascripts/*.js', 'routes/*.js', 'test/**/*.js', 'bin/*.js', '!public/dist/javascripts/*.js', '!public/javascripts/jquery_2_1_1.js', '!public/javascripts/jquery_mobile_1_4_3.js', '!public/javascripts/prettyprint.js'],
+				src: ['Gruntfile.js', 'app.js', 'bin/*.js', 'public/javascripts/*.js', 'routes/*.js', 'test/**/*.js', 'bin/*.js', 'test/*.js', '!public/dist/javascripts/*.js', '!public/javascripts/jquery_2_1_1.js', '!public/javascripts/jquery_mobile_1_4_3.js', '!public/javascripts/prettyprint.js'],
 			},
 			clientsrc:
 			{

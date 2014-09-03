@@ -28,15 +28,7 @@ router.get('/', function(req, res) {
 });
 
 function newUser(name, pass) {
-	// Store hash in your password DB.
-	//var user = undefined;
-	////var hash = ""
-	//bcrypt.hash(pass, 2, null, function(err, hash) {
-	//	if (err) { console.log(err) }
-	//	else { user = {type: {login: {username: name, passhash: hash}}, rights:{answer: true}};	}
-	//	//console.log("newUser()");
-	//});
-
+	// Store user, with username and hash in user DB.
 	hash = bcrypt.hashSync(pass);
 	user = {type: {login: {username: name, passhash: hash}}, rights:{answer: true}};
 	console.log('User: '+user);
