@@ -80,11 +80,16 @@ I'm considering tacking the resulting answers onto `Response` objects. This will
 Users
 ------
 * `User` object
-	* `privileges` string
-		* "transient", non-password-protected nickname, can answer polls
-		* "resident", password-protected nickname, can answer polls
-		* "superuser", can answer and create polls and view results of polls they created
-		* "admin", can create polls and view results of any poll
-	* `polls_created` list of poll id's
-	* `polls_answered` list of poll id's
-	* `demographics` dictionary of demographic information known; used to prune demographics questions if they're known; "transient" users get demographics questions every time; EASILY CLOBBERED BY POORLY WRITTEN POLLS! BE CAREFUL!
+	* `type` object
+		* `login` object
+			* `username` string
+			* `passhash` string
+		* `anonymous` string
+	* `rights` object
+		* `accessClosed` boolean
+		* `create` boolean
+		* `delete` boolean
+		* `clone` boolean
+		* `answer` boolean
+		* `openClose` boolean
+		* `getAnswers` boolean
