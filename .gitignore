@@ -44,5 +44,8 @@ node_modules
 # Ignore 'progress of the project' document
 status.md
 
+# Ignore Istanbul coverage reports
+/test/coverage/*
+
 # This is some deep, dark voodoo, man.
 !.gitignore
