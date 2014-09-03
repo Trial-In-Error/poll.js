@@ -93,10 +93,10 @@ describe('Routing:', function() {
 				.get('/pollroute/listpolls')
 				.end(function(err, res) {
 					if (err) { throw err; }
-					var list = JSON.parse(res.body.polls)
-					for (index in list) {
-						for (index2 in list[index].question_list) {
-							for (index3 in list[index].question_list[index2].type.response_list) {
+					var list = JSON.parse(res.body.polls);
+					for (var index in list) {
+						for (var index2 in list[index].question_list) {
+							for (var index3 in list[index].question_list[index2].type.response_list) {
 								list[index].question_list[index2].type.response_list[index3]
 								.should.not.have.property('answer');
 							}
