@@ -59,6 +59,7 @@
 		"grunt-lineending": "^0.2.2",
 		"grunt-text-replace": "*",
 		"should": "*",
-		"mocha": "*"
+		"mocha": "*",
+		"istanbul": "*"
 	}
 }
