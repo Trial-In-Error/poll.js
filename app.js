@@ -92,12 +92,11 @@ function findByUsername(username, fn) {
 //   credentials (in this case, a username and password), and invoke a callback
 //   with a user object.  In the real world, this would query a database;
 //   however, in this example we are using a baked-in set of users.
-passport.use(new LocalStrategy(
+passport.use('local', new LocalStrategy(
 	function(username, password, done) {
 		console.log('Authenticating user.');
 		// asynchronous verification, for effect...
 		process.nextTick(function () {
-			//var user = {'id': 1};
 			console.log('Tick.');
 			findByUsername(username, function(err, user) {
 				console.log('localStrategy found: '+user);
@@ -120,6 +119,16 @@ passport.use(new LocalStrategy(
 				//	return done(null, false, {message: 'Incorrect password.'});
 				//}
 			});
+		});
+	}
+));
+
+passport.use('anonymous', new LocalStrategy(
+	function(username, password, done) {
+		console.log('Logging in anonymous user.');
+		// asynchronous verification, for effect...
+		process.nextTick(function () {
+			return done(null, {});
 		});
 	}
 ));
@@ -247,6 +256,16 @@ app.post('/login', function(req, res, next) {
 			return res.send({success: true, redirect: String(redirect_to)});
 		});
 	})(req, res, next);
+});
+
+app.post('/anonymous-login', function(req, res, next) {
+	// THIS NEEDS TO BE SESSION-IZED
+	console.log('By the way, redirect is set to:'+ req.session.redirect_to+' .');
+	console.log('If this ever looks like it\'ll go to /login, please set to / instead.');
+	var redirect_to = req.session.redirect_to || '/';
+	//delete req.session.redirect_to;
+	console.log('POST to anonymous-login.');
+	passport.authenticate('anonymous');
 });
 
 app.get('/logout', function(req, res){
