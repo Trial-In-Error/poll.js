@@ -1,14 +1,15 @@
 $(document).on('pageinit', function() {
 	$(document).on('click', '#anonymous', function() {
+			console.log('Fire!');
 			$.ajax({
 				url: '/anonymous-login',
-				data: {action : 'login'},
+				data: {action : 'login', username: 'anonymous', password: 'anonymous'},
 				type: 'post',
 				async: 'true',
 				dataType: 'json'
 			})
 			.done(function (result) {
-				//console.log('Done!');
+				console.log('Done!');
 				//window.location.replace(result.redirect);
 				console.log(result);
 				if(result.success) {

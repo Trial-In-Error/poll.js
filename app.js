@@ -73,7 +73,7 @@ passport.deserializeUser(function(user, done) {
 });
 
 function findByUsername(username, fn) {
-	// find().limit(1) SERVING findOne
+	// STUB: Change to find().limit(1) instead of findOne!
 	// see: https://blog.serverdensity.com/checking-if-a-document-exists-mongodb-slow-findone-vs-find/
 	db.collection('userdb').findOne({'type.login.username': String(username)}, function (err, user) {
 		if(err) return err;
@@ -128,7 +128,7 @@ passport.use('anonymous', new LocalStrategy(
 		console.log('Logging in anonymous user.');
 		// asynchronous verification, for effect...
 		process.nextTick(function () {
-			return done(null, {});
+			return done(null, {type: "anonymous", rights: {answer: true}});
 		});
 	}
 ));
@@ -265,7 +265,21 @@ app.post('/anonymous-login', function(req, res, next) {
 	var redirect_to = req.session.redirect_to || '/';
 	//delete req.session.redirect_to;
 	console.log('POST to anonymous-login.');
-	passport.authenticate('anonymous');
+	passport.authenticate('anonymous', function(err, user, info) {
+		//console.log('Start login attempt.');
+		if (err) { return next(err); }
+		if (!user) {
+			//console.log('User login failed.');
+			return res.send({ success: false, message: info});
+		}
+		req.logIn(user, function(err) {
+			if (err) { return next(err); }
+			//console.log('User login successful.');
+			return res.send({success: true, redirect: String(redirect_to)});
+		});
+		console.log(JSON.stringify(req.session.passport.user));
+		console.log(JSON.stringify(res.locals.session.passport.user));
+	})(req, res, next);
 });
 
 app.get('/logout', function(req, res){
