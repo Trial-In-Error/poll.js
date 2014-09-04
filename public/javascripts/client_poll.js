@@ -235,6 +235,12 @@ function render_slider(temp) {
 	return temp;
 }
 
+// STUB: DOCUMENT ME
+function render_open(temp) {
+	temp = render_text_field();
+	return temp;
+}
+
 /**
  *	Creates and updates text fields.
  *	Conditionally either creates a text field, updates a text field with local poll's data, sets a text field to blank, or deletes a text field.
@@ -274,10 +280,13 @@ function update_text_field() {
 
 				console.log('current_response.answers: '+JSON.stringify(current_response.answers, null, 4));
 				if ( typeof current_response !== 'undefined' && typeof current_response.explanation.explain_text !== 'undefined' && (typeof current_response.answers === 'undefined' || typeof current_response.answers[0].explanation === 'undefined')) {
+					console.log('Sniff');
 					temp += '<textarea cols="40" rows="8" type="text" name="text-'+counter+'" id="text-'+counter+'" value="" placeholder="'+current_response.explanation.explain_text+'"></textarea>';
 				} else if(typeof current_response.answers !== 'undefined' && typeof current_response.answers[0].explanation !== 'undefined') {
+					console.log('Snaf');
 					temp += '<textarea cols="40" rows="8" type="text" name="text-'+counter+'" id="text-'+counter+'" value="">'+current_response.answers[0].explanation+'</textarea>';
 				} else {
+					console.log('Foo');
 					temp += '<textarea cols="40" rows="8" type="text" name="text-'+counter+'" id="text-'+counter+'" value=""></textarea>';
 				}
 				// WARN: This code happens n times for n text fields; maybe expensive
@@ -285,9 +294,16 @@ function update_text_field() {
 					$('#pick-choice-'+String(counter)).parent().after(temp);
 				} else if (poll.question_list[current_question].type.name === 'slider') {
 					$('#slider').parent().after(temp);
+				} else if (poll.question_list[current_question].type.name === 'open') {
+					$('#form').html(temp);
+					if(typeof current_response.answers[0].explanation !== 'undefined') {
+						console.log('WERT');
+						$('#form').trigger('create');
+						$('#text-0').val(current_response.answers[0].explanation);	
+					}
 				} else {
 					console.log('UNEXPECTED CASE!');
-					console.log(poll.question_list[current_question].type);
+					console.log(poll.question_list[current_question].type.name);
 				}
 
 				$('#form').trigger('create');
@@ -311,7 +327,8 @@ function update_text_field() {
 				&& typeof current_response.answers[0] !== 'undefined'
 				&& typeof current_response.answers[0].explanation !== 'undefined'
 				&& !$('#pick-choice-'+String(counter)).is(':checked')
-				&& current_response.explanation.always_explainable) {
+				&& current_response.explanation.always_explainable
+				&& (poll.question_list[current_question].type.name !== 'open')) {
 					// Then render nothing in the textbox (allowing the hint to show through)
 					$('#text-'+String(counter)).val('');
 
@@ -321,6 +338,7 @@ function update_text_field() {
 				&& $(this).attr('id') !== 'pick-choice-'+String(counter) && !$('#pick-choice-'+String(counter)).is(':checked')) {
 				// Then delete the textbox
 				$('#text-'+String(counter)).remove();
+			
 			}
 		}
 	}
@@ -370,9 +388,10 @@ function renderCurrentQuestion() {
 
 	if (poll.question_list[current_question].type.name === 'pick_n') {
 		temp += temp.concat(render_pick_n(temp));
-	}
-	else if (poll.question_list[current_question].type.name === 'slider') {
+	} else if (poll.question_list[current_question].type.name === 'slider') {
 		temp += temp.concat(render_slider(temp));
+	} else if (poll.question_list[current_question].type.name === 'open') {
+		temp += temp.concat(render_open(temp));
 	}
 
 	temp += '</fieldset>';
@@ -416,7 +435,7 @@ function validateCurrentQuestion(forward) {
 				(poll.question_list[current_question].type.response_list[n_special].explanation &&
 				!poll.question_list[current_question].type.response_list[n_special].explanation.required ||
 				$('#text-'+String(n_special)).val() !== '')) {
-				console.log('But we short circuited the logic.');
+				//console.log('But we short circuited the logic.');
 				// Then we're valid
 				return true;
 			// Otherwise, we're invalid, and let's find out how
@@ -462,6 +481,17 @@ function validateCurrentQuestion(forward) {
 		return true;
 	} else if (poll.question_list[current_question].type.name === 'not_a_question') {
 		return true;
+	} else if (poll.question_list[current_question].type.name === 'open') {
+		// If we aren't required to answer it, return true
+		if(typeof poll.question_list[current_question].type.response_list[0].explanation.required !== 'undefined'
+			&&  poll.question_list[current_question].type.response_list[0].explanation.required === false) {
+			return true;
+		} else if ( $('#text-0').val() !== '') {
+			return true;
+		} else if (forward) {
+			alert('Please enter some text.');
+		}
+		return false;
 	}
 }
 
@@ -619,6 +649,12 @@ function answer_question(forward) {
 				poll.question_list[current_question].type.response_list[0].answers =
 					[{user: user_token, value: $('#slider').val(), explanation: undefined, timestamp: $.now()}];
 			}
+		// OTHERWISE, if we have an open style question
+		} else if(poll.question_list[current_question].type.name === 'open') {
+			poll.question_list[current_question].type.response_list[0].answers =
+					[{user: user_token, value: undefined, explanation: $('#text-0').val(), timestamp: $.now()}]
+		} else {
+			console.log('UNEXPECTED QUESTION TYPE!!!');
 		}
 
 		// For all question types

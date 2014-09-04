@@ -51,6 +51,8 @@ I'm considering tacking the resulting answers onto `Response` objects. This will
 			* `more_and_more` boolean; render `max` as `> max`
 			* `less_and_less` boolean; render `min` as `< min`
 		* `not_a_question` user gets a prompt and a next button, but no response
+		* `open` user gets a prompt and a text box
+			* `required`; defaults to true
 		* `screen_location` user responds by tapping somewhere inside the app
 		* `image`
 		* `video`

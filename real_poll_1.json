@@ -31,13 +31,10 @@
 			"body": "Hur gammal är du?",
 			"type":
 			{
-				"name": "pick_n",
-				"n": 1,
-				"require": 0,
+				"name": "open",
 				"response_list":
 				[
 					{
-						"body": "THIS IS A PLACEHOLDER.",
 						"explanation": {
 							"always_explainable": true,
 							"explain_text": "THIS SHOULD BE SWEDISH HINT TEXT.",
