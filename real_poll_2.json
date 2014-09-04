@@ -151,6 +151,7 @@
 		},
 		{
 			"body": " Jag tycker att denna FlashPoll funkar bra",
+			"closing_slide": true,
 			"type":
 			{
 				"name": "pick_n",
@@ -173,8 +174,7 @@
 					{
 						"body": "Stämmer mycket bra"
 					}
-				],
-				"closing_slide": true
+				]
 			}
 		}
 	]

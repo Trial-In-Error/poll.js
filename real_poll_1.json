@@ -37,7 +37,6 @@
 					{
 						"explanation": {
 							"always_explainable": true,
-							"explain_text": "THIS SHOULD BE SWEDISH HINT TEXT.",
 							"required": true
 						} 
 					}
@@ -154,6 +153,7 @@
 		},
 		{
 			"body": " Jag tycker att denna FlashPoll funkar bra",
+			"closing_slide": true,
 			"type":
 			{
 				"name": "pick_n",
@@ -165,7 +165,6 @@
 						"body": "Stämmer mycket dåligt",
 						"explanation": {
 							"always_explainable": false,
-							"explain_text": "SWEDISH HINT TEXT GOES HERE",
 							"required": false
 						}
 					},
@@ -173,7 +172,6 @@
 						"body": "Stämmer dåligt",
 						"explanation": {
 							"always_explainable": false,
-							"explain_text": "SWEDISH HINT TEXT GOES HERE",
 							"required": false
 						}
 					},
@@ -181,7 +179,6 @@
 						"body": "Stämmer varken bra eller dåligt",
 						"explanation": {
 							"always_explainable": false,
-							"explain_text": "SWEDISH HINT TEXT GOES HERE",
 							"required": false
 						}
 					},
@@ -189,7 +186,6 @@
 						"body": "Stämmer bra",
 						"explanation": {
 							"always_explainable": false,
-							"explain_text": "SWEDISH HINT TEXT GOES HERE",
 							"required": false
 						}
 					},
@@ -197,12 +193,10 @@
 						"body": "Stämmer mycket bra",
 						"explanation": {
 							"always_explainable": false,
-							"explain_text": "SWEDISH HINT TEXT GOES HERE",
 							"required": false
 						}
 					}
-				],
-				"closing_slide": true
+				]
 			}
 		}
 	]
