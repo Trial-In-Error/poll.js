@@ -22,13 +22,20 @@ function populateTable() {
 				tableContent += '</a>';
 				tableContent += '<div class="split-custom-wrapper">';
 				if ( data.auth && typeof data.rights.delete !== 'undefined' && data.rights.delete) {
+					//console.log('I can delete.');
 					tableContent += '<a href="#" class="linkdeletepoll split-custom-button ui-btn-icon-notext" rel="'+this._id+'" data-role="button" data-icon="delete" data-iconpos="notext">delete</a>';
-				} else if ( data.auth && typeof data.rights.copy !== 'undefined' && data.rights.copy) {
+				}
+				if ( data.auth && typeof data.rights.copy !== 'undefined' && data.rights.copy) {
+					//console.log('I can copy.');
 					tableContent += '<a href="#" class="linkcopypoll split-custom-button ui-btn-icon-notext" rel="'+this._id+'" data-role="button" data-icon="forward" data-iconpos="notext">copy</a>';
-				} else if ( data.auth && typeof data.rights.openClose !== 'undefined' && data.rights.openClose) {
+				}
+				if ( data.auth && typeof data.rights.openClose !== 'undefined' && data.rights.openClose) {
+					//console.log('I can open/close.');
 					tableContent += '<a href="#" class="linkopenclosepoll split-custom-button ui-btn-icon-notext" rel="'+this._id+'" data-role="button" data-icon="lock" data-iconpos="notext">open/close</a>';
 					//tableContent += '<a href="#" class="linksharepoll split-custom-button ui-btn-icon-notext" rel="'+this._id+'" data-role="button" data-icon="action" data-iconpos="notext">link</a>';
-				} else {
+				}
+				if (!(data.rights.delete || data.rights.copy || data.rights.openClose)) {
+					//console.log('I can do nothing.');
 					tableContent += '<a href="/poll/' + this._id + '" class="split-custom-button ui-btn-icon-notext" data-role="button" data-icon="carat-r" data-iconpos="notext">answer</a>';
 					//tableContent += '<a href="#" class="linksharepoll split-custom-button ui-btn-icon-notext" rel="'+this._id+'" data-role="button" data-icon="action" data-iconpos="notext">link</a>';
 				}

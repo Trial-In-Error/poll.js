@@ -27,6 +27,8 @@ Adding an Admin User
 4. Chooese the mongo database for this project with `use polljs`.
 5. Promote the user to an admin by `db.userdb.update({"type.login.username":<username>}, {$set: {"rights.<desiredRight>":true}})`. Note that you will have to do this for each right you wish to give to the admin.
 
+Note that, because of the way session based authentication is done, the user will have to log back in after being promoted in order to have access to their new rights.
+
 Using Grunt
 ---------------------------------
 This project is built with grunt. Most files have two versions, one called `foo_dev`, and one called `foo`. Make edits to `foo_dev` and then, from the project directory, type `grunt` to have the edits moved into `foo` and formatted for deployment. This will minify javascript, remove comments from JSON, check line endings, etc. In other words, good stuff! Note that on Windows, you may have to type `grunt.cmd`. Additionally, if using `grunt watch`, the work done by `grunt` is done automatically.

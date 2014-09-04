@@ -407,13 +407,16 @@ function validateCurrentQuestion(forward) {
 				n_special = i;
 			}
 		}
+		console.log(counter);
 		// If we're picking 1 from a list
 		if (poll.question_list[current_question].type.n === 1) {
+			console.log('We\'re picking 1 from a list.');
 			// And we have picked 1, and (explanation not required OR explanation provided)
 			if(counter === 1 &&
-				poll.question_list[current_question].type.response_list[n_special].explanation &&
+				(poll.question_list[current_question].type.response_list[n_special].explanation &&
 				!poll.question_list[current_question].type.response_list[n_special].explanation.required ||
-				$('#text-'+String(n_special)).val() !== '') {
+				$('#text-'+String(n_special)).val() !== '')) {
+				console.log('But we short circuited the logic.');
 				// Then we're valid
 				return true;
 			// Otherwise, we're invalid, and let's find out how
