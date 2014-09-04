@@ -221,10 +221,6 @@ app.get('/nickname-login', function(req, res) {
 	res.render('meta-login');
 });
 
-//app.post('/anonymous-login', function(req, res) {
-//	res.render('meta-login');
-//})
-
 app.get('/', function(req, res) {
 	res.render('index', { user: req.user});
 });
