@@ -73,9 +73,9 @@ function clean_poll(callback) {
 				}
 			} catch (err) {
 				console.log(err+' '+question+' '+response);
-				console.log(poll);
+				//console.log(poll);
 			}
-
+			console.log(poll);
 		}
 	}
 	callback();
@@ -248,6 +248,7 @@ function render_open(temp) {
  *	Called on ui-radio-btn.change(), nextQuestion(), lastQuestion(), and renderCurrentQuestion().
  *	Curiosly enough, it is NOT called in skipQuestion(). This is an oversight.
  *	// WARN: This function is almost certainly being called more often than necessary.
+ *	// WARN: THIS IS AN AWFUL, UNDOCUMENTED MESS
  */
 function update_text_field() {
 	var temp;
@@ -270,23 +271,20 @@ function update_text_field() {
 				($('#pick-choice-'+String(counter)).is(':checked')
 				&& document.getElementById('text-'+String(counter)) === null && $('#text-'+String(counter)).length === 0 )) {
 				// Then create the damn thing
-				console.log(document.getElementById('text-'+String(counter)));
-				console.log('We fully created text area #:'+counter);
+				//console.log(document.getElementById('text-'+String(counter)));
+				//console.log('We fully created text area #:'+counter);
 				if ( typeof current_response.explanation.label !== 'undefined' ) {
 					temp += '<label for="text-'+counter+'">'+current_response.explanation.label+'</label>';
 				} else {
 					temp += '<label for="text-'+counter+'" class="ui-hidden-accessible"></label>';
 				}
 
-				console.log('current_response.answers: '+JSON.stringify(current_response.answers, null, 4));
+				//console.log('current_response.answers: '+JSON.stringify(current_response.answers, null, 4));
 				if ( typeof current_response !== 'undefined' && typeof current_response.explanation.explain_text !== 'undefined' && (typeof current_response.answers === 'undefined' || typeof current_response.answers[0].explanation === 'undefined')) {
-					console.log('Sniff');
 					temp += '<textarea cols="40" rows="8" type="text" name="text-'+counter+'" id="text-'+counter+'" value="" placeholder="'+current_response.explanation.explain_text+'"></textarea>';
 				} else if(typeof current_response.answers !== 'undefined' && typeof current_response.answers[0].explanation !== 'undefined') {
-					console.log('Snaf');
 					temp += '<textarea cols="40" rows="8" type="text" name="text-'+counter+'" id="text-'+counter+'" value="">'+current_response.answers[0].explanation+'</textarea>';
 				} else {
-					console.log('Foo');
 					temp += '<textarea cols="40" rows="8" type="text" name="text-'+counter+'" id="text-'+counter+'" value=""></textarea>';
 				}
 				// WARN: This code happens n times for n text fields; maybe expensive
@@ -296,8 +294,9 @@ function update_text_field() {
 					$('#slider').parent().after(temp);
 				} else if (poll.question_list[current_question].type.name === 'open') {
 					$('#form').html(temp);
-					if(typeof current_response.answers[0].explanation !== 'undefined') {
-						console.log('WERT');
+					if(typeof current_response.answers !== 'undefined'
+						&& typeof current_response.answers[0].explanation !== 'undefined') {
+						//console.log('WERT');
 						$('#form').trigger('create');
 						$('#text-0').val(current_response.answers[0].explanation);	
 					}
@@ -426,10 +425,10 @@ function validateCurrentQuestion(forward) {
 				n_special = i;
 			}
 		}
-		console.log(counter);
+		//console.log(counter);
 		// If we're picking 1 from a list
 		if (poll.question_list[current_question].type.n === 1) {
-			console.log('We\'re picking 1 from a list.');
+			//console.log('We\'re picking 1 from a list.');
 			// And we have picked 1, and (explanation not required OR explanation provided)
 			if(counter === 1 &&
 				(poll.question_list[current_question].type.response_list[n_special].explanation &&
@@ -628,12 +627,12 @@ function answer_question(forward) {
 					if ( typeof poll.question_list[current_question].type.response_list[i].answers !== 'undefined'
 						&& typeof poll.question_list[current_question].type.response_list[i].answers[0] !== 'undefined'
 						&& typeof poll.question_list[current_question].type.response_list[i].answers[0].value !== 'undefined' ) {
-						console.log('Soft overwriting answer '+i+'.');
+						//console.log('Soft overwriting answer '+i+'.');
 						//poll.question_list[current_question].type.response_list[i].answers = [[undefined, undefined, $('#text-'+String(i)).val()]];
 						poll.question_list[current_question].type.response_list[i].answers =
 							[{user: undefined, value: undefined, explanation: poll.question_list[current_question].type.response_list[i].answers[0].explanation}];
 					} else {
-						console.log('Hard overwriting answer '+i+'.');
+						//console.log('Hard overwriting answer '+i+'.');
 						poll.question_list[current_question].type.response_list[i].answers =
 							gen_empty_answer();
 					}
