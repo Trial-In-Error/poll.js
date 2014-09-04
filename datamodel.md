@@ -18,18 +18,15 @@ I'm considering tacking the resulting answers onto `Response` objects. This will
 
 * `Poll` object
 	* `name` string for description
-	* `opening_slide` question object of type `not_a_question`, guaranteed to be first
-	* `closing_slide` question object of type `not_a_question`, guaranteed to be last
-	* `id` number for lookup
 	* `open` boolean; open or closed, presently?
 	* `owner` number; user id of poll creator
-	* `theme` string describing optional themes
-	* `widgets` list of widget objects to render
-	* `expiry` date; when does the poll close?
-	* `auto_renew` boolean; does this poll generate a new, identical (but for id) one when it expires?
-	* `time_to_live` number; when auto-renewed, how long does this poll last?
 	* `allow_skipping` boolean; can every question be skipped?
 	* `question_list` list of question objects; defaults to question_list[0] as the first question
+	* `//theme` string describing optional themes
+	* `//widgets` list of widget objects to render
+	* `//expiry` date; when does the poll close?
+	* `//auto_renew` boolean; does this poll generate a new, identical (but for id) one when it expires?
+	* `//time_to_live` number; when auto-renewed, how long does this poll last?
 
 * `Question` object describing a single question
 	* `Body` object containing some text, image, sound, video, etc
@@ -45,7 +42,7 @@ I'm considering tacking the resulting answers onto `Response` objects. This will
 			* `min` number; inclusive
 			* `max` number; inclusive
 			* `step` number
-			* `response` a single `Response` object
+			* `response_list` a single `Response` object
 			* `up_and_up` boolean; render `max` as `max +`
 			* `down_and_down` boolean; render `min` as `min -`
 			* `more_and_more` boolean; render `max` as `> max`
@@ -53,12 +50,14 @@ I'm considering tacking the resulting answers onto `Response` objects. This will
 		* `not_a_question` user gets a prompt and a next button, but no response
 		* `open` user gets a prompt and a text box
 			* `required`; defaults to true
-		* `screen_location` user responds by tapping somewhere inside the app
-		* `image`
-		* `video`
-		* `sound`
+			* `name` string; `open`
+			* `response_list` list of response objects
+		* `//screen_location` user responds by tapping somewhere inside the app
+		* `//image`
+		* `//video`
+		* `//sound`
 	* `id` number for look-up
-	* `demographics_name` string specifying what this question describes (age, gender); used to set User.demographcs(`demographics_name`) = `response_chosen.body()`. In short, questions with `demographics_name` set to non-null will edit Users' demographics fields. 
+	* `//demographics_name` string specifying what this question describes (age, gender); used to set User.demographcs(`demographics_name`) = `response_chosen.body()`. In short, questions with `demographics_name` set to non-null will edit Users' demographics fields. 
 	* `next` the `id` label to jump to when this question is answered; overwritten by `response.next`
 
 * `Response` object describing a single possible response to a single question
@@ -69,15 +68,17 @@ I'm considering tacking the resulting answers onto `Response` objects. This will
 		* user; identification for the user that answered the question
 		* timestamp; when the user answered the question
 		* skipped; bool
-	* `always_explainable` boolean; always has a text field beneath it
-	* `situationally_explainable` boolean; renders a text field beneath it when chosen
-	* `must_explain` boolean; whether or not the rendered text field must have some contents
+	* `explanation` object
+		* `always_explainable` boolean; always has a text field beneath it
+		* `explain_text` string; hint text rendered when the text field is blank
+		* `required` boolean; whether or not the rendered text field must have some contents
+		* `label` string; i don't even know, man
 	* `metadata` list of tag objects
 	* `change_next_to` number; changes parent `Question`'s next field to allow branching.
 
-* `Tag` object describing some word and intensity associated with a response
-	* `tag` string
-	* `intensity` number
+* `//Tag` object describing some word and intensity associated with a response
+	* `//tag` string
+	* `//intensity` number
 
 Users
 ------
