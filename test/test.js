@@ -4,7 +4,7 @@ var request = require('supertest');
 var mongo = require('mongoskin');
 var poll1 = require('../example_poll.json');
 var poll2 = require('../example_poll_2.json');
-
+console.log('I\'MA MOCHA!');
 
 describe('Routing:', function() {
 	var url = 'http://localhost:3000';
@@ -12,9 +12,17 @@ describe('Routing:', function() {
 	var db = mongo.db('mongodb://localhost:27017/polljs', {native_parse:true});
 	var pollCount;
 	var authString = 'Basic ' + new Buffer('awkward' + ':' + 'awkward').toString('base64');
+	var dbih = require('../bin/database_init_helper_module.js');
+	var sih = require('../bin/server_init_helper_module.js');
+	
+
+
 
 	// before testing, clear out our database, then populate it with the two example polls
 	before(function(done) {
+		dbih.init(function() {
+			sih.init(function() {
+
 		db.dropDatabase(function(err, result) {
 			if(err) { throw err; }
 			db.collection('polldb').insert(poll1, function(err, result) {
@@ -28,6 +36,9 @@ describe('Routing:', function() {
 					});
 				});
 			});
+		});
+	});
+
 		});
 	});
 

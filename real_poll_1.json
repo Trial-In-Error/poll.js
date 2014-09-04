@@ -162,19 +162,44 @@
 				"response_list":
 				[
 					{
-						"body": "Stämmer mycket dåligt"
+						"body": "Stämmer mycket dåligt",
+						"explanation": {
+							"always_explainable": false,
+							"explain_text": "SWEDISH HINT TEXT GOES HERE",
+							"required": false
+						}
 					},
 					{
-						"body": "Stämmer dåligt"
+						"body": "Stämmer dåligt",
+						"explanation": {
+							"always_explainable": false,
+							"explain_text": "SWEDISH HINT TEXT GOES HERE",
+							"required": false
+						}
 					},
 					{
-						"body": "Stämmer varken bra eller dåligt"
+						"body": "Stämmer varken bra eller dåligt",
+						"explanation": {
+							"always_explainable": false,
+							"explain_text": "SWEDISH HINT TEXT GOES HERE",
+							"required": false
+						}
 					},
 					{
-						"body": "Stämmer bra"
+						"body": "Stämmer bra",
+						"explanation": {
+							"always_explainable": false,
+							"explain_text": "SWEDISH HINT TEXT GOES HERE",
+							"required": false
+						}
 					},
 					{
-						"body": "Stämmer mycket bra"
+						"body": "Stämmer mycket bra",
+						"explanation": {
+							"always_explainable": false,
+							"explain_text": "SWEDISH HINT TEXT GOES HERE",
+							"required": false
+						}
 					}
 				],
 				"closing_slide": true

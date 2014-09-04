@@ -22,16 +22,19 @@ if(typeof process.env.MONGOLAB_URI !== 'undefined') {
 	console.log(process.env.MONGOLAB_URI);
 }
 var db = mongo.db(process.env.MONGOLAB_URI || 'mongodb://localhost:27017/polljs', {native_parse:true});
-db.open(function(err, db) {
-	if(err) { throw err; }
-	db.collection('polldb').ensureIndex({'id':1}, function(err, res) {
-		if(err) { throw err; }
-	});
-	db.collection('userdb').ensureIndex({'type.login.username':1}, function(err, res) {
-		if(err) { throw err; }
-	});	
-});
 
+// WARN: The code below causes crashes (I think it executes before the async mongo.db call above!)
+
+//db.open(function(err, db) {
+//	if(err) { throw err; }
+//	db.collection('polldb').ensureIndex({'id':1}, function(err, res) {
+//		if(err) { throw err; }
+//	});
+//	db.collection('userdb').ensureIndex({'type.login.username':1}, function(err, res) {
+//		if(err) { throw err; }
+//	});	
+//});
+//
 var pollindex = require('./routes/pollindex');
 var pollroute = require('./routes/pollroute');
 var poll = require('./routes/poll');
