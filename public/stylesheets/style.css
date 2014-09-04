@@ -58,3 +58,15 @@ a.heading-hyperlink:active {color: #000000 !important;}
     left:-12px;
     height:40%; /* stay within boundaries of list item */
 }
+
+*.ui-listview *.ui-btn-up-c,
+*.ui-listview *.ui-btn-down-c,
+*.ui-listview *.ui-btn-hover-c,
+*.ui-listview *.ui-btn:hover,
+*.ui-listview *.ui-btn:active
+  {
+    background-color: #f6f6f6 ;
+    border-color: #ddd ;
+    color: #333 ;
+    text-shadow: 0  1px 0 #f3f3f3;
+  }
