@@ -18,7 +18,8 @@ function populateTable() {
 				}else{
 					tableContent += 'Closed';
 				}
-				tableContent += ', owned by ' + this.owner + ', and has the database hash ' + this._id+'.</p>';
+				//tableContent += ', owned by ' + this.owner + ', and has the database hash ' + this._id+'.</p>';
+				tableContent += ', owned by ' + this.owner + '.</p>';
 				tableContent += '</a>';
 				tableContent += '<div class="split-custom-wrapper">';
 				if ( data.auth && typeof data.rights.delete !== 'undefined' && data.rights.delete) {
