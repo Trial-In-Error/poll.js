@@ -61,6 +61,7 @@
 		"should": "*",
 		"mocha": "*",
 		"istanbul": "*",
-		"supertest": "*"
+		"supertest": "*",
+		"selenium-webdriver": "*"
 	}
 }

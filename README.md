@@ -77,6 +77,10 @@ Coverage Reports
 ---------------------------------
 Try `istanbul cover ./node_modules/mocha/bin/_mocha test/test.js -- -u exports -R spec` from root. This will produce a coverage report in ./coverage, which may or may not be of any use. Currently wonky.
 
+Selenium Integration Testing
+---------------------------------
+Requires the google chrome driver to be present and on the system path. See instructions [here](http://simpleprogrammer.com/2014/02/03/selenium-with-node-js/).
+
 The Future
 ---------------------------------
 * http://www.w3schools.com/html/html5_geolocation.asp
