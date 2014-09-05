@@ -73,13 +73,19 @@ Files Related to Heroku
 * `Procfile` defines process types run by `heroku ps:scale `type=number`
 * `package.json` is used to build the app on heroku's servers. It must list *every* package used in the app; no packages can be used from global scope.
 
+Unit Testing
+---------------------------------
+To run unit tests, `mocha` from the project directory. This will run the unit tests, then the integration tests.
+
+Note that the unit tests WILL DELETE THE DATABASE!!! You have been warned. Also note that the integration tests require the Selenium web driver.
+
 Coverage Reports
 ---------------------------------
-Try `istanbul cover ./node_modules/mocha/bin/_mocha test/test.js -- -u exports -R spec` from root. This will produce a coverage report in ./coverage, which may or may not be of any use. Currently wonky.
+Try `istanbul cover ./node_modules/mocha/bin/_mocha test/test.js -- -u exports -R spec` from project directory. This will produce a coverage report in ./coverage, which may or may not be of any use. Currently wonky.
 
 Selenium Integration Testing
 ---------------------------------
-Requires the google chrome driver to be present and on the system path. See instructions [here](http://simpleprogrammer.com/2014/02/03/selenium-with-node-js/).
+Requires the google chrome driver to be present and on the system path. See instructions [here](http://simpleprogrammer.com/2014/02/03/selenium-with-node-js/). Selenium tests are automatically run as part of the full mocha test suite. If the integration tests cause mocha to time out, pass it a custom timeout variable as `mocha -t verylargenumberinmilliseconds` or `mocha specifictest -t verylargenumberinmilliseconds`.
 
 The Future
 ---------------------------------
