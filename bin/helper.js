@@ -73,3 +73,33 @@ exports.reqCreateRight = function(req, res, next) {
 	req.priv = 'create';
 	return next();
 };
+
+exports.build_combined_csv = function(questionCounter) {
+	var csv_rows = [ [], [], [], [], [], [] ];
+	var final_csv = "";
+	//console.log('start');
+		for (var responseCounter in poll.question_list[questionCounter].type.response_list) {
+		//console.log('response counter'+responseCounter);
+			res = poll.question_list[questionCounter].type.response_list[responseCounter];
+			//console.log('res'+JSON.stringify(res));
+			for (answerCounter in res.answers) {
+				var res2 = res.answers[answerCounter]
+				//console.log('res2'+res2);
+				csv_rows[0].push(res2.user);
+				csv_rows[1].push(res2.timestamp);
+				csv_rows[2].push(res2.skipped);
+				csv_rows[3].push(responseCounter);
+				csv_rows[4].push(res2.value);
+				csv_rows[5].push(res2.explanation);
+			}
+		}
+		//console.log('end');
+	for (var row in csv_rows) {
+		var thisRow = csv_rows[row]
+		//console.log('thisRow' + thisRow);
+		csv_rows[row] = JSON.stringify(thisRow).slice(1, -1);
+		//console.log('thisRow, string' + csv_rows[row]);
+		final_csv += csv_rows[row]+'\n';
+	}
+	return {final_csv: final_csv, csv_rows:csv_rows};
+}
