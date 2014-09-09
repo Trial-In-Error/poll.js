@@ -102,7 +102,7 @@ exports.build_combined_csv = function(questionCounter) {
 	return {final_csv: final_csv, csv_rows:csv_rows};
 };
 
-exports.frequencyCount = function(questionCounter) {
+exports.frequencyCount = function(questionCounter, poll) {
 	// Makes an object that doesn't inherit from Object.prototype.
 	// This makes it safe to use as an array.
 	// See: http://www.devthought.com/2012/01/18/an-object-is-not-a-hash/
@@ -134,7 +134,6 @@ exports.frequencyCount = function(questionCounter) {
 	return dict;
 };
 
-//WARN: NOT SAFE FOR RESPONSES WITH COMMAS IN THEM
 exports.formatFrequencyCount = function(frequencyDict) {
 	var csv = ''
 	for (var counter in frequencyDict) {
