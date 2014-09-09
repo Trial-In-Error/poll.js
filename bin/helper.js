@@ -101,3 +101,46 @@ exports.build_combined_csv = function(questionCounter) {
 	}
 	return {final_csv: final_csv, csv_rows:csv_rows};
 };
+
+exports.frequencyCount = function(questionCounter) {
+	// Makes an object that doesn't inherit from Object.prototype.
+	// This makes it safe to use as an array.
+	// See: http://www.devthought.com/2012/01/18/an-object-is-not-a-hash/
+	var dict = Object.create(null);
+	for (var responseCounter in poll.question_list[questionCounter].type.response_list) {
+	console.log('response counter'+responseCounter);
+		res = poll.question_list[questionCounter].type.response_list[responseCounter];
+		console.log('res'+JSON.stringify(res));
+		for (var answerCounter in res.answers) {
+			var res2 = res.answers[answerCounter];
+			if(typeof dict[responseCounter] === 'undefined') {
+				dict[responseCounter] = Object.create(null);
+				dict[responseCounter].value = res2.value;
+				if (typeof res2.explanation !== 'undefined' && typeof res2.explanation.explain_text !== 'undefined') {
+					dict[responseCounter].explanation = [res2.explanation.explain_text];	
+				}
+				dict[responseCounter].response = res.body;
+				dict[responseCounter].frequency = 1;
+			} else {
+				dict[responseCounter].value = res2.value;
+				if (typeof res2.explanation !== 'undefined' && typeof res2.explanation.explain_text !== 'undefined') {
+					dict[responseCounter].explanation.push(res2.explanation.explain_text);
+				}
+				dict[responseCounter].response = res.body;
+				dict[responseCounter].frequency += 1;
+			}
+		}
+	}
+	return dict;
+};
+
+//WARN: NOT SAFE FOR RESPONSES WITH COMMAS IN THEM
+exports.formatFrequencyCount = function(frequencyDict) {
+	var csv = ''
+	for (var counter in frequencyDict) {
+		console.log(frequencyDict[counter])
+		csv += '"' + frequencyDict[counter].response + '", ';
+		csv += frequencyDict[counter].frequency + '\n';
+	}
+	return csv.slice(0,-1);
+}
