@@ -20,7 +20,7 @@ exports.ensureAuth = function(req, res, next) {
 				if (!user) {
 					//console.log('User login failed.');
 					//return res.send({ success: false, message: info});
-					return res.redirect('/login');
+					return res.redirect('/meta-login');
 				}
 				req.logIn(user, function(err) {
 					if (err) { return next(err); }
@@ -135,7 +135,7 @@ exports.frequencyCount = function(questionCounter, poll) {
 };
 
 exports.formatFrequencyCount = function(frequencyDict) {
-	var csv = ''
+	var csv = 'Answer,Frequency\n'
 	for (var counter in frequencyDict) {
 		console.log(frequencyDict[counter])
 		csv += '"' + frequencyDict[counter].response + '", ';
