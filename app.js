@@ -32,7 +32,7 @@ var db = mongo.db(process.env.MONGOLAB_URI || 'mongodb://localhost:27017/polljs'
 //	});
 //	db.collection('userdb').ensureIndex({'type.login.username':1}, function(err, res) {
 //		if(err) { throw err; }
-//	});	
+//	});
 //});
 //
 var pollindex = require('./routes/pollindex');
@@ -178,7 +178,7 @@ app.use(function(req, res, next) {
 			// At this point plain_auth = "username:password"
 			var creds = plain_auth.split(':');
 			req.body.username = creds[0];
-			req.body.password = creds[1];			
+			req.body.password = creds[1];
 		} catch (err) {
 			console.log(err);
 		}

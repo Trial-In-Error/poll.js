@@ -1,3 +1,4 @@
+/*jshint expr: true*/
 var assert = require('assert'),
 test = require('selenium-webdriver/testing'),
 webdriver = require('selenium-webdriver');
@@ -26,5 +27,5 @@ test.describe('Google Search', function() {
 			value.should.not.equal('simple programmer');
 		});
 		driver.quit();
-	})
+	});
 });

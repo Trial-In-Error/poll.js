@@ -10,4 +10,4 @@ exports.init = function(callback) {
 	function puts(error, stdout, stderr) { sys.puts(stdout); }
 	exec(options, puts);
 	callback();
-}
+};

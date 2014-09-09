@@ -1,3 +1,4 @@
+/*jshint expr: true*/
 var should = require('should');
 var assert = require('assert');
 var request = require('supertest');
@@ -14,7 +15,6 @@ describe('Routing:', function() {
 	var authString = 'Basic ' + new Buffer('awkward' + ':' + 'awkward').toString('base64');
 	var dbih = require('../bin/database_init_helper_module.js');
 	var sih = require('../bin/server_init_helper_module.js');
-	
 
 
 
@@ -91,7 +91,7 @@ describe('Routing:', function() {
 				done();
 			});
 		});
-	})
+	});
 
 	describe('exportpolljson', function() {
 		it('should return the poll, in json, to authenticated users', function(done) {

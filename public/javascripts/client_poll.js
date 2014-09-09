@@ -298,7 +298,7 @@ function updateTextField() {
 						&& typeof current_response.answers[0].explanation !== 'undefined') {
 						//console.log('WERT');
 						$('#form').trigger('create');
-						$('#text-0').val(current_response.answers[0].explanation);	
+						$('#text-0').val(current_response.answers[0].explanation);
 					}
 				} else {
 					console.log('UNEXPECTED CASE!');
@@ -337,7 +337,6 @@ function updateTextField() {
 				&& $(this).attr('id') !== 'pick-choice-'+String(counter) && !$('#pick-choice-'+String(counter)).is(':checked')) {
 				// Then delete the textbox
 				$('#text-'+String(counter)).remove();
-			
 			}
 		}
 	}
@@ -651,7 +650,7 @@ function answerQuestion(forward) {
 		// OTHERWISE, if we have an open style question
 		} else if(poll.question_list[current_question].type.name === 'open') {
 			poll.question_list[current_question].type.response_list[0].answers =
-					[{user: user_token, value: undefined, explanation: $('#text-0').val(), timestamp: $.now()}]
+					[{user: user_token, value: undefined, explanation: $('#text-0').val(), timestamp: $.now()}];
 		} else {
 			console.log('UNEXPECTED QUESTION TYPE!!!');
 		}

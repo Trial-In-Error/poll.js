@@ -29,8 +29,6 @@ exports.ensureAuth = function(req, res, next) {
 					return next();
 				});
 			})(req, res, next);
-		
-
 
 		//console.log('REQ.PATH = '+req.path);
 		//if(req.path === '/login') {
@@ -39,7 +37,7 @@ exports.ensureAuth = function(req, res, next) {
 		//	//console.log('REQ.PATH: '+req.path);
 		//	//console.log('REQ.ORIGINALURL: '+req.originalUrl);
 		//	//console.log('REQ.BASEURL: '+req.baseUrl);
-		//	req.session.redirect_to = req.originalUrl;	
+		//	req.session.redirect_to = req.originalUrl;
 		//}
 		//console.log('User is not already authenticated. Redirecting.');
 		////req.session.returnTo = req.path;
@@ -76,14 +74,14 @@ exports.reqCreateRight = function(req, res, next) {
 
 exports.build_combined_csv = function(questionCounter) {
 	var csv_rows = [ [], [], [], [], [], [] ];
-	var final_csv = "";
+	var final_csv = '';
 	//console.log('start');
 		for (var responseCounter in poll.question_list[questionCounter].type.response_list) {
 		//console.log('response counter'+responseCounter);
 			res = poll.question_list[questionCounter].type.response_list[responseCounter];
 			//console.log('res'+JSON.stringify(res));
-			for (answerCounter in res.answers) {
-				var res2 = res.answers[answerCounter]
+			for (var answerCounter in res.answers) {
+				var res2 = res.answers[answerCounter];
 				//console.log('res2'+res2);
 				csv_rows[0].push(res2.user);
 				csv_rows[1].push(res2.timestamp);
@@ -95,11 +93,11 @@ exports.build_combined_csv = function(questionCounter) {
 		}
 		//console.log('end');
 	for (var row in csv_rows) {
-		var thisRow = csv_rows[row]
+		var thisRow = csv_rows[row];
 		//console.log('thisRow' + thisRow);
 		csv_rows[row] = JSON.stringify(thisRow).slice(1, -1);
 		//console.log('thisRow, string' + csv_rows[row]);
 		final_csv += csv_rows[row]+'\n';
 	}
 	return {final_csv: final_csv, csv_rows:csv_rows};
-}
+};
