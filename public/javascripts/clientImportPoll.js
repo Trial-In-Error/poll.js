@@ -4,7 +4,12 @@ $(document).on('pageinit', function() {
 		if($('#json').val().length > 0){
 			// Send data to server through the ajax call
 			// action is functionality we want to call and outputJSON is our data
-			console.log(JSON.parse($('#json').val()));
+			try {
+				console.log(JSON.parse($('#json').val()));	
+			} catch (err) {
+				alert('Poll is not valid JSON.');
+				return false;
+			}
 			$.ajax({
 				url: '/pollroute/importpoll',
 				data: JSON.parse($('#json').val()),

@@ -4,7 +4,7 @@ var helper = require('../bin/helper');
 
 /* GET poll as JSON */
 router.get('/:id', helper.reqGetAnswersRight, helper.ensureAuth, function(req, res) {
-	res.render('export-poll-json');
+	res.render('exportPoll');
 });
 
 module.exports = router;

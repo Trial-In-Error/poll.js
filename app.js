@@ -39,11 +39,11 @@ var pollindex = require('./routes/pollindex');
 var pollroute = require('./routes/pollroute');
 var poll = require('./routes/poll');
 var register = require('./routes/register');
-var exportpolljson = require('./routes/exportpolljson');
-var viewPollJSON = require('./routes/viewPollJSON');
-var editPollJSON = require('./routes/editPollJSON');
+var exportPoll = require('./routes/exportPoll');
+var inspectPoll = require('./routes/inspectPoll');
+var editPoll = require('./routes/editPoll');
 var importPoll = require('./routes/importPoll');
-var clonePollJSON = require('./routes/clonePollJSON');
+var clonePoll = require('./routes/clonePoll');
 
 // In prior versions of Express, this was a call express.createServer();
 // To support https, this will have to change.
@@ -215,11 +215,12 @@ app.use('/polls', pollindex);
 app.use('/pollroute', pollroute);
 app.use('/poll', poll);
 app.use('/register', register);
-app.use('/exportpoll', exportpolljson);
-app.use('/viewpoll', viewPollJSON);
-app.use('/editpoll', editPollJSON);
+app.use('/exportpoll', exportPoll);
+app.use('/viewpoll', inspectPoll);
+app.use('/inspectPoll', inspectPoll);
+app.use('/editpoll', editPoll);
 app.use('/importpoll', importPoll);
-app.use('/clonepoll', clonePollJSON);
+app.use('/clonepoll', clonePoll);
 
 //STUB: MOVE TO ANOTHER FILE LATER
 app.get('/meta-login', function(req, res) {
