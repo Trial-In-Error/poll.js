@@ -96,3 +96,4 @@ Users
 		* `answer` boolean
 		* `openClose` boolean
 		* `getAnswers` boolean
+		* `edit` boolean

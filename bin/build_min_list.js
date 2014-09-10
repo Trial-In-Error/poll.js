@@ -13,6 +13,7 @@ module.exports = {
 							'client_export_poll_json.js',
 							'client_view_poll_json.js',
 							'client_meta_login.js',
+							'clientImportPoll.js',
 							'client_register.js'];
 
 		console.log('Looking from: '+String(__dirname));

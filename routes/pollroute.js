@@ -53,27 +53,6 @@ router.get('/exportpolljsonclean/:id', helper.reqGetAnswersRight, helper.ensureA
 	});
 });
 
-// JSON validation done entirely with JSON.parse; NO SCHEMA VALIDATION IS DONE HERE!
-// UNTESTED
-// http://stackoverflow.com/questions/8431415/json-object-validation-in-javascript
-router.post('/importpoll', helper.reqCreateRight, helper.ensureAuth, function(req, JSON) {
-	var pollToImport;
-	try {
-		pollToImport = JSON.parse(req.body);
-	} catch (err) {
-		if (err) { res.send({msg: 'Invalid JSON: '+err}); }
-	}
-	var db = req.db;
-	db.polldb.insert(pollToImport, function(result, err) {
-		if (err) {
-			res.send({msg: 'Database error: '+err});
-		} else {
-			res.send({msg: ''});
-		}
-	});
-});
-
-
 router.post('/closepoll/:id', helper.reqOpenCloseRight, helper.ensureAuth, function(req, res) {
 	var db = req.db;
 	var pollToClose = req.params.id;
@@ -159,3 +138,26 @@ router.delete('/deletepoll/:id', helper.reqDeleteRight, helper.ensureAuth, funct
 });
 
 module.exports = router;
+
+
+// JSON validation done entirely with JSON.parse; NO SCHEMA VALIDATION IS DONE HERE!
+// UNTESTED
+// http://stackoverflow.com/questions/8431415/json-object-validation-in-javascript
+router.post('/importpoll', helper.reqCreateRight, helper.ensureAuth, function(req, res) {
+	var pollToImport;
+	console.log(req.body);
+	//console.log(JSON.parse(req.body));
+	try {
+		pollToImport = req.body;
+	} catch (err) {
+		if (err) { res.send({msg: 'Invalid JSON: '+err}); }
+	}
+	var db = req.db;
+	db.collection('polldb').insert(pollToImport, function(err, result) {
+		if (err) {
+			res.send({msg: 'Database error: '+err});
+		} else {
+			res.send({success: true, redirect: '/poll/'+result[0]._id, msg: ''});
+		}
+	});
+});

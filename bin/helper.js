@@ -52,6 +52,11 @@ exports.reqAnswerRight = function(req, res, next) {
 	return next();
 };
 
+exports.reqEditRight = function(req, res, next) {
+	req.priv = 'edit';
+	return next();
+}
+
 exports.reqGetAnswersRight = function(req, res, next) {
 	req.priv = 'getAnswers';
 	return next();
