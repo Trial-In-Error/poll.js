@@ -117,11 +117,16 @@ router.post('/answerpoll', helper.reqAnswerRight, helper.ensureAuth, function(re
 	}
 });
 
-router.get('/frequency/:pollid/:questionid', /*helper.reqGetAnswersRight, helper.ensureAuth,*/ function(req, res) {
+router.get('/frequency/:pollid/:questionid', /*helper.reqGetAnswersRight, helper.ensureAuth,*/ function(req, res, next) {
 	var db = req.db;
 	db.collection('polldb').findOne({_id: mongo.helper.toObjectID(req.params.pollid)}, function(err, result) {
 		if(err) { throw err; }
-		res.send(helper.formatFrequencyCount(helper.frequencyCount(req.params.questionid, result)))
+		var csv = helper.formatFrequencyCount(helper.frequencyCount(req.params.questionid, result));
+		if(typeof csv !== 'undefined') {
+			res.send(csv)	
+		} else {
+			(req, res, next);
+		}
 	});
 });
 

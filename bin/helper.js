@@ -112,39 +112,56 @@ exports.frequencyCount = function(questionCounter, poll) {
 	// This makes it safe to use as an array.
 	// See: http://www.devthought.com/2012/01/18/an-object-is-not-a-hash/
 	var dict = Object.create(null);
-	for (var responseCounter in poll.question_list[questionCounter].type.response_list) {
-	console.log('response counter'+responseCounter);
-		res = poll.question_list[questionCounter].type.response_list[responseCounter];
-		console.log('res'+JSON.stringify(res));
-		for (var answerCounter in res.answers) {
-			var res2 = res.answers[answerCounter];
-			if(typeof dict[responseCounter] === 'undefined') {
-				dict[responseCounter] = Object.create(null);
-				dict[responseCounter].value = res2.value;
-				if (typeof res2.explanation !== 'undefined' && typeof res2.explanation.explain_text !== 'undefined') {
-					dict[responseCounter].explanation = [res2.explanation.explain_text];	
+	if(typeof poll.question_list[questionCounter] !== 'undefined') {
+		for (var responseCounter in poll.question_list[questionCounter].type.response_list) {
+			console.log('response counter'+responseCounter);
+			res = poll.question_list[questionCounter].type.response_list[responseCounter];
+			console.log('res'+JSON.stringify(res));
+			for (var answerCounter in res.answers) {
+				var res2 = res.answers[answerCounter];
+				if(typeof dict[responseCounter] === 'undefined') {
+					dict[responseCounter] = Object.create(null);
+					dict[responseCounter].value = res2.value;
+					if (typeof res2.explanation !== 'undefined' && typeof res2.explanation.explain_text !== 'undefined') {
+						dict[responseCounter].explanation = [res2.explanation.explain_text];	
+					}
+					if(res.body) {
+						dict[responseCounter].response = res.body;
+					} else {
+						dict[responseCounter].response = poll.question_list[questionCounter].type.name;
+					}
+					
+					dict[responseCounter].frequency = 1;
+				} else {
+					dict[responseCounter].value = res2.value;
+					if (typeof res2.explanation !== 'undefined' && typeof res2.explanation.explain_text !== 'undefined') {
+						dict[responseCounter].explanation.push(res2.explanation.explain_text);
+					}
+					if(res.body) {
+						dict[responseCounter].response = res.body;	
+					} else {
+						dict[responseCounter].response = poll.question_list[questionCounter].type.name;
+					}
+					dict[responseCounter].frequency += 1;
 				}
-				dict[responseCounter].response = res.body;
-				dict[responseCounter].frequency = 1;
-			} else {
-				dict[responseCounter].value = res2.value;
-				if (typeof res2.explanation !== 'undefined' && typeof res2.explanation.explain_text !== 'undefined') {
-					dict[responseCounter].explanation.push(res2.explanation.explain_text);
-				}
-				dict[responseCounter].response = res.body;
-				dict[responseCounter].frequency += 1;
 			}
 		}
+		return dict;
+	} else {
+		return undefined;
 	}
-	return dict;
 };
 
 exports.formatFrequencyCount = function(frequencyDict) {
-	var csv = 'Answer,Frequency\n'
-	for (var counter in frequencyDict) {
-		console.log(frequencyDict[counter])
-		csv += '"' + frequencyDict[counter].response + '", ';
-		csv += frequencyDict[counter].frequency + '\n';
+	if(typeof frequencyDict !== 'undefined') {
+		var csv = 'Answer,Frequency\n'
+		for (var counter in frequencyDict) {
+			console.log(frequencyDict[counter])
+			csv += '"' + frequencyDict[counter].response + '", ';
+			csv += frequencyDict[counter].frequency + '\n';
+		}
+		return csv.slice(0,-1);		
+	} else {
+		return undefined;
 	}
-	return csv.slice(0,-1);
 }
