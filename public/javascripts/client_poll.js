@@ -59,7 +59,7 @@ function clearStorage() {
  *	Called in submitPoll(); its callback is used by the ajax POST that is the second half of submitPoll.
  */
 function cleanPoll(callback) {
-	console.log('Cleaning poll.');
+	//console.log('Cleaning poll.');
 	for (var question in poll.question_list) {
 		for (var response in poll.question_list[question].type.response_list) {
 			try {
@@ -75,7 +75,7 @@ function cleanPoll(callback) {
 				console.log(err+' '+question+' '+response);
 				//console.log(poll);
 			}
-			console.log(poll);
+			//console.log(poll);
 		}
 	}
 	callback();
@@ -88,6 +88,7 @@ function cleanPoll(callback) {
  */
 function submitPoll() {
 	cleanPoll( function () {
+		console.log(poll);
 			$.ajax({
 			type: 'POST',
 			data: poll,
@@ -612,7 +613,7 @@ function answerQuestion(forward) {
 					// OTHERWISE, if it's a pick_n, with n > 1
 					} else {
 						// For each response, save the current state
-						poll.question_list[current_question].type.response_list[i].answers = [{user: user_token, value: true, explanation: undefined}];
+						poll.question_list[current_question].type.response_list[i].answers = [{user: user_token, value: true, explanation: undefined, timestamp: $.now()}];
 						// Then check for option-conditional branching; take it if possible
 						if (forward && typeof poll.question_list[current_question].type.response_list[i].next !== 'undefined') {
 							current_question = poll.question_list[current_question].type.response_list[i].next;
