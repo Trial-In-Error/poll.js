@@ -250,9 +250,9 @@ app.get('/login', function(req, res) {
 //   which, in this example, will redirect the user to the home page.
 app.post('/login', function(req, res, next) {
 	// THIS NEEDS TO BE SESSION-IZED
+	var redirect_to = req.session.redirect_to || '/';
 	console.log('By the way, redirect is set to:'+ req.session.redirect_to+' .');
 	console.log('If this ever looks like it\'ll go to /login, please set to / instead.');
-	var redirect_to = req.session.redirect_to || '/';
 	//delete req.session.redirect_to;
 
 	console.log('login matched with username '+req.body.username+' and password '+req.body.password+'.');
@@ -273,9 +273,9 @@ app.post('/login', function(req, res, next) {
 
 app.post('/anonymous-login', function(req, res, next) {
 	// THIS NEEDS TO BE SESSION-IZED
+	var redirect_to = req.session.redirect_to || '/';
 	console.log('By the way, redirect is set to:'+ req.session.redirect_to+' .');
 	console.log('If this ever looks like it\'ll go to /login, please set to / instead.');
-	var redirect_to = req.session.redirect_to || '/';
 	//delete req.session.redirect_to;
 	console.log('POST to anonymous-login.');
 	passport.authenticate('anonymous', function(err, user, info) {
