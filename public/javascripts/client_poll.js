@@ -87,28 +87,30 @@ function cleanPoll(callback) {
  *	Upon receiving OK from server, deletes local storage of the poll and returns to /polls/.
  */
 function submitPoll() {
-	cleanPoll( function () {
-		console.log(poll);
-			$.ajax({
-			type: 'POST',
-			data: poll,
-			url: '/pollroute/answerpoll',
-			dataType: 'JSON'
-			}).done(function(response){
-			// STUB: Lock this user out of this poll in the future, server-side
-			// Check for successful (blank) response
-			if ( response.msg === '' ) {
-				// Delete local storage of results
-				// WARN: Do onbeforeunload more elegantly?
-				window.onbeforeunload = function() {};
-				clearStorage();
-				poll = undefined;
-			} else {
-				// If something went wrong, alert the error message
-				alert('Error: '+response.msg);
-			}
+	if(answerQuestion(true)) {
+		cleanPoll( function () {
+			console.log(poll);
+				$.ajax({
+				type: 'POST',
+				data: poll,
+				url: '/pollroute/answerpoll',
+				dataType: 'JSON'
+				}).done(function(response){
+				// STUB: Lock this user out of this poll in the future, server-side
+				// Check for successful (blank) response
+				if ( response.msg === '' ) {
+					// Delete local storage of results
+					// WARN: Do onbeforeunload more elegantly?
+					window.onbeforeunload = function() {};
+					clearStorage();
+					poll = undefined;
+				} else {
+					// If something went wrong, alert the error message
+					alert('Error: '+response.msg);
+				}
+			});
 		});
-	});
+	}
 }
 
 /**

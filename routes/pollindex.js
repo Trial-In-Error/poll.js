@@ -11,7 +11,7 @@ router.get('/', function(req, res) {
 		user = false;
 	}
 	console.log('User is: '+user);
-	res.render('polls', { title: 'Express', exists: res.locals.expose.exists, user: user});
+	res.render('pollIndex', { title: 'Express', exists: res.locals.expose.exists, user: user});
 });
 
 module.exports = router;

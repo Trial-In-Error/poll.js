@@ -35,8 +35,8 @@ var db = mongo.db(process.env.MONGOLAB_URI || 'mongodb://localhost:27017/polljs'
 //	});
 //});
 //
-var pollindex = require('./routes/pollindex');
-var pollroute = require('./routes/pollroute');
+var pollIndex = require('./routes/pollIndex');
+var pollRoute = require('./routes/pollRoute');
 var poll = require('./routes/poll');
 var register = require('./routes/register');
 var exportPoll = require('./routes/exportPoll');
@@ -210,9 +210,9 @@ app.use(function(req, res, next){
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.use('/', pollindex);
-app.use('/polls', pollindex);
-app.use('/pollroute', pollroute);
+app.use('/', pollIndex);
+app.use('/polls', pollIndex);
+app.use('/pollroute', pollRoute);
 app.use('/poll', poll);
 app.use('/register', register);
 app.use('/exportpoll', exportPoll);
