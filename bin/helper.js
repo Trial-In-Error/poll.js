@@ -109,7 +109,7 @@ exports.build_combined_csv = function(questionCounter) {
 
 exports.frequencyCount = function(questionCounter, poll) {
 	// Makes an object that doesn't inherit from Object.prototype.
-	// This makes it safe to use as an array.
+	// This makes it safe to use as a dict.
 	// See: http://www.devthought.com/2012/01/18/an-object-is-not-a-hash/
 	var dict = Object.create(null);
 	if(typeof poll.question_list[questionCounter] !== 'undefined') {
@@ -159,6 +159,54 @@ exports.formatFrequencyCount = function(frequencyDict) {
 			console.log(frequencyDict[counter])
 			csv += '"' + frequencyDict[counter].response + '", ';
 			csv += frequencyDict[counter].frequency + '\n';
+		}
+		return csv.slice(0,-1);		
+	} else {
+		return undefined;
+	}
+}
+
+exports.unevenBucketFrequencyCount = function(questionCounter, poll, bucketList) {
+	// bucketList [bucket{} ...]
+		//bucket{min, max, name, explanations}
+	if(typeof poll.question_list[questionCounter] !== 'undefined') {
+		for (var responseCounter in poll.question_list[questionCounter].type.response_list) {
+			console.log('response counter'+responseCounter);
+			res = poll.question_list[questionCounter].type.response_list[responseCounter];
+			console.log('res'+JSON.stringify(res));
+			for (var answerCounter in res.answers) {
+				var res2 = res.answers[answerCounter];
+				for (var bucketCount in bucketList) {
+					if(res2.value >= bucketList[bucketCount].min && res2.value <= bucketList[bucketCount].max) {
+						console.log('Added response '+res2.value+' to bucket '+bucketList[bucketCount].name);
+						if(typeof bucketList[bucketCount].frequency === 'undefined') {
+							bucketList[bucketCount].frequency = 1;
+						} else {
+							bucketList[bucketCount].frequency += 1;	
+						}
+						if(typeof res2.explanation !== 'undefined' && res2.explanation.explain_text !== 'undefined') {
+							if(typeof bucketList[bucketCount].explanations === 'undefined') {
+								bucketList[bucketCount].explanations = [];	
+							}
+							bucketList[bucketCount].explanations.push(res2.explanation.explain_text);
+						}
+					}
+				}
+			}
+		}
+		return bucketList;
+	} else {
+		return undefined;
+	}
+};
+
+exports.formatUnevenBucketFrequencyCount = function(bucketList) {
+	if(typeof bucketList !== 'undefined') {
+		var csv = 'Bucket,Frequency\n'
+		for (var counter in bucketList) {
+			console.log(bucketList[counter])
+			csv += '"' + bucketList[counter].name + '", ';
+			csv += bucketList[counter].frequency + '\n';
 		}
 		return csv.slice(0,-1);		
 	} else {
