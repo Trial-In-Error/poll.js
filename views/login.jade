@@ -1,9 +1,6 @@
 extends layout
 
 block content
-	h1= title
-
-
 	if locals.expose.exists['client_login.js']
 		script(src='/dist/javascripts/client_login.js')
 	else
