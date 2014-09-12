@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+require('look').start();
 var app = require('../app');
 var http = require('http');
 var https = require('https');

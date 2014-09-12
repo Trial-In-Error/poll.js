@@ -89,6 +89,10 @@ Selenium Integration Testing
 ---------------------------------
 Requires the google chrome driver to be present and on the system path. See instructions [here](http://simpleprogrammer.com/2014/02/03/selenium-with-node-js/). Selenium tests are automatically run as part of the full mocha test suite. If the integration tests cause mocha to time out, pass it a custom timeout variable as `mocha -t verylargenumberinmilliseconds` or `mocha specifictest -t verylargenumberinmilliseconds`.
 
+Performance Profiling
+---------------------------------
+On startup, the web app runs a `look` server, which profiles and monitors response time, CPU usage, memory usage, errors, and stack traces. Connect to it via the web app's normal hostname at port 5959 (i.e., 127.0.0.1:5959 or aherokuwebapp.com/moreurl:5959). Note that it has NOT been tested on heroku.
+
 The Future
 ---------------------------------
 * http://www.w3schools.com/html/html5_geolocation.asp
