@@ -16,6 +16,11 @@ function batchSanitize(items) {
 	return items;
 }
 
+router.get('/', function(req, res, next) {
+	console.log('API hit!');
+	req.api = true;
+})
+
 /* GET poll list */
 router.get('/listpolls', function(req, res) {
 	var db = req.db;
@@ -123,8 +128,38 @@ router.get('/frequency/:pollid/:questionid', /*helper.reqGetAnswersRight, helper
 		if(err) { throw err; }
 		var csv = helper.formatFrequencyCount(helper.frequencyCount(req.params.questionid, result));
 		if(typeof csv !== 'undefined') {
-			res.send(csv)	
+			res.send(csv);
 		} else {
+			(req, res, next);
+		}
+	});
+});
+
+router.post('/bucketfrequency/:pollid/:questionid', /*helper.reqGetAnswersRight, helper.ensureAuth,*/ function(req, res, next) {
+	var db = req.db;
+		console.log('req.body');
+		console.log('----------------------');
+		console.log(req.body);
+		//console.log(JSON.parse(req.body.bucketList));
+		//console.log(typeof JSON.stringify(req.body.bucketList));
+		//console.log(typeof JSON.parse(JSON.stringify(req.body.bucketList)));
+		//console.log(JSON.parse(req.body.bucketList));
+		//console.log(typeof req.body.bucketList);
+
+		blist = req.body.bucketList;
+
+		//blist = [{min:1, max:4, name:"1-4"}, {min:5, max:7, name:"5-7"}, {min:6, max:10, name:"6-10"}];
+	db.collection('polldb').findOne({_id: mongo.helper.toObjectID(req.params.pollid)}, function(err, result) {
+		if(err) { throw err; }
+		
+		var csv = helper.formatUnevenBucketFrequencyCount(helper.unevenBucketFrequencyCount(req.params.questionid, result, blist));
+		console.log('CSV');
+		console.log('----------------------');
+		console.log(csv);
+		if(typeof csv !== 'undefined') {
+			res.send(csv);
+		} else {
+			console.log('GODFUCKINGDAMNIT');
 			(req, res, next);
 		}
 	});
@@ -141,8 +176,6 @@ router.delete('/deletepoll/:id', helper.reqDeleteRight, helper.ensureAuth, funct
 		res.send((result === 1) ? { msg: '' } : { msg:'Database error: ' + err });
 	});
 });
-
-module.exports = router;
 
 
 // JSON validation done entirely with JSON.parse; NO SCHEMA VALIDATION IS DONE HERE!
@@ -166,3 +199,5 @@ router.post('/importpoll', helper.reqCreateRight, helper.ensureAuth, function(re
 		}
 	});
 });
+
+module.exports = router;

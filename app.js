@@ -154,6 +154,7 @@ app.use(favicon());
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded());
+//app.use(bodyParser.text());
 app.use(cookieParser());
 //app.use(express.methodOverride()); // what does this do? tutorial for passport.js used it
 
@@ -167,7 +168,7 @@ app.use(function(req, res, next) {
 	// auth is in base64(username:password)  so we need to decode the base64
 	var auth = req.headers.authorization;
 	console.log('Authorization Header is: ', auth);
-
+	console.log(req.body);
 	// The Authorization was passed in so now we validate it
 	if(auth) {
 		try {
@@ -323,10 +324,21 @@ app.use(function(req, res, next) {
 if (app.get('env') === 'development') {
 	app.use(function(err, req, res, next) {
 		res.status(err.status || 500);
-		res.render('error', {
-			message: err.message,
-			error: err
-		});
+		if(req.api) {
+			console.log('Normal error.');
+			res.render('error', {
+				message: err.message,
+				//WARN CHANGE BACK TO {}
+				error: {}
+			});	
+		} else {
+			console.log('API error.');
+			res.status(err.status || 500).send({
+				message: 'error: '+err.message,
+				// WARN CHANGE BACK TO {}
+				error: {}
+			});
+		}
 	});
 }
 
@@ -334,10 +346,21 @@ if (app.get('env') === 'development') {
 // no stacktraces leaked to user
 app.use(function(err, req, res, next) {
 	res.status(err.status || 500);
-	res.render('error', {
-		message: err.message,
-		error: {}
-	});
+	if(req.api) {
+		console.log('Normal error.');
+		res.render('error', {
+			message: err.message,
+			//WARN CHANGE BACK TO {}
+			error: {}
+		});	
+	} else {
+		console.log('API error.');
+		res.status(err.status || 500).send({
+			message: 'error: '+err.message,
+			// WARN CHANGE BACK TO {}
+			error: {}
+		});
+	}
 });
 
 
