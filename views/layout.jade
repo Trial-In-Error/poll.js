@@ -28,9 +28,12 @@ html
 	body(class="ui-mobile-viewport ui-overlay-c")
 		div(data-role="page" id="frontpage")
 			div(data-role="header", class="ui-header ui-bar-b")
-					h1
-						a(class="heading-hyperlink" href="/") Flashpoll
+				h1
+					a(class="heading-hyperlink" href="/") Flashpoll
+				div(class="ui-btn-right")
+					if locals.expose.auth
+						a(href="/logout" class="ui-btn" data-role="button" data-inline="true" id="logout") Logout
 			div(data-role='content', class='ui-content')
 				block content
 			div(data-role='footer', class='ui-header ui-bar-b')
-					h4= 'TNG KTH SU @ Tekniska Museet'
+				h4= 'TNG KTH SU @ Tekniska Museet'

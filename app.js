@@ -211,6 +211,12 @@ app.use(function(req, res, next){
 app.use(passport.initialize());
 app.use(passport.session());
 
+app.use(function(req, res, next) {
+		res.locals.expose.auth = req.isAuthenticated();
+	console.log('RES.LOCALS.EXPOSE.AUTH = '+req.isAuthenticated());
+	next();
+})
+
 app.use('/', pollIndex);
 app.use('/polls', pollIndex);
 app.use('/pollroute', pollRoute);
