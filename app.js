@@ -298,7 +298,7 @@ app.post('/anonymous-login', function(req, res, next) {
 
 app.get('/logout', function(req, res){
 	req.logout();
-	res.redirect(200, '/');
+	res.redirect('/');
 });
 
 /// catch 404 and forward to error handler
