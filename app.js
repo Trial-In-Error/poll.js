@@ -59,6 +59,8 @@ var exists_list = {};
 
 var build_min_list = require('./bin/build_min_list.js');
 
+var printList = helper.buildPrintList
+
 var passin = build_min_list.build(exists_list);
 
 console.log(exists_list);
@@ -79,7 +81,7 @@ passport.serializeUser(function(user, done) {
 passport.deserializeUser(function(user, done) {
 	//findById(id, function (err, user) {
 	//var user = {'id': 1};
-	console.log('deserialize found: '+user);
+	//console.log('deserialize found: '+user);
 	done(null, user);
 	//done(err, user);
 	//});
@@ -98,6 +100,30 @@ function findByUsername(username, fn) {
 			return fn(null, null);
 		}
 	});
+}
+
+function findByNickname(nickname, fn) {
+	// STUB: Change to find().limit(1) instead of findOne!
+	// see: https://blog.serverdensity.com/checking-if-a-document-exists-mongodb-slow-findone-vs-find/
+	console.log('FINDBYNICKNAME');
+	console.log('------------------------------');
+	db.collection('userdb').findOne({'type.nickname.nickname': String(nickname)}, function (err, user) {
+		if(err) return err;
+		if(user) {
+			console.log('User found in database.');
+			return fn(null, user);
+		} else {
+			console.log('User not found in database.');
+			return fn(null, null);
+		}
+	});
+}
+
+function newNicknameUser(name, pass) {
+	// Store user, with username and hash in user DB.
+	user = {type: {nickname: {nickname: name}}, rights:{answer: true}};
+	//console.log('User: '+user);
+	return user;
 }
 
 // Use the LocalStrategy within Passport.
@@ -131,6 +157,31 @@ passport.use('local', new LocalStrategy(
 				//if (user.type.login.password !== password ) {
 				//	return done(null, false, {message: 'Incorrect password.'});
 				//}
+			});
+		});
+	}
+));
+
+passport.use('nickname', new LocalStrategy(
+	function(username, password, done) {
+		console.log('Logging in nickname user.');
+		// asynchronous verification, for effect...
+		process.nextTick(function () {
+			console.log('Tick.');
+			findByNickname(username, function(err, user) {
+				console.log('localStrategy found: '+user);
+				console.log(user);
+				if (err) {return done(err);}
+				if (!user) {
+					user = newNicknameUser(username);
+					db.collection('userdb').insert(user, function(err, result) {
+						//res.send( (err === null) ? {msg: '' } : { msg: err } );
+						if(err === null) {
+							console.log('Nickname user '+username+' added.');
+						}
+					});
+				}
+				return done(null, user);
 			});
 		});
 	}
@@ -235,7 +286,7 @@ app.get('/meta-login', function(req, res) {
 });
 
 app.get('/nickname-login', function(req, res) {
-	res.render('meta-login');
+	res.render('nickname-login');
 });
 
 app.get('/', function(req, res) {
@@ -274,6 +325,29 @@ app.post('/login', function(req, res, next) {
 			if (err) { return next(err); }
 			//console.log('User login successful.');
 			return res.send({success: true, redirect: String(redirect_to)});
+		});
+	})(req, res, next);
+});
+
+app.post('/nickname-login', function(req, res, next) {
+	// THIS NEEDS TO BE SESSION-IZED
+	console.log('By the way, redirect is set to:'+ req.session.redirect_to+' .');
+	console.log('If this ever looks like it\'ll go to /login, please set to / instead.');
+	var redirect_to = req.session.redirect_to || '/';
+	//delete req.session.redirect_to;
+
+	console.log('login matched with usernickname '+req.body.nickname+'.');
+	passport.authenticate('nickname', function(err, user, info) {
+		//console.log('Start login attempt.');
+		if (err) { return next(err); }
+		if (!user) {
+			//console.log('User login failed.');
+			return res.send({ success: false, message: info});
+		}
+		req.logIn(user, function(err) {
+			if (err) { return next(err); }
+			//console.log('User login successful.');
+			return res.redirect(String(redirect_to) || '/');
 		});
 	})(req, res, next);
 });
