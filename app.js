@@ -379,8 +379,6 @@ app.post('/anonymous-login', function(req, res, next) {
 app.get('/logout', function(req, res){
 	req.logout();
 	// Delete local storage of results
-	// WARN: Do onbeforeunload more elegantly?
-	window.onbeforeunload = function() {};
 	res.redirect('/');
 });
 
