@@ -16,6 +16,18 @@ exports.ensureAuth = function(req, res, next) {
 			console.log(req.isAuthenticated());
 			passport.authenticate('local', function(err, user, info) {
 				console.log('Start login attempt.');
+				console.log('REQ.PATH = '+req.originalUrl);
+				if(req.path === '/login' || req.path === '/meta-login') {
+					req.session.redirect_to = req.session.redirect_to || '/';
+				} else {
+					//console.log('REQ.PATH: '+req.path);
+					//console.log('REQ.ORIGINALURL: '+req.originalUrl);
+					//console.log('REQ.BASEURL: '+req.baseUrl);
+					req.session.redirect_to = req.originalUrl;
+				}
+				console.log('User is not already authenticated. Redirecting.');
+				//req.session.returnTo = req.path;
+				//res.redirect('/meta-login');
 				if (err) { return next(err); }
 				if (!user) {
 					//console.log('User login failed.');
@@ -29,19 +41,6 @@ exports.ensureAuth = function(req, res, next) {
 					return next();
 				});
 			})(req, res, next);
-
-		//console.log('REQ.PATH = '+req.path);
-		//if(req.path === '/login') {
-		//	req.session.redirect_to = req.session.redirect_to || '/';
-		//} else {
-		//	//console.log('REQ.PATH: '+req.path);
-		//	//console.log('REQ.ORIGINALURL: '+req.originalUrl);
-		//	//console.log('REQ.BASEURL: '+req.baseUrl);
-		//	req.session.redirect_to = req.originalUrl;
-		//}
-		//console.log('User is not already authenticated. Redirecting.');
-		////req.session.returnTo = req.path;
-		//res.redirect('/login');
 	} catch (err) {
 		console.log(err);
 	}
