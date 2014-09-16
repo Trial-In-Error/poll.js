@@ -117,6 +117,8 @@ router.post('/answerpoll', helper.reqAnswerRight, helper.ensureAuth, function(re
 							//console.log('Appended: '+req.body.question_list[question].type.response_list[response].answers);
 							//console.log(result.question_list);
 							//console.log(req.body.question_list);
+
+							// I think this is never, ever, ever reached...
 							if(typeof result.question_list[question].type.response_list[response].answers === 'undefined') {
 								result.question_list[question].type.response_list[response].answers = [];
 							}
