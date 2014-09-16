@@ -164,7 +164,7 @@ passport.use('local', new LocalStrategy(
 
 passport.use('nickname', new LocalStrategy(
 	function(username, password, done) {
-		console.log('Logging in nickname user.');
+		console.log('Logging in nickname user '+username+'.');
 		// asynchronous verification, for effect...
 		process.nextTick(function () {
 			console.log('Tick.');
@@ -336,17 +336,17 @@ app.post('/nickname-login', function(req, res, next) {
 	var redirect_to = req.session.redirect_to || '/';
 	//delete req.session.redirect_to;
 
-	console.log('login matched with usernickname '+req.body.nickname+'.');
+	console.log('login matched with usernickname '+req.body.nickname||req.body.username+'.');
 	passport.authenticate('nickname', function(err, user, info) {
-		//console.log('Start login attempt.');
+		console.log('Start login attempt.');
 		if (err) { return next(err); }
 		if (!user) {
-			//console.log('User login failed.');
+			console.log('User login failed.');
 			return res.send({ success: false, message: info});
 		}
 		req.logIn(user, function(err) {
 			if (err) { return next(err); }
-			//console.log('User login successful.');
+			console.log('User login successful.');
 			return res.redirect(String(redirect_to) || '/');
 		});
 	})(req, res, next);
