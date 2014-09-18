@@ -5,7 +5,6 @@ var request = require('supertest');
 var mongo = require('mongoskin');
 var poll1 = require('../example_poll.json');
 var poll2 = require('../example_poll_2.json');
-console.log('I\'MA MOCHA!');
 
 describe('Routing:', function() {
 	var url = 'http://localhost:3000';
@@ -131,7 +130,7 @@ describe('Routing:', function() {
 					//console.log(JSON.stringify(res.status));
 					res.status.should.be.equal(302);
 					JSON.stringify(res.body).should.be.equal('{}');
-					res.header.location.should.be.equal('/login');
+					res.header.location.should.be.equal('/meta-login');
 					done();
 				});
 		});
