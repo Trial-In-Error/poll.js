@@ -4,10 +4,10 @@ block content
 	h1= title
 	div(style='max-width: 300px; margin:0 auto')
 	p(style='text-align: left') Please provide a nickname to continue.
-	form(role='form', action='/nickname-login', method='post')
+	form(role='form', action='/nickname-login', method='post', data-ajax="false")
 		.form-group
 			input.form-control(type='text', data-clear-btn="true", name="username", id="username", value="", placeholder='Nickname')
 		.form-group
-			input.form-control(type='password', data-clear-btn="true", name="password", id="password", value="", placeholder='Password')
+			input.form-control(type='password', data-clear-btn="true", name="password", id="password", value="dummy", placeholder='Password', style="display: none;", val="dummy")
 		.form-group
 			button(type='submit', name='submit', id='submit' class="ui-btn ui-corner-all") Submit

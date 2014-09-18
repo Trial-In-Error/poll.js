@@ -172,6 +172,8 @@ describe('Routing:', function() {
 
 	//describe anonymous login
 
+	//describe nickname login
+
 	describe('listpolls', function() {
 		it('should return a list of polls', function(done) {
 			request(url)

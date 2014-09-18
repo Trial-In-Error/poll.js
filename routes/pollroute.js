@@ -76,6 +76,21 @@ router.post('/openpoll/:id', helper.reqOpenCloseRight, helper.ensureAuth, functi
 	});
 });
 
+function verifyUser(res, req, answer) {
+	console.log(JSON.stringify(res.locals.session.passport.user));
+	if(typeof res.locals.session.passport.user.type.login.username !== 'undefined') {
+		console.log('Question overwritten for a usernamed user.');
+		answer.user = {username: res.locals.session.passport.user.type.login.username};
+	} else if(typeof res.locals.session.passport.user.type.nickname !== 'undefined') {
+		console.log('Question overwritten for a nicknamed user.');
+		answer.user = {nickname: res.locals.session.passport.user.type.nickname};
+	} else {
+		console.log('Question overwritten for an anonymous user.');
+		answer.user = {anonymous: true};
+	}
+	return answer;
+}
+
 /* POST to answer poll */
 // UNTESTED: Authentication here
 // WARN: Consider /answerpoll/:id for flexibility?
@@ -89,8 +104,11 @@ router.post('/answerpoll', helper.reqAnswerRight, helper.ensureAuth, function(re
 				if(err) {
 					console.log(err);
 				}
+				// For every question in the submitted poll
 				for (var question in req.body.question_list) {
+					// And every response for that question (there should be only 1, but...)
 					for (var response in req.body.question_list[question].type.response_list) {
+						// If it's been answered
 						if(typeof req.body.question_list[question].type.response_list[response].answers !== 'undefined'
 							&& typeof req.body.question_list[question].type.response_list[response].answers[0] !== 'undefined'
 							&& typeof req.body.question_list[question].type.response_list[response].answers[0].value !== 'undefined'
@@ -99,10 +117,15 @@ router.post('/answerpoll', helper.reqAnswerRight, helper.ensureAuth, function(re
 							//console.log('Appended: '+req.body.question_list[question].type.response_list[response].answers);
 							//console.log(result.question_list);
 							//console.log(req.body.question_list);
+
+							// I think this is never, ever, ever reached...
 							if(typeof result.question_list[question].type.response_list[response].answers === 'undefined') {
 								result.question_list[question].type.response_list[response].answers = [];
 							}
-							result.question_list[question].type.response_list[response].answers.push(req.body.question_list[question].type.response_list[response].answers[0]);
+							// Add the answer to the resulting poll
+							result.question_list[question].type.response_list[response].answers.push(
+								verifyUser(res, req, req.body.question_list[question].type.response_list[response].answers[0])
+								);
 							//console.log(result.question_list[question].type.response_list[response].answers);
 						}
 					}
