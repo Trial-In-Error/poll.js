@@ -82,12 +82,20 @@ describe('Routing:', function() {
 				});
 		});
 
+		it('should enforce a character limit on username', function(done) {
+			request(url)
+				.post('/register')
+				.send({'username':'', 'password':} )		
+		});
+
 		it('should allow for promoting a user to admin rights using the DB driver', function(done) {
 			db.collection('userdb').update({'type.login.username': 'awkward'}, {$set: {'rights.delete': true, 'rights.openClose': true, 'rights.accessClosed': true}}, function (err, user) {
 				if (err) { throw err; }
 				done();
 			});
 		});
+
+
 	});
 
 	describe('exportpolljson', function() {
