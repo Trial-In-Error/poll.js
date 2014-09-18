@@ -36,14 +36,45 @@ function newUser(name, pass) {
 	return user;
 }
 
+// STUB: SPECIAL CHARACTER VALIDATION
+function validateRegistration(username, password) {
+	console.log(username+' '+username.length);
+	console.log(password+' '+password.length);
+	var maxUsernameLength = 32;
+	var maxPasswordLength = 32;
+	if(username.length <= 0 && password.length > 0) {
+		return 'Please fill in your username.';
+	} else if (username.length > 0 && password.length <= 0) {
+		return 'Please fill in your password.';
+	} else if (password.length < 5 && username.length > 0) {
+		return 'Please choose a password at least 5 characters long.';
+	} else if (username.length > maxUsernameLength && password.length <= maxPasswordLength) {
+		return 'Please choose a username shorter than '+maxUsernameLength+' characters.';
+	} else if (username.length <= maxUsernameLength && password.length > maxPasswordLength) {
+		return 'Please choose a password shorter than '+maxPasswordLength+' characters.';
+	} else if (username.length > maxUsernameLength && password.length > maxPasswordLength) {
+		return 'Please choose a username shorter than '+maxUsernameLength+' characters and a password shorter than '+maxPasswordLength+' characters.';
+	} else if (username.length <= 0 && password.length <= 0) {
+		return 'Please fill in your username and password.';
+	} else {
+		return '';
+	}
+}
+
 /* POST to register */
 router.post('/', function(req, res) {
+	console.log('--------------');
 	var db = req.db;
+	var validateError = validateRegistration(req.body.username, req.body.password);
+	if(validateError !== '') {
+		console.log('Error error!');
+		return res.send({msg: validateError});
+	}
 	findByUsername(req, function(err, user) {
 		console.log(user);
 		if(user) {
 			console.log('Shit, that user already exists.');
-			res.send({msg: 'That username is already taken. Please choose another.'});
+			return res.send({msg: 'That username is already taken. Please choose another.'});
 		} else {
 			db.collection('userdb').insert(newUser(req.body.username, req.body.password), function(err, result) {
 					console.log('User '+req.body.username+' added with password '+req.body.password+'.');
