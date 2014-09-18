@@ -35,7 +35,15 @@ var db = mongo.db(process.env.MONGOLAB_URI || 'mongodb://localhost:27017/polljs'
 //	});
 //});
 //
-var pollIndex = require('./routes/pollIndex');
+try {
+	var pollIndex = require('./routes/pollIndex');	
+} catch (err) {
+	console.log('----------------');
+	console.log(process.cwd());
+	console.log(__dirname);
+	throw err;
+}
+
 var pollRoute = require('./routes/pollRoute');
 var poll = require('./routes/poll');
 var register = require('./routes/register');
