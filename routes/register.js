@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var bcrypt = require('bcrypt-nodejs');
+var passport = require('passport');
 //var db = req.db;
 
 //WARN: THIS IS COMPLETELY REDUNDANT FROM APP.JS!!! DON'T BE LAZY!
@@ -43,14 +44,22 @@ router.post('/', function(req, res) {
 		if(user) {
 			console.log('Shit, that user already exists.');
 			res.send({msg: 'That username is already taken. Please choose another.'});
-		}else {
+		} else {
 			db.collection('userdb').insert(newUser(req.body.username, req.body.password), function(err, result) {
-				res.send(
-					(err === null) ? { msg: '' } : { msg: err }
-				);
-				if(err === null) {
 					console.log('User '+req.body.username+' added with password '+req.body.password+'.');
-				}
+					passport.authenticate('local', function(err, user, info) {
+						console.log('Start login attempt.');
+						if (err) { return res.send(err); }
+						if (!user) {
+							console.log('User login failed.');
+							return res.send({ msg: 'User login failed.'});
+						}
+						req.login(user, function(err) {
+							if (err) { return res.send(err); }
+							console.log('User login successful.');
+							return res.send({msg: ''});
+						});
+					})(req, res);
 			});
 		}
 	});

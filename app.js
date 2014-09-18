@@ -321,9 +321,9 @@ app.post('/login', function(req, res, next) {
 			//console.log('User login failed.');
 			return res.send({ success: false, message: info});
 		}
-		req.logIn(user, function(err) {
+		req.login(user, function(err) {
 			if (err) { return next(err); }
-			//console.log('User login successful.');
+			console.log('User login successful.');
 			return res.send({success: true, redirect: String(redirect_to)});
 		});
 	})(req, res, next);
