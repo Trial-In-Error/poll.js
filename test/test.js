@@ -21,23 +21,21 @@ describe('Routing:', function() {
 	before(function(done) {
 		dbih.init(function() {
 			sih.init(function() {
-
-		db.dropDatabase(function(err, result) {
-			if(err) { throw err; }
-			db.collection('polldb').insert(poll1, function(err, result) {
-				if(err) { throw err; }
-				db.collection('polldb').insert(poll2, function(err, result) {
+				db.dropDatabase(function(err, result) {
 					if(err) { throw err; }
-					db.collection('polldb').findOne({'id': '10'}, function(err, result) {
+					db.collection('polldb').insert(poll1, function(err, result) {
 						if(err) { throw err; }
-						pollID = mongo.helper.toObjectID(result._id);
-						done();
+						db.collection('polldb').insert(poll2, function(err, result) {
+							if(err) { throw err; }
+							db.collection('polldb').findOne({'id': '10'}, function(err, result) {
+								if(err) { throw err; }
+								pollID = mongo.helper.toObjectID(result._id);
+								done();
+							});
+						});
 					});
 				});
 			});
-		});
-	});
-
 		});
 	});
 

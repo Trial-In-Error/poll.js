@@ -1,3 +1,7 @@
+//window.onerror = function(error) {
+//    alert(error);
+//};
+
 // Fill table with data
 function populateTable() {
 
@@ -35,11 +39,11 @@ function populateTable() {
 					tableContent += '<a href="#" class="linkopenclosepoll split-custom-button ui-btn-icon-notext" rel="'+this._id+'" data-role="button" data-icon="lock" data-iconpos="notext">open/close</a>';
 					//tableContent += '<a href="#" class="linksharepoll split-custom-button ui-btn-icon-notext" rel="'+this._id+'" data-role="button" data-icon="action" data-iconpos="notext">link</a>';
 				}
-				if (typeof data.rights !== 'undefined' && !(data.rights.delete || data.rights.copy || data.rights.openClose)) {
-					//console.log('I can do nothing.');
-					tableContent += '<a href="/poll/' + this._id + '" class="split-custom-button ui-btn-icon-notext" data-role="button" data-icon="carat-r" data-iconpos="notext">answer</a>';
-					//tableContent += '<a href="#" class="linksharepoll split-custom-button ui-btn-icon-notext" rel="'+this._id+'" data-role="button" data-icon="action" data-iconpos="notext">link</a>';
-				}
+				//if (typeof data.rights !== 'undefined' && !(data.rights.delete || data.rights.copy || data.rights.openClose)) {
+				//	//console.log('I can do nothing.');
+				//	tableContent += '<a href="/poll/' + this._id + '" class="split-custom-button ui-btn-icon-notext" data-role="button" data-icon="carat-r" data-iconpos="notext">answer</a>';
+				//	//tableContent += '<a href="#" class="linksharepoll split-custom-button ui-btn-icon-notext" rel="'+this._id+'" data-role="button" data-icon="action" data-iconpos="notext">link</a>';
+				//}
 				tableContent += '</div></li>';
 			});
 		} else {

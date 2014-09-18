@@ -68,13 +68,13 @@ router.post('/', function(req, res) {
 	var validateError = validateRegistration(req.body.username, req.body.password);
 	if(validateError !== '') {
 		console.log('Error error!');
-		return res.send({msg: validateError});
+		return res.send(400, {msg: validateError});
 	}
 	findByUsername(req, function(err, user) {
 		console.log(user);
 		if(user) {
 			console.log('Shit, that user already exists.');
-			return res.send({msg: 'That username is already taken. Please choose another.'});
+			return res.send(400, {msg: 'That username is already taken. Please choose another.'});
 		} else {
 			db.collection('userdb').insert(newUser(req.body.username, req.body.password), function(err, result) {
 					console.log('User '+req.body.username+' added with password '+req.body.password+'.');
@@ -83,7 +83,7 @@ router.post('/', function(req, res) {
 						if (err) { return res.send(err); }
 						if (!user) {
 							console.log('User login failed.');
-							return res.send({ msg: 'User login failed.'});
+							return res.send(400, { msg: 'User login failed.'});
 						}
 						req.login(user, function(err) {
 							if (err) { return res.send(err); }
