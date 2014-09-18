@@ -1,6 +1,9 @@
 $(document).on('pageinit', function() {
 	$(document).on('click', '#submit', function() {
-		if($('#username').val().length > 0 && $('#password').val().length >= 5){
+		var maxUsernameLength = 32;
+		var maxPasswordLength = 32;
+		if( $('#username').val().length > 0 && $('#username').val().length <= maxUsernameLength
+			&& $('#password').val().length >= 5 && $('#password').val().length <= maxPasswordLength ){
 			// Send data to server through the ajax call
 			// action is functionality we want to call and outputJSON is our data
 			$.ajax({
@@ -36,6 +39,10 @@ $(document).on('pageinit', function() {
 				alert('Please fill in your password.');
 			} else if($('#password').val().length < 5) {
 				alert('Please a choose a password at least 5 characters long.');
+			} else if($('#username').val().length > maxUsernameLength) {
+				alert('Please choose a username shorter than '+maxUsernameLength+' characters.');
+			} else if($('#password').val().length > maxPasswordLength) {
+				alert('Please choose a password shorter than '+maxPasswordLength+' characters.');
 			} else {
 				alert('Please fill in your username and password.');
 			}
