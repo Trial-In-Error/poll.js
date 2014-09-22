@@ -3,10 +3,10 @@ extends layout
 block content
 	h1= title
 
-	if locals.expose.exists['client_meta_login.js']
-		script(src='/dist/javascripts/client_meta_login.js')
+	if locals.expose.exists['clientMetaLogin.js']
+		script(src='/dist/javascripts/clientMetaLogin.js')
 	else
-		script(src='/javascripts/client_meta_login.js')
+		script(src='/javascripts/clientMetaLogin.js')
 
 	div(display='inline-block', style='width:280px; margin: 0 auto; text-align:center')
 		h4(class='ui-bar ui-bar-a ui-corner-all') Please choose a way to log-in:

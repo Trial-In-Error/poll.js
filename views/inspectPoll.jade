@@ -3,10 +3,10 @@ extends layout
 block content
 	h1= title
 
-	if locals.expose.exists['client_view_poll_json.js']
-		script(src='/dist/javascripts/client_view_poll_json.js')
+	if locals.expose.exists['clientViewPoll.js']
+		script(src='/dist/javascripts/clientViewPoll.js')
 	else
-		script(src='/javascripts/client_view_poll_json.js')
+		script(src='/javascripts/clientViewPoll.js')
 	if locals.expose.exists['prettyPrint.js']
 		script(src='/dist/javascripts/prettyPrint.js')
 	else

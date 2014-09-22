@@ -3,18 +3,18 @@ var path = require('path');
 
 module.exports = {
 	build: function build_min_list(exists_list) {
-		var files_needed = ['client_polls.js',
-							'client_poll.js',
+		var files_needed = ['clientPolls.js',
+							'clientPoll.js',
 							'jquery_mobile_1_4_3.js',
 							'jquery_2_1_1.js',
 							'combined_style.css',
-							'client_login.js',
+							'clientLogin.js',
 							'prettyPrint.js',
-							'client_export_poll_json.js',
-							'client_view_poll_json.js',
-							'client_meta_login.js',
+							'clientExportPoll.js',
+							'clientViewPoll.js',
+							'clientMetaLogin.js',
 							'clientImportPoll.js',
-							'client_register.js'];
+							'clientRegister.js'];
 
 		console.log('Looking from: '+String(__dirname));
 
