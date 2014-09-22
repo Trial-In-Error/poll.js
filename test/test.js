@@ -85,7 +85,7 @@ describe('Routing:', function() {
 		it('should enforce a character limit on username', function(done) {
 			request(url)
 				.post('/register')
-				.send({'username':'', 'password':} )		
+				.send({'username':'', 'password':} )
 		});
 
 		it('should allow for promoting a user to admin rights using the DB driver', function(done) {

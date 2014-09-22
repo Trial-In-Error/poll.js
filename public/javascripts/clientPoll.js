@@ -82,6 +82,213 @@ function cleanPoll(callback) {
 }
 
 /**
+ *	Validates the current question, returning either true or false.
+ *	Called by answerQuestion() when nextQuestion() or lastQuestion() are called by clicking a bottom button.
+ *	Note that this is not called by skipQuestion(); this is intentional.
+ *	Decides if the current question should be stored, then decides if the current question should be changed.
+ *	Always changes the current question on backward (lastQuestion()), but stores the response first if it's valid.
+ *	@param {boolean} forward - Indicates if answerQuestion() is requesting to go forwards or backwards.
+ *	@returns {boolean} - Indicates whether or not it's acceptable to move in the direction indicated by forward.
+ */
+function validateCurrentQuestion(forward) {
+	var counter = 0;
+	// STUB: Generalize to an array to support checkbox explanations...
+	// STUB: Comment me!!!
+	var n_special = 0;
+	// If we're doing a pick_n
+	if (poll.question_list[current_question].type.name === 'pick_n') {
+		for (i = 0; i < poll.question_list[current_question].type.response_list.length; i += 1) {
+			if($('#pick-choice-'+String(i)).is(':checked')) {
+				counter += 1;
+				n_special = i;
+			}
+		}
+		//console.log(counter);
+		// If we're picking 1 from a list
+		if (poll.question_list[current_question].type.n === 1) {
+			//console.log('We\'re picking 1 from a list.');
+			// And we have picked 1, and (explanation not required OR explanation provided)
+			if(counter === 1 &&
+				(poll.question_list[current_question].type.response_list[n_special].explanation &&
+				!poll.question_list[current_question].type.response_list[n_special].explanation.required ||
+				$('#text-'+String(n_special)).val() !== '')) {
+				//console.log('But we short circuited the logic.');
+				// Then we're valid
+				return true;
+			// Otherwise, we're invalid, and let's find out how
+			} else if ($('#text-'+String(n_special)).val() === '') {
+				if (forward && poll.question_list[current_question].type.response_list[n_special].explanation.required) {
+					alert('Please enter some text.');
+				}
+			} else if(counter === 0) {
+				if (forward) {
+					alert('Please pick an option.');
+				}
+			} else {
+				if (forward) {
+					alert('Please pick only one option.');
+				}
+			}
+			return false;
+		} else if (poll.question_list[current_question].type.n > 1){
+			// STUB: You should really ASSERT that counter >= 0 and counter <= ...response_list.length
+			if(counter < 0) {
+				if (forward) {
+					alert('Something has gone terribly wrong; you\'ve selected less than zero answers.');
+				}
+			} else if (counter > poll.question_list[current_question].type.response_list.length) {
+				if (forward) {
+					alert('Something has gone terribly wrong; you\'ve selected more answers than exist.');
+				}
+			} else if (counter > poll.question_list[current_question].type.n) {
+				if (forward) {
+					alert('Please select no more than '+poll.question_list[current_question].type.n+' options.');
+				}
+			} else if (counter < poll.question_list[current_question].type.require) {
+				if (forward) {
+					alert('Please select at least '+poll.question_list[current_question].type.require+' options.');
+				}
+			} else {
+				return true;
+			}
+			return false;
+		}
+	} else if (poll.question_list[current_question].type.name === 'slider') {
+		// STUB: Check to see if slider is in valid range and divisible by increment. It's silly, I know...
+		return true;
+	} else if (poll.question_list[current_question].type.name === 'not_a_question') {
+		return true;
+	} else if (poll.question_list[current_question].type.name === 'open') {
+		// If we aren't required to answer it, return true
+		if(typeof poll.question_list[current_question].type.response_list[0].explanation.required !== 'undefined'
+			&&  poll.question_list[current_question].type.response_list[0].explanation.required === false) {
+			return true;
+		} else if ( $('#text-0').val() !== '') {
+			return true;
+		} else if (forward) {
+			alert('Please enter some text.');
+		}
+		return false;
+	}
+}
+
+/**
+ *	Finds an element in an array by matching element[attribute] === value.
+ *	In other words, find the element that has a property with a given value.
+ *	Called as a helper in answerQuestion() to follow 'next' links.
+ *	@param {array} array - The array to be searched.
+ *	@param {string} attr - The field of each member of the array to match on.
+ *	@param {???} value - The value to match the attribute on.
+ */
+function findWithAttr(array, attr, value) {
+	for(var i = 0; i < array.length; i += 1) {
+		if(array[i][attr] === value) {
+			return i;
+		}
+	}
+}
+
+/**
+ *	Checks the response's validity, saves it if valid, then changes the current_question as appropriate.
+ *	Always saves text fields.
+ *	Calls validateCurrentQuestion() to check validity.
+ *	Called by nextQuestion() and lastQuestion().
+ *	@param {boolean} forward - True if trying to go forwards, false if trying to go backwards.
+ *	@return {boolean} - True if you current_question++, false if current_question--
+ */
+function answerQuestion(forward) {
+	// If we're valid OR we're going backwards
+	if(validateCurrentQuestion(forward)) {
+		// And if we have a pick_n style question
+		if(poll.question_list[current_question].type.name === 'pick_n') {
+			// For every question
+			for (var i = 0; i < poll.question_list[current_question].type.response_list.length; i += 1) {
+				// If the choice is checked
+				if ($('#pick-choice-'+String(i)).is(':checked')) {
+					// And if it's a radiobox
+					if(poll.question_list[current_question].type.n === 1) {
+						// Save it
+						if ( typeof poll.question_list[current_question].type.response_list[i].explanation !== 'undefined' ) {
+							poll.question_list[current_question].type.response_list[i].answers =
+								[{user: user_token, value: true, explanation: $('#text-'+String(i)).val(), timestamp: $.now()}];
+						} else {
+							poll.question_list[current_question].type.response_list[i].answers =
+								[{user: user_token, value: true, explanation: undefined, timestamp: $.now()}];
+						}
+						// Check for option-conditional branching; take it if possible
+						if (forward && typeof poll.question_list[current_question].type.response_list[i].next !== 'undefined') {
+							current_question = poll.question_list[current_question].type.response_list[i].next;
+							return true;
+						}
+					// OTHERWISE, if it's a pick_n, with n > 1
+					} else {
+						// For each response, save the current state
+						poll.question_list[current_question].type.response_list[i].answers = [{user: user_token, value: true, explanation: undefined, timestamp: $.now()}];
+						// Then check for option-conditional branching; take it if possible
+						if (forward && typeof poll.question_list[current_question].type.response_list[i].next !== 'undefined') {
+							current_question = poll.question_list[current_question].type.response_list[i].next;
+							return true;
+						}
+					}
+				// OTHERWISE, if this option is not checked
+				} else {
+
+					// save only the explanation
+					if ( typeof poll.question_list[current_question].type.response_list[i].answers !== 'undefined'
+						&& typeof poll.question_list[current_question].type.response_list[i].answers[0] !== 'undefined'
+						&& typeof poll.question_list[current_question].type.response_list[i].answers[0].value !== 'undefined' ) {
+						//console.log('Soft overwriting answer '+i+'.');
+						//poll.question_list[current_question].type.response_list[i].answers = [[undefined, undefined, $('#text-'+String(i)).val()]];
+						poll.question_list[current_question].type.response_list[i].answers =
+							[{user: undefined, value: undefined, explanation: poll.question_list[current_question].type.response_list[i].answers[0].explanation}];
+					} else {
+						//console.log('Hard overwriting answer '+i+'.');
+						poll.question_list[current_question].type.response_list[i].answers =
+							genEmptyAnswers();
+					}
+				}
+			}
+
+		// OTHERWISE, if we have a slider style question
+		} else if(poll.question_list[current_question].type.name === 'slider') {
+			if ( typeof poll.question_list[current_question].type.response_list[0].explanation !== 'undefined' ) {
+				poll.question_list[current_question].type.response_list[0].answers =
+					[{user: user_token, value: $('#slider').val(), explanation: $('#text-0').val(), timestamp: $.now()}];
+			} else {
+				poll.question_list[current_question].type.response_list[0].answers =
+					[{user: user_token, value: $('#slider').val(), explanation: undefined, timestamp: $.now()}];
+			}
+		// OTHERWISE, if we have an open style question
+		} else if(poll.question_list[current_question].type.name === 'open') {
+			poll.question_list[current_question].type.response_list[0].answers =
+					[{user: user_token, value: undefined, explanation: $('#text-0').val(), timestamp: $.now()}];
+		} else {
+			console.log('UNEXPECTED QUESTION TYPE!!!');
+		}
+
+		// For all question types
+
+		// If we have a hard-link to the next question, take it
+		if (forward && typeof poll.question_list[current_question].next !== 'undefined') {
+			current_question = findWithAttr(poll.question_list, 'id', poll.question_list[current_question].next);
+		// Otherwise, go forwards/backwards as appropriate
+		} else if (forward) {
+			current_question += 1;
+		} else {
+			current_question -= 1;
+			return false;
+		}
+		return true;
+	// Otherwise, if invalid and going forwards
+	} else {
+		if (!forward) {
+			current_question -= 1;
+		}
+		return false;
+	}
+}
+
+/**
  *	POSTs the finished poll to the server.
  *	Starts by cleaning the poll of unnecessary explanations, then POSTs.
  *	Upon receiving OK from server, deletes local storage of the poll and returns to /polls/.
@@ -406,97 +613,6 @@ function renderCurrentQuestion() {
 }
 
 /**
- *	Validates the current question, returning either true or false.
- *	Called by answerQuestion() when nextQuestion() or lastQuestion() are called by clicking a bottom button.
- *	Note that this is not called by skipQuestion(); this is intentional.
- *	Decides if the current question should be stored, then decides if the current question should be changed.
- *	Always changes the current question on backward (lastQuestion()), but stores the response first if it's valid.
- *	@param {boolean} forward - Indicates if answerQuestion() is requesting to go forwards or backwards.
- *	@returns {boolean} - Indicates whether or not it's acceptable to move in the direction indicated by forward.
- */
-function validateCurrentQuestion(forward) {
-	var counter = 0;
-	// STUB: Generalize to an array to support checkbox explanations...
-	// STUB: Comment me!!!
-	var n_special = 0;
-	// If we're doing a pick_n
-	if (poll.question_list[current_question].type.name === 'pick_n') {
-		for (i = 0; i < poll.question_list[current_question].type.response_list.length; i += 1) {
-			if($('#pick-choice-'+String(i)).is(':checked')) {
-				counter += 1;
-				n_special = i;
-			}
-		}
-		//console.log(counter);
-		// If we're picking 1 from a list
-		if (poll.question_list[current_question].type.n === 1) {
-			//console.log('We\'re picking 1 from a list.');
-			// And we have picked 1, and (explanation not required OR explanation provided)
-			if(counter === 1 &&
-				(poll.question_list[current_question].type.response_list[n_special].explanation &&
-				!poll.question_list[current_question].type.response_list[n_special].explanation.required ||
-				$('#text-'+String(n_special)).val() !== '')) {
-				//console.log('But we short circuited the logic.');
-				// Then we're valid
-				return true;
-			// Otherwise, we're invalid, and let's find out how
-			} else if ($('#text-'+String(n_special)).val() === '') {
-				if (forward && poll.question_list[current_question].type.response_list[n_special].explanation.required) {
-					alert('Please enter some text.');
-				}
-			} else if(counter === 0) {
-				if (forward) {
-					alert('Please pick an option.');
-				}
-			} else {
-				if (forward) {
-					alert('Please pick only one option.');
-				}
-			}
-			return false;
-		} else if (poll.question_list[current_question].type.n > 1){
-			// STUB: You should really ASSERT that counter >= 0 and counter <= ...response_list.length
-			if(counter < 0) {
-				if (forward) {
-					alert('Something has gone terribly wrong; you\'ve selected less than zero answers.');
-				}
-			} else if (counter > poll.question_list[current_question].type.response_list.length) {
-				if (forward) {
-					alert('Something has gone terribly wrong; you\'ve selected more answers than exist.');
-				}
-			} else if (counter > poll.question_list[current_question].type.n) {
-				if (forward) {
-					alert('Please select no more than '+poll.question_list[current_question].type.n+' options.');
-				}
-			} else if (counter < poll.question_list[current_question].type.require) {
-				if (forward) {
-					alert('Please select at least '+poll.question_list[current_question].type.require+' options.');
-				}
-			} else {
-				return true;
-			}
-			return false;
-		}
-	} else if (poll.question_list[current_question].type.name === 'slider') {
-		// STUB: Check to see if slider is in valid range and divisible by increment. It's silly, I know...
-		return true;
-	} else if (poll.question_list[current_question].type.name === 'not_a_question') {
-		return true;
-	} else if (poll.question_list[current_question].type.name === 'open') {
-		// If we aren't required to answer it, return true
-		if(typeof poll.question_list[current_question].type.response_list[0].explanation.required !== 'undefined'
-			&&  poll.question_list[current_question].type.response_list[0].explanation.required === false) {
-			return true;
-		} else if ( $('#text-0').val() !== '') {
-			return true;
-		} else if (forward) {
-			alert('Please enter some text.');
-		}
-		return false;
-	}
-}
-
-/**
  *	Updates the bottom button set. Buttons are never deleted or added, only shown, hidden, enabled, and disabled.
  *	Called by renderBottomButtons(), nextQuestion(), lastQuestion(), and skipQuestion().
  *	Requires that opening_slide and closing_slide are correctly labeled in the poll's .json!
@@ -547,22 +663,6 @@ function updateBottomButtons() {
 }
 
 /**
- *	Finds an element in an array by matching element[attribute] === value.
- *	In other words, find the element that has a property with a given value.
- *	Called as a helper in answerQuestion() to follow 'next' links.
- *	@param {array} array - The array to be searched.
- *	@param {string} attr - The field of each member of the array to match on.
- *	@param {???} value - The value to match the attribute on.
- */
-function findWithAttr(array, attr, value) {
-	for(var i = 0; i < array.length; i += 1) {
-		if(array[i][attr] === value) {
-			return i;
-		}
-	}
-}
-
-/**
  *	Generates the bottom buttons, injects them into #bottombuttons, and then inflates them.
  *	Called exclusively in DOM.ready(). After that, the buttons are only modified, never deleted or created.
  *	Calls updateBottomButtons() after creating the buttons to ensure that they're in the correct states.
@@ -578,106 +678,6 @@ function renderBottomButtons() {
 	$('#bottombuttons').html(temp);
 	$('#bottombuttons').trigger('create');
 	updateBottomButtons();
-}
-
-/**
- *	Checks the response's validity, saves it if valid, then changes the current_question as appropriate.
- *	Always saves text fields.
- *	Calls validateCurrentQuestion() to check validity.
- *	Called by nextQuestion() and lastQuestion().
- *	@param {boolean} forward - True if trying to go forwards, false if trying to go backwards.
- *	@return {boolean} - True if you current_question++, false if current_question--
- */
-function answerQuestion(forward) {
-	// If we're valid OR we're going backwards
-	if(validateCurrentQuestion(forward)) {
-		// And if we have a pick_n style question
-		if(poll.question_list[current_question].type.name === 'pick_n') {
-			// For every question
-			for (var i = 0; i < poll.question_list[current_question].type.response_list.length; i += 1) {
-				// If the choice is checked
-				if ($('#pick-choice-'+String(i)).is(':checked')) {
-					// And if it's a radiobox
-					if(poll.question_list[current_question].type.n === 1) {
-						// Save it
-						if ( typeof poll.question_list[current_question].type.response_list[i].explanation !== 'undefined' ) {
-							poll.question_list[current_question].type.response_list[i].answers =
-								[{user: user_token, value: true, explanation: $('#text-'+String(i)).val(), timestamp: $.now()}];
-						} else {
-							poll.question_list[current_question].type.response_list[i].answers =
-								[{user: user_token, value: true, explanation: undefined, timestamp: $.now()}];
-						}
-						// Check for option-conditional branching; take it if possible
-						if (forward && typeof poll.question_list[current_question].type.response_list[i].next !== 'undefined') {
-							current_question = poll.question_list[current_question].type.response_list[i].next;
-							return true;
-						}
-					// OTHERWISE, if it's a pick_n, with n > 1
-					} else {
-						// For each response, save the current state
-						poll.question_list[current_question].type.response_list[i].answers = [{user: user_token, value: true, explanation: undefined, timestamp: $.now()}];
-						// Then check for option-conditional branching; take it if possible
-						if (forward && typeof poll.question_list[current_question].type.response_list[i].next !== 'undefined') {
-							current_question = poll.question_list[current_question].type.response_list[i].next;
-							return true;
-						}
-					}
-				// OTHERWISE, if this option is not checked
-				} else {
-
-					// save only the explanation
-					if ( typeof poll.question_list[current_question].type.response_list[i].answers !== 'undefined'
-						&& typeof poll.question_list[current_question].type.response_list[i].answers[0] !== 'undefined'
-						&& typeof poll.question_list[current_question].type.response_list[i].answers[0].value !== 'undefined' ) {
-						//console.log('Soft overwriting answer '+i+'.');
-						//poll.question_list[current_question].type.response_list[i].answers = [[undefined, undefined, $('#text-'+String(i)).val()]];
-						poll.question_list[current_question].type.response_list[i].answers =
-							[{user: undefined, value: undefined, explanation: poll.question_list[current_question].type.response_list[i].answers[0].explanation}];
-					} else {
-						//console.log('Hard overwriting answer '+i+'.');
-						poll.question_list[current_question].type.response_list[i].answers =
-							genEmptyAnswers();
-					}
-				}
-			}
-
-		// OTHERWISE, if we have a slider style question
-		} else if(poll.question_list[current_question].type.name === 'slider') {
-			if ( typeof poll.question_list[current_question].type.response_list[0].explanation !== 'undefined' ) {
-				poll.question_list[current_question].type.response_list[0].answers =
-					[{user: user_token, value: $('#slider').val(), explanation: $('#text-0').val(), timestamp: $.now()}];
-			} else {
-				poll.question_list[current_question].type.response_list[0].answers =
-					[{user: user_token, value: $('#slider').val(), explanation: undefined, timestamp: $.now()}];
-			}
-		// OTHERWISE, if we have an open style question
-		} else if(poll.question_list[current_question].type.name === 'open') {
-			poll.question_list[current_question].type.response_list[0].answers =
-					[{user: user_token, value: undefined, explanation: $('#text-0').val(), timestamp: $.now()}];
-		} else {
-			console.log('UNEXPECTED QUESTION TYPE!!!');
-		}
-
-		// For all question types
-
-		// If we have a hard-link to the next question, take it
-		if (forward && typeof poll.question_list[current_question].next !== 'undefined') {
-			current_question = findWithAttr(poll.question_list, 'id', poll.question_list[current_question].next);
-		// Otherwise, go forwards/backwards as appropriate
-		} else if (forward) {
-			current_question += 1;
-		} else {
-			current_question -= 1;
-			return false;
-		}
-		return true;
-	// Otherwise, if invalid and going forwards
-	} else {
-		if (!forward) {
-			current_question -= 1;
-		}
-		return false;
-	}
 }
 
 /**

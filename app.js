@@ -36,7 +36,7 @@ var db = mongo.db(process.env.MONGOLAB_URI || 'mongodb://localhost:27017/polljs'
 //});
 //
 try {
-	var pollIndex = require('./routes/pollIndex');	
+	var pollIndex = require('./routes/pollIndex');
 } catch (err) {
 	console.log('----------------');
 	console.log(process.cwd());
@@ -67,7 +67,7 @@ var exists_list = {};
 
 var build_min_list = require('./bin/build_min_list.js');
 
-var printList = helper.buildPrintList
+var printList = helper.buildPrintList;
 
 var passin = build_min_list.build(exists_list);
 
@@ -274,7 +274,7 @@ app.use(function(req, res, next) {
 		res.locals.expose.auth = req.isAuthenticated();
 	console.log('RES.LOCALS.EXPOSE.AUTH = '+req.isAuthenticated());
 	next();
-})
+});
 
 app.use('/', pollIndex);
 app.use('/polls', pollIndex);
@@ -419,7 +419,7 @@ if (app.get('env') === 'development') {
 				message: err.message,
 				//WARN CHANGE BACK TO {}
 				error: {}
-			});	
+			});
 		} else {
 			console.log('API error.');
 			res.status(err.status || 500).send({
@@ -441,7 +441,7 @@ app.use(function(err, req, res, next) {
 			message: err.message,
 			//WARN CHANGE BACK TO {}
 			error: {}
-		});	
+		});
 	} else {
 		console.log('API error.');
 		res.status(err.status || 500).send({

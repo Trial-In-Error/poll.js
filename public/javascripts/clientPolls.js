@@ -161,7 +161,7 @@ $(document).ready(function() {
 	//$('#listpoll table tbody').on('click', 'td a.linkdeletepoll', deletePoll);
 	$('#listpoll ul').on('click', 'li a.linkdeletepoll', deletePoll);
 	$('#listpoll ul').on('click', 'li a.linkopenclosepoll', openClosePoll);
-	
+
 	// WARN: Do onbeforeunload more elegantly?
 	window.onbeforeunload = function() {};
 

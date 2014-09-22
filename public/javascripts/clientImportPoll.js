@@ -5,7 +5,7 @@ $(document).on('pageinit', function() {
 			// Send data to server through the ajax call
 			// action is functionality we want to call and outputJSON is our data
 			try {
-				console.log(JSON.parse($('#json').val()));	
+				console.log(JSON.parse($('#json').val()));
 			} catch (err) {
 				alert('Poll is not valid JSON.');
 				return false;
@@ -33,7 +33,7 @@ $(document).on('pageinit', function() {
 				alert('Network error has occurred please try again!');
 			});
 		} else {
-			alert('Please type or paste a poll into the field.')
+			alert('Please type or paste a poll into the field.');
 		}
 		return false; // cancel original event to prevent form submitting
 	});

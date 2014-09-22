@@ -54,7 +54,7 @@ exports.reqAnswerRight = function(req, res, next) {
 exports.reqEditRight = function(req, res, next) {
 	req.priv = 'edit';
 	return next();
-}
+};
 
 exports.reqGetAnswersRight = function(req, res, next) {
 	req.priv = 'getAnswers';
@@ -122,14 +122,14 @@ exports.frequencyCount = function(questionCounter, poll) {
 					dict[responseCounter] = Object.create(null);
 					dict[responseCounter].value = res2.value;
 					if (typeof res2.explanation !== 'undefined' && typeof res2.explanation.explain_text !== 'undefined') {
-						dict[responseCounter].explanation = [res2.explanation.explain_text];	
+						dict[responseCounter].explanation = [res2.explanation.explain_text];
 					}
 					if(res.body) {
 						dict[responseCounter].response = res.body;
 					} else {
 						dict[responseCounter].response = poll.question_list[questionCounter].type.name;
 					}
-					
+
 					dict[responseCounter].frequency = 1;
 				} else {
 					dict[responseCounter].value = res2.value;
@@ -137,7 +137,7 @@ exports.frequencyCount = function(questionCounter, poll) {
 						dict[responseCounter].explanation.push(res2.explanation.explain_text);
 					}
 					if(res.body) {
-						dict[responseCounter].response = res.body;	
+						dict[responseCounter].response = res.body;
 					} else {
 						dict[responseCounter].response = poll.question_list[questionCounter].type.name;
 					}
@@ -153,17 +153,17 @@ exports.frequencyCount = function(questionCounter, poll) {
 
 exports.formatFrequencyCount = function(frequencyDict) {
 	if(typeof frequencyDict !== 'undefined') {
-		var csv = 'Answer,Frequency\n'
+		var csv = 'Answer,Frequency\n';
 		for (var counter in frequencyDict) {
-			console.log(frequencyDict[counter])
+			console.log(frequencyDict[counter]);
 			csv += '"' + frequencyDict[counter].response + '", ';
 			csv += frequencyDict[counter].frequency + '\n';
 		}
-		return csv.slice(0,-1);		
+		return csv.slice(0,-1);
 	} else {
 		return undefined;
 	}
-}
+};
 
 exports.unevenBucketFrequencyCount = function(questionCounter, poll, bucketList) {
 	// bucketList [bucket{} ...]
@@ -181,11 +181,11 @@ exports.unevenBucketFrequencyCount = function(questionCounter, poll, bucketList)
 						if(typeof bucketList[bucketCount].frequency === 'undefined') {
 							bucketList[bucketCount].frequency = 1;
 						} else {
-							bucketList[bucketCount].frequency += 1;	
+							bucketList[bucketCount].frequency += 1;
 						}
 						if(typeof res2.explanation !== 'undefined' && res2.explanation.explain_text !== 'undefined') {
 							if(typeof bucketList[bucketCount].explanations === 'undefined') {
-								bucketList[bucketCount].explanations = [];	
+								bucketList[bucketCount].explanations = [];
 							}
 							bucketList[bucketCount].explanations.push(res2.explanation.explain_text);
 						}
@@ -201,14 +201,14 @@ exports.unevenBucketFrequencyCount = function(questionCounter, poll, bucketList)
 
 exports.formatUnevenBucketFrequencyCount = function(bucketList) {
 	if(typeof bucketList !== 'undefined') {
-		var csv = 'Bucket,Frequency\n'
+		var csv = 'Bucket,Frequency\n';
 		for (var counter in bucketList) {
-			console.log(bucketList[counter])
+			console.log(bucketList[counter]);
 			csv += '"' + bucketList[counter].name + '", ';
 			csv += bucketList[counter].frequency + '\n';
 		}
-		return csv.slice(0,-1);		
+		return csv.slice(0,-1);
 	} else {
 		return undefined;
 	}
-}
+};
