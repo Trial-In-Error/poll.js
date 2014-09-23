@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 var mongo = require('mongoskin');
 var helper = require('../bin/helper');
+var sys = require('sys');
 
 function batchSanitize(items) {
 	for(var tr in items) {
@@ -40,10 +41,17 @@ router.get('/exportpolljson/:id', helper.reqGetAnswersRight, helper.ensureAuth, 
 	console.log('Looking for '+pollToExport);
 	db.collection('polldb').findOne({_id: mongo.helper.toObjectID(pollToExport)}, function(err, result) {
 		// WARN: THESE COULD LEAK STACK TRACES
-		//console.log(err);
+		console.log(err);
 		//console.log(err === null);
-		//console.log(typeof err === null);
-		console.log(result);
+		//console.log(typeof result);
+		//console.log(sys.inspect(result) === null);
+		//console.log(typeof sys.inspect(result) === null);
+		//console.log(typeof sys.inspect(result) === 'null');
+		//console.log(sys.inspect(result));
+		//console.log(JSON.stringify(result));
+		if(!result) {
+			res.send(404, {error: 'Poll not found.'});
+		}
 		res.send((err === null) ? result : { msg:'Database error: ' + err });
 	});
 });
@@ -54,6 +62,9 @@ router.get('/exportpolljsonclean/:id', helper.reqGetAnswersRight, helper.ensureA
 	db.collection('polldb').findOne({_id: mongo.helper.toObjectID(pollToExport)}, function(err, result) {
 		// WARN: THESE COULD LEAK STACK TRACES
 		//console.log(err);
+		if(!result) {
+			res.send(404, {error: 'Poll not found.'});
+		}
 		res.send((err === null) ? batchSanitize(result) : { msg:'Database error: ' + err });
 	});
 });
@@ -63,7 +74,10 @@ router.post('/closepoll/:id', helper.reqOpenCloseRight, helper.ensureAuth, funct
 	var pollToClose = req.params.id;
 	db.collection('polldb').update({_id: mongo.helper.toObjectID(pollToClose)}, { $set: {open: false}}, function(err, result) {
 		// WARN: THESE COULD LEAK STACK TRACES
-		res.send((result === 1) ? { msg: '' } : { msg:'Database error: ' + err });
+		if(!result) {
+			res.send(404, {error: 'Poll not found.'});
+		}
+		res.send((err === null) ? { msg: '' } : { msg:'Database error: ' + err });
 	});
 });
 

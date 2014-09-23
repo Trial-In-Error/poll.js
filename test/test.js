@@ -15,6 +15,9 @@ describe('Routing:', function() {
 	var dbih = require('../bin/database_init_helper_module.js');
 	var sih = require('../bin/server_init_helper_module.js');
 
+	var maxUsernameLength = 32;
+	var maxPasswordLength = 32;
+
 
 
 	// before testing, clear out our database, then populate it with the two example polls
@@ -76,20 +79,111 @@ describe('Routing:', function() {
 					if (err) { throw err; }
 					//console.log(JSON.stringify(res.body.polls));
 					//console.log(JSON.parse(res.body.polls).length);
-					res.status.should.be.equal(200, 'incorrect HTTP response code');
+					res.status.should.be.equal(400, 'incorrect HTTP response code');
 					res.body.msg.should.not.be.empty;
 					done();
 				});
 		});
 
-		it('should enforce a character limit on username', function(done) {
+		// this matches routes/register.js's verification, which should probs be in helper.js instead
+		it('should enforce an upper character limit on usernames', function(done) {
+			var temp_username = ''
+			for (var i = 0; i < maxUsernameLength; i++) {
+				temp_username += '1'
+			}
 			request(url)
 				.post('/register')
-				.send({'username':'', 'password':} )
+				.send({'username': temp_username, 'password':'asdfasdf'} )
+				.end(function(err, res) {
+					if (err) { throw err; }
+					res.status.should.be.equal(200, 'incorrect HTTP response code');
+					res.body.msg.should.be.empty;
+					request(url)
+						.post('/register')
+						.send({'username': temp_username.concat('1'), 'password':'asdfasdf'} )
+						.end(function(err, res) {
+							if (err) { throw err; }
+							res.status.should.be.equal(400, 'incorrect HTTP response code');
+							res.body.msg.should.not.be.empty;
+							done();
+						});
+				});
 		});
 
+		it('should enforce an upper character limit on passwords', function(done) {
+			var temp_password = ''
+			for (var i = 0; i < maxPasswordLength; i++) {
+				temp_password += '1'
+			}
+			request(url)
+				.post('/register')
+				.send({'username': 'upperpasstest', 'password':temp_password} )
+				.end(function(err, res) {
+					if (err) { throw err; }
+					res.status.should.be.equal(200, 'incorrect HTTP response code');
+					res.body.msg.should.be.empty;
+					request(url)
+						.post('/register')
+						.send({'username': 'upperpasstest2', 'password':temp_password.concat('1')} )
+						.end(function(err, res) {
+							if (err) { throw err; }
+							res.status.should.be.equal(400, 'incorrect HTTP response code');
+							res.body.msg.should.not.be.empty;
+							done();
+						});
+				});
+		});
+
+		it('should enforce a lower character limit on passwords', function(done) {
+			request(url)
+				.post('/register')
+				.send({'username': 'lowerpasstest', 'password':'longenough'} )
+				.end(function(err, res) {
+					if (err) { throw err; }
+					res.status.should.be.equal(200, 'incorrect HTTP response code');
+					res.body.msg.should.be.empty;
+					request(url)
+						.post('/register')
+						.send({'username': 'lowerpasstest2', 'password':'2sml'} )
+						.end(function(err, res) {
+							if (err) { throw err; }
+							res.status.should.be.equal(400, 'incorrect HTTP response code');
+							res.body.msg.should.not.be.empty;
+							done();
+						});
+				});
+		});
+
+		//it('should not allow a user to register with special characters in their name', function(done) {
+		//	request(url)
+		//		.post('/register')
+		//		.send({'username':'awk ward', 'password':'badpass'})
+		//		.end(function(err, res) {
+		//			if (err) { throw err; }
+		//			//console.log(JSON.stringify(res.body.polls));
+		//			//console.log(JSON.parse(res.body.polls).length);
+		//			res.status.should.be.equal(400, 'incorrect HTTP response code');
+		//			res.body.msg.should.not.be.empty;
+		//			done();
+		//		});
+		//});
+
+		//it('should not allow a user to register with special characters in their password', function(done) {
+		//	request(url)
+		//		.post('/register')
+		//		.send({'username':'specialchartest', 'password':'!23-4'})
+		//		.end(function(err, res) {
+		//			if (err) { throw err; }
+		//			//console.log(JSON.stringify(res.body.polls));
+		//			//console.log(JSON.parse(res.body.polls).length);
+		//			res.status.should.be.equal(400, 'incorrect HTTP response code');
+		//			res.body.msg.should.not.be.empty;
+		//			done();
+		//		});
+		//});
+
 		it('should allow for promoting a user to admin rights using the DB driver', function(done) {
-			db.collection('userdb').update({'type.login.username': 'awkward'}, {$set: {'rights.delete': true, 'rights.openClose': true, 'rights.accessClosed': true}}, function (err, user) {
+			db.collection('userdb').update({'type.login.username': 'awkward'}, {$set: {'rights.delete': true, 'rights.openClose': true, 'rights.accessClosed': true, 'rights.getAnswers': true}}, function (err, user) {
 				if (err) { throw err; }
 				done();
 			});
@@ -122,6 +216,7 @@ describe('Routing:', function() {
 					if (err) { throw err; }
 					JSON.stringify(res.body).should.equal('{}');
 					res.status.should.be.equal(302);
+					res.header.location.should.be.equal('/meta-login');
 					done();
 				});
 		});
@@ -129,14 +224,13 @@ describe('Routing:', function() {
 		it('should gracefully handle requests to export non-existant polls', function(done) {
 			request(url)
 				.get('/pollroute/exportpolljson/'+pollID+'123')
-				.set('authorization', authString+'123')
+				.set('authorization', authString)
 				.end(function(err, res) {
 					if (err) { throw err; }
 					//console.log(JSON.stringify(res.body));
 					//console.log(JSON.stringify(res.status));
-					res.status.should.be.equal(302);
-					JSON.stringify(res.body).should.be.equal('{}');
-					res.header.location.should.be.equal('/meta-login');
+					res.status.should.be.equal(404);
+					res.error.should.not.be.empty;
 					done();
 				});
 		});
@@ -158,9 +252,32 @@ describe('Routing:', function() {
 
 		//it should have answer data
 
-		//it should not serve the poll, in json, to unauthenticated users
+		it('should not return the poll to unauthenticated users', function(done) {
+			request(url)
+				.get('/pollroute/exportpolljsonclean/'+pollID)
+				.set('authorization', authString+'123')
+				.end(function(err, res) {
+					if (err) { throw err; }
+					JSON.stringify(res.body).should.equal('{}');
+					res.status.should.be.equal(302);
+					res.header.location.should.be.equal('/meta-login');
+					done();
+				});
+		});
 
-		//it should gracefully handle requests to export non-existant polls
+		it('should gracefully handle requests to export non-existant polls', function(done) {
+			request(url)
+				.get('/pollroute/exportpolljsonclean/'+pollID+'123')
+				.set('authorization', authString)
+				.end(function(err, res) {
+					if (err) { throw err; }
+					//console.log(JSON.stringify(res.body));
+					//console.log(JSON.stringify(res.status));
+					res.status.should.be.equal(404);
+					res.error.should.not.be.empty;
+					done();
+				});
+		});
 	});
 
 	//describe importpoll

@@ -423,9 +423,9 @@ if (app.get('env') === 'development') {
 		} else {
 			console.log('API error.');
 			res.status(err.status || 500).send({
-				message: 'error: '+err.message,
+				message: '',//'error: '+err.message,
 				// WARN CHANGE BACK TO {}
-				error: {}
+				error: err
 			});
 		}
 	});
@@ -445,9 +445,9 @@ app.use(function(err, req, res, next) {
 	} else {
 		console.log('API error.');
 		res.status(err.status || 500).send({
-			message: 'error: '+err.message,
+			message: '',//'error: '+err.message,
 			// WARN CHANGE BACK TO {}
-			error: {}
+			error: err
 		});
 	}
 });

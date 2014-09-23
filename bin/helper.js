@@ -1,3 +1,19 @@
+// WARN: THIS DOES A LOT OF COMPUTATION THAT SHOULD BE PRE-BAKED
+// SUCH CPU BOUND
+// WOW
+// SHOCKING
+exports.checkAlphanumeric = function(username) {
+	var alphabet = "abcdefghijklmnopqrstuvwxyzåäö";
+	var numbers = "0123456789";
+	var legalCharacters = (alphabet).split("").concat(alphabet.toUpperCase().split("")).concat(numbers.split(""));
+	for (var character in username) {
+		if(legalCharacters.indexOf(username[character]) === -1) {
+			return false;
+		}
+	}
+	return true;
+}
+
 exports.ensureAuth = function(req, res, next) {
 	var passport = require('passport');
 
