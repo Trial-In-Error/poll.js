@@ -154,33 +154,33 @@ describe('Routing:', function() {
 				});
 		});
 
-		//it('should not allow a user to register with special characters in their name', function(done) {
-		//	request(url)
-		//		.post('/register')
-		//		.send({'username':'awk ward', 'password':'badpass'})
-		//		.end(function(err, res) {
-		//			if (err) { throw err; }
-		//			//console.log(JSON.stringify(res.body.polls));
-		//			//console.log(JSON.parse(res.body.polls).length);
-		//			res.status.should.be.equal(400, 'incorrect HTTP response code');
-		//			res.body.msg.should.not.be.empty;
-		//			done();
-		//		});
-		//});
+		it('should not allow a user to register a username with special characters', function(done) {
+			request(url)
+				.post('/register')
+				.send({'username':'awk ward', 'password':'badpass'})
+				.end(function(err, res) {
+					if (err) { throw err; }
+					//console.log(JSON.stringify(res.body.polls));
+					//console.log(JSON.parse(res.body.polls).length);
+					res.status.should.be.equal(400, 'incorrect HTTP response code');
+					res.body.msg.should.not.be.empty;
+					done();
+				});
+		});
 
-		//it('should not allow a user to register with special characters in their password', function(done) {
-		//	request(url)
-		//		.post('/register')
-		//		.send({'username':'specialchartest', 'password':'!23-4'})
-		//		.end(function(err, res) {
-		//			if (err) { throw err; }
-		//			//console.log(JSON.stringify(res.body.polls));
-		//			//console.log(JSON.parse(res.body.polls).length);
-		//			res.status.should.be.equal(400, 'incorrect HTTP response code');
-		//			res.body.msg.should.not.be.empty;
-		//			done();
-		//		});
-		//});
+		it('should not allow a user to register with a password containing special characters', function(done) {
+			request(url)
+				.post('/register')
+				.send({'username':'specialchartest', 'password':'!23-4'})
+				.end(function(err, res) {
+					if (err) { throw err; }
+					//console.log(JSON.stringify(res.body.polls));
+					//console.log(JSON.parse(res.body.polls).length);
+					res.status.should.be.equal(400, 'incorrect HTTP response code');
+					res.body.msg.should.not.be.empty;
+					done();
+				});
+		});
 
 		it('should allow for promoting a user to admin rights using the DB driver', function(done) {
 			db.collection('userdb').update({'type.login.username': 'awkward'}, {$set: {'rights.delete': true, 'rights.openClose': true, 'rights.accessClosed': true, 'rights.getAnswers': true}}, function (err, user) {
@@ -199,8 +199,6 @@ describe('Routing:', function() {
 				.set('authorization', authString)
 				.end(function(err, res) {
 					if (err) { throw err; }
-					//console.log(JSON.stringify(res.body));
-					//console.log(poll2.question_list[0]);
 					JSON.stringify(res.body.question_list).should.equal(JSON.stringify(poll2.question_list));
 					done();
 				});
@@ -227,8 +225,6 @@ describe('Routing:', function() {
 				.set('authorization', authString)
 				.end(function(err, res) {
 					if (err) { throw err; }
-					//console.log(JSON.stringify(res.body));
-					//console.log(JSON.stringify(res.status));
 					res.status.should.be.equal(404);
 					res.error.should.not.be.empty;
 					done();
@@ -243,8 +239,6 @@ describe('Routing:', function() {
 				.set('authorization', authString)
 				.end(function(err, res) {
 					if (err) { throw err; }
-					//console.log(JSON.stringify(res.body));
-					//console.log(poll2.question_list[0]);
 					JSON.stringify(res.body.question_list).should.equal(JSON.stringify(poll2.question_list));
 					done();
 				});
@@ -271,8 +265,6 @@ describe('Routing:', function() {
 				.set('authorization', authString)
 				.end(function(err, res) {
 					if (err) { throw err; }
-					//console.log(JSON.stringify(res.body));
-					//console.log(JSON.stringify(res.status));
 					res.status.should.be.equal(404);
 					res.error.should.not.be.empty;
 					done();
@@ -304,6 +296,7 @@ describe('Routing:', function() {
 					JSON.stringify(res.body).should.equal('{}');
 					res.status.should.be.equal(302);
 					res.header.location.should.be.equal('/meta-login');
+					// STUB: This could check the DB for actual contents
 					done();
 				});
 		});
@@ -316,8 +309,6 @@ describe('Routing:', function() {
 				.send('THIS ISN\'T VALID JSON!')
 				.end(function(err, res) {
 					if (err) { throw err; }
-					//console.log(JSON.stringify(res.body));
-					//console.log(JSON.stringify(res.status));
 					res.status.should.be.equal(400);
 					res.error.should.not.be.empty;
 					done();
@@ -331,11 +322,10 @@ describe('Routing:', function() {
 				.set('authorization', authString)
 				.end(function(err, res) {
 					if (err) { throw err; }
-					//console.log(JSON.stringify(res.body));
-					//console.log(JSON.stringify(res.status));
 					res.status.should.be.equal(200);
 					res.body.success.should.be.true;
 					res.body.redirect.should.not.be.empty;
+					// STUB: This could check the DB for actual contents
 					done();
 				});
 		});

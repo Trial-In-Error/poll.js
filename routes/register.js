@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 var bcrypt = require('bcrypt-nodejs');
 var passport = require('passport');
+var helper = require('../bin/helper');
 //var db = req.db;
 
 //WARN: THIS IS COMPLETELY REDUNDANT FROM APP.JS!!! DON'T BE LAZY!
@@ -42,6 +43,7 @@ function validateRegistration(username, password) {
 	console.log(password+' '+password.length);
 	var maxUsernameLength = 32;
 	var maxPasswordLength = 32;
+
 	if(username.length <= 0 && password.length > 0) {
 		return 'Please fill in your username.';
 	} else if (username.length > 0 && password.length <= 0) {
@@ -56,6 +58,8 @@ function validateRegistration(username, password) {
 		return 'Please choose a username shorter than '+maxUsernameLength+' characters and a password shorter than '+maxPasswordLength+' characters.';
 	} else if (username.length <= 0 && password.length <= 0) {
 		return 'Please fill in your username and password.';
+	} else if (!helper.checkAlphanumeric(username) || !helper.checkAlphanumeric(password)) {
+		return 'Please only use alphanumeric characters in your username and password.';
 	} else {
 		return '';
 	}
