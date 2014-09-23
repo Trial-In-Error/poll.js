@@ -212,6 +212,9 @@ router.delete('/deletepoll/:id', helper.reqDeleteRight, helper.ensureAuth, funct
 	var userToDelete = req.params.id;
 	db.collection('polldb').removeById(userToDelete, function(err, result) {
 		// WARN: THESE COULD LEAK STACK TRACES
+				if(!result) {
+			res.send(404, {error: 'Poll not found.'});
+		}
 		res.send((result === 1) ? { msg: '' } : { msg:'Database error: ' + err });
 	});
 });
@@ -222,10 +225,19 @@ router.delete('/deletepoll/:id', helper.reqDeleteRight, helper.ensureAuth, funct
 // http://stackoverflow.com/questions/8431415/json-object-validation-in-javascript
 router.post('/importpoll', helper.reqCreateRight, helper.ensureAuth, function(req, res) {
 	var pollToImport;
-	console.log(req.body);
+
 	//console.log(JSON.parse(req.body));
+	if(req.username) {
+		delete req.username;
+	}
+	if(req.password) {
+		delete req.password;
+	}
 	try {
 		pollToImport = req.body;
+	console.log('-----------------------');
+	console.log(req.body);
+	console.log('-----------------------');
 	} catch (err) {
 		if (err) { res.send({msg: 'Invalid JSON: '+err}); }
 	}

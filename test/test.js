@@ -280,7 +280,66 @@ describe('Routing:', function() {
 		});
 	});
 
-	//describe importpoll
+	describe('importpoll', function() {
+		it('should allow an authenticated user to add a valid poll', function(done) {
+			request(url)
+				.post('/pollroute/importpoll')
+				.send({'poll': 'THISISAPOLL'})
+				.set('authorization', authString)
+				.end(function(err, res) {
+					if (err) { throw err; }
+					res.status.should.be.equal(200);
+					res.body.success.should.be.true;
+					done();
+				});
+		});
+
+		it('should not allow unauthenticated users to add a poll', function(done) {
+			request(url)
+				.post('/pollroute/importpoll')
+				.send({'poll': 'THISISAPOLL'})
+				.set('authorization', authString+'123')
+				.end(function(err, res) {
+					if (err) { throw err; }
+					JSON.stringify(res.body).should.equal('{}');
+					res.status.should.be.equal(302);
+					res.header.location.should.be.equal('/meta-login');
+					done();
+				});
+		});
+
+		it('should gracefully handle invalid polls', function(done) {
+			request(url)
+				.post('/pollroute/importpoll')
+				.set({'Content-Type': 'application/json'})
+				.set('authorization', authString)
+				.send('THIS ISN\'T VALID JSON!')
+				.end(function(err, res) {
+					if (err) { throw err; }
+					//console.log(JSON.stringify(res.body));
+					//console.log(JSON.stringify(res.status));
+					res.status.should.be.equal(400);
+					res.error.should.not.be.empty;
+					done();
+				});
+		});
+
+		it('should redirect to the poll\'s page on a successful import', function(done) {
+			request(url)
+				.post('/pollroute/importpoll')
+				.send({'poll': 'THISISAPOLL'})
+				.set('authorization', authString)
+				.end(function(err, res) {
+					if (err) { throw err; }
+					//console.log(JSON.stringify(res.body));
+					//console.log(JSON.stringify(res.status));
+					res.status.should.be.equal(200);
+					res.body.success.should.be.true;
+					res.body.redirect.should.not.be.empty;
+					done();
+				});
+		});
+	});
 
 	//describe closepoll
 
@@ -376,10 +435,23 @@ describe('Routing:', function() {
 				.set('authorization', authString)
 				.end(function(err, res) {
 					if(err) { throw err; }
-					res.body.msg.should.be.ok;
-					res.status.should.be.equal(200);
+					//console.log(JSON.stringify(res.body))
+					res.body.error.should.exist;
+					res.status.should.be.equal(404);
 					done();
 				});
 		});
 	});
+
+	describe('404', function() {
+		it('should respond with a 404 error when an invalid page is requested', function(done) {
+			request(url)
+				.get('/404')
+				.end(function(err, res) {
+					if(err) { throw err; }
+					res.status.should.be.equal(404);
+					done();
+				});
+		});
+	})
 });
