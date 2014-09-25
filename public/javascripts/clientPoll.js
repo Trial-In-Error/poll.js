@@ -12,8 +12,15 @@ eval($('#data')[0].innerHTML); // jshint ignore:line
  */
 function supportsHTML5Storage() {
 	try {
-		return 'localStorage' in window && 'sessionStorage' in window && window.sessionStorage !== null && window.localStorage !== null;
+		if('localStorage' in window && 'sessionStorage' in window && window.sessionStorage !== null && window.localStorage !== null) {
+			window.localStorage.setItem('supportTest', 'did this work?');
+			window.localStorage.removeItem('supportTest');
+			return true;
+		} else {
+			return false;
+		}
 	} catch (e) {
+		
 		return false;
 	}
 }
@@ -27,9 +34,11 @@ function storePoll() {
 		window.localStorage['poll'+poll._id] = JSON.stringify(poll);
 		window.localStorage['current'+poll._id] = JSON.stringify(current_question);
 	} else {
-		//UNTESTED: fall back on window.namespace clobbering
-		window['polljspoll'+poll._id] = poll;
-		window['polljscurrent'+poll._id] = current_question;
+		// WARN: THIS IS UNCLEAR AND AMBIGUOUS
+		alert('Your progress will not be saved until you submit the completed poll.\n\n To enable incremental saving, leave private browsing mode.');
+		// STUB: SHOULD USE COOKIES FOR BACKUP IF ANYTHING
+		//window['polljspoll'+poll._id] = poll;
+		//window['polljscurrent'+poll._id] = current_question;
 	}
 }
 
@@ -49,8 +58,8 @@ function clearStorage() {
 		window.localStorage.removeItem('poll'+poll._id);
 		window.localStorage.removeItem('current'+poll._id);
 	} else {
-		window['polljspoll'+poll._id] = undefined;
-		window['polljscurrent'+poll._id] = undefined;
+		//window['polljspoll'+poll._id] = undefined;
+		//window['polljscurrent'+poll._id] = undefined;
 	}
 }
 
@@ -333,9 +342,10 @@ function loadPoll() {
 		poll = JSON.parse(window.localStorage['poll'+window.location.pathname.split('poll/').slice(-1)]);
 		current_question = parseInt(window.localStorage['current'+window.location.pathname.split('poll/').slice(-1)]);
 	} else {
-		//UNTESTED: load from window.namespace
-		poll = window['polljspoll'+poll._id];
-		current_question = window['polljscurrent'+poll._id];
+		// STUB: DOESN'T WORK. CONSIDER COOKIES INSTEAD
+		//alert(window.location.pathname.split('poll/').slice(-1));
+		//poll = window['polljspoll'+window.location.pathname.split('poll/').slice(-1)];
+		//current_question = window['polljscurrent'+window.location.pathname.split('poll/').slice(-1)];
 	}
 }
 
@@ -352,8 +362,11 @@ function pollIsStored() {
 		return typeof window.localStorage['poll'+poll._id] !== 'undefined';
 	} else {
 		//UNTESTED: return window.namespace's existance
-		return (typeof window['polljspoll'+poll._id] !== 'undefined'
-			&& typeof window['polljscurrent'+poll._id] !== 'undefined');
+		//alert(poll._id);
+		//alert(typeof window['polljspoll'+poll._id]);
+		//return (typeof window['polljspoll'+poll._id] !== 'undefined'
+		//	&& typeof window['polljscurrent'+poll._id] !== 'undefined');
+		return false;
 	}
 }
 

@@ -2,7 +2,7 @@
 
 require('nodetime').profile({
     accountKey: 'b023cd76db5237236ddcad980a6f3bb6c02d500d', 
-    appName: 'Node.js Application',
+    appName: 'flashpoll',
     //debug: true
  });
 
