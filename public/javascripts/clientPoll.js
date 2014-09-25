@@ -339,8 +339,10 @@ function submitPoll() {
  */
 function loadPoll() {
 	if ( supportsHTML5Storage() ) {
-		poll = JSON.parse(window.localStorage['poll'+window.location.pathname.split('poll/').slice(-1)]);
-		current_question = parseInt(window.localStorage['current'+window.location.pathname.split('poll/').slice(-1)]);
+		console.log(window.location.pathname.toLowerCase().split('poll/').slice(-1))
+		poll = JSON.parse(window.localStorage['poll'+window.location.pathname.toLowerCase().split('poll/').slice(-1)]);
+
+		current_question = parseInt(window.localStorage['current'+window.location.pathname.toLowerCase().split('poll/').slice(-1)]);
 	} else {
 		// STUB: DOESN'T WORK. CONSIDER COOKIES INSTEAD
 		//alert(window.location.pathname.split('poll/').slice(-1));

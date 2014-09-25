@@ -183,7 +183,7 @@ describe('Routing:', function() {
 		});
 
 		it('should allow for promoting a user to admin rights using the DB driver', function(done) {
-			db.collection('userdb').update({'type.login.username': 'awkward'}, {$set: {'rights.delete': true, 'rights.openClose': true, 'rights.accessClosed': true, 'rights.getAnswers': true}}, function (err, user) {
+			db.collection('userdb').update({'type.login.username': 'awkward'}, {$set: {'rights.delete': true, 'rights.openClose': true, 'rights.accessClosed': true, 'rights.getAnswers': true, 'rights.create': true}}, function (err, user) {
 				if (err) { throw err; }
 				done();
 			});
