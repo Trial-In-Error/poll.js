@@ -33,6 +33,7 @@
 		"mongodb": "*",
 		"mongoskin": "*",
 		"bcrypt-nodejs": "*",
+		"twin-bcrypt": "*",
 		"passport": "*",
 		"passport-local": "*",
 		"passport-http-bearer": "*",

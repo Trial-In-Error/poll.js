@@ -1,6 +1,8 @@
 var express = require('express');
 var router = express.Router();
-var bcrypt = require('bcrypt-nodejs');
+//var bcrypt = require('bcrypt-nodejs');
+//var bcrypt = require('twin-bcrypt');
+var bcrypt = require('bcryptjs');
 var passport = require('passport');
 var helper = require('../bin/helper');
 //var db = req.db;
@@ -29,14 +31,18 @@ router.get('/', function(req, res) {
 	res.render('register', { title: 'Login', globalExists: global });
 });
 
-function newUser(name, pass, callback) {
+function newUser(name, pass, fn) {
 	// Store user, with username and hash in user DB.
 	console.log('newUser');
-	hash = bcrypt.hash(pass, null, null, function(err, hash) {
-		user = {type: {login: {username: name, passhash: hash}}, rights:{answer: true}};
-		console.log('User: '+user);
-		callback(null, user);
-	});
+	console.log(typeof fn);
+	bcrypt.genSalt(4, function(err, salt) {
+		bcrypt.hash(pass, salt, function(err, hash) {
+			console.log('PASSHASH!!!!! ' + hash);
+			user = {type: {login: {username: name, passhash: hash}}, rights:{answer: true}};
+			console.log('User: '+user);
+			fn(null, user);
+		});	
+	})
 	
 }
 
@@ -83,6 +89,7 @@ router.post('/', function(req, res) {
 			console.log('Shit, that user already exists.');
 			return res.send(400, {msg: 'That username is already taken. Please choose another.'});
 		} else {
+			console.log('NEWLYLOL');
 			newUser(req.body.username, req.body.password, function(err, result1) {
 				db.collection('userdb').insert(result1, function(err, result) {				
 					console.log('User '+req.body.username+' added with password '+req.body.password+'.');

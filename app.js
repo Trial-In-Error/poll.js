@@ -12,7 +12,9 @@ var LocalStrategy = require('passport-local').Strategy;
 var Chance = require('chance');
 var alea = new Chance();
 var flash = require('connect-flash');
-var bcrypt = require('bcrypt-nodejs');
+//var bcrypt = require('bcrypt-nodejs');
+//var bcrypt = require('twin-bcrypt');
+var bcrypt = require('bcryptjs');
 var helper = require('./bin/helper');
 
 
