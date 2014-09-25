@@ -12,8 +12,8 @@ describe('Routing:', function() {
 	var db = mongo.db('mongodb://localhost:27017/polljs', {native_parse:true});
 	var pollCount;
 	var authString = 'Basic ' + new Buffer('awkward' + ':' + 'awkward').toString('base64');
-	var dbih = require('../bin/database_init_helper_module.js');
-	var sih = require('../bin/server_init_helper_module.js');
+	//var dbih = require('../bin/database_init_helper_module.js');
+	//var sih = require('../bin/server_init_helper_module.js');
 
 	var maxUsernameLength = 32;
 	var maxPasswordLength = 32;
@@ -22,8 +22,8 @@ describe('Routing:', function() {
 
 	// before testing, clear out our database, then populate it with the two example polls
 	before(function(done) {
-		dbih.init(function() {
-			sih.init(function() {
+		//dbih.init(function() {
+			//sih.init(function() {
 				db.dropDatabase(function(err, result) {
 					if(err) { throw err; }
 					db.collection('polldb').insert(poll1, function(err, result) {
@@ -38,8 +38,8 @@ describe('Routing:', function() {
 						});
 					});
 				});
-			});
-		});
+			//});
+		//});
 	});
 
 	describe('register', function() {
@@ -168,7 +168,7 @@ describe('Routing:', function() {
 				});
 		});
 
-		it('should not allow a user to register with a password containing special characters', function(done) {
+		it('should not allow a user to register with a password containing special', function(done) {
 			request(url)
 				.post('/register')
 				.send({'username':'specialchartest', 'password':'!23-4'})

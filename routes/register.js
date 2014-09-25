@@ -11,14 +11,14 @@ function findByUsername(req, fn) {
 	// find().limit(1) SERVING AS findOne()
 	// see: https://blog.serverdensity.com/checking-if-a-document-exists-mongodb-slow-findone-vs-find/
 	// also see: http://stackoverflow.com/questions/22364858/pagination-in-mongoskin-skip-limit
-	console.log('findByUsername req.username: '+req.body.username);
+	//console.log('findByUsername req.username: '+req.body.username);
 	db.collection('userdb').findOne({'type.login.username': String(req.body.username)}, function (err, user) {
 		if(err) return err;
 		if(user) {
-			console.log('User found in database.');
+			//console.log('User found in database.');
 			return fn(null, user);
 		} else {
-			console.log('User not found in database.');
+			//console.log('User not found in database.');
 			return fn(null, null);
 		}
 	});
@@ -39,8 +39,8 @@ function newUser(name, pass) {
 
 // STUB: SPECIAL CHARACTER VALIDATION
 function validateRegistration(username, password) {
-	console.log(username+' '+username.length);
-	console.log(password+' '+password.length);
+	//console.log(username+' '+username.length);
+	//console.log(password+' '+password.length);
 	var maxUsernameLength = 32;
 	var maxPasswordLength = 32;
 

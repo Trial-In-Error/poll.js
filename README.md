@@ -87,7 +87,7 @@ Try `istanbul cover ./node_modules/mocha/bin/_mocha test/test.js -- -u exports -
 
 Selenium Integration Testing
 ---------------------------------
-Requires the google chrome driver to be present and on the system path. See instructions [here](http://simpleprogrammer.com/2014/02/03/selenium-with-node-js/). Selenium tests are automatically run as part of the full mocha test suite. If the integration tests cause mocha to time out, pass it a custom timeout variable as `mocha -t verylargenumberinmilliseconds` or `mocha specifictest -t verylargenumberinmilliseconds`.
+Requires the google chrome driver to be present and on the system path. See instructions [here](http://simpleprogrammer.com/2014/02/03/selenium-with-node-js/). Selenium tests are automatically run as part of the full mocha test suite. If the integration tests cause mocha to time out, pass it a custom timeout variable as `mocha --timeout verylargenumberinmilliseconds` or `mocha specifictest -t verylargenumberinmilliseconds`.
 
 Performance Profiling
 ---------------------------------

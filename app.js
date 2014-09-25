@@ -15,6 +15,19 @@ var flash = require('connect-flash');
 var bcrypt = require('bcrypt-nodejs');
 var helper = require('./bin/helper');
 
+
+//if (process.env.NODE_ENV === ‘production’) {
+//var nullfun = function () {};
+//console.log = nullfun;
+//console.info = nullfun;
+//console.error = nullfun;
+//console.warn = nullfun;
+//}
+
+//process.env.NODE_ENV = 'development'
+//
+//console.log(process.env.NODE_ENV);
+
 // Database
 var mongo = require('mongoskin');
 // Use the remote mongo database if available (i.e., app is heroku hosted), else use the local one named 'polljs'
@@ -220,6 +233,7 @@ app.use(cookieParser());
 // session() must be called before passport.session()!
 app.use(session({secret: alea.string({length:20}), resave: true, saveUninitialized: true}));
 app.use(flash());
+
 app.use(express.static(path.join(__dirname, 'public')));
 
 // WARN: THE API SERVER DOES SESSION-BASED AUTH!!!
