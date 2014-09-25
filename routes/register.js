@@ -29,12 +29,15 @@ router.get('/', function(req, res) {
 	res.render('register', { title: 'Login', globalExists: global });
 });
 
-function newUser(name, pass) {
+function newUser(name, pass, callback) {
 	// Store user, with username and hash in user DB.
-	hash = bcrypt.hashSync(pass);
-	user = {type: {login: {username: name, passhash: hash}}, rights:{answer: true}};
-	console.log('User: '+user);
-	return user;
+	console.log('newUser');
+	hash = bcrypt.hash(pass, null, null, function(err, hash) {
+		user = {type: {login: {username: name, passhash: hash}}, rights:{answer: true}};
+		console.log('User: '+user);
+		callback(null, user);
+	});
+	
 }
 
 // STUB: SPECIAL CHARACTER VALIDATION
@@ -80,7 +83,8 @@ router.post('/', function(req, res) {
 			console.log('Shit, that user already exists.');
 			return res.send(400, {msg: 'That username is already taken. Please choose another.'});
 		} else {
-			db.collection('userdb').insert(newUser(req.body.username, req.body.password), function(err, result) {
+			newUser(req.body.username, req.body.password, function(err, result1) {
+				db.collection('userdb').insert(result1, function(err, result) {				
 					console.log('User '+req.body.username+' added with password '+req.body.password+'.');
 					passport.authenticate('local', function(err, user, info) {
 						console.log('Start login attempt.');
@@ -95,8 +99,9 @@ router.post('/', function(req, res) {
 							return res.send({msg: ''});
 						});
 					})(req, res);
+				});
 			});
-		}
+		};
 	});
 });
 
