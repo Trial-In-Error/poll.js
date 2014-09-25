@@ -33,7 +33,7 @@ router.get('/', function(req, res) {
 
 function newUser(name, pass, fn) {
 	// Store user, with username and hash in user DB.
-	console.log('newUser');
+	//console.log('newUser');
 	console.log(typeof fn);
 	bcrypt.genSalt(4, function(err, salt) {
 		bcrypt.hash(pass, salt, function(err, hash) {
