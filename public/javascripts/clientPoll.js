@@ -20,7 +20,6 @@ function supportsHTML5Storage() {
 			return false;
 		}
 	} catch (e) {
-		
 		return false;
 	}
 }
@@ -339,7 +338,7 @@ function submitPoll() {
  */
 function loadPoll() {
 	if ( supportsHTML5Storage() ) {
-		console.log(window.location.pathname.toLowerCase().split('poll/').slice(-1))
+		console.log(window.location.pathname.toLowerCase().split('poll/').slice(-1));
 		poll = JSON.parse(window.localStorage['poll'+window.location.pathname.toLowerCase().split('poll/').slice(-1)]);
 
 		current_question = parseInt(window.localStorage['current'+window.location.pathname.toLowerCase().split('poll/').slice(-1)]);

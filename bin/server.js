@@ -1,10 +1,10 @@
 #!/usr/bin/env node
 
 require('nodetime').profile({
-    accountKey: 'b023cd76db5237236ddcad980a6f3bb6c02d500d', 
-    appName: 'flashpoll',
-    //debug: true
- });
+	accountKey: 'b023cd76db5237236ddcad980a6f3bb6c02d500d',
+	appName: 'flashpoll',
+	//debug: true
+});
 
 //require('look').start();
 var app = require('../app');

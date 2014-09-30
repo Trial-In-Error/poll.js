@@ -13,9 +13,6 @@ describe('Routing:', function() {
 	var pollCount;
 	var authString = 'Basic ' + new Buffer('awkward' + ':' + 'awkward').toString('base64');
 	var pollAnswered;
-	//var dbih = require('../bin/database_init_helper_module.js');
-	//var sih = require('../bin/server_init_helper_module.js');
-
 	var maxUsernameLength = 32;
 	var maxPasswordLength = 32;
 
@@ -23,29 +20,25 @@ describe('Routing:', function() {
 
 	// before testing, clear out our database, then populate it with the two example polls
 	before(function(done) {
-		//dbih.init(function() {
-			//sih.init(function() {
-				db.dropDatabase(function(err, result) {
+		db.dropDatabase(function(err, result) {
+			if(err) { throw err; }
+			db.collection('polldb').insert(poll1, function(err, result) {
+				if(err) { throw err; }
+				db.collection('polldb').insert(poll2, function(err, result) {
 					if(err) { throw err; }
-					db.collection('polldb').insert(poll1, function(err, result) {
+					db.collection('polldb').findOne({'id': '10'}, function(err, result) {
 						if(err) { throw err; }
-						db.collection('polldb').insert(poll2, function(err, result) {
-							if(err) { throw err; }
-							db.collection('polldb').findOne({'id': '10'}, function(err, result) {
-								if(err) { throw err; }
-								//console.log(result._id);
-								//console.log(mongo.helper.toObjectID(result._id));
-								pollID = mongo.helper.toObjectID(result._id);
-								//console.log(result._id);
-								pollAnswered = {"_id":result._id,"name":"Client-side stress test","id":"10","open":true,"owner":"#swedish_summer_sucks","allow_skipping":false,"question_list":[{"body":"Welcome to this poll!","type":{"name":"not_a_question"},"opening_slide":true},{"body":"When are these questions explainable?","type":{"name":"pick_n","n":1,"response_list":[{"body":"Never.","answers":[{"user":"00977379","value":true,"timestamp":1412072532693}]},{"body":"When selected and required.","explanation":{"always_explainable":false,"explain_text":"Please enter some stuff to continue.","required":true},"answers":[{"skipped":false}]},{"body":"Always but not required.","explanation":{"always_explainable":true,"explain_text":"Optionally explain.","required":false},"answers":[{"skipped":false}]}]}},{"body":"This page is the only one that's skippable.","type":{"name":"not_a_question"},"allow_skipping":true},{"body":"Please select between 2 and 5 words.","type":{"name":"pick_n","n":5,"require":2,"response_list":[{"body":"Zero.","answers":[{"skipped":false}]},{"body":"Lilt.","answers":[{"skipped":false}]},{"body":"Wiser.","answers":[{"user":"00977379","value":true,"timestamp":1412072537261}]},{"body":"Orange.","answers":[{"skipped":false}]},{"body":"Agrarian.","answers":[{"user":"00977379","value":true,"timestamp":1412072537261}]},{"body":"Silly.","answers":[{"skipped":false}]},{"body":"Obelisk.","answers":[{"user":"00977379","value":true,"timestamp":1412072537261}]},{"body":"Quaff.","answers":[{"skipped":false}]}]}},{"body":"Pick your two favorite.","type":{"name":"pick_n","n":2,"require":2,"response_list":[{"body":"Coffee.","answers":[{"user":"00977379","value":true,"timestamp":1412072539338}]},{"body":"Video-games.","answers":[{"user":"00977379","value":true,"timestamp":1412072539338}]},{"body":"Cats.","answers":[{"skipped":false}]},{"body":"Beer.","answers":[{"skipped":false}]}]},"next":"slider"},{"body":"This question should have been passed over by 'next'.","type":{"name":"not_a_question"}},{"body":"Explain what you think of this slider.","type":{"name":"slider","min":-5,"max":5,"step":1.5,"up_and_up":true,"response_list":[{"explanation":{"always_explainable":true,"required":true},"answers":[{"skipped":false}]}]},"id":"slider"},{"body":"Thank you for taking the time to answer this poll!","type":{"name":"not_a_question"},"closing_slide":true}]}
-								//console.log(result._id);
-								done();
-							});
-						});
+						//console.log(result._id);
+						//console.log(mongo.helper.toObjectID(result._id));
+						pollID = mongo.helper.toObjectID(result._id);
+						//console.log(result._id);
+						pollAnswered = {"_id":result._id,"name":"Client-side stress test","id":"10","open":true,"owner":"#swedish_summer_sucks","allow_skipping":false,"question_list":[{"body":"Welcome to this poll!","type":{"name":"not_a_question"},"opening_slide":true},{"body":"When are these questions explainable?","type":{"name":"pick_n","n":1,"response_list":[{"body":"Never.","answers":[{"user":"00977379","value":true,"timestamp":1412072532693}]},{"body":"When selected and required.","explanation":{"always_explainable":false,"explain_text":"Please enter some stuff to continue.","required":true},"answers":[{"skipped":false}]},{"body":"Always but not required.","explanation":{"always_explainable":true,"explain_text":"Optionally explain.","required":false},"answers":[{"skipped":false}]}]}},{"body":"This page is the only one that's skippable.","type":{"name":"not_a_question"},"allow_skipping":true},{"body":"Please select between 2 and 5 words.","type":{"name":"pick_n","n":5,"require":2,"response_list":[{"body":"Zero.","answers":[{"skipped":false}]},{"body":"Lilt.","answers":[{"skipped":false}]},{"body":"Wiser.","answers":[{"user":"00977379","value":true,"timestamp":1412072537261}]},{"body":"Orange.","answers":[{"skipped":false}]},{"body":"Agrarian.","answers":[{"user":"00977379","value":true,"timestamp":1412072537261}]},{"body":"Silly.","answers":[{"skipped":false}]},{"body":"Obelisk.","answers":[{"user":"00977379","value":true,"timestamp":1412072537261}]},{"body":"Quaff.","answers":[{"skipped":false}]}]}},{"body":"Pick your two favorite.","type":{"name":"pick_n","n":2,"require":2,"response_list":[{"body":"Coffee.","answers":[{"user":"00977379","value":true,"timestamp":1412072539338}]},{"body":"Video-games.","answers":[{"user":"00977379","value":true,"timestamp":1412072539338}]},{"body":"Cats.","answers":[{"skipped":false}]},{"body":"Beer.","answers":[{"skipped":false}]}]},"next":"slider"},{"body":"This question should have been passed over by 'next'.","type":{"name":"not_a_question"}},{"body":"Explain what you think of this slider.","type":{"name":"slider","min":-5,"max":5,"step":1.5,"up_and_up":true,"response_list":[{"explanation":{"always_explainable":true,"required":true},"answers":[{"skipped":false}]}]},"id":"slider"},{"body":"Thank you for taking the time to answer this poll!","type":{"name":"not_a_question"},"closing_slide":true}]}
+						//console.log(result._id);
+						done();
 					});
 				});
-			//});
-		//});
+			});
+		});
 	});
 
 	describe('register', function() {
@@ -195,7 +188,13 @@ describe('Routing:', function() {
 			});
 		});
 
+		it.skip('should immediately log the user in after registering', function(done) {
+			//
+		});
 
+		it.skip('should not let logged in users register', function(done) {
+			//
+		});
 	});
 
 	describe('exportpolljson', function() {
@@ -210,7 +209,9 @@ describe('Routing:', function() {
 				});
 		});
 
-		//it should have answer data
+		it.skip('should have answer data', function(done) {
+			//
+		});
 
 		it('should not return the poll to unauthenticated users', function(done) {
 			request(url)
@@ -250,7 +251,9 @@ describe('Routing:', function() {
 				});
 		});
 
-		//it should have answer data
+		it.skip('should not have answer data', function(done) {
+			//
+		});
 
 		it('should not return the poll to unauthenticated users', function(done) {
 			request(url)
@@ -337,7 +340,6 @@ describe('Routing:', function() {
 		});
 	});
 
-	//describe closepoll
 	describe('closepoll', function() {
 		it('should allow an authenticated user to close a poll', function(done) {
 			request(url)
@@ -400,9 +402,12 @@ describe('Routing:', function() {
 					done();
 				});
 		});
+
+		it.skip('should reverse openpoll', function(done) {
+			//
+		});
 	});
 
-	//describe openpoll
 	describe('openpoll', function() {
 		it('should allow an authenticated user to open a poll', function(done) {
 			request(url)
@@ -465,9 +470,12 @@ describe('Routing:', function() {
 					done();
 				});
 		});
+
+		it.skip('should reverse closepoll', function(done) {
+			//
+		});
 	});
 
-	//describe answerpoll //remember to stress-test all 3 log-ins?
 	describe('answerpoll', function() {
 		it('should allow an authenticated user to submit answers to a poll', function(done) {
 			request(url)
@@ -500,22 +508,78 @@ describe('Routing:', function() {
 				});
 		});
 
-		it.skip('should not allow an unauthenticated user to submit answers to a poll', function() {
+		it.skip('should not allow an unauthenticated user to submit answers to a poll', function(done) {
 			done();
 		});
 
-		it.skip('should overwrite the user field on responses on the server side', function() {
+		it.skip('should overwrite the user field on responses on the server side', function(done) {
+			done();
+		});
+
+		it.skip('should preserve explanation fields', function(done) {
 			done();
 		});
 	});
 
-	//describe login
+	describe.skip('login', function() {
+		it('should allow a user to login with valid credentials', function(done) {
+			//
+		});
 
-	//describe logout
+		it('should not allow a user to login with invalid credentials', function(done) {
+			//
+		});
 
-	//describe anonymous login
+		it('should handle Swedish characters gracefully', function(done) {
+			//
+		});
 
-	//describe nickname login
+		it.skip('should ... multi-login work ... ?', function(done) {
+			//
+		});
+
+		it('should specify what part of the credentials generated the error', function(done) {
+			//
+		});
+	});
+
+	describe.skip('logout', function() {
+		it('should log the user out', function(done) {
+			//
+		});
+
+		it('should gracefully handle requests to log out when already logged out', function(done) {
+
+		});
+	});
+
+	describe.skip('anonymous-login', function() {
+		it('should allow the user to log in', function(done) {
+
+		});
+
+		it('should gracefully handle requests to login when already logged in', function(done) {
+
+		});
+	});
+
+	describe.skip('nickname-login', function() {
+		it('should allow the user to login with a valid nickname', function(done) {
+
+		});
+
+		it('should not allow nicknames to have special characters', function(done) {
+
+		});
+
+		it('should allow Swedish characters in nicknames', function(done) {
+
+		});
+
+		it('should impose an upper character limit on nicknames', function(done) {
+
+		});
+	});
 
 	describe('listpolls', function() {
 		it('should return a list of polls', function(done) {
@@ -551,6 +615,24 @@ describe('Routing:', function() {
 					}
 					done();
 				});
+		});
+
+		it.skip('should not expose any of the polls\' responses', function(done) {
+		//	request(url)
+		//		.get('/pollroute/listpolls')
+		//		.end(function(err, res) {
+		//			if (err) { throw err; }
+		//			var list = JSON.parse(res.body.polls);
+		//			for (var index in list) {
+		//				for (var index2 in list[index].question_list) {
+		//					for (var index3 in list[index].question_list[index2].type.response_list) {
+		//						list[index].question_list[index2].type.response_list[index3]
+		//						.should.not.have.property('answer');
+		//					}
+		//				}
+		//			}
+		//			done();
+		//		});
 		});
 	});
 

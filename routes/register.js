@@ -41,9 +41,8 @@ function newUser(name, pass, fn) {
 			user = {type: {login: {username: name, passhash: hash}}, rights:{answer: true}};
 			console.log('User: '+user);
 			fn(null, user);
-		});	
-	})
-	
+		});
+	});
 }
 
 // STUB: SPECIAL CHARACTER VALIDATION
@@ -91,7 +90,7 @@ router.post('/', function(req, res) {
 		} else {
 			console.log('NEWLYLOL');
 			newUser(req.body.username, req.body.password, function(err, result1) {
-				db.collection('userdb').insert(result1, function(err, result) {				
+				db.collection('userdb').insert(result1, function(err, result) {
 					console.log('User '+req.body.username+' added with password '+req.body.password+'.');
 					passport.authenticate('local', function(err, user, info) {
 						console.log('Start login attempt.');
@@ -108,7 +107,7 @@ router.post('/', function(req, res) {
 					})(req, res);
 				});
 			});
-		};
+		}
 	});
 });
 
