@@ -12,6 +12,7 @@ describe('Routing:', function() {
 	var db = mongo.db('mongodb://localhost:27017/polljs', {native_parse:true});
 	var pollCount;
 	var authString = 'Basic ' + new Buffer('awkward' + ':' + 'awkward').toString('base64');
+	var pollAnswered;
 	//var dbih = require('../bin/database_init_helper_module.js');
 	//var sih = require('../bin/server_init_helper_module.js');
 
@@ -32,7 +33,12 @@ describe('Routing:', function() {
 							if(err) { throw err; }
 							db.collection('polldb').findOne({'id': '10'}, function(err, result) {
 								if(err) { throw err; }
+								//console.log(result._id);
+								//console.log(mongo.helper.toObjectID(result._id));
 								pollID = mongo.helper.toObjectID(result._id);
+								//console.log(result._id);
+								pollAnswered = {"_id":result._id,"name":"Client-side stress test","id":"10","open":true,"owner":"#swedish_summer_sucks","allow_skipping":false,"question_list":[{"body":"Welcome to this poll!","type":{"name":"not_a_question"},"opening_slide":true},{"body":"When are these questions explainable?","type":{"name":"pick_n","n":1,"response_list":[{"body":"Never.","answers":[{"user":"00977379","value":true,"timestamp":1412072532693}]},{"body":"When selected and required.","explanation":{"always_explainable":false,"explain_text":"Please enter some stuff to continue.","required":true},"answers":[{"skipped":false}]},{"body":"Always but not required.","explanation":{"always_explainable":true,"explain_text":"Optionally explain.","required":false},"answers":[{"skipped":false}]}]}},{"body":"This page is the only one that's skippable.","type":{"name":"not_a_question"},"allow_skipping":true},{"body":"Please select between 2 and 5 words.","type":{"name":"pick_n","n":5,"require":2,"response_list":[{"body":"Zero.","answers":[{"skipped":false}]},{"body":"Lilt.","answers":[{"skipped":false}]},{"body":"Wiser.","answers":[{"user":"00977379","value":true,"timestamp":1412072537261}]},{"body":"Orange.","answers":[{"skipped":false}]},{"body":"Agrarian.","answers":[{"user":"00977379","value":true,"timestamp":1412072537261}]},{"body":"Silly.","answers":[{"skipped":false}]},{"body":"Obelisk.","answers":[{"user":"00977379","value":true,"timestamp":1412072537261}]},{"body":"Quaff.","answers":[{"skipped":false}]}]}},{"body":"Pick your two favorite.","type":{"name":"pick_n","n":2,"require":2,"response_list":[{"body":"Coffee.","answers":[{"user":"00977379","value":true,"timestamp":1412072539338}]},{"body":"Video-games.","answers":[{"user":"00977379","value":true,"timestamp":1412072539338}]},{"body":"Cats.","answers":[{"skipped":false}]},{"body":"Beer.","answers":[{"skipped":false}]}]},"next":"slider"},{"body":"This question should have been passed over by 'next'.","type":{"name":"not_a_question"}},{"body":"Explain what you think of this slider.","type":{"name":"slider","min":-5,"max":5,"step":1.5,"up_and_up":true,"response_list":[{"explanation":{"always_explainable":true,"required":true},"answers":[{"skipped":false}]}]},"id":"slider"},{"body":"Thank you for taking the time to answer this poll!","type":{"name":"not_a_question"},"closing_slide":true}]}
+								//console.log(result._id);
 								done();
 							});
 						});
@@ -332,10 +338,176 @@ describe('Routing:', function() {
 	});
 
 	//describe closepoll
+	describe('closepoll', function() {
+		it('should allow an authenticated user to close a poll', function(done) {
+			request(url)
+				.post('/pollroute/closepoll/'+pollID)
+				.set('authorization', authString)
+				.end(function(err, res) {
+					if (err) { throw err; }
+					res.status.should.be.equal(200);
+					res.body.msg.should.be.empty;
+					db.collection('polldb').findById(pollID, function(err, res) {
+						should.not.exist(err);
+						res.open.should.be.false;
+						done();
+					});
+				});
+		});
+
+		it('should gracefully handle requests to close already closed polls', function(done) {
+			request(url)
+				.post('/pollroute/closepoll/'+pollID)
+				.set('authorization', authString)
+				.end(function(err, res) {
+					if (err) { throw err; }
+					res.status.should.be.equal(200);
+					res.body.msg.should.be.empty;
+					db.collection('polldb').findById(pollID, function(err, res) {
+						should.not.exist(err);
+						res.open.should.be.false;
+						done();
+					});
+				});
+		});
+
+		it('should not allow unauthenticated users to close polls', function(done) {
+			db.collection('polldb').update({_id: mongo.helper.toObjectID(pollID)}, {$set: {open: true}}, function(err, res) {
+				if (err) { throw err; }
+				request(url)
+					.post('/pollroute/closepoll/'+pollID)
+					.set('authorization', authString+'123')
+					.end(function(err, res) {
+						if (err) { throw err; }
+						res.status.should.be.equal(302);
+						db.collection('polldb').findById(pollID, function(err, res) {
+							should.not.exist(err);
+							res.open.should.be.true;
+							done();
+						});
+					});
+			});
+		});
+
+		it('should gracefully handle requests to close non-existant polls', function(done) {
+			request(url)
+				.post('/pollroute/closepoll/'+pollID+'123')
+				.set('authorization', authString)
+				.end(function(err, res) {
+					if (err) { throw err; }
+					res.status.should.be.equal(404);
+					res.body.error.should.not.be.empty;
+					done();
+				});
+		});
+	});
 
 	//describe openpoll
+	describe('openpoll', function() {
+		it('should allow an authenticated user to open a poll', function(done) {
+			request(url)
+				.post('/pollroute/openpoll/'+pollID)
+				.set('authorization', authString)
+				.end(function(err, res) {
+					if (err) { throw err; }
+					res.status.should.be.equal(200);
+					res.body.msg.should.be.empty;
+					db.collection('polldb').findById(pollID, function(err, res) {
+						should.not.exist(err);
+						res.open.should.be.true;
+						done();
+					});
+				});
+		});
 
-	//describe answerpoll
+		it('should gracefully handle requests to open already opened polls', function(done) {
+			request(url)
+				.post('/pollroute/openpoll/'+pollID)
+				.set('authorization', authString)
+				.end(function(err, res) {
+					if (err) { throw err; }
+					res.status.should.be.equal(200);
+					res.body.msg.should.be.empty;
+					db.collection('polldb').findById(pollID, function(err, res) {
+						should.not.exist(err);
+						res.open.should.be.true;
+						done();
+					});
+				});
+		});
+
+		it('should not allow unauthenticated users to open polls', function(done) {
+			db.collection('polldb').update({_id: mongo.helper.toObjectID(pollID)}, {$set: {open: false}}, function(err, res) {
+				if (err) { throw err; }
+				request(url)
+					.post('/pollroute/openpoll/'+pollID)
+					.set('authorization', authString+'123')
+					.end(function(err, res) {
+						if (err) { throw err; }
+						res.status.should.be.equal(302);
+						db.collection('polldb').findById(pollID, function(err, res) {
+							should.not.exist(err);
+							res.open.should.be.false;
+							done();
+						});
+					});
+			});
+		});
+
+		it('should gracefully handle requests to open non-existant polls', function(done) {
+			request(url)
+				.post('/pollroute/openpoll/'+pollID+'123')
+				.set('authorization', authString)
+				.end(function(err, res) {
+					if (err) { throw err; }
+					res.status.should.be.equal(404);
+					res.body.error.should.not.be.empty;
+					done();
+				});
+		});
+	});
+
+	//describe answerpoll //remember to stress-test all 3 log-ins?
+	describe('answerpoll', function() {
+		it('should allow an authenticated user to submit answers to a poll', function(done) {
+			request(url)
+				.post('/pollroute/answerpoll')
+				.send(pollAnswered)
+				.set('authorization', authString)
+				.set({'Content-Type': 'application/json'})
+				.end(function(err, res) {
+					if (err) { throw err; }
+					//console.log(JSON.stringify(res.body.polls));
+					//console.log(JSON.parse(res.body.polls).length);
+					res.status.should.be.equal(200, 'incorrect HTTP response code');
+					res.body.msg.should.be.empty;
+					db.collection('polldb').findById(pollID, function(err, res) {
+						//console.log('---------');
+						should.not.exist(err);
+						for (questionCount in res.question_list) {
+							for (responseCount in res.question_list[questionCount].type.response_list) {
+								//console.log(res.question_list[questionCount].type)
+								if(typeof res.question_list[questionCount].type.response_list[responseCount].answers !== 'undefined') {
+									res.question_list[questionCount].type.response_list[responseCount].answers[0].should.exist;
+									res.question_list[questionCount].type.response_list[responseCount].answers[0].user.should.exist;
+									res.question_list[questionCount].type.response_list[responseCount].answers[0].value.should.exist;
+									res.question_list[questionCount].type.response_list[responseCount].answers[0].timestamp.should.exist;
+								}
+							}
+						}
+						done();
+					});
+				});
+		});
+
+		it.skip('should not allow an unauthenticated user to submit answers to a poll', function() {
+			done();
+		});
+
+		it.skip('should overwrite the user field on responses on the server side', function() {
+			done();
+		});
+	});
 
 	//describe login
 

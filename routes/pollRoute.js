@@ -77,6 +77,7 @@ router.post('/closepoll/:id', helper.reqOpenCloseRight, helper.ensureAuth, funct
 		if(!result) {
 			res.send(404, {error: 'Poll not found.'});
 		}
+		//WARN: DATABSE ERROR SHOULD BE NOT A 200?
 		res.send((err === null) ? { msg: '' } : { msg:'Database error: ' + err });
 	});
 });
@@ -86,6 +87,9 @@ router.post('/openpoll/:id', helper.reqOpenCloseRight, helper.ensureAuth, functi
 	var pollToClose = req.params.id;
 	db.collection('polldb').update({_id: mongo.helper.toObjectID(pollToClose)}, { $set: {open: true}}, function(err, result) {
 		// WARN: THESE COULD LEAK STACK TRACES
+		if(!result) {
+			res.send(404, {error: 'Poll not found.'});
+		}
 		res.send((result === 1) ? { msg: '' } : { msg:'Database error: ' + err });
 	});
 });
@@ -110,15 +114,19 @@ function verifyUser(res, req, answer) {
 // UNTESTED: Authentication here
 // WARN: Consider /answerpoll/:id for flexibility?
 router.post('/answerpoll', helper.reqAnswerRight, helper.ensureAuth, function(req, res) {
+	console.log('--------------------');
+	console.log('req.body: '+req.body);
 	try {
 		var db = req.db;
 		var tid = req.body._id;
 		delete req.body._id;
+		console.log(tid);
 		db.collection('polldb').findOne({_id: mongo.helper.toObjectID(tid)},
 			function(err, result) {
 				if(err) {
-					console.log(err);
+					throw err;
 				}
+				console.log(result);
 				// For every question in the submitted poll
 				for (var question in req.body.question_list) {
 					// And every response for that question (there should be only 1, but...)
@@ -156,7 +164,8 @@ router.post('/answerpoll', helper.reqAnswerRight, helper.ensureAuth, function(re
 			});
 
 	} catch (err) {
-		console.log(err);
+		console.log(req.body);
+		throw err;
 	}
 });
 
