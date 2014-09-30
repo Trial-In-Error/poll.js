@@ -100,7 +100,8 @@ function verifyUser(res, req, answer) {
 		answer.user = {nickname: res.locals.session.passport.user.type.nickname};
 	} else {
 		console.log('Question overwritten for an anonymous user.');
-		answer.user = {anonymous: true};
+		console.log(answer.user);
+		answer.user = {anonymous: true, token: answer.user};
 	}
 	return answer;
 }
