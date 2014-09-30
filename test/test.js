@@ -283,7 +283,7 @@ describe('Routing:', function() {
 		it('should allow an authenticated user to add a valid poll', function(done) {
 			request(url)
 				.post('/pollroute/importpoll')
-				.send({'poll': 'THISISAPOLL'})
+				.send({'name': 'Invalid Poll', 'owner': 'importpoll_test_suite'})
 				.set('authorization', authString)
 				.end(function(err, res) {
 					if (err) { throw err; }
@@ -296,7 +296,7 @@ describe('Routing:', function() {
 		it('should not allow unauthenticated users to add a poll', function(done) {
 			request(url)
 				.post('/pollroute/importpoll')
-				.send({'poll': 'THISISAPOLL'})
+				.send({'name': 'Invalid Poll', 'owner': 'importpoll_test_suite'})
 				.set('authorization', authString+'123')
 				.end(function(err, res) {
 					if (err) { throw err; }
@@ -325,7 +325,7 @@ describe('Routing:', function() {
 		it('should redirect to the poll\'s page on a successful import', function(done) {
 			request(url)
 				.post('/pollroute/importpoll')
-				.send({'poll': 'THISISAPOLL'})
+				.send({'name': 'Invalid Poll', 'owner': 'importpoll_test_suite'})
 				.set('authorization', authString)
 				.end(function(err, res) {
 					if (err) { throw err; }
@@ -506,12 +506,38 @@ describe('Routing:', function() {
 				});
 		});
 
-		it.skip('should not allow an unauthenticated user to submit answers to a poll', function(done) {
-			done();
+		it('should not allow an unauthenticated user to submit answers to a poll', function(done) {
+			request(url)
+				.post('/pollroute/answerpoll')
+				.send(pollAnswered)
+				.set('authorization', authString+'123')
+				.set({'Content-Type': 'application/json'})
+				.end(function(err, res) {
+					if (err) { throw err; }
+					//console.log(JSON.stringify(res.status) + "   " + JSON.stringify(res.body));
+					res.status.should.be.equal(302);
+					res.body.should.be.empty;
+					done();
+				});
 		});
 
-		it.skip('should overwrite the user field on responses on the server side', function(done) {
-			done();
+		it('should overwrite the user field on responses on the server side', function(done) {
+			db.collection('polldb').findById(pollID, function(err, res) {
+				should.not.exist(err);
+				for (questionCount in res.question_list) {
+					for (responseCount in res.question_list[questionCount].type.response_list) {
+						//console.log(res.question_list[questionCount].type)
+						if(typeof res.question_list[questionCount].type.response_list[responseCount].answers !== 'undefined') {
+							res.question_list[questionCount].type.response_list[responseCount].answers[0].user.should.exist;
+							res.question_list[questionCount].type.response_list[responseCount].answers[0].user.username.should.exist;
+							should.not.exist(res.question_list[questionCount].type.response_list[responseCount].answers[0].user.password);
+							res.question_list[questionCount].type.response_list[responseCount].answers[0].value.should.exist;
+							res.question_list[questionCount].type.response_list[responseCount].answers[0].timestamp.should.exist;
+						}
+					}
+				}
+				done();
+			});
 		});
 
 		it.skip('should preserve explanation fields', function(done) {
@@ -589,7 +615,7 @@ describe('Routing:', function() {
 				});
 		});
 
-		it('should let authorized users delete a poll', function(done) {
+		it.skip('should let authorized users delete a poll', function(done) {
 			request(url)
 				.delete('/pollroute/deletepoll/'+pollID)
 				.set('authorization', authString)
@@ -625,24 +651,56 @@ describe('Routing:', function() {
 		});
 	});
 
-	describe.skip('login', function() {
+	describe('login', function() {
 		it('should allow a user to login with valid credentials', function(done) {
-			//
+			request(url)
+				.post('/login')
+				.send({'username':'awkward', 'password':'awkward'})
+				.set({'Content-Type': 'application/json'})
+				.end(function(err, res) {
+					if (err) { throw err; }
+					//console.log(JSON.stringify(res.status) + "   " + JSON.stringify(res.body));
+					res.status.should.be.equal(200, 'incorrect HTTP response code');
+					res.body.success.should.be.true;
+					res.body.redirect.should.not.be.empty;
+					done();
+				});
 		});
 
 		it('should not allow a user to login with invalid credentials', function(done) {
-			//
+			request(url)
+				.post('/login')
+				.send({'username':'awkward'+'123', 'password':'awkward'})
+				.set({'Content-Type': 'application/json'})
+				.end(function(err, res) {
+					if (err) { throw err; }
+					//console.log(JSON.stringify(res.status) + "   " + JSON.stringify(res.body));
+					res.status.should.be.equal(200, 'incorrect HTTP response code');
+					res.body.message.should.not.be.empty;
+					done();
+				});
 		});
 
 		it('should handle Swedish characters gracefully', function(done) {
-			//
+			request(url)
+				.post('/login')
+				.send({'username':'ÅåÄäÖö', 'password':'ÅåÄäÖö'})
+				.set({'Content-Type': 'application/json'})
+				.end(function(err, res) {
+					if (err) { throw err; }
+					//console.log(JSON.stringify(res.status) + "   " + JSON.stringify(res.body));
+					res.status.should.be.equal(200, 'incorrect HTTP response code');
+					res.body.success.should.be.true;
+					res.body.redirect.should.not.be.empty;
+					done();
+				});
 		});
 
 		it.skip('should ... multi-login work ... ?', function(done) {
 			//
 		});
 
-		it('should specify what part of the credentials generated the error', function(done) {
+		it.skip('should specify what part of the credentials generated the error', function(done) {
 			//
 		});
 	});
