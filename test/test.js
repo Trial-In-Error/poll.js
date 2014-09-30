@@ -16,8 +16,6 @@ describe('Routing:', function() {
 	var maxUsernameLength = 32;
 	var maxPasswordLength = 32;
 
-
-
 	// before testing, clear out our database, then populate it with the two example polls
 	before(function(done) {
 		db.dropDatabase(function(err, result) {
@@ -521,66 +519,6 @@ describe('Routing:', function() {
 		});
 	});
 
-	describe.skip('login', function() {
-		it('should allow a user to login with valid credentials', function(done) {
-			//
-		});
-
-		it('should not allow a user to login with invalid credentials', function(done) {
-			//
-		});
-
-		it('should handle Swedish characters gracefully', function(done) {
-			//
-		});
-
-		it.skip('should ... multi-login work ... ?', function(done) {
-			//
-		});
-
-		it('should specify what part of the credentials generated the error', function(done) {
-			//
-		});
-	});
-
-	describe.skip('logout', function() {
-		it('should log the user out', function(done) {
-			//
-		});
-
-		it('should gracefully handle requests to log out when already logged out', function(done) {
-
-		});
-	});
-
-	describe.skip('anonymous-login', function() {
-		it('should allow the user to log in', function(done) {
-
-		});
-
-		it('should gracefully handle requests to login when already logged in', function(done) {
-
-		});
-	});
-
-	describe.skip('nickname-login', function() {
-		it('should allow the user to login with a valid nickname', function(done) {
-
-		});
-
-		it('should not allow nicknames to have special characters', function(done) {
-
-		});
-
-		it('should allow Swedish characters in nicknames', function(done) {
-
-		});
-
-		it('should impose an upper character limit on nicknames', function(done) {
-
-		});
-	});
-
 	describe('listpolls', function() {
 		it('should return a list of polls', function(done) {
 			request(url)
@@ -684,6 +622,66 @@ describe('Routing:', function() {
 					res.status.should.be.equal(404);
 					done();
 				});
+		});
+	});
+
+	describe.skip('login', function() {
+		it('should allow a user to login with valid credentials', function(done) {
+			//
+		});
+
+		it('should not allow a user to login with invalid credentials', function(done) {
+			//
+		});
+
+		it('should handle Swedish characters gracefully', function(done) {
+			//
+		});
+
+		it.skip('should ... multi-login work ... ?', function(done) {
+			//
+		});
+
+		it('should specify what part of the credentials generated the error', function(done) {
+			//
+		});
+	});
+
+	describe.skip('anonymous-login', function() {
+		it('should allow the user to log in', function(done) {
+
+		});
+
+		it('should gracefully handle requests to login when already logged in', function(done) {
+
+		});
+	});
+
+	describe.skip('nickname-login', function() {
+		it('should allow the user to login with a valid nickname', function(done) {
+
+		});
+
+		it('should not allow nicknames to have special characters', function(done) {
+
+		});
+
+		it('should allow Swedish characters in nicknames', function(done) {
+
+		});
+
+		it('should impose an upper character limit on nicknames', function(done) {
+
+		});
+	});
+
+	describe.skip('logout', function() {
+		it('should log the user out', function(done) {
+			//
+		});
+
+		it('should gracefully handle requests to log out when already logged out', function(done) {
+
 		});
 	});
 
