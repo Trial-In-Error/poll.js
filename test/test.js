@@ -615,7 +615,7 @@ describe('Routing:', function() {
 				});
 		});
 
-		it.skip('should let authorized users delete a poll', function(done) {
+		it('should let authorized users delete a poll', function(done) {
 			request(url)
 				.delete('/pollroute/deletepoll/'+pollID)
 				.set('authorization', authString)
