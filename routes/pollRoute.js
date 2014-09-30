@@ -92,7 +92,7 @@ router.post('/openpoll/:id', helper.reqOpenCloseRight, helper.ensureAuth, functi
 
 function verifyUser(res, req, answer) {
 	console.log(JSON.stringify(res.locals.session.passport.user));
-	if(typeof res.locals.session.passport.user.type.login.username !== 'undefined') {
+	if(typeof res.locals.session.passport.user.type.login !== 'undefined' && typeof res.locals.session.passport.user.type.login.username !== 'undefined') {
 		console.log('Question overwritten for a usernamed user.');
 		answer.user = {username: res.locals.session.passport.user.type.login.username};
 	} else if(typeof res.locals.session.passport.user.type.nickname !== 'undefined') {

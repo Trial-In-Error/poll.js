@@ -64,7 +64,6 @@ I'm considering tacking the resulting answers onto `Response` objects. This will
 	* `Body` object containing some text, image, sound, video, etc.
 	* `answers` object
 		* value; the response, varies by question type
-		* explanation; any explanation field
 		* user; identification for the user that answered the question
 		* timestamp; when the user answered the question
 		* skipped; bool
