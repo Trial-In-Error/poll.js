@@ -93,6 +93,10 @@ Performance Profiling
 ---------------------------------
 On startup, the web app runs a `look` server, which profiles and monitors response time, CPU usage, memory usage, errors, and stack traces. Connect to it via the web app's normal hostname at port 5959 (i.e., 127.0.0.1:5959 or aherokuwebapp.com/moreurl:5959). Note that it has NOT been tested on heroku.
 
+Load / Stress Testing
+---------------------------------
+Stress testing can be done with `loadtest`, which provides an apache benchmark-esque CLI. To use it, try `loadtest -c numberOfSimultaneousConnections --rpm requestsPerMinute protocol://url/`. For instance, a common stress test for a local dev deployment might be `loadtest -c 10 --rpm 200 http://localhost:3000/pollroute/listpolls`.
+
 Testing the API Endpoints with Postman
 ---------------------------------
 API testing has been done with the [Chrome extension Postman](https://chrome.google.com/webstore/detail/postman-rest-client/fdmmgilgnpjigdojojpjoooidkmcomcm?hl=en). `Basic Auth` should be used, and for many of the POST verb endpoints, you will need to add the header `Content-Type application/json`. Data should be POSTed in `raw` form. Note that this means that the keys in the object will need to be quoted. For example, to test posting to /register/, send the raw data: `{"username": "1234567", "password": "123412341234123412341234123412341"}`.
