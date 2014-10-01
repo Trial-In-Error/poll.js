@@ -9,7 +9,7 @@ module.exports = {
 							'jquery_2_1_1.js',
 							'combined_style.css',
 							'clientLogin.js',
-							'prettyPrint.js',
+							'prettyprint.js',
 							'clientExportPoll.js',
 							'clientViewPoll.js',
 							'clientMetaLogin.js',
