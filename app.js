@@ -48,15 +48,8 @@ var db = mongo.db(process.env.MONGOLAB_URI || 'mongodb://localhost:27017/polljs'
 //	});
 //});
 //
-try {
-	var pollIndex = require('./routes/pollIndex');
-} catch (err) {
-	console.log('----------------');
-	console.log(process.cwd());
-	console.log(__dirname);
-	throw err;
-}
 
+var pollIndex = require('./routes/pollIndex');
 var pollRoute = require('./routes/pollRoute');
 var poll = require('./routes/poll');
 var register = require('./routes/register');
@@ -75,15 +68,10 @@ var clonePoll = require('./routes/clonePoll');
 //http://docs.nodejitsu.com/articles/HTTP/servers/how-to-create-a-HTTPS-server
 //http://stackoverflow.com/questions/11744975/enabling-https-on-express-js
 var app = express();
-
 var exists_list = {};
-
 var build_min_list = require('./bin/build_min_list.js');
-
 var printList = helper.buildPrintList;
-
 var passin = build_min_list.build(exists_list);
-
 console.log(exists_list);
 
 
@@ -190,7 +178,7 @@ passport.use('nickname', new LocalStrategy(
 		process.nextTick(function () {
 			console.log('Tick.');
 			findByNickname(username, function(err, user) {
-				console.log('localStrategy found: '+user);
+				console.log('localStrategy found: '+JSON.stringify(user));
 				console.log(user);
 				if (err) {return done(err);}
 				if (!user) {
@@ -285,7 +273,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.use(function(req, res, next) {
-		res.locals.expose.auth = req.isAuthenticated();
+	res.locals.expose.auth = req.isAuthenticated();
 	console.log('RES.LOCALS.EXPOSE.AUTH = '+req.isAuthenticated());
 	next();
 });
@@ -308,7 +296,7 @@ app.get('/meta-login', function(req, res) {
 });
 
 app.get('/nickname-login', function(req, res) {
-	res.render('nickname-login');
+	res.render('nickname-login', {nickname: req.session.lastNickname});
 });
 
 app.get('/', function(req, res) {
@@ -353,11 +341,13 @@ app.post('/login', function(req, res, next) {
 
 app.post('/nickname-login', function(req, res, next) {
 	// THIS NEEDS TO BE SESSION-IZED
-	console.log('By the way, redirect is set to:'+ req.session.redirect_to+' .');
-	console.log('If this ever looks like it\'ll go to /login, please set to / instead.');
+	//console.log('By the way, redirect is set to:'+ req.session.redirect_to+' .');
+	//console.log('If this ever looks like it\'ll go to /login, please set to / instead.');
+	console.log('TODAYTODAYTODAYTODAY');
+	console.log(JSON.stringify(req.session));
 	var redirect_to = req.session.redirect_to || '/';
 	//delete req.session.redirect_to;
-
+	req.session.lastNickname = req.body.nickname||req.body.username;
 	console.log('login matched with usernickname '+req.body.nickname||req.body.username+'.');
 	passport.authenticate('nickname', function(err, user, info) {
 		console.log('Start login attempt.');
