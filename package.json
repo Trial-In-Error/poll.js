@@ -21,11 +21,13 @@
 		"mongodb": "*",
 		"mongoskin": "*",
 		"bcrypt-nodejs": "*",
+		"bcryptjs": "*",
 		"twin-bcrypt": "*",
 		"passport": "*",
 		"passport-local": "*",
 		"passport-http-bearer": "*",
 		"connect-redis": "*",
+		"nodetime": "*",
 		"connect-flash": "*", 
 		"forever": "*" 
 	},
