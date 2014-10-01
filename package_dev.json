@@ -38,6 +38,7 @@
 		"passport-local": "*",
 		"passport-http-bearer": "*",
 		"connect-redis": "*",
+		"nodetime": "*",
 		"connect-flash": "*", //required for passport auth 'flashes'
 		"forever": "*" //forever-monitor version 1.2 is broken - use version 1.1 instead
 		// alternatively, if you continue to get events.js:72 Error: spawn ENOENT
