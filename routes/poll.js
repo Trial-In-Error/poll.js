@@ -13,12 +13,13 @@ router.get('/:id', helper.reqAnswerRight, helper.ensureAuth, function(req, res) 
 		if(err) return err;
 		tr = result;
 
-		// In the edge case where you request a nonexistant poll through an AJAX redirect
+		// In the edge case where you request a nonexistant poll through a client-side redirect
 		// This safeguards the server from crashing & seamlessly redirects to root
 		if(tr === null) {
-			//res.send(404, {error: 'Redirect error. This link is invalid.'});
-			console.log('redirect error');
-			res.redirect('/');
+			//console.log('redirect error');
+			//res.send(404, {error: 'Poll not found.'});
+			res.render('error', {error: {status: 'Poll not found.'}});
+			//res.redirect('/');
 			return;
 		}
 
