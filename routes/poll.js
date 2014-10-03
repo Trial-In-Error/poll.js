@@ -13,6 +13,15 @@ router.get('/:id', helper.reqAnswerRight, helper.ensureAuth, function(req, res) 
 		if(err) return err;
 		tr = result;
 
+		// In the edge case where you request a nonexistant poll through an AJAX redirect
+		// This safeguards the server from crashing & seamlessly redirects to root
+		if(tr === null) {
+			//res.send(404, {error: 'Redirect error. This link is invalid.'});
+			console.log('redirect error');
+			res.redirect('/');
+			return;
+		}
+
 		if(typeof tr.open !== 'undefined' && !tr.open) {
 			if (req.isAuthenticated() && typeof res.locals.session.passport.user.rights.accessClosed !== 'undefined' && res.locals.session.passport.user.rights.accessClosed) {
 			} else {
