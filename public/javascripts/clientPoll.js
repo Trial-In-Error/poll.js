@@ -30,8 +30,13 @@ function supportsHTML5Storage() {
  */
 function storePoll() {
 	if (supportsHTML5Storage()) {
-		window.localStorage['poll'+poll._id] = JSON.stringify(poll);
-		window.localStorage['current'+poll._id] = JSON.stringify(current_question);
+		window.localStorage['poll'+window.location.pathname.toLowerCase().split('poll/').slice(-1)] = JSON.stringify(poll);
+		if(current_question !== 0) {
+			window.localStorage['current'+window.location.pathname.toLowerCase().split('poll/').slice(-1)] = JSON.stringify(current_question);	
+		} else {
+			window.localStorage['current'+window.location.pathname.toLowerCase().split('poll/').slice(-1)] = 0;
+		}
+		
 	} else {
 		// WARN: THIS IS UNCLEAR AND AMBIGUOUS
 		alert('Your progress will not be saved until you submit the completed poll.\n\n To enable incremental saving, leave private browsing mode.');
@@ -54,8 +59,8 @@ function genEmptyAnswers() {
  */
 function clearStorage() {
 	if ( supportsHTML5Storage() ) {
-		window.localStorage.removeItem('poll'+poll._id);
-		window.localStorage.removeItem('current'+poll._id);
+		window.localStorage.removeItem('poll'+window.location.pathname.toLowerCase().split('poll/').slice(-1));
+		window.localStorage.removeItem('current'+window.location.pathname.toLowerCase().split('poll/').slice(-1));
 	} else {
 		//window['polljspoll'+poll._id] = undefined;
 		//window['polljscurrent'+poll._id] = undefined;
@@ -303,6 +308,24 @@ function answerQuestion(forward) {
 	}
 }
 
+function batchSanitize(items) {
+	console.log('BATCHSAN!');
+	for(var tr in items) {
+		if(!items[tr]) {
+			console.log(JSON.stringify(items));
+			return false;
+		}
+		for(var question in items[tr].question_list) {
+			for(var response in items[tr].question_list[question].type.response_list) {
+				console.log('Deleted '+items[tr].question_list[question].type.response_list[response].answers);
+				delete items[tr].question_list[question].type.response_list[response].answers;
+				//console.log('Now it\s '+ items[tr].question_list[question].type.response_list[response].answers);
+			}
+		}
+	}
+	return items;
+}
+
 /**
  *	POSTs the finished poll to the server.
  *	Starts by cleaning the poll of unnecessary explanations, then POSTs.
@@ -323,9 +346,18 @@ function submitPoll() {
 				if ( response.msg === '' ) {
 					// Delete local storage of results
 					// WARN: Do onbeforeunload more elegantly?
+					//current_question = 0;
+					//clearStorage();
+					console.log(batchSanitize([poll])[0])
+					window.localStorage['poll'+window.location.pathname.toLowerCase().split('poll/').slice(-1)] = JSON.stringify(batchSanitize([poll])[0]);
+					window.localStorage['current'+window.location.pathname.toLowerCase().split('poll/').slice(-1)] = 0;
+					current_question = 0;
+					console.log('SUBMITPOLL CURRENT QUESTION'+current_question);
 					window.onbeforeunload = function() {};
-					clearStorage();
-					poll = undefined;
+					//clearStorage();
+					//poll = batchSanitize([poll])[0];
+					//poll = undefined;
+
 				} else {
 					// If something went wrong, alert the error message
 					alert('Error: '+response.msg);
@@ -347,8 +379,9 @@ function loadPoll() {
 	if ( supportsHTML5Storage() ) {
 		console.log(window.location.pathname.toLowerCase().split('poll/').slice(-1));
 		poll = JSON.parse(window.localStorage['poll'+window.location.pathname.toLowerCase().split('poll/').slice(-1)]);
-
+		console.log('LOADPOLL PRE CURRENT QUESTION'+current_question);
 		current_question = parseInt(window.localStorage['current'+window.location.pathname.toLowerCase().split('poll/').slice(-1)]);
+		console.log('LOADPOLL POST CURRENT QUESTION'+current_question);
 	} else {
 		// STUB: DOESN'T WORK. CONSIDER COOKIES INSTEAD
 		//alert(window.location.pathname.split('poll/').slice(-1));
@@ -367,7 +400,7 @@ function loadPoll() {
  */
 function pollIsStored() {
 	if(supportsHTML5Storage()) {
-		return typeof window.localStorage['poll'+poll._id] !== 'undefined';
+		return typeof window.localStorage['poll'+window.location.pathname.toLowerCase().split('poll/').slice(-1)] !== 'undefined';
 	} else {
 		//UNTESTED: return window.namespace's existance
 		//alert(poll._id);
@@ -759,39 +792,34 @@ function skipQuestion() {
  *	Calls ajax.on('click'...) for each of the bottom buttons to link the click event to the proper functions.
  *	//WARN: This may be an inappropriate way to do setup with Jquery Mobile. Look into it.
  */
-$(document).ready(function() {
+//$(document).ready(function() {
 
-
+function pageShowHelper() {
 	// WARN: If problems with page transitions occur, this line is likely to blame
-	$.mobile.changePage($('#frontpage'), {allowSamePageTransition: true});
-
-	if (pollIsStored()) {
-		loadPoll();
+	//$.mobile.changePage($('#frontpage'), {allowSamePageTransition: true});
+	console.log('pageShow!');
+	if(window.location.pathname.toLowerCase() === '/polls') {
+		//nothing
 	} else {
-		current_question = 0;
-		storePoll();
-	}
-	renderCurrentQuestion();
-	renderBottomButtons();
-
-	$('#bottombuttons div div').on('click', 'a.nextquestion', nextQuestion);
-	$('#bottombuttons div div').on('click', 'a.lastquestion', lastQuestion);
-	$('#bottombuttons div div').on('click', 'a.skipquestion', skipQuestion);
-});
-
-
-//WARN: This is a terrible hack; the function gets called twice per click
-//Once on uncheck of the old one, once on check the new one
-//But it works and I'm not in the mood to question working.
-$(document).change('.ui-radio-on', function () {
-	//console.log(event.target.nodeName);
-	if(event.target.nodeName === 'LABEL') {
-		updateTextField();
+		if (pollIsStored()) {
+				console.log('poll loaded');
+				//current_question = 0;
+				loadPoll();
+			} else {
+				console.log('poll stored');
+				eval($('#data')[0].innerHTML); // jshint ignore:line
+				current_question = 0;
+				storePoll();
+			}
+			renderCurrentQuestion();
+			renderBottomButtons();
+	
+		$('#bottombuttons div div').on('click', 'a.nextquestion', nextQuestion);
+		$('#bottombuttons div div').on('click', 'a.lastquestion', lastQuestion);
+		$('#bottombuttons div div').on('click', 'a.skipquestion', skipQuestion);
 	}
 
-});
-
-/**
+	/**
  *	Asks the user to confirm leaving or refreshing the page before POSTing the answered poll.
  *	Because it's attached to window, it must be overwritten manually(i.e., will persist through to the next URI/URL visited!).
  */
@@ -808,3 +836,27 @@ window.onbeforeunload = function() {
 	// history.forward disabling
 	// http://viralpatel.net/blogs/disable-back-button-browser-javascript/
 };
+
+	
+//});
+};
+
+//WARN: This is a terrible hack; the function gets called twice per click
+//Once on uncheck of the old one, once on check the new one
+//But it works and I'm not in the mood to question working.
+$(document).change('.ui-radio-on', function () {
+	//console.log(event.target.nodeName);
+	if(event.target.nodeName === 'LABEL') {
+		updateTextField();
+	}
+
+});
+
+
+
+window.onunload = function() {};
+
+//window.addEventListener( 'pagehide', function() { console.log( 'page hide' ); } );
+//window.addEventListener( 'pageshow', pageShowHelper, false );
+
+$(window).bind('pageshow', pageShowHelper);
