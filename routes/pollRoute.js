@@ -5,21 +5,20 @@ var helper = require('../bin/helper');
 var sys = require('sys');
 
 function batchSanitize(items) {
-	for(var tr in items) {
-		for(var question in items[tr].question_list) {
-			for(var response in items[tr].question_list[question].type.response_list) {
-				//console.log('Deleted '+items[tr].question_list[question].type.response_list[response].answers);
-				delete items[tr].question_list[question].type.response_list[response].answers;
-				//console.log('Now it\s '+ items[tr].question_list[question].type.response_list[response].answers);
+		for(var question in items.question_list) {
+			for(var response in items.question_list[question].type.response_list) {
+				console.log('Deleted '+items.question_list[question].type.response_list[response].answers);
+				delete items.question_list[question].type.response_list[response].answers;
+				console.log('Now it\s '+ items.question_list[question].type.response_list[response].answers);
 			}
 		}
-	}
 	return items;
 }
 
 router.get('/', function(req, res, next) {
 	console.log('API hit!');
 	req.api = true;
+	res.send('');
 });
 
 /* GET poll list */

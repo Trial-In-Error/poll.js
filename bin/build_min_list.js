@@ -10,6 +10,7 @@ module.exports = {
 							'combined_style.css',
 							'clientLogin.js',
 							'prettyprint.js',
+							'detector.js',
 							'clientExportPoll.js',
 							'clientViewPoll.js',
 							'clientMetaLogin.js',

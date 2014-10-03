@@ -123,11 +123,14 @@ exports.build_combined_csv = function(questionCounter) {
 	return {final_csv: final_csv, csv_rows:csv_rows};
 };
 
+/* THIS IS WHERE THE USEFUL STUFF BEGINS */
+
 exports.frequencyCount = function(questionCounter, poll) {
 	// Makes an object that doesn't inherit from Object.prototype.
 	// This makes it safe to use as a dict.
 	// See: http://www.devthought.com/2012/01/18/an-object-is-not-a-hash/
 	var dict = Object.create(null);
+	// dict has the properties { frequency, value, explanation, response }
 	if(typeof poll.question_list[questionCounter] !== 'undefined') {
 		for (var responseCounter in poll.question_list[questionCounter].type.response_list) {
 			console.log('response counter'+responseCounter);
