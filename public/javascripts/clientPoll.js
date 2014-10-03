@@ -209,7 +209,7 @@ function answerQuestion(forward) {
 	if(validateCurrentQuestion(forward)) {
 		// And if we have a pick_n style question
 		if(poll.question_list[current_question].type.name === 'pick_n') {
-			// For every question
+			// For every response
 			for (var i = 0; i < poll.question_list[current_question].type.response_list.length; i += 1) {
 				// If the choice is checked
 				if ($('#pick-choice-'+String(i)).is(':checked')) {
@@ -275,6 +275,8 @@ function answerQuestion(forward) {
 		} else if(poll.question_list[current_question].type.name === 'open') {
 			poll.question_list[current_question].type.response_list[0].answers =
 					[{user: user_token, value: undefined, explanation: $('#text-0').val(), timestamp: $.now()}];
+		} else if(poll.question_list[current_question].type.name === 'not_a_question') {
+			//do no work, but prevents the griping from the else clause below
 		} else {
 			console.log('UNEXPECTED QUESTION TYPE!!!');
 		}

@@ -4,14 +4,21 @@ var mongo = require('mongoskin');
 var helper = require('../bin/helper');
 var sys = require('sys');
 
-function batchSanitize(item) {
-	for(var question in item.question_list) {
-		for(var response in item.question_list[question].type.response_list) {
-			//console.log('Deleted '+JSON.stringify(item.question_list[question].type.response_list[response].answers));
-			delete item.question_list[question].type.response_list[response].answers;
+function batchSanitize(items) {
+	for(var tr in items) {
+		if(!items[tr]) {
+			console.log(JSON.stringify(items));
+			return false;
+		}
+		for(var question in items[tr].question_list) {
+			for(var response in items[tr].question_list[question].type.response_list) {
+				//console.log('Deleted '+items[tr].question_list[question].type.response_list[response].answers);
+				delete items[tr].question_list[question].type.response_list[response].answers;
+				//console.log('Now it\s '+ items[tr].question_list[question].type.response_list[response].answers);
+			}
 		}
 	}
-	return item;
+	return items;
 }
 
 router.get('/', function(req, res, next) {
@@ -63,7 +70,7 @@ router.get('/exportpolljsonclean/:id', helper.reqGetAnswersRight, helper.ensureA
 		if(!result) {
 			res.send(404, {error: 'Poll not found.'});
 		}
-		res.send((err === null) ? batchSanitize(result) : { msg:'Database error: ' + err });
+		res.send((err === null) ? batchSanitize([result]) : { msg:'Database error: ' + err });
 	});
 });
 
