@@ -4,15 +4,14 @@ var mongo = require('mongoskin');
 var helper = require('../bin/helper');
 var sys = require('sys');
 
-function batchSanitize(items) {
-		for(var question in items.question_list) {
-			for(var response in items.question_list[question].type.response_list) {
-				console.log('Deleted '+items.question_list[question].type.response_list[response].answers);
-				delete items.question_list[question].type.response_list[response].answers;
-				console.log('Now it\s '+ items.question_list[question].type.response_list[response].answers);
-			}
+function batchSanitize(item) {
+	for(var question in item.question_list) {
+		for(var response in item.question_list[question].type.response_list) {
+			//console.log('Deleted '+JSON.stringify(item.question_list[question].type.response_list[response].answers));
+			delete item.question_list[question].type.response_list[response].answers;
 		}
-	return items;
+	}
+	return item;
 }
 
 router.get('/', function(req, res, next) {

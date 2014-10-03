@@ -13,7 +13,7 @@ router.get('/:id', helper.reqAnswerRight, helper.ensureAuth, function(req, res) 
 		if(err) return err;
 		tr = result;
 
-		if(!tr.open) {
+		if(typeof tr.open !== 'undefined' && !tr.open) {
 			if (req.isAuthenticated() && typeof res.locals.session.passport.user.rights.accessClosed !== 'undefined' && res.locals.session.passport.user.rights.accessClosed) {
 			} else {
 				req.session.redirect_to = req.path;

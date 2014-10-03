@@ -113,7 +113,7 @@ function validateCurrentQuestion(forward) {
 		}
 		//console.log(counter);
 		// If we're picking 1 from a list
-		if (poll.question_list[current_question].type.n === 1) {
+		if (poll.question_list[current_question].type.n === 1 || poll.question_list[current_question].type.n === '1') {
 			//console.log('We\'re picking 1 from a list.');
 			// And we have picked 1, and (explanation not required OR explanation provided)
 			if(counter === 1 &&
@@ -214,7 +214,7 @@ function answerQuestion(forward) {
 				// If the choice is checked
 				if ($('#pick-choice-'+String(i)).is(':checked')) {
 					// And if it's a radiobox
-					if(poll.question_list[current_question].type.n === 1) {
+					if(poll.question_list[current_question].type.n === 1 || poll.question_list[current_question].type.n === '1') {
 						// Save it
 						if ( typeof poll.question_list[current_question].type.response_list[i].explanation !== 'undefined' ) {
 							poll.question_list[current_question].type.response_list[i].answers =
@@ -259,6 +259,11 @@ function answerQuestion(forward) {
 
 		// OTHERWISE, if we have a slider style question
 		} else if(poll.question_list[current_question].type.name === 'slider') {
+			// if the response list doesn't exist, first create it
+			if (typeof poll.question_list[current_question].type.response_list === 'undefined') {
+				poll.question_list[current_question].type.response_list = [{}];
+			}
+			// then, add this response, with or without an explanation
 			if ( typeof poll.question_list[current_question].type.response_list[0].explanation !== 'undefined' ) {
 				poll.question_list[current_question].type.response_list[0].answers =
 					[{user: user_token, value: $('#slider').val(), explanation: $('#text-0').val(), timestamp: $.now()}];
@@ -419,7 +424,7 @@ function renderPickN(temp) {
 	for (var entry in poll.question_list[current_question].type.response_list) {
 		// Create a button to click!
 		// If N > 1, use check boxes, else use radio buttons
-		if (poll.question_list[current_question].type.n === 1) {
+		if (poll.question_list[current_question].type.n === 1 || poll.question_list[current_question].type.n === '1') {
 
 			//MISSING OPEN FORM!!!
 
@@ -632,7 +637,7 @@ function renderCurrentQuestion() {
  *	Requires that opening_slide and closing_slide are correctly labeled in the poll's .json!
  */
 function updateBottomButtons() {
-	if(poll.question_list[current_question].closing_slide) {
+	if(poll.question_list[current_question].closing_slide || poll.question_list[current_question].closing_slide === 'true') {
 		//$('#nextquestion').addClass('ui-state-disabled');
 		$('#nextquestion').hide();
 		if(document.getElementById('submit') === null) {
@@ -648,7 +653,7 @@ function updateBottomButtons() {
 		}
 		$('#skipquestion').addClass('ui-state-disabled');
 		$('#lastquestion').removeClass('ui-state-disabled');
-	} else if(poll.question_list[current_question].opening_slide) {
+	} else if(poll.question_list[current_question].opening_slide || poll.question_list[current_question].opening_slide === 'true') {
 		$('#submit').hide();
 		$('#nextquestion').show();
 		$('#nextquestion').removeClass('ui-state-disabled');
