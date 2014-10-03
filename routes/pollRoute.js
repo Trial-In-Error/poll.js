@@ -70,7 +70,7 @@ router.get('/exportpolljsonclean/:id', helper.reqGetAnswersRight, helper.ensureA
 		if(!result) {
 			res.send(404, {error: 'Poll not found.'});
 		}
-		res.send((err === null) ? batchSanitize([result]) : { msg:'Database error: ' + err });
+		res.send((err === null) ? batchSanitize([result])[0] : { msg:'Database error: ' + err });
 	});
 });
 
