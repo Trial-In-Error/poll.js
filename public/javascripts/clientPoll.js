@@ -703,13 +703,13 @@ function updateBottomButtons() {
 		$('#lastquestion').removeClass('ui-state-disabled');
 	}
 
-	if ( poll.allow_skipping !== 'false' && !poll.allow_skipping && (typeof poll.question_list[current_question].allow_skipping === 'undefined' || !poll.question_list[current_question].allow_skipping)) {
+	if ( (poll.allow_skipping === 'false' || !poll.allow_skipping) && (typeof poll.question_list[current_question].allow_skipping === 'undefined' || !poll.question_list[current_question].allow_skipping)) {
 		// STUB: Consider hiding the text on Skip in this case
 		$('#skipquestion').addClass('ui-state-disabled');
 		$('#skipquestion').innerHTML = '';
 	}
 
-	if ( poll.allow_skipping !== 'false' && !poll.allow_skipping && (typeof poll.question_list[current_question].allow_skipping !== 'undefined' && poll.question_list[current_question].allow_skipping)) {
+	if ( (poll.allow_skipping !== 'false' || !poll.allow_skipping) && (typeof poll.question_list[current_question].allow_skipping !== 'undefined' && poll.question_list[current_question].allow_skipping)) {
 		$('#skipquestion').removeClass('ui-state-disabled');
 		$('#skipquestion').innerHTML = 'Skip';
 	}
