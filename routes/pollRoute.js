@@ -260,11 +260,11 @@ router.post('/importpoll', helper.reqCreateRight, helper.ensureAuth, function(re
 	var pollToImport;
 
 	//console.log(JSON.parse(req.body));
-	if(req.username) {
-		delete req.username;
+	if(req.body.username) {
+		delete req.body.username;
 	}
-	if(req.password) {
-		delete req.password;
+	if(req.body.password) {
+		delete req.body.password;
 	}
 	try {
 		pollToImport = req.body;

@@ -244,6 +244,12 @@ app.use(function(req, res, next) {
 			var creds = plain_auth.split(':');
 			req.body.username = creds[0];
 			req.body.password = creds[1];
+
+
+
+
+
+			
 		} catch (err) {
 			console.log(err);
 		}

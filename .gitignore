@@ -48,5 +48,9 @@ status.md
 /test/coverage/*
 /coverage/*
 
+# Ignore temporary, bespoke stuff
+bespoke_backport.js
+catdata.csv
+
 # This is some deep, dark voodoo, man.
 !.gitignore
