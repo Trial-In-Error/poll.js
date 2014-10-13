@@ -1,0 +1,68 @@
+{
+	"name": "Promotional Poll",
+	"id": "21",
+	"open": true,
+	"owner": "Konrad",
+	"allow_skipping": true,
+	"question_list":
+	[
+		{
+			"body": "Skip this, Konrad.",
+			"type":
+			{
+				"name": "not_a_question"
+			},
+			"opening_slide": true
+		},
+		{
+			"body": "Is politics important to you?",
+			"language": "english",
+			"type":
+			{
+				"name": "pick_n",
+				"n": 1,
+				"response_list":
+				[
+					{
+						"body": "Very much"
+					},
+					{
+						"body": "Somewhat"
+					},
+					{
+						"body": "A little bit"
+					}
+				]
+			}
+		},
+		{
+			"body": "Är politik viktigt för dig?",
+			"language": "swedish",
+			"type":
+			{
+				"name": "pick_n",
+				"n": 1,
+				"response_list":
+				[
+					{
+						"body": "Mycket"
+					},
+					{
+						"body": "Sådär"
+					},
+					{
+						"body": "Lite"
+					}
+				]
+			}
+		},
+		{
+			"body": "This doesn't matter either.",
+			"type":
+			{
+				"name": "not_a_question"
+			},
+			"closing_slide": true
+		}
+	]
+}
