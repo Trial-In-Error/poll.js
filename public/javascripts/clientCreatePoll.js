@@ -12,7 +12,31 @@ function checkNumeric(username) {
 		}
 	}
 	return true;
-};
+}
+
+function chooseQuestionType() {
+	$('#questionTypeForm').show();
+	$('#next').off();
+	$('#next').on('click', function() {
+		if($('#informational').is(':checked')) {
+			console.log('Informational!');
+			$('#questionTypeForm').hide();
+			setupInformational();
+		} else if ($('#pickOne').is(':checked')) {
+			console.log('pickOne!');
+		} else if ($('#pickSeveral').is(':checked')) {
+			console.log('pickSeveral!');
+		} else if ($('#slider').is(':checked')) {
+			console.log('slider!');
+			$('#questionTypeForm').hide();
+			setupSlider();
+		} else if ($('#textField').is(':checked')) {
+			console.log('textField!');
+			$('#questionTypeForm').hide();
+			setupTextField();
+		}
+	});
+}
 
 function setupInformational() {
 	// Reset the informationalForm to its default values
@@ -95,29 +119,7 @@ function setupTextField() {
 	});
 }
 
-function chooseQuestionType() {
-	$('#questionTypeForm').show();
-	$('#next').off();
-	$('#next').on('click', function() {
-		if($('#informational').is(':checked')) {
-			console.log('Informational!');
-			$('#questionTypeForm').hide();
-			setupInformational();
-		} else if ($('#pickOne').is(':checked')) {
-			console.log('pickOne!');
-		} else if ($('#pickSeveral').is(':checked')) {
-			console.log('pickSeveral!');
-		} else if ($('#slider').is(':checked')) {
-			console.log('slider!');
-			$('#questionTypeForm').hide()
-			setupSlider();
-		} else if ($('#textField').is(':checked')) {
-			console.log('textField!');
-			$('#questionTypeForm').hide();
-			setupTextField();
-		}
-	});
-}
+
 
 function setupQuestionType() {
 	if ($('#welcomeText').val().length <= 0) {
@@ -164,6 +166,6 @@ function pageShowHelper() {
 	window.onbeforeunload = function() {
 		return 'Do you want to leave this poll? Your progress will not be saved!';
 	};
-};
+}
 
 $(window).bind('pageshow', pageShowHelper);

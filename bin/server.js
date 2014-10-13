@@ -13,11 +13,11 @@ var http = require('http');
 var https = require('https');
 var fs = require('fs');
 
-var port = (process.env.PORT || 3000)
+var port = (process.env.PORT || 3000);
 
 http.get({hostname:'localhost', port:(process.env.PORT || 3000), path:'/', agent:false}, function (res) {
-  // Do stuff
-})
+	// Do stuff
+});
 
 //var port = (process.env.PORT || 3000);
 /*var secure_port = 443;

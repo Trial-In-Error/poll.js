@@ -249,7 +249,7 @@ app.use(function(req, res, next) {
 
 
 
-			
+
 		} catch (err) {
 			console.log(err);
 		}
@@ -317,8 +317,7 @@ app.get('/login', function(req, res) {
 });
 
 app.get('/createpoll', function(req, res) {
-		res.render('createPoll');
-	
+	res.render('createPoll');
 });
 
 // POST /login

@@ -33,18 +33,18 @@ function storePoll() {
 	if (supportsHTML5Storage()) {
 		window.localStorage['poll'+window.location.pathname.toLowerCase().split('poll/').slice(-1)] = JSON.stringify(poll);
 		if(current_question !== 0) {
-			window.localStorage['current'+window.location.pathname.toLowerCase().split('poll/').slice(-1)] = JSON.stringify(current_question);	
+			window.localStorage['current'+window.location.pathname.toLowerCase().split('poll/').slice(-1)] = JSON.stringify(current_question);
 		} else {
 			window.localStorage['current'+window.location.pathname.toLowerCase().split('poll/').slice(-1)] = 0;
 		}
-		
+
 	} else {
 		// WARN: THIS IS UNCLEAR AND AMBIGUOUS
 		if (firstRun) {
 			alert('Your progress will not be saved until you submit the completed poll.\n\n To enable incremental saving, leave private browsing mode.');
 			firstRun = false;
 		}
-		
+
 		// STUB: SHOULD USE COOKIES FOR BACKUP IF ANYTHING
 		//window['polljspoll'+poll._id] = poll;
 		//window['polljscurrent'+poll._id] = current_question;
@@ -353,7 +353,7 @@ function submitPoll() {
 					// WARN: Do onbeforeunload more elegantly?
 					//current_question = 0;
 					//clearStorage();
-					console.log(batchSanitize([poll])[0])
+					console.log(batchSanitize([poll])[0]);
 					window.localStorage['poll'+window.location.pathname.toLowerCase().split('poll/').slice(-1)] = JSON.stringify(batchSanitize([poll])[0]);
 					window.localStorage['current'+window.location.pathname.toLowerCase().split('poll/').slice(-1)] = 0;
 					current_question = 0;
@@ -815,7 +815,7 @@ function pageShowHelper() {
 					console.log('poll stored');
 					eval($('#data')[0].innerHTML); // jshint ignore:line
 					current_question = 0;
-					storePoll();					
+					storePoll();
 				}
 			}
 			renderCurrentQuestion();
@@ -824,33 +824,31 @@ function pageShowHelper() {
 			if(firstRun) {
 				firstRun = false;
 			}
-	
+
 		$('#bottombuttons div div').on('click', 'a.nextquestion', nextQuestion);
 		$('#bottombuttons div div').on('click', 'a.lastquestion', lastQuestion);
 		$('#bottombuttons div div').on('click', 'a.skipquestion', skipQuestion);
 	}
 
-	/**
- *	Asks the user to confirm leaving or refreshing the page before POSTing the answered poll.
- *	Because it's attached to window, it must be overwritten manually(i.e., will persist through to the next URI/URL visited!).
- */
-window.onbeforeunload = function() {
-	// WARN: Unconditionally storing the poll may be a source of interesting errors!
-	//storePoll();
-	return 'Do you want to leave this poll? Your progress will be saved.';
+		/**
+	 *	Asks the user to confirm leaving or refreshing the page before POSTing the answered poll.
+	 *	Because it's attached to window, it must be overwritten manually(i.e., will persist through to the next URI/URL visited!).
+	 */
+	window.onbeforeunload = function() {
+		// WARN: Unconditionally storing the poll may be a source of interesting errors!
+		//storePoll();
+		return 'Do you want to leave this poll? Your progress will be saved.';
 
-	// history.pushstate and location.hash
-	// http://www.webdesignerdepot.com/2013/03/how-to-manage-the-back-button-with-javascript/
-	// https://developer.mozilla.org/en-US/docs/Web/API/Window.onhashchange
-	// https://developer.mozilla.org/en-US/docs/Web/API/window.location
+		// history.pushstate and location.hash
+		// http://www.webdesignerdepot.com/2013/03/how-to-manage-the-back-button-with-javascript/
+		// https://developer.mozilla.org/en-US/docs/Web/API/Window.onhashchange
+		// https://developer.mozilla.org/en-US/docs/Web/API/window.location
 
-	// history.forward disabling
-	// http://viralpatel.net/blogs/disable-back-button-browser-javascript/
-};
-
-	
+		// history.forward disabling
+		// http://viralpatel.net/blogs/disable-back-button-browser-javascript/
+	};
 //});
-};
+}
 
 //WARN: This is a terrible hack; the function gets called twice per click
 //Once on uncheck of the old one, once on check the new one
