@@ -1,5 +1,5 @@
 {
-	"name": "??????",
+	"name": "Jullovs poll",
 	"id": "18",
 	"open": true,
 	"owner": "Konrad",
@@ -25,7 +25,7 @@
 			"opening_slide": true
 		},
 		{
-			"body": "Jag ser fra mot jullovet.",
+			"body": "Jag ser fram mot jullovet.",
 			"type":
 			{
 				"name": "pick_n",

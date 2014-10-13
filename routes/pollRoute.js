@@ -24,7 +24,9 @@ function batchSanitize(items) {
 router.get('/', function(req, res, next) {
 	console.log('API hit!');
 	req.api = true;
-	res.send('');
+	res.header('Access-Control-Allow-Origin', '*');
+	next();
+	//res.send('');
 });
 
 /* GET poll list */
@@ -174,7 +176,23 @@ router.post('/answerpoll', helper.reqAnswerRight, helper.ensureAuth, function(re
 	}
 });
 
-router.get('/frequency/:pollid/:questionid', /*helper.reqGetAnswersRight, helper.ensureAuth,*/ function(req, res, next) {
+router.options('/frequency/*', function(req, res, next) {
+	try {
+		res.header('Access-Control-Allow-Origin', '*');
+		res.header('Access-Control-Allow-Methods', '*');
+		res.header('Access-Control-Allow-Headers', req.header('Access-Control-Request-Headers')); //allow all headers
+		res.send(200,'');
+	} catch (err) {
+		console.log(err);
+		console.log(JSON.stringify(req.headers));
+		throw err;
+	}
+});
+
+router.get('/frequency/:pollid/:questionid', helper.reqGetAnswersRight, helper.ensureAuth, function(req, res, next) {
+	res.header('Access-Control-Allow-Origin', '*');
+	//console.log(res.header['Access-Control-Allow-Origin']);
+	//console.log('THIS IS FREQUENCY');
 	var db = req.db;
 	db.collection('polldb').findOne({_id: mongo.helper.toObjectID(req.params.pollid)}, function(err, result) {
 		if(err) { throw err; }
@@ -188,7 +206,7 @@ router.get('/frequency/:pollid/:questionid', /*helper.reqGetAnswersRight, helper
 	});
 });
 
-router.post('/bucketfrequency/:pollid/:questionid', /*helper.reqGetAnswersRight, helper.ensureAuth,*/ function(req, res, next) {
+router.post('/bucketfrequency/:pollid/:questionid', helper.reqGetAnswersRight, helper.ensureAuth, function(req, res, next) {
 	var db = req.db;
 		console.log('req.body');
 		console.log('----------------------');

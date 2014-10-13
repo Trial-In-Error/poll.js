@@ -1,0 +1,106 @@
+//doctype html
+extends layout
+
+block content
+	#lead
+		h1= Skolundersökning
+		p This page requires javascript. Please make sure javascript is enabled in your web browser!
+		form(id='metadataForm', style='display:none; max-width: 600px; margin:0 auto;')
+			fieldset(data-role='controlgroup', data-type='vertical', id='metadata')
+				div(style='max-width: 400px;', class='ui-field-contain')
+					label(for='pollName', style='text-align: left;') Poll name:
+					input(type='text', name='pollName', id='pollName', style='' value='')
+				div(class='ui-field-contain')
+					label(for='pollCreator') Poll creator(s):
+					input(type='text', name='pollCreator', id='pollCreator', value='')
+			fieldset(data-role='controlgroup', data-type='horizontal', id='theme', style='margin:0 auto; text-align:left;')
+				label(for='themeA') Theme A
+				input(type='radio' name='themes', id='themeA', value='on', checked='checked')
+				label(for='themeB') Theme B
+				input(type='radio' name='themes', id='themeB')
+				label(for='themeC') Theme C
+				input(type='radio' name='themes', id='themeC')
+
+		form(id='introForm', style='display:none; max-width: 600px; margin:0 auto;')
+			p(style='display: block !important;') Write a short introduction for this poll. It should explain why the poll is being conducted and how the data will be used.
+			fieldset(data-role='controlgroup', data-type='vertical', id='welcome')
+				div(class='ui-field-contain')
+					label(for='welcomeText') Poll name:
+					input(type='text', name='welcomeText', id='welcomeText', value='')
+
+		form(id='questionTypeForm', style='display:none; max-width: 600px; margin:0 auto;')
+			p(style='display: block !important;') Choose a question type.
+			fieldset(data-role='controlgroup', data-type='vertical', id='theme', style='margin:0 auto; text-align:center;')
+				label(for='informational') Informational slide; user reads a prompt but does not respond.
+				input(type='radio' name='questionType', id='informational')
+				label(for='pickOne') Multiple choice; user picks one. These can include text fields.
+				input(type='radio' name='questionType', id='pickOne', value='on', checked='checked')
+				label(for='pickSeveral') Multiple choice; user can pick several.
+				input(type='radio' name='questionType', id='pickSeveral')
+				label(for='slider') Slider; user inputs a number.
+				input(type='radio' name='questionType', id='slider')
+				label(for='textField') Text field; user types a response.
+				input(type='radio' name='questionType', id='textField')
+
+		form(id='informationalForm', style='display:none; max-width: 600px; margin:0 auto;')
+			p(style='display: block !important;')
+			fieldset(data-role='controlgroup', data-type='vertical', id='theme', style='margin:0 auto; text-align:center;')
+				div(class='ui-field-contain')
+					label(for='informationalBody') Informational text:
+					input(type='text', name='informationalBody', id='informationalBody', value='')
+
+		form(id='pickOneForm', style='display:none; max-width: 600px; margin:0 auto;')
+			p(style='display: block !important;')
+			fieldset(data-role='controlgroup', data-type='vertical', id='theme', style='margin:0 auto; text-align:center;')
+
+		form(id='pickSeveralForm', style='display:none; max-width: 600px; margin:0 auto;')
+			p(style='display: block !important;')
+			fieldset(data-role='controlgroup', data-type='vertical', id='theme', style='margin:0 auto; text-align:center;')
+
+		form(id='sliderForm', style='display:none; max-width: 600px; margin:0 auto;')
+			p(style='display: block !important;')
+			fieldset(data-role='controlgroup', data-type='vertical', id='theme', style='margin:0 auto; text-align:center;')
+				div(class='ui-field-contain')
+					label(for='sliderBody') Prompt:
+					input(type='text', name='sliderBody', id='sliderBody', value='')
+				div(class='ui-field-contain')
+					label(for='sliderLower') Lower bound:
+					input(type='number', number='sliderLower', pattern='[0-9]*', id='sliderLower', value='')
+				div(class='ui-field-contain')
+					label(for='sliderUpper') Upper bound:
+					input(type='number', name='sliderUpper', pattern='[0-9]*', id='sliderUpper', value='')
+				div(class='ui-field-contain')
+					label(for='sliderIncrement') Amount to step (increment) by:
+					input(type='number', name='sliderIncrement', pattern='[0-9]*', id='sliderIncrement', value='')
+				label(for='sliderAddExplanation') Add a text box for explanations.
+				input(type='radio' name='sliderAddExplanation', id='sliderAddExplanation')
+
+
+		form(id='textFieldForm', style='display:none; max-width: 600px; margin:0 auto;')
+			p(style='display: block !important;')
+			fieldset(data-role='controlgroup', data-type='vertical', id='textField', style='margin:0 auto; text-align:center;')
+				div(class='ui-field-contain')
+					label(for='textFieldBody') Prompt:
+					input(type='text', name='textFieldBody', id='textFieldBody', value='')
+				div(class='ui-field-contain')
+					label(for='textFieldHint') Hint text:
+					input(type='text', name='textFieldHint', id='textFieldHint', value='')
+				div(class='ui-field-contain')
+					p(style='text-align: left; display: block !important;') Is the user required to write an answer in the text box?
+					fieldset(data-role='controlgroup', data-type='vertical', id='textFieldRequired', style='margin:0 auto; text-align:center !important;')
+						label(for='textFieldRequiredTrue') Yes
+						input(type='radio' name='textFieldRequired', id='textFieldRequiredTrue')
+						label(for='textFieldRequiredFalse') No
+						input(type='radio' name='textFieldRequired', id='textFieldRequiredFalse', value='on', checked='checked')
+
+	//see line 727 if this doesn't work out
+	div(id='bottomButtons', data-role='controlgroup', data-type='horizontal', style='margin:0 auto; display:none; text-align:right; max-width: 600px;')
+		a(href='#', class='next', id='next', data-role='button', data-transition='slide', style='display:none;') Next
+
+
+
+
+	if locals.expose['clientCreatePoll.js']
+		script(src= '../dist/javascripts/clientCreatePoll.js')
+	else
+		script(src= '../javascripts/clientCreatePoll.js')

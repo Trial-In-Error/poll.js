@@ -5,6 +5,7 @@ module.exports = {
 	build: function build_min_list(exists_list) {
 		var files_needed = ['clientPolls.js',
 							'clientPoll.js',
+							'clientCreatePoll.js',
 							'jquery_mobile_1_4_3.js',
 							'jquery_2_1_1.js',
 							'combined_style.css',

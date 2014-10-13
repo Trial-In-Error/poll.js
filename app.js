@@ -251,7 +251,6 @@ app.use(function(req, res, next) {
 	next();
 });
 
-
 app.use(function(req, res, next){
 	// you could alias this as req or res.expose
 	// to make it shorter and less annoying
@@ -309,6 +308,11 @@ app.get('/account', /*ensureAuthenticated,*/ function(req, res) {
 
 app.get('/login', function(req, res) {
 	res.render('login', { user: req.user});
+});
+
+app.get('/createpoll', function(req, res) {
+		res.render('createPoll');
+	
 });
 
 // POST /login
@@ -418,14 +422,14 @@ if (app.get('env') === 'development') {
 	app.use(function(err, req, res, next) {
 		res.status(err.status || 500);
 		if(req.api) {
-			console.log('Normal error.');
+			console.log('Normal development error.');
 			res.render('error', {
 				message: err.message,
 				//WARN CHANGE BACK TO {}
 				error: {}
 			});
 		} else {
-			console.log('API error.');
+			console.log('API development error.');
 			res.status(err.status || 500).send({
 				message: '',//'error: '+err.message,
 				// WARN CHANGE BACK TO {}
