@@ -729,11 +729,19 @@ function updateBottomButtons() {
 function renderBottomButtons() {
 	// Render 'back' and 'next' buttons
 	var temp = '';
-	temp += '<div id="verybottombuttons" data-role="controlgroup" data-type="horizontal" text-align="center" margin-left="auto" margin-right="auto" align="center">';
-	temp += '<a href="#" class="lastquestion" id="lastquestion" data-transition="slide" data-direction= "reverse" data-role="button" data-icon="carat-l" data-iconpos="left">Back</a>';
-	// STUB: Check to see if you should render a 'skip' button
-	temp += '<a href="#" class="skipquestion" id="skipquestion" data-transition="slide" data-role="button">Skip</a>';
-	temp += '<a href="#" class="nextquestion" id="nextquestion" data-transition="slide" data-role="button" data-icon="carat-r" data-iconpos="right">Next</a>';
+	if(typeof poll.question_list[current_question].language === 'undefined' || poll.question_list[current_question].language === 'english') {
+		temp += '<div id="verybottombuttons" data-role="controlgroup" data-type="horizontal" text-align="center" margin-left="auto" margin-right="auto" align="center">';
+		temp += '<a href="#" class="lastquestion" id="lastquestion" data-transition="slide" data-direction= "reverse" data-role="button" data-icon="carat-l" data-iconpos="left">Back</a>';
+		// STUB: Check to see if you should render a 'skip' button
+		temp += '<a href="#" class="skipquestion" id="skipquestion" data-transition="slide" data-role="button">Skip</a>';
+		temp += '<a href="#" class="nextquestion" id="nextquestion" data-transition="slide" data-role="button" data-icon="carat-r" data-iconpos="right">Next</a>';
+	} else {
+		temp += '<div id="verybottombuttons" data-role="controlgroup" data-type="horizontal" text-align="center" margin-left="auto" margin-right="auto" align="center">';
+		temp += '<a href="#" class="lastquestion" id="lastquestion" data-transition="slide" data-direction= "reverse" data-role="button" data-icon="carat-l" data-iconpos="left">Bakåt</a>';
+		// STUB: Check to see if you should render a 'skip' button
+		temp += '<a href="#" class="skipquestion" id="skipquestion" data-transition="slide" data-role="button">Hoppa</a>';
+		temp += '<a href="#" class="nextquestion" id="nextquestion" data-transition="slide" data-role="button" data-icon="carat-r" data-iconpos="right">Nästa</a>';		
+	}
 	$('#bottombuttons').html(temp);
 	$('#bottombuttons').trigger('create');
 	updateBottomButtons();
