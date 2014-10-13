@@ -3,6 +3,7 @@ var value = Math.floor((Math.random() * 1000000)+1);
 var user_token = ('00000000' + value).slice(-8);
 
 eval($('#data')[0].innerHTML); // jshint ignore:line
+var firstRun = true;
 
 /**
  *	Checks if browser supports html5's localStorage. Note that, by design, it checks for both sessionStorage and localStorage being supported.
@@ -39,7 +40,11 @@ function storePoll() {
 		
 	} else {
 		// WARN: THIS IS UNCLEAR AND AMBIGUOUS
-		alert('Your progress will not be saved until you submit the completed poll.\n\n To enable incremental saving, leave private browsing mode.');
+		if (firstRun) {
+			alert('Your progress will not be saved until you submit the completed poll.\n\n To enable incremental saving, leave private browsing mode.');
+			firstRun = false;
+		}
+		
 		// STUB: SHOULD USE COOKIES FOR BACKUP IF ANYTHING
 		//window['polljspoll'+poll._id] = poll;
 		//window['polljscurrent'+poll._id] = current_question;
@@ -806,13 +811,19 @@ function pageShowHelper() {
 				//current_question = 0;
 				loadPoll();
 			} else {
-				console.log('poll stored');
-				eval($('#data')[0].innerHTML); // jshint ignore:line
-				current_question = 0;
-				storePoll();
+				if(firstRun) {
+					console.log('poll stored');
+					eval($('#data')[0].innerHTML); // jshint ignore:line
+					current_question = 0;
+					storePoll();					
+				}
 			}
 			renderCurrentQuestion();
 			renderBottomButtons();
+
+			if(firstRun) {
+				firstRun = false;
+			}
 	
 		$('#bottombuttons div div').on('click', 'a.nextquestion', nextQuestion);
 		$('#bottombuttons div div').on('click', 'a.lastquestion', lastQuestion);
