@@ -338,6 +338,7 @@ function batchSanitize(items) {
  */
 function submitPoll() {
 	if(answerQuestion(true)) {
+		console.log('Submitting: '+JSON.stringify(poll));
 		cleanPoll( function () {
 			console.log(poll);
 				$.ajax({
@@ -348,16 +349,18 @@ function submitPoll() {
 				}).done(function(response){
 				// STUB: Lock this user out of this poll in the future, server-side
 				// Check for successful (blank) response
+				console.log('Response: '+JSON.stringify(response));
 				if ( response.msg === '' ) {
 					// Delete local storage of results
 					// WARN: Do onbeforeunload more elegantly?
 					//current_question = 0;
 					//clearStorage();
-					console.log(batchSanitize([poll])[0]);
+					//console.log(batchSanitize([poll])[0]);
+					console.log('Submission complete; sanitizing local storage.');
 					window.localStorage['poll'+window.location.pathname.toLowerCase().split('poll/').slice(-1)] = JSON.stringify(batchSanitize([poll])[0]);
 					window.localStorage['current'+window.location.pathname.toLowerCase().split('poll/').slice(-1)] = 0;
 					current_question = 0;
-					console.log('SUBMITPOLL CURRENT QUESTION'+current_question);
+					//console.log('SUBMITPOLL CURRENT QUESTION'+current_question);
 					window.onbeforeunload = function() {};
 					//clearStorage();
 					//poll = batchSanitize([poll])[0];
