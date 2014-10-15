@@ -341,6 +341,7 @@ function submitPoll() {
 	if(answerQuestion(true)) {
 		console.log('Submitting: '+JSON.stringify(poll));
 		window.onbeforeunload = function() {};
+		var tempID = window.location.pathname.toLowerCase().split('poll/').slice(-1);
 		cleanPoll( function () {
 				$.ajax({
 				type: 'POST',
@@ -358,9 +359,13 @@ function submitPoll() {
 					//current_question = 0;
 					//clearStorage();
 					//console.log(batchSanitize([poll])[0]);
+					poll = {};
 					console.log('Submission complete; sanitizing local storage.');
-					window.localStorage['poll'+window.location.pathname.toLowerCase().split('poll/').slice(-1)] = JSON.stringify(batchSanitize([poll])[0]);
-					window.localStorage['current'+window.location.pathname.toLowerCase().split('poll/').slice(-1)] = 0;
+					//clearStorage();
+					window.localStorage.removeItem('poll'+tempID);
+					window.localStorage.removeItem('current'+tempID);
+					//window.localStorage['poll'+tempID] = JSON.stringify(batchSanitize([poll])[0]);
+					//window.localStorage['current'+tempID] = 0;
 					current_question = 0;
 					//console.log('SUBMITPOLL CURRENT QUESTION'+current_question);
 					//clearStorage();
