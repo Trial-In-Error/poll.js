@@ -86,7 +86,7 @@ function cleanPoll(callback) {
 					&& typeof poll.question_list[question].type.response_list[response].explanation !== 'undefined'
 					&& typeof poll.question_list[question].type.response_list[response].answers[0] !== 'undefined'
 					&& poll.question_list[question].type.response_list[response].answers[0].value !== true) {
-					console.log('Question '+question+' had response '+response+' with the value of '+poll.question_list[question].type.response_list[response].answers[0]+'. Cleared.' );
+					console.log('Question '+question+' had response '+response+' with the value of '+JSON.stringify(poll.question_list[question].type.response_list[response].answers[0])+'. Cleared!' );
 					poll.question_list[question].type.response_list[response].answers = genEmptyAnswers();
 				}
 			} catch (err) {
