@@ -85,8 +85,9 @@ function cleanPoll(callback) {
 					&& typeof poll.question_list[question].type.response_list[response].answers !== 'undefined'
 					&& typeof poll.question_list[question].type.response_list[response].explanation !== 'undefined'
 					&& typeof poll.question_list[question].type.response_list[response].answers[0] !== 'undefined'
-					&& poll.question_list[question].type.response_list[response].answers[0].value !== true) {
-					console.log('Question '+question+' had response '+response+' with the value of '+JSON.stringify(poll.question_list[question].type.response_list[response].answers[0])+'. Cleared!' );
+					&& (poll.question_list[question].type.response_list[response].answers[0].value === false
+						|| poll.question_list[question].type.response_list[response].answers[0].value === undefined)) {
+					console.log('Question '+question+' had response '+response+' with the values of '+JSON.stringify(poll.question_list[question].type.response_list[response].answers[0])+'. Cleared!' );
 					poll.question_list[question].type.response_list[response].answers = genEmptyAnswers();
 				}
 			} catch (err) {
@@ -339,14 +340,15 @@ function batchSanitize(items) {
 function submitPoll() {
 	if(answerQuestion(true)) {
 		console.log('Submitting: '+JSON.stringify(poll));
+		window.onbeforeunload = function() {};
 		cleanPoll( function () {
-			console.log(poll);
 				$.ajax({
 				type: 'POST',
 				data: poll,
 				url: '/pollroute/answerpoll',
 				dataType: 'JSON'
 				}).done(function(response){
+				//window.onbeforeunload = function() {};
 				// STUB: Lock this user out of this poll in the future, server-side
 				// Check for successful (blank) response
 				console.log('Response: '+JSON.stringify(response));
@@ -361,7 +363,6 @@ function submitPoll() {
 					window.localStorage['current'+window.location.pathname.toLowerCase().split('poll/').slice(-1)] = 0;
 					current_question = 0;
 					//console.log('SUBMITPOLL CURRENT QUESTION'+current_question);
-					window.onbeforeunload = function() {};
 					//clearStorage();
 					//poll = batchSanitize([poll])[0];
 					//poll = undefined;
@@ -834,6 +835,15 @@ function pageShowHelper() {
 
 			if(firstRun) {
 				firstRun = false;
+				window.onbeforeunload = function() {
+					return 'Do you want to leave this poll? Your progress will be saved.';
+					// history.pushstate and location.hash
+					// http://www.webdesignerdepot.com/2013/03/how-to-manage-the-back-button-with-javascript/
+					// https://developer.mozilla.org/en-US/docs/Web/API/Window.onhashchange
+					// https://developer.mozilla.org/en-US/docs/Web/API/window.location
+					// history.forward disabling
+					// http://viralpatel.net/blogs/disable-back-button-browser-javascript/
+				};
 			}
 
 		$('#bottombuttons div div').on('click', 'a.nextquestion', nextQuestion);
@@ -845,19 +855,7 @@ function pageShowHelper() {
 	 *	Asks the user to confirm leaving or refreshing the page before POSTing the answered poll.
 	 *	Because it's attached to window, it must be overwritten manually(i.e., will persist through to the next URI/URL visited!).
 	 */
-	window.onbeforeunload = function() {
-		// WARN: Unconditionally storing the poll may be a source of interesting errors!
-		//storePoll();
-		return 'Do you want to leave this poll? Your progress will be saved.';
 
-		// history.pushstate and location.hash
-		// http://www.webdesignerdepot.com/2013/03/how-to-manage-the-back-button-with-javascript/
-		// https://developer.mozilla.org/en-US/docs/Web/API/Window.onhashchange
-		// https://developer.mozilla.org/en-US/docs/Web/API/window.location
-
-		// history.forward disabling
-		// http://viralpatel.net/blogs/disable-back-button-browser-javascript/
-	};
 //});
 }
 
