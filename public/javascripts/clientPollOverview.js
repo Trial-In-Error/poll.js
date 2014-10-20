@@ -4,7 +4,7 @@ function populateTable() {
 	// Empty content string
 	var tableContent = '';
 	// jQuery AJAX call for JSON
-	$.getJSON( '/pollroute/exportpolljson/'+window.location.href.split('/').pop(), function( data ) {
+	$.getJSON( '/pollroute/exportpolljsonclean/'+window.location.href.split('/').pop(), function( data ) {
 		// Inject the whole content string into our existing HTML table
 		if(data.msg === null) {
 			alert('Network error!');

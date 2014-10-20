@@ -63,7 +63,7 @@ router.get('/exportpolljson/:id', helper.reqGetAnswersRight, helper.ensureAuth, 
 	});
 });
 
-router.get('/exportpolljsonclean/:id', helper.reqGetAnswersRight, helper.ensureAuth, function(req, res) {
+router.get('/exportpolljsonclean/:id', function(req, res) {
 	var db = req.db;
 	var pollToExport = req.params.id;
 	db.collection('polldb').findOne({_id: mongo.helper.toObjectID(pollToExport)}, function(err, result) {
