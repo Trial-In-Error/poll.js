@@ -1,0 +1,15 @@
+extends layout
+
+block content
+	h1= title
+
+	if locals.expose.exists['clientPollOverview.js']
+		script(src='/dist/javascripts/clientPollOverview.js')
+	else
+		script(src='/javascripts/clientPollOverview.js')
+
+	link(rel='stylesheet', href='/stylesheets/roundList.css')
+
+	h2(id='pollTitle')
+	p(id='pollMetadata')
+	div(id='collapsibleSet' data-role='collapsibleset' data-mini='true' data-inset='false' style='max-width: 100%; margin:0 auto;')

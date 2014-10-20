@@ -21,16 +21,22 @@ html
 		else
 			script(src='/javascripts/jquery_mobile_1_4_3.js')
 
+		script.
+			$(document).bind("mobileinit", function(){
+				$.mobile.ignoreContentEnabled = true;
+			});
+
 
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 
 
 	body(class="ui-mobile-viewport ui-overlay-c")
 		div(data-role="page" id="frontpage")
-			div(data-role="header", class="ui-header ui-bar-b", style="background-color: #fff !important;")
+			div(class="ui-header ui-bar-b", style="background-color: #fff !important;")
 				//h1
 					//a(class="heading-hyperlink" href="/") Flashpoll
-				img(src='/images/opiner.jpg', style='display: block; margin-left: auto !important; margin-right: auto !important; text-align:center; max-width: 212px; max-height: 57.5px')
+				a(href='/', id='headerAnchor', style='display: block;margin-left: auto !important; margin-right: auto !important; text-align:center; border: none;max-width: 212px; max-height: 57.5px', data-role= 'none', data-enhance='false')
+					img(src='/images/opiner.jpg', style='max-width: 212px; max-height: 57.5px;' data-role='none')
 
 			div(data-role='content', class='ui-content')
 				block content

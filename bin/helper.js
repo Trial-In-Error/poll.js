@@ -35,7 +35,7 @@ exports.ensureAuth = function(req, res, next) {
 			//delete req.session.redirect_to;
 			console.log('AUTOMATED anonymous-login.');
 			req.body.password = 'garbage';
-			req.body.username = 'garbage'
+			req.body.username = 'garbage';
 			passport.authenticate('anonymous', function(err, user, info) {
 				//console.log('Start login attempt.');
 				if (err) { return next(err); }
