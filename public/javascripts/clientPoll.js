@@ -361,6 +361,7 @@ function submitPoll() {
 					//console.log(batchSanitize([poll])[0]);
 					poll = {};
 					console.log('Submission complete; sanitizing local storage.');
+					$(window).unbind('pageshow');
 					//clearStorage();
 					window.localStorage.removeItem('poll'+tempID);
 					window.localStorage.removeItem('current'+tempID);
