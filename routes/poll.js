@@ -4,7 +4,7 @@ var mongo = require('mongoskin');
 var helper = require('../bin/helper');
 
 /* GET a specific poll. */
-router.get('/:id', helper.reqAnswerRight, helper.ensureAuth, function(req, res) {
+router.get('/:id', function(req, res) {
 	console.log('MATCHED AT /:id.');
 	var db = req.db;
 	var pollToDisplay = req.params.id;

@@ -30,7 +30,7 @@ exports.ensureAuth = function(req, res, next) {
 		} else if (true) {
 			// THIS NEEDS TO BE SESSION-IZED
 			var redirect_to = req.session.redirect_to || '/';
-			console.log('By the way, redirect is set to:'+ req.session.redirect_to+' .');
+			console.log('1By the way, redirect is set to:'+ req.session.redirect_to+' .');
 			console.log('If this ever looks like it\'ll go to /login, please set to / instead.');
 			//delete req.session.redirect_to;
 			console.log('AUTOMATED anonymous-login.');

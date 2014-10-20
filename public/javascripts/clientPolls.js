@@ -4,7 +4,11 @@
 
 function constructRow(tableContent, poll, data) {
 	tableContent += '<li>';
-	tableContent += '<a href="/poll/' + poll._id + '" rel="external" data-ajax="false">';
+	if(poll.open) {
+		tableContent += '<a href="/poll/' + poll._id + '" rel="external" data-ajax="false">';	
+	} else {
+		tableContent += '<a href="/polloverview/' + poll._id + '" rel="external" data-ajax="false">';
+	}
 	tableContent += '<h2>'+ poll.name + '</h2>';
 	tableContent += '<p>';
 	tableContent += 'Created by ' + poll.owner + '.</p>';
