@@ -22,7 +22,7 @@ function populateTable() {
 
 				//Inside the grid, add a div for the question list and a div for the graph
 				$('#grid-'+questionCounter).append('<div class="ui-block-a" style="padding: 15px;" id=collapsibleDiv-'+questionCounter+'></div>');
-				$('#grid-'+questionCounter).append('<div class="ui-block-b" style="padding: 15px; background-color: #ff0000;" id=collapsibleGraph-'+questionCounter+'></div>');
+				$('#grid-'+questionCounter).append('<div class="ui-block-b" style="padding: 0px;" id=collapsibleGraph-'+questionCounter+'></div>');
 				$('#collapsibleGraph-'+questionCounter).append('<p style="text-shadow: none;">Put a graph here!</p>');
 				$('#collapsible-'+questionCounter).append($('<h4></h4>').text(data.question_list[questionCounter].body));
 				$('#collapsibleDiv-'+questionCounter).append($('<ol class="rounded-list"></ol>'));
@@ -36,7 +36,10 @@ function populateTable() {
 					//tempResponse.append($('<a href=""></a>')).text(data.question_list[questionCounter].type.response_list[responseCounter].body);
 					$('#collapsibleDiv-'+questionCounter+' ol').append(tempResponse);
 				}
-				$("#collapsibleGraph-"+questionCounter).height( $("#collapsibleDiv-"+questionCounter).height() );
+				console.log("Loading from: "+window.location.origin+"/pollroute/frequency"+window.location.pathname.split('/polloverview')[1]+"/"+questionCounter)
+				loadMatrixCSV(window.location.origin+"/pollroute/frequency"+window.location.pathname.split('/polloverview')[1]+"/"+questionCounter,"#collapsibleGraph-"+questionCounter);
+				$("#collapsibleDiv-"+questionCounter).height( $("#collapsibleGraph-"+questionCounter).height() );
+
 				//$('#collapsibleSet').trigger('create');
 				//$('#collapsible-'+questionCounter+' div').css('display', 'flex');
 			}
