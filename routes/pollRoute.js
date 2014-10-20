@@ -189,7 +189,7 @@ router.options('/frequency/*', function(req, res, next) {
 	}
 });
 
-router.get('/frequency/:pollid/:questionid', helper.reqGetAnswersRight, helper.ensureAuth, function(req, res, next) {
+router.get('/frequency/:pollid/:questionid', function(req, res, next) {
 	res.header('Access-Control-Allow-Origin', '*');
 	//console.log(res.header['Access-Control-Allow-Origin']);
 	//console.log('THIS IS FREQUENCY');
@@ -206,7 +206,7 @@ router.get('/frequency/:pollid/:questionid', helper.reqGetAnswersRight, helper.e
 	});
 });
 
-router.post('/bucketfrequency/:pollid/:questionid', helper.reqGetAnswersRight, helper.ensureAuth, function(req, res, next) {
+router.post('/bucketfrequency/:pollid/:questionid', function(req, res, next) {
 	var db = req.db;
 		console.log('req.body');
 		console.log('----------------------');

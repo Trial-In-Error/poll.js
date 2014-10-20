@@ -18,7 +18,7 @@ function loadMatrixCSV(url,container){
   }
   
 
-
+  console.log('Attempting to log in as '+username+', '+password);
   d3.csv(url).header("Authorization", "Basic " + btoa(username + ":" + password))
   .get(function(error,data) {
    console.log(data);
