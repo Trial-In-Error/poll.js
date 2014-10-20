@@ -63,17 +63,41 @@ function setupSlider() {
 	$('#sliderLower').val('');
 	$('#sliderUpper').val('');
 	$('#sliderIncrement').val('');
+	$('#sliderAddExplanation').parent().show();
 	$('#sliderAddExplanation').prop('checked', false);
-	$('#sliderAddExplanation').show();
-	$('#sliderExplanation').val('');
+	$('#sliderAddExplanation').checkboxradio('refresh');
+	$('#sliderRemoveExplanation').prop('checked', false);
+	$('#sliderRemoveExplanation').parent().hide();
 	$('#sliderExplanation').hide();
-	$('#sliderExplanationRequired').prop('checked', false);
-	$('#sliderExplanationRequired').hide();
+	$('#sliderExplanationRequiredTrue').prop('checked', false);
+	$('#sliderExplanationRequiredTrue').checkboxradio('refresh');
+	$('#sliderExplanationRequiredFalse').prop('checked', true);
+	$('#sliderExplanationRequiredFalse').checkboxradio('refresh');
+	//$('#sliderExplanationRequired').hide();
 	$('#sliderExplanationHintText').val('');
-	$('#sliderExplanationHintText').hide();
+	//$('#sliderExplanationHintText').hide();
 
 	// Show the sliderForm
 	$('#sliderForm').show();
+
+	$('#sliderRemoveExplanation').on('click', function() {
+		$('#sliderExplanation').hide();
+		$('#sliderAddExplanation').parent().show();
+		$('#sliderAddExplanation').prop('checked', false);
+		$('#sliderAddExplanation').checkboxradio('refresh');
+		$('#sliderRemoveExplanation').parent().hide();
+	})
+
+	$('#sliderAddExplanation').on('click', function() {
+		$('#sliderExplanation').show();
+		$('#sliderRemoveExplanation').parent().show();
+		$('#sliderRemoveExplanation').prop('checked', false);
+		$('#sliderRemoveExplanation').checkboxradio('refresh');
+		$('#sliderAddExplanation').parent().hide();
+		//$('#sliderTextFieldRequired').show();
+		//$('#sliderExplanationHintText').show();
+		
+	})
 
 	// Set up the next button's behavior
 	$('#next').off();

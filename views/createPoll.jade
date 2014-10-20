@@ -72,8 +72,22 @@ block content
 				div(class='ui-field-contain')
 					label(for='sliderIncrement') Amount to step (increment) by:
 					input(type='number', name='sliderIncrement', pattern='[0-9]*', id='sliderIncrement', value='')
-				label(for='sliderAddExplanation') Add a text box for explanations.
-				input(type='radio' name='sliderAddExplanation', id='sliderAddExplanation')
+			label(for='sliderAddExplanation') Add a text box for explanations.
+			input(type='radio', name='sliderAddExplanation', id='sliderAddExplanation')
+			label(for='sliderRemoveExplanation') Remove the text box for explanations.
+			input(type='radio', name='sliderRemoveExplanation', id='sliderRemoveExplanation')
+			div(id='sliderExplanation')
+				div(class='ui-field-contain')
+					label(for='sliderExplanationHintText') Hint text: 
+					input(type='text', name='sliderExplanationHintText', id='sliderExplanationHintText', value='')
+				div(class='ui-field-contain')
+					p(style='text-align: left; display: block !important;') Is the user required to write an answer in the text box?
+					fieldset(data-role='controlgroup', data-type='vertical', id='sliderTextFieldRequired', style='margin:0 auto; text-align:center !important;')
+						label(for='sliderExplanationRequiredTrue') Yes
+						input(type='radio' name='sliderExplanationRequired', id='sliderExplanationRequiredTrue')
+						label(for='sliderExplanationRequiredFalse') No
+						input(type='radio' name='sliderExplanationRequired', id='sliderExplanationRequiredFalse', value='on', checked='checked')
+
 
 
 		form(id='textFieldForm', style='display:none; max-width: 600px; margin:0 auto;')

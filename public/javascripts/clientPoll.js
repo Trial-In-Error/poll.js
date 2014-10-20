@@ -883,3 +883,11 @@ window.onunload = function() {};
 //window.addEventListener( 'pageshow', pageShowHelper, false );
 
 $(window).bind('pageshow', pageShowHelper);
+
+$( document ).on( "swipeleft", ".ui-page", function( event ) {
+	nextQuestion();
+});
+// The same for the navigating to the previous page
+$( document ).on( "swiperight", ".ui-page", function( event ) {
+	lastQuestion();
+});

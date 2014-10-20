@@ -2,50 +2,73 @@
 //    alert(error);
 //};
 
+function constructRow(tableContent, poll, data) {
+	tableContent += '<li>';
+	tableContent += '<a href="/poll/' + poll._id + '" rel="external" data-ajax="false">';
+	tableContent += '<h2>'+ poll.name + '</h2>';
+	tableContent += '<p>';
+	tableContent += 'Created by ' + poll.owner + '.</p>';
+	if(poll.open) {
+		tableContent += '<h4 style="display:none;"> open </h4>';	
+	} else {
+		tableContent += '<h4 style="display:none;"> closed </h4>';	
+	}
+	
+	tableContent += '</a>';
+	tableContent += '<div class="split-custom-wrapper">';
+	if ( data.auth && typeof data.rights.delete !== 'undefined' && data.rights.delete) {
+		//console.log('I can delete.');
+		tableContent += '<a href="#" class="linkdeletepoll split-custom-button ui-btn-icon-notext" rel="'+poll._id+'" data-role="button" data-icon="delete" data-iconpos="notext"></a>';
+	}
+	if ( data.auth && typeof data.rights.copy !== 'undefined' && data.rights.copy) {
+		//console.log('I can copy.');
+		tableContent += '<a href="#" class="linkcopypoll split-custom-button ui-btn-icon-notext" rel="'+poll._id+'" data-role="button" data-icon="forward" data-iconpos="notext"></a>';
+	}
+	if ( data.auth && typeof data.rights.openClose !== 'undefined' && data.rights.openClose) {
+		//console.log('I can open/close.');
+		tableContent += '<a href="#" class="linkopenclosepoll split-custom-button ui-btn-icon-notext" rel="'+poll._id+'" data-role="button" data-icon="lock" data-iconpos="notext"></a>';
+		//tableContent += '<a href="#" class="linksharepoll split-custom-button ui-btn-icon-notext" rel="'+this._id+'" data-role="button" data-icon="action" data-iconpos="notext">link</a>';
+	}
+	//if (typeof data.rights !== 'undefined' && !(data.rights.delete || data.rights.copy || data.rights.openClose)) {
+	//	//console.log('I can do nothing.');
+	//	tableContent += '<a href="/poll/' + this._id + '" class="split-custom-button ui-btn-icon-notext" data-role="button" data-icon="carat-r" data-iconpos="notext">answer</a>';
+	//	//tableContent += '<a href="#" class="linksharepoll split-custom-button ui-btn-icon-notext" rel="'+this._id+'" data-role="button" data-icon="action" data-iconpos="notext">link</a>';
+	//}
+	tableContent += '</div></li>';
+	return tableContent;
+}
+
 // Fill table with data
 function populateTable() {
-
-	// Empty content string
 	var tableContent = '';
+	var openPolls = [];
+	var closedPolls = [];
+
 	// jQuery AJAX call for JSON
 	$.getJSON( '/pollroute/listpolls', function( data ) {
-		if(typeof data !== 'undefined' && typeof data.polls !== 'undefined') {
-			// For each item in our JSON, add a table row and cells to the content string
-			$.each(JSON.parse(data.polls), function(){
-				tableContent += '<li>';
-				tableContent += '<a href="/poll/' + this._id + '" rel="external" data-ajax="false">';
-				tableContent += '<h2>'+ this.name + '</h2>';
-				tableContent += '<p>';
-				if(this.open)
-				{
-					tableContent += 'Open';
-				}else{
-					tableContent += 'Closed';
+		if (typeof data !== 'undefined' && typeof data.polls !== 'undefined') {
+			$.each(JSON.parse(data.polls), function() {
+				if (this.open) {
+					openPolls.push(this);
+				} else {
+					closedPolls.push(this);
 				}
-				//tableContent += ', owned by ' + this.owner + ', and has the database hash ' + this._id+'.</p>';
-				tableContent += ', owned by ' + this.owner + '.</p>';
-				tableContent += '</a>';
-				tableContent += '<div class="split-custom-wrapper">';
-				if ( data.auth && typeof data.rights.delete !== 'undefined' && data.rights.delete) {
-					//console.log('I can delete.');
-					tableContent += '<a href="#" class="linkdeletepoll split-custom-button ui-btn-icon-notext" rel="'+this._id+'" data-role="button" data-icon="delete" data-iconpos="notext">delete</a>';
-				}
-				if ( data.auth && typeof data.rights.copy !== 'undefined' && data.rights.copy) {
-					//console.log('I can copy.');
-					tableContent += '<a href="#" class="linkcopypoll split-custom-button ui-btn-icon-notext" rel="'+this._id+'" data-role="button" data-icon="forward" data-iconpos="notext">copy</a>';
-				}
-				if ( data.auth && typeof data.rights.openClose !== 'undefined' && data.rights.openClose) {
-					//console.log('I can open/close.');
-					tableContent += '<a href="#" class="linkopenclosepoll split-custom-button ui-btn-icon-notext" rel="'+this._id+'" data-role="button" data-icon="lock" data-iconpos="notext">open/close</a>';
-					//tableContent += '<a href="#" class="linksharepoll split-custom-button ui-btn-icon-notext" rel="'+this._id+'" data-role="button" data-icon="action" data-iconpos="notext">link</a>';
-				}
-				//if (typeof data.rights !== 'undefined' && !(data.rights.delete || data.rights.copy || data.rights.openClose)) {
-				//	//console.log('I can do nothing.');
-				//	tableContent += '<a href="/poll/' + this._id + '" class="split-custom-button ui-btn-icon-notext" data-role="button" data-icon="carat-r" data-iconpos="notext">answer</a>';
-				//	//tableContent += '<a href="#" class="linksharepoll split-custom-button ui-btn-icon-notext" rel="'+this._id+'" data-role="button" data-icon="action" data-iconpos="notext">link</a>';
-				//}
-				tableContent += '</div></li>';
 			});
+
+			tableContent += '<li data-theme="b" data-role="collapsible" data-collapsed="false" data-iconpos="right" data-inset="false"> <h2>Open Polls</h2>';
+			tableContent += '<ul data-theme="a" data-role="listview">';
+			for (var openIndex in openPolls) {
+				tableContent = constructRow(tableContent, openPolls[openIndex], data);
+			}
+			tableContent += '</ul></li>';
+
+			tableContent += '<li data-theme="b" data-role="collapsible" data-collapsed="false" data-iconpos="right" data-inset="false"> <h2>Closed Polls</h2>';
+			tableContent += '<ul data-theme="a" data-role="listview">';
+			for (var closedIndex in closedPolls) {
+				tableContent = constructRow(tableContent, closedPolls[closedIndex], data);
+			}
+			tableContent += '</ul></li';
+
 		} else {
 			location.reload();
 		}
@@ -62,9 +85,9 @@ function openClosePoll() {
 	var open, confirmation;
 
 	// WARN: THIS PATH IS REALLY UNSTABLE AND DEPENDENT ON THE DOM. BE WARY.
-	console.log($(this).parent().parent().children()[0].text);
+	console.log($(this).parent().parent().children().children().next().next().text().search('open'));
 
-	if ( $(this).parent().parent().children()[0].text.search('Open') !== -1) {
+	if ( $(this).parent().parent().children().children().next().next().text().search('open') !== -1) {
 		open = true;
 	} else {
 		open = false;

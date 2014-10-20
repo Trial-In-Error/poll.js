@@ -25,8 +25,33 @@ exports.ensureAuth = function(req, res, next) {
 		if (req.isAuthenticated() && typeof res.locals.session.passport.user.rights[priv] !== 'undefined' && res.locals.session.passport.user.rights[priv]) {
 			console.log('User is already authenticated. Continuing.');
 			return next();
-		}// else {
 
+		// This branch does automatic anonymous login and makes the branch below it unreachable!
+		} else if (true) {
+			// THIS NEEDS TO BE SESSION-IZED
+			var redirect_to = req.session.redirect_to || '/';
+			console.log('By the way, redirect is set to:'+ req.session.redirect_to+' .');
+			console.log('If this ever looks like it\'ll go to /login, please set to / instead.');
+			//delete req.session.redirect_to;
+			console.log('AUTOMATED anonymous-login.');
+			req.body.password = 'garbage';
+			req.body.username = 'garbage'
+			passport.authenticate('anonymous', function(err, user, info) {
+				//console.log('Start login attempt.');
+				if (err) { return next(err); }
+				if (!user) {
+					//console.log('User login failed.');
+					return res.send({ success: false, message: info});
+				}
+				req.logIn(user, function(err) {
+					if (err) { return next(err); }
+					//console.log('User login successful.');
+					return res.redirect(String(redirect_to));
+				});
+				console.log(JSON.stringify(req.session.passport.user));
+				console.log(JSON.stringify(res.locals.session.passport.user));
+			})(req, res, next);
+		} else {
 			//console.log('ELSE, MOTHERFUCKER');
 			//console.log(JSON.stringify(req.header(username)))
 			//console.log(JSON.stringify(req.header(password)))
@@ -58,6 +83,7 @@ exports.ensureAuth = function(req, res, next) {
 					return next();
 				});
 			})(req, res, next);
+		}
 	} catch (err) {
 		console.log(err);
 	}

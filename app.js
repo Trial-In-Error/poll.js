@@ -58,6 +58,7 @@ var inspectPoll = require('./routes/inspectPoll');
 var editPoll = require('./routes/editPoll');
 var importPoll = require('./routes/importPoll');
 var clonePoll = require('./routes/clonePoll');
+var pollOverview = require('./routes/pollOverview');
 
 // In prior versions of Express, this was a call express.createServer();
 // To support https, this will have to change.
@@ -294,6 +295,7 @@ app.use('/inspectPoll', inspectPoll);
 app.use('/editpoll', editPoll);
 app.use('/importpoll', importPoll);
 app.use('/clonepoll', clonePoll);
+app.use('/pollOverview', pollOverview);
 
 //STUB: MOVE TO ANOTHER FILE LATER
 app.get('/meta-login', function(req, res) {
