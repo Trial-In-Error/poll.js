@@ -9,8 +9,14 @@ function loadMatrixCSV(url,container){
   cat = new Array();
 	// cat = categories;
   // cat = categories;
-  var username = "awkward";
-  var password = "awkward";
+  if(window.location.origin.indexOf('heroku')!== -1) {
+    var username = "admin";
+    var password = "admin";  
+  } else {
+    var username = "awkward";
+    var password = "awkward";
+  }
+  
 
 
   d3.csv(url).header("Authorization", "Basic " + btoa(username + ":" + password))
