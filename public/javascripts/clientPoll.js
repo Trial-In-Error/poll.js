@@ -365,7 +365,7 @@ function submitPoll() {
 					//clearStorage();
 					window.localStorage.removeItem('poll'+tempID);
 					window.localStorage.removeItem('current'+tempID);
-					window.location.replace('/polloverview/'+tempID);
+					//window.location.replace('/polloverview/'+tempID);
 					//window.localStorage['poll'+tempID] = JSON.stringify(batchSanitize([poll])[0]);
 					//window.localStorage['current'+tempID] = 0;
 					current_question = 0;
