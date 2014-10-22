@@ -59,6 +59,7 @@ router.get('/exportpolljson/:id', function(req, res) {
 	var db = req.db;
 	var pollToExport = req.params.id;
 	console.log('Looking for '+pollToExport);
+	res.header('Access-Control-Allow-Origin', '*');
 	db.collection('polldb').findOne({_id: mongo.helper.toObjectID(pollToExport)}, function(err, result) {
 		// WARN: THESE COULD LEAK STACK TRACES
 		console.log(err);
