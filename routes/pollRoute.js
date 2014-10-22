@@ -42,6 +42,19 @@ router.get('/listpolls', function(req, res) {
 	});
 });
 
+router.options('/exportpolljson/*', function(req, res, next) {
+	try {
+		res.header('Access-Control-Allow-Origin', '*');
+		res.header('Access-Control-Allow-Methods', '*');
+		res.header('Access-Control-Allow-Headers', req.header('Access-Control-Request-Headers')); //allow all headers
+		res.send(200,'');
+	} catch (err) {
+		console.log(err);
+		console.log(JSON.stringify(req.headers));
+		throw err;
+	}
+});
+
 router.get('/exportpolljson/:id', function(req, res) {
 	var db = req.db;
 	var pollToExport = req.params.id;
