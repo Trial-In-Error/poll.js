@@ -15,6 +15,7 @@ function checkNumeric(username) {
 }
 
 function chooseQuestionType() {
+	document.body.scrollTop = document.documentElement.scrollTop = 0;
 	$('#questionTypeForm').show();
 	$('#next').off();
 	$('#next').on('click', function() {
@@ -39,6 +40,7 @@ function chooseQuestionType() {
 }
 
 function setupInformational() {
+	document.body.scrollTop = document.documentElement.scrollTop = 0;
 	// Reset the informationalForm to its default values
 	$('#informationalBody').val('');
 
@@ -58,6 +60,7 @@ function setupInformational() {
 }
 
 function setupSlider() {
+	document.body.scrollTop = document.documentElement.scrollTop = 0;
 	// Reset the sliderForm to its default values
 	$('#sliderBody').val('');
 	$('#sliderLower').val('');
@@ -119,6 +122,7 @@ function setupSlider() {
 }
 
 function setupTextField() {
+	document.body.scrollTop = document.documentElement.scrollTop = 0;
 	// Reset the textFieldForm to its default values
 	$('#textFieldBody').val('');
 	$('#textFieldHint').val('');
@@ -146,6 +150,7 @@ function setupTextField() {
 
 
 function setupQuestionType() {
+	document.body.scrollTop = document.documentElement.scrollTop = 0;
 	if ($('#welcomeText').val().length <= 0) {
 		alert('Please fill in all required fields!');
 		setupIntro();
@@ -156,6 +161,7 @@ function setupQuestionType() {
 }
 
 function setupIntro() {
+	document.body.scrollTop = document.documentElement.scrollTop = 0;
 	if ($('#pollName').val().length <= 0 || $('#pollCreator').val().length <= 0) {
 		alert('Please fill in all required fields!');
 		setupPoll();
@@ -168,6 +174,7 @@ function setupIntro() {
 }
 
 function setupPoll() {
+	document.body.scrollTop = document.documentElement.scrollTop = 0;
 	$('#lead p').hide();
 	//$('#form').css('display', 'none')
 	$('#metadataForm').show();
@@ -178,6 +185,7 @@ function setupPoll() {
 }
 
 function pageShowHelper() {
+	document.body.scrollTop = document.documentElement.scrollTop = 0;
 	// WARN: If problems with page transitions occur, this line is likely to blame
 	//$.mobile.changePage($('#frontpage'), {allowSamePageTransition: true});
 	console.log('pageShow!');
