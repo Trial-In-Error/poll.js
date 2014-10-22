@@ -42,7 +42,7 @@ router.get('/listpolls', function(req, res) {
 	});
 });
 
-router.get('/exportpolljson/:id', helper.reqGetAnswersRight, helper.ensureAuth, function(req, res) {
+router.get('/exportpolljson/:id', function(req, res) {
 	var db = req.db;
 	var pollToExport = req.params.id;
 	console.log('Looking for '+pollToExport);

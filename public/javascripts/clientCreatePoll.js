@@ -1,13 +1,13 @@
 firstLoad = true;
 poll = {};
 
-function checkNumeric(username) {
+function checkNumeric(string) {
 	//var alphabet = 'abcdefghijklmnopqrstuvwxyzåäö';
 	//var numbers = '0123456789';
 	//var legalCharacters = (alphabet).split('').concat(alphabet.toUpperCase().split('')).concat(numbers.split(''));
 	var legalCharacters = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
-	for (var character in username) {
-		if(legalCharacters.indexOf(username[character]) === -1) {
+	for (var character in string) {
+		if(legalCharacters.indexOf(string[character]) === -1) {
 			return false;
 		}
 	}
@@ -103,6 +103,7 @@ function setupSlider() {
 	})
 
 	// Set up the next button's behavior
+	// STUB: VALIDATE FOR EXPLANATION FILLED OUT
 	$('#next').off();
 	$('#next').on('click', function() {
 		if( $('#sliderBody').val().length <= 0
