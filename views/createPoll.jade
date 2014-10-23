@@ -7,10 +7,9 @@ block content
 		p This page requires javascript. Please make sure javascript is enabled in your web browser!
 		form(id='metadataForm', style='display:none; max-width: 600px; margin:0 auto;')
 			fieldset(data-role='controlgroup', data-type='vertical', id='metadata')
-				div(style='max-width: 400px;', class='ui-field-contain')
-					label(for='pollName', style='text-align: left;') Poll name:
-					input(type='text', name='pollName', id='pollName', style='' value='')
 				div(class='ui-field-contain')
+					label(for='pollName', style='text-align: left;') Poll name:
+					input(type='text', name='pollName', id='pollName', style='width: 100%;' value='')
 					label(for='pollCreator') Poll creator(s):
 					input(type='text', name='pollCreator', id='pollCreator', value='')
 			fieldset(data-role='controlgroup', data-type='horizontal', id='theme', style='margin:0 auto; text-align:left;')
@@ -51,7 +50,12 @@ block content
 
 		form(id='pickOneForm', style='display:none; max-width: 600px; margin:0 auto;')
 			p(style='display: block !important;')
-			fieldset(data-role='controlgroup', data-type='vertical', id='theme', style='margin:0 auto; text-align:center;')
+			fieldset(data-role='controlgroup', data-type='vertical', id='pickOneForm', style='margin:0 auto; text-align:center;')
+				div(class='ui-field-contain')
+					label(for='pickOneBody') Prompt:
+					input(type='text', name='pickOneForm', id='pickOneBody', value='')
+			div(class='ui-field-contain' id='pickOneResponses')
+			input(type='button', name='pickOneAddResponse', id='pickOneAddResponse', value='Add a response.')
 
 		form(id='pickSeveralForm', style='display:none; max-width: 600px; margin:0 auto;')
 			p(style='display: block !important;')
@@ -72,10 +76,10 @@ block content
 				div(class='ui-field-contain')
 					label(for='sliderIncrement') Amount to step (increment) by:
 					input(type='number', name='sliderIncrement', pattern='[0-9]*', id='sliderIncrement', value='')
-			label(for='sliderAddExplanation') Add a text box for explanations.
-			input(type='radio', name='sliderAddExplanation', id='sliderAddExplanation')
-			label(for='sliderRemoveExplanation') Remove the text box for explanations.
-			input(type='radio', name='sliderRemoveExplanation', id='sliderRemoveExplanation')
+			//label(for='sliderAddExplanation') Add a text box for explanations.
+			input(type='button', name='sliderAddExplanation', id='sliderAddExplanation', value='Add a text box for explanations.')
+			//label(for='sliderRemoveExplanation') Remove the text box for explanations.
+			input(type='button', name='sliderRemoveExplanation', id='sliderRemoveExplanation', value='Remove the text box for explanations.')
 			div(id='sliderExplanation')
 				div(class='ui-field-contain')
 					label(for='sliderExplanationHintText') Hint text: 

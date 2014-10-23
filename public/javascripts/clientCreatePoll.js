@@ -25,6 +25,8 @@ function chooseQuestionType() {
 			setupInformational();
 		} else if ($('#pickOne').is(':checked')) {
 			console.log('pickOne!');
+			$('#questionTypeForm').hide();
+			setupPickOne();
 		} else if ($('#pickSeveral').is(':checked')) {
 			console.log('pickSeveral!');
 		} else if ($('#slider').is(':checked')) {
@@ -36,6 +38,68 @@ function chooseQuestionType() {
 			$('#questionTypeForm').hide();
 			setupTextField();
 		}
+	});
+}
+
+function setupPickOne() {
+	document.body.scrollTop = document.documentElement.scrollTop = 0;
+	var pickOneResponseCount = 0;
+	$('#pickOneBody').val('');
+	$('#pickOneResponses').empty();
+	$('#pickOneForm').show();
+
+	// When you add a response...
+	$('#pickOneAddResponse').on('click', function() {
+		//$('#pickOneResponses').append('<div id=pickOneResponse></div>');
+		console.log(this.id);
+		$('#pickOneResponses').append('<div id=pickOneResponse'+pickOneResponseCount+'></div>');
+		$('#pickOneResponse'+pickOneResponseCount).append('<div class="ui-field-contain">\
+			<label for="pickOneResponse'+pickOneResponseCount+'ResponseBody"> Response text:</label>\
+			<input type="text" name="pickOneResponse'+pickOneResponseCount+'ResponseBody" id="pickOneResponse'+pickOneResponseCount+'ResponseBody">\
+			</div>');
+		$('#pickOneResponse'+pickOneResponseCount).append('<fieldset data-role="controlgroup" data-type="horizontal">\
+			<input type="button" name="pickOneResponse'+pickOneResponseCount+'AddExplanation" id="pickOneResponse'+pickOneResponseCount+'AddExplanation" value="Add an explanation field.">\
+			</fieldset>');
+		// When you click to toggle the explanation...
+		$('#pickOneResponse'+pickOneResponseCount+'AddExplanation').on('click', function() {
+			var thisCount = this.id.split("Response")[1].split("Add")[0]
+			console.log('Add/Remove clicked.'+thisCount);
+			if($('#pickOneResponse'+thisCount+'ExplanationHintText').length <= 0) {
+				console.log('Chose to add.');
+				$('#pickOneResponse'+thisCount).append('<fieldset data-role="controlgroup" data-type="vertical"><form>\
+					<div class="ui-field-contain">\
+					<label for="pickOneResponse'+thisCount+'ExplanationHintText">Hint text:</label>\
+					<input type="text" name="pickOneResponse'+thisCount+'ExplanationHintText" id="pickOneResponse'+thisCount+'ExplanationHintText">\
+					</div>\
+					<div class="ui-field-contain">\
+					<label for="pickOneResponse'+thisCount+'ExplanationRequired">Explanation required?</label>\
+					<input type="checkbox" data-role="flipswitch" data-on-text="Yes" data-off-text="No" name="pickOneResponse'+thisCount+'ExplanationRequired" id="pickOneResponse'+thisCount+'ExplanationRequired">\
+					</div></form></fieldset>');
+				$('#pickOneResponse'+thisCount+'AddExplanation').val('Remove explanation field.');
+				$('#pickOneResponse'+thisCount+'AddExplanation').button('refresh');
+				$('#pickOneResponse'+thisCount).trigger('create');
+			} else {			
+				console.log('Chose to remove.');
+				$('#pickOneResponse'+thisCount+'ExplanationRequired').parent().remove();
+				$('#pickOneResponse'+thisCount+'ExplanationHintText').remove();
+				$('#pickOneResponse'+thisCount+'AddExplanation').val('Add an explanation field.')
+				$('#pickOneResponse'+thisCount+'AddExplanation').button('refresh');
+				$('#pickOneResponse'+thisCount).trigger('create');
+			}
+		});
+		$('#pickOneResponses').trigger('create');
+		pickOneResponseCount += 1;
+
+		// Set up the next button's behavior
+		$('#next').off();
+		$('#next').on('click', function() {
+			if($('#informationalBody').val().length <= 0) {
+				alert('Please fill in all required fields!');
+			} else {
+				$('#informationalForm').hide();
+				chooseQuestionType();
+			}
+		});
 	});
 }
 
@@ -67,9 +131,11 @@ function setupSlider() {
 	$('#sliderUpper').val('');
 	$('#sliderIncrement').val('');
 	$('#sliderAddExplanation').parent().show();
-	$('#sliderAddExplanation').prop('checked', false);
-	$('#sliderAddExplanation').checkboxradio('refresh');
-	$('#sliderRemoveExplanation').prop('checked', false);
+	//$('#sliderAddExplanation').prop('checked', false);
+	//$('#sliderAddExplanation').checkboxradio('refresh');
+	$('#sliderAddExplanation').button('refresh');
+	//$('#sliderRemoveExplanation').prop('checked', false);
+	$('#sliderRemoveExplanation').button('refresh');
 	$('#sliderRemoveExplanation').parent().hide();
 	$('#sliderExplanation').hide();
 	$('#sliderExplanationRequiredTrue').prop('checked', false);
@@ -86,16 +152,19 @@ function setupSlider() {
 	$('#sliderRemoveExplanation').on('click', function() {
 		$('#sliderExplanation').hide();
 		$('#sliderAddExplanation').parent().show();
-		$('#sliderAddExplanation').prop('checked', false);
-		$('#sliderAddExplanation').checkboxradio('refresh');
+		//$('#sliderAddExplanation').prop('checked', false);
+		//$('#sliderAddExplanation').checkboxradio('refresh');
+		//$('#sliderRemoveExplanation').checkboxradio('refresh');
+		$('#sliderRemoveExplanation').button('refresh');
 		$('#sliderRemoveExplanation').parent().hide();
 	})
 
 	$('#sliderAddExplanation').on('click', function() {
 		$('#sliderExplanation').show();
 		$('#sliderRemoveExplanation').parent().show();
-		$('#sliderRemoveExplanation').prop('checked', false);
-		$('#sliderRemoveExplanation').checkboxradio('refresh');
+		//$('#sliderRemoveExplanation').prop('checked', false);
+		//$('#sliderRemoveExplanation').checkboxradio('refresh');
+		$('#sliderRemoveExplanation').button('refresh');
 		$('#sliderAddExplanation').parent().hide();
 		//$('#sliderTextFieldRequired').show();
 		//$('#sliderExplanationHintText').show();
