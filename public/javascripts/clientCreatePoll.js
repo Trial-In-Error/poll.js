@@ -14,6 +14,39 @@ function checkNumeric(string) {
 	return true;
 }
 
+function submitPoll() {
+	// Send data to server through the ajax call
+	// action is functionality we want to call and outputJSON is our data
+	try {
+		console.log(JSON.stringify(poll));
+	} catch (err) {
+		alert('Poll is not valid JSON.');
+		return false;
+	}
+	$.ajax({
+		url: '/pollroute/importpoll',
+		data: poll,
+		type: 'post',
+		async: 'true',
+		dataType: 'json'
+	})
+	.done(function (result) {
+		//console.log('Done!');
+		//window.location.replace(result.redirect);
+		console.log(result);
+		if(result.success) {
+			window.location.replace(result.redirect);
+		} else {
+			alert(result.msg);
+		}
+	})
+	.fail(function (request, error) {
+		console.log('Fail!');
+		// This callback function will trigger on unsuccessful action
+		alert('Network error has occurred, please try again!');
+	});
+}
+
 function chooseQuestionType() {
 	document.body.scrollTop = document.documentElement.scrollTop = 0;
 	$('#questionTypeForm').show();
@@ -29,6 +62,8 @@ function chooseQuestionType() {
 			setupPickOne();
 		} else if ($('#pickSeveral').is(':checked')) {
 			console.log('pickSeveral!');
+			$('#questionTypeForm').hide();
+			setupPickSeveral();
 		} else if ($('#slider').is(':checked')) {
 			console.log('slider!');
 			$('#questionTypeForm').hide();
@@ -41,6 +76,56 @@ function chooseQuestionType() {
 	});
 }
 
+function setupPickSeveral() {
+	document.body.scrollTop = document.documentElement.scrollTop = 0;
+	var pickSeveralResponseCount = 0;
+	$('#pickSeveralBody').val('');
+	$('#pickSeveralResponses').empty();
+	$('#pickSeveralForm').show();
+
+	$('#pickSeveralRemoveResponse').off();
+	$('#pickSeveralRemoveResponse').on('click', function() {
+		if(pickSeveralResponseCount > 0) {
+			pickSeveralResponseCount -= 1;
+			console.log('Removing '+pickSeveralResponseCount)
+			$('#pickSeveralResponse'+pickSeveralResponseCount).remove();			
+		}
+	});
+
+	// When you add a response...
+	$('#pickSeveralAddResponse').off();
+	$('#pickSeveralAddResponse').on('click', function() {
+		//$('#pickSeveralResponses').append('<div id=pickSeveralResponse></div>');
+		console.log(this.id);
+		$('#pickSeveralResponses').append('<div id=pickSeveralResponse'+pickSeveralResponseCount+'></div>');
+		$('#pickSeveralResponse'+pickSeveralResponseCount).append('<div class="ui-field-contain">\
+			<label for="pickSeveralResponse'+pickSeveralResponseCount+'ResponseBody"> Response text:</label>\
+			<input type="text" name="pickSeveralResponse'+pickSeveralResponseCount+'ResponseBody" id="pickSeveralResponse'+pickSeveralResponseCount+'ResponseBody">\
+			</div>');
+
+		$('#pickSeveralResponses').trigger('create');
+		pickSeveralResponseCount += 1;
+
+		// Set up the next button's behavior
+		$('#next').off();
+		$('#next').on('click', function() {
+			for(var i = 0; i < pickSeveralResponseCount; i++) {
+				if($('#pickSeveralResponse'+i+'ResponseBody').val().length <= 0) {
+					alert('Please fill in all response body fields!');
+					return;
+				}
+				if($('#pickSeveralBody').val().length <= 0) {
+					alert('Please fill in the prompt.');
+					return;
+				}
+			}
+			$('#pickSeveralResponses').empty();
+			$('#pickSeveralForm').hide();
+			chooseQuestionType();
+		});
+	});
+}
+
 function setupPickOne() {
 	document.body.scrollTop = document.documentElement.scrollTop = 0;
 	var pickOneResponseCount = 0;
@@ -48,7 +133,17 @@ function setupPickOne() {
 	$('#pickOneResponses').empty();
 	$('#pickOneForm').show();
 
+	$('#pickOneRemoveResponse').off();
+	$('#pickOneRemoveResponse').on('click', function() {
+		if(pickOneResponseCount > 0) {
+			pickOneResponseCount -= 1;
+			console.log('Removing '+pickOneResponseCount)
+			$('#pickOneResponse'+pickOneResponseCount).remove();			
+		}
+	});
+
 	// When you add a response...
+	$('#pickOneAddResponse').off();
 	$('#pickOneAddResponse').on('click', function() {
 		//$('#pickOneResponses').append('<div id=pickOneResponse></div>');
 		console.log(this.id);
@@ -60,7 +155,9 @@ function setupPickOne() {
 		$('#pickOneResponse'+pickOneResponseCount).append('<fieldset data-role="controlgroup" data-type="horizontal">\
 			<input type="button" name="pickOneResponse'+pickOneResponseCount+'AddExplanation" id="pickOneResponse'+pickOneResponseCount+'AddExplanation" value="Add an explanation field.">\
 			</fieldset>');
-		// When you click to toggle the explanation...
+
+		// Set up the explanation toggle handler
+		$('#pickOneResponse'+pickOneResponseCount+'AddExplanation').off();
 		$('#pickOneResponse'+pickOneResponseCount+'AddExplanation').on('click', function() {
 			var thisCount = this.id.split("Response")[1].split("Add")[0]
 			console.log('Add/Remove clicked.'+thisCount);
@@ -80,25 +177,33 @@ function setupPickOne() {
 				$('#pickOneResponse'+thisCount).trigger('create');
 			} else {			
 				console.log('Chose to remove.');
-				$('#pickOneResponse'+thisCount+'ExplanationRequired').parent().remove();
-				$('#pickOneResponse'+thisCount+'ExplanationHintText').remove();
-				$('#pickOneResponse'+thisCount+'AddExplanation').val('Add an explanation field.')
+				$('#pickOneResponse'+thisCount+'ExplanationRequired').parent().parent().parent().remove();
+				//$('#pickOneResponse'+thisCount+'ExplanationHintText').parent().remove();
+				$('#pickOneResponse'+thisCount+'AddExplanation').val('Add an explanation field.');
 				$('#pickOneResponse'+thisCount+'AddExplanation').button('refresh');
 				$('#pickOneResponse'+thisCount).trigger('create');
 			}
 		});
+
 		$('#pickOneResponses').trigger('create');
 		pickOneResponseCount += 1;
 
 		// Set up the next button's behavior
 		$('#next').off();
 		$('#next').on('click', function() {
-			if($('#informationalBody').val().length <= 0) {
-				alert('Please fill in all required fields!');
-			} else {
-				$('#informationalForm').hide();
-				chooseQuestionType();
+			for(var i = 0; i < pickOneResponseCount; i++) {
+				if($('#pickOneResponse'+i+'ResponseBody').val().length <= 0) {
+					alert('Please fill in all response body fields!');
+					return;
+				}
+				if($('#pickOneBody').val().length <= 0) {
+					alert('Please fill in the prompt.');
+					return;
+				}
 			}
+			$('#pickOneResponses').empty();
+			$('#pickOneForm').hide();
+			chooseQuestionType();
 		});
 	});
 }
@@ -117,6 +222,7 @@ function setupInformational() {
 		if($('#informationalBody').val().length <= 0) {
 			alert('Please fill in all required fields!');
 		} else {
+			poll.question_list.push({body: $('#informationalForm').val(), type: {name: 'not_a_question'}})
 			$('#informationalForm').hide();
 			chooseQuestionType();
 		}
@@ -185,6 +291,16 @@ function setupSlider() {
 			|| !checkNumeric($('#sliderIncrement').val()) ) {
 			alert('Please use only numbers in the bound and increment fields!');
 		} else {
+			var temp = {body: $('#sliderBody').val(),
+				type: {name: 'slider', min: $('#sliderLower'), max: $('#sliderUpper'), step: $('#sliderIncrement'),
+					response_list: [{}]
+				}
+			}
+			if( $('#sliderRemoveExplanation').is(':visible') ) {
+				temp.type.response_list[0].explanation = {};
+				temp.type.response_list[0].explanation.always_explainable = $('#sliderExplanationRequiredTrue').prop('checked');
+				temp.type.response_list[0].explanation.explain_text = $('#sliderExplanationHintText').val();
+			}
 			$('#sliderForm').hide();
 			chooseQuestionType();
 		}
@@ -211,36 +327,35 @@ function setupTextField() {
 		if($('#textFieldBody').val().length <= 0) {
 			alert('Please fill in all required fields!');
 		} else {
+			poll.question_list.push({body: $('#textFieldBody').val(),
+				type: {name: 'open',
+					response_list: [ { explanation:
+						{ always_explainable: true, explain_text: $('#textFieldHint').val(), required:$('#textFieldRequiredTrue').prop('checked') }
+					} ]
+				}
+			})
 			$('#textFieldForm').hide();
 			chooseQuestionType();
 		}
 	});
 }
 
-
-
-function setupQuestionType() {
-	document.body.scrollTop = document.documentElement.scrollTop = 0;
-	if ($('#welcomeText').val().length <= 0) {
-		alert('Please fill in all required fields!');
-		setupIntro();
-	} else {
-		$('#introForm').hide();
-		chooseQuestionType();
-	}
-}
-
 function setupIntro() {
 	document.body.scrollTop = document.documentElement.scrollTop = 0;
-	if ($('#pollName').val().length <= 0 || $('#pollCreator').val().length <= 0) {
-		alert('Please fill in all required fields!');
-		setupPoll();
-	} else {
-		$('#next').off();
-		$('#next').on('click', setupQuestionType);
-		$('#metadataForm').hide();
-		$('#introForm').show();
-	}
+	$('#introForm').show();	
+	$('#next').off();
+	$('#next').on('click', function() {
+		if ($('#welcomeText').val().length <= 0) {
+			alert('Please fill in the welcome text!');
+			//setupPoll();
+			return;
+		} else {
+			$('#introForm').hide();
+			poll.question_list = [];
+			poll.question_list.push({body: $('#welcomeText').val(), type:{name: 'not_a_question'}, opening_slide: true});
+			chooseQuestionType();
+		}
+	});
 }
 
 function setupPoll() {
@@ -251,7 +366,18 @@ function setupPoll() {
 	$('#bottomButtons').show();
 	$('#next').show();
 	$('#next').off();
-	$('#next').on('click', setupIntro);
+	$('#next').on('click', function() {
+		if ($('#pollName').val().length <= 0 || $('#pollCreator').val().length <= 0) {
+			alert('Please fill in all required fields!');
+			return;
+		} else {
+			poll.name = $('#pollName').val();
+			poll.owner = $('#pollCreator').val();
+			poll.open = true;
+			$('#metadataForm').hide();
+			setupIntro();
+		}
+	});
 }
 
 function pageShowHelper() {

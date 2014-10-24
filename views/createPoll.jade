@@ -24,7 +24,7 @@ block content
 			p(style='display: block !important;') Write a short introduction for this poll. It should explain why the poll is being conducted and how the data will be used.
 			fieldset(data-role='controlgroup', data-type='vertical', id='welcome')
 				div(class='ui-field-contain')
-					label(for='welcomeText') Poll name:
+					label(for='welcomeText') Introductory text:
 					input(type='text', name='welcomeText', id='welcomeText', value='')
 
 		form(id='questionTypeForm', style='display:none; max-width: 600px; margin:0 auto;')
@@ -55,11 +55,20 @@ block content
 					label(for='pickOneBody') Prompt:
 					input(type='text', name='pickOneForm', id='pickOneBody', value='')
 			div(class='ui-field-contain' id='pickOneResponses')
-			input(type='button', name='pickOneAddResponse', id='pickOneAddResponse', value='Add a response.')
+			fieldset(data-role='controlgroup', data-type='horizontal')
+				input(type='button', name='pickOneAddResponse', id='pickOneRemoveResponse', value='Remove bottom response.')
+				input(type='button', name='pickOneAddResponse', id='pickOneAddResponse', value='Add a response.')
 
 		form(id='pickSeveralForm', style='display:none; max-width: 600px; margin:0 auto;')
 			p(style='display: block !important;')
-			fieldset(data-role='controlgroup', data-type='vertical', id='theme', style='margin:0 auto; text-align:center;')
+			fieldset(data-role='controlgroup', data-type='vertical', id='pickSeveralForm', style='margin:0 auto; text-align:center;')
+				div(class='ui-field-contain')
+					label(for='pickSeveralBody') Prompt:
+					input(type='text', name='pickSeveralForm', id='pickSeveralBody', value='')
+			div(class='ui-field-contain' id='pickSeveralResponses')
+			fieldset(data-role='controlgroup', data-type='horizontal')
+				input(type='button', name='pickSeveralAddResponse', id='pickSeveralRemoveResponse', value='Remove bottom response.')
+				input(type='button', name='pickSeveralAddResponse', id='pickSeveralAddResponse', value='Add a response.')
 
 		form(id='sliderForm', style='display:none; max-width: 600px; margin:0 auto;')
 			p(style='display: block !important;')
@@ -76,9 +85,7 @@ block content
 				div(class='ui-field-contain')
 					label(for='sliderIncrement') Amount to step (increment) by:
 					input(type='number', name='sliderIncrement', pattern='[0-9]*', id='sliderIncrement', value='')
-			//label(for='sliderAddExplanation') Add a text box for explanations.
 			input(type='button', name='sliderAddExplanation', id='sliderAddExplanation', value='Add a text box for explanations.')
-			//label(for='sliderRemoveExplanation') Remove the text box for explanations.
 			input(type='button', name='sliderRemoveExplanation', id='sliderRemoveExplanation', value='Remove the text box for explanations.')
 			div(id='sliderExplanation')
 				div(class='ui-field-contain')

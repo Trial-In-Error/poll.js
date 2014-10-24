@@ -145,6 +145,7 @@ router.post('/answerpoll', helper.reqAnswerRight, helper.ensureAuth, function(re
 		db.collection('polldb').findOne({_id: mongo.helper.toObjectID(tid)},
 			function(err, result) {
 				if(err) {
+					res.send({msg: err});
 					throw err;
 				}
 				console.log(result);
@@ -176,6 +177,7 @@ router.post('/answerpoll', helper.reqAnswerRight, helper.ensureAuth, function(re
 				}
 				db.collection('polldb').update( {_id: mongo.helper.toObjectID(tid)}, result, function(err, result) {
 					if(err) {
+						res.send({msg: err});
 						console.log(err);
 					} else {
 						res.send((result === 1) ? { msg: '' } : { msg:'Database error: '+ err});
@@ -186,6 +188,7 @@ router.post('/answerpoll', helper.reqAnswerRight, helper.ensureAuth, function(re
 
 	} catch (err) {
 		console.log(req.body);
+		res.send({msg: 'Invalid JSON object!'});
 		throw err;
 	}
 });
@@ -272,7 +275,9 @@ router.delete('/deletepoll/:id', helper.reqDeleteRight, helper.ensureAuth, funct
 // http://stackoverflow.com/questions/8431415/json-object-validation-in-javascript
 router.post('/importpoll', helper.reqCreateRight, helper.ensureAuth, function(req, res) {
 	var pollToImport;
-
+	console.log('req.body---------------');
+	console.log(req.body);
+	console.log('-----------------------');
 	//console.log(JSON.parse(req.body));
 	if(req.body.username) {
 		delete req.body.username;
@@ -280,13 +285,17 @@ router.post('/importpoll', helper.reqCreateRight, helper.ensureAuth, function(re
 	if(req.body.password) {
 		delete req.body.password;
 	}
-	try {
-		pollToImport = req.body;
-	console.log('-----------------------');
-	console.log(req.body);
-	console.log('-----------------------');
-	} catch (err) {
-		if (err) { res.send({msg: 'Invalid JSON: '+err}); }
+	if(typeof req.body === "string") {
+		pollToImport = JSON.parse(req.body);
+	} else {
+		try {
+			pollToImport = req.body;
+			console.log('-----------------------');
+			console.log(req.body);
+			console.log('-----------------------');
+		} catch (err) {
+			if (err) { res.send({msg: 'Invalid JSON: '+err}); }
+		}
 	}
 	var db = req.db;
 	db.collection('polldb').insert(pollToImport, function(err, result) {
