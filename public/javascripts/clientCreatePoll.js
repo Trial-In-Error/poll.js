@@ -120,7 +120,7 @@ function setupPickSeveral() {
 				}
 			}
 			var temp = {body: $('#pickSeveralBody').val(),
-				type: {name: 'pick_n', n: 1, require: 1,
+				type: {name: 'pick_n', n: pickSeveralResponseCount, require: 1,
 					response_list: []
 				}
 			}
@@ -211,6 +211,27 @@ function setupPickOne() {
 					return;
 				}
 			}
+			var temp = {body: $('#pickOneBody').val(),
+				type: {name: 'pick_n', n: 1, require: 1,
+					response_list: []
+				}
+			}
+			for(var i = 0; i < pickOneResponseCount; i++) {
+				console.log('Pushing response '+i+' with value of '+ $('#pickOneResponse'+i+'ResponseBody').val());
+				// If the add explanation button says "Remove"...
+				if( $('#pickOneResponse'+i+'AddExplanation').val().indexOf('Remove') !== -1 ) {
+					//Then we know there's an explanation. Push it, too.
+					temp.type.response_list.push({body: $('#pickOneResponse'+i+'ResponseBody').val(),
+						explanation: {
+							always_explainable: true,
+							explain_text: $('#pickOneResponse'+i+'ExplanationHintText').val(),
+							required: $('#pickOneResponse'+i+'ExplanationRequired').is(':checked'),
+						}});
+				} else {
+					temp.type.response_list.push({body: $('#pickOneResponse'+i+'ResponseBody').val()});
+				}
+			}
+			poll.question_list.push(temp);
 			$('#pickOneResponses').empty();
 			$('#pickOneForm').hide();
 			chooseQuestionType();

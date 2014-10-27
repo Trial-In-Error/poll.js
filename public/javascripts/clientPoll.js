@@ -135,7 +135,8 @@ function validateCurrentQuestion(forward) {
 			// And we have picked 1, and (explanation not required OR explanation provided)
 			if(counter === 1 &&
 				(poll.question_list[current_question].type.response_list[n_special].explanation &&
-				!poll.question_list[current_question].type.response_list[n_special].explanation.required ||
+				(!poll.question_list[current_question].type.response_list[n_special].explanation.required
+					|| poll.question_list[current_question].type.response_list[n_special].explanation.required === 'false') ||
 				$('#text-'+String(n_special)).val() !== '')) {
 				//console.log('But we short circuited the logic.');
 				// Then we're valid
