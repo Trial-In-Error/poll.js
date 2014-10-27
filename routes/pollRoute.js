@@ -13,7 +13,9 @@ function batchSanitize(items) {
 		for(var question in items[tr].question_list) {
 			for(var response in items[tr].question_list[question].type.response_list) {
 				//console.log('Deleted '+items[tr].question_list[question].type.response_list[response].answers);
-				delete items[tr].question_list[question].type.response_list[response].answers;
+				if(items[tr] !== null && typeof items[tr].question_list[question].type.response_list[response].answers !== 'undefined') {
+					delete items[tr].question_list[question].type.response_list[response].answers;
+				}
 				//console.log('Now it\s '+ items[tr].question_list[question].type.response_list[response].answers);
 			}
 		}

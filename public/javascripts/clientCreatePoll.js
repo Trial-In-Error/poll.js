@@ -119,6 +119,16 @@ function setupPickSeveral() {
 					return;
 				}
 			}
+			var temp = {body: $('#pickSeveralBody').val(),
+				type: {name: 'pick_n', n: 1, require: 1,
+					response_list: []
+				}
+			}
+			for(var i = 0; i < pickSeveralResponseCount; i++) {
+				console.log('Pushing response '+i+' with value of '+ $('#pickSeveralResponse'+i+'ResponseBody').val());
+				temp.type.response_list.push({body: $('#pickSeveralResponse'+i+'ResponseBody').val()});
+			}
+			poll.question_list.push(temp);
 			$('#pickSeveralResponses').empty();
 			$('#pickSeveralForm').hide();
 			chooseQuestionType();
@@ -376,6 +386,8 @@ function setupPoll() {
 			poll.name = $('#pollName').val();
 			poll.owner = $('#pollCreator').val();
 			poll.open = true;
+			// STUB: ASSUMES SWEDISH
+			poll.language = "swedish";
 			$('#metadataForm').hide();
 			setupIntro();
 		}
