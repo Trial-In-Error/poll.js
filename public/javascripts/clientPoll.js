@@ -154,7 +154,7 @@ function validateCurrentQuestion(forward) {
 					if(checkLanguage() === 'english') {
 						alert('Please pick an option.');	
 					} else {
-						alert('Vad god och välj ett alternativ');
+						alert('Vad god och välj ett alternativ.');
 					}
 				}
 			} else {
@@ -162,7 +162,7 @@ function validateCurrentQuestion(forward) {
 					if(checkLanguage() === 'english') {
 						alert('Please pick only one option.');	
 					} else {
-						alert('Endast ett alternativ är tillåtet');
+						alert('Endast ett alternativ är tillåtet.');
 					}
 				}
 			}
@@ -174,7 +174,7 @@ function validateCurrentQuestion(forward) {
 					if(checkLanguage() === 'english') {
 						alert('Something has gone terribly wrong; you\'ve selected less than zero answers.');
 					} else {
-						alert('Det har uppstått ett allvarligt fel, du har valt mindre än noll alternativ');
+						alert('Det har uppstått ett allvarligt fel, du har valt mindre än noll alternativ.');
 					}
 				}
 			} else if (counter > poll.question_list[current_question].type.response_list.length) {
@@ -182,7 +182,7 @@ function validateCurrentQuestion(forward) {
 					if(checkLanguage() === 'english') {
 						alert('Something has gone terribly wrong; you\'ve selected more answers than exist.');						
 					} else {
-						alert('Det har uppstått ett allvarligt fel, du har valt fler alternativ än tillgängligt');
+						alert('Det har uppstått ett allvarligt fel, du har valt fler alternativ än tillgängligt.');
 					}
 				}
 			} else if (counter > poll.question_list[current_question].type.n) {
@@ -198,7 +198,7 @@ function validateCurrentQuestion(forward) {
 					if(checkLanguage() === 'english') {
 						alert('Please select at least '+poll.question_list[current_question].type.require+' options.');						
 					} else {
-						alert('Var god och välj minst '+poll.question_list[current_question].type.require+' alternativ');
+						alert('Var god och välj minst '+poll.question_list[current_question].type.require+' alternativ.');
 					}
 				}
 			} else {
@@ -218,7 +218,7 @@ function validateCurrentQuestion(forward) {
 			if(checkLanguage() === 'english') {
 				alert('Please fill in the textbox.');	
 			} else {
-				alert('Var god och fyll i textrutan');
+				alert('Var god och fyll i textrutan.');
 			}
 		} else {
 			return true;
@@ -239,7 +239,7 @@ function validateCurrentQuestion(forward) {
 			if(checkLanguage() === 'english') {
 				alert('Please enter some text.');	
 			} else {
-				alert('Var god och fyll i textrutan');
+				alert('Var god och fyll i textrutan.');
 			}
 		}
 		return false;
