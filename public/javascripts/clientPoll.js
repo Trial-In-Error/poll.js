@@ -44,7 +44,8 @@ function storePoll() {
 			if(checkLanguage !== 'english') {
 				alert('Your progress will not be saved until you submit the completed poll.\n\n To enable incremental saving, leave private browsing mode.');
 			} else {
-				alert('!!!TRANSLATE');
+				alert('Din svar kommer ej att sparas förrän du har slutfört formuläret \n\n För att spara kontinuerligt var god att lämna privat surf.');
+				
 			}
 			
 			firstRun = false;
@@ -145,7 +146,7 @@ function validateCurrentQuestion(forward) {
 					if(checkLanguage() === 'english') {
 						alert('Please enter some text.');
 					} else {
-						alert('!!!TRANSLATE');
+						alert('Vad god och fyll i ett svar för alternativet du valde.');
 					}
 				}
 			} else if(counter === 0) {
@@ -153,7 +154,7 @@ function validateCurrentQuestion(forward) {
 					if(checkLanguage() === 'english') {
 						alert('Please pick an option.');	
 					} else {
-						alert('!!!TRANSLATE');
+						alert('Vad god och välj ett alternativ');
 					}
 				}
 			} else {
@@ -161,7 +162,7 @@ function validateCurrentQuestion(forward) {
 					if(checkLanguage() === 'english') {
 						alert('Please pick only one option.');	
 					} else {
-						alert('!!!TRANSLATE');
+						alert('Endast ett alternativ är tillåtet');
 					}
 				}
 			}
@@ -173,7 +174,7 @@ function validateCurrentQuestion(forward) {
 					if(checkLanguage() === 'english') {
 						alert('Something has gone terribly wrong; you\'ve selected less than zero answers.');
 					} else {
-						alert('!!!TRANSLATE');
+						alert('Det har uppstått ett allvarligt fel, du har valt mindre än noll alternativ');
 					}
 				}
 			} else if (counter > poll.question_list[current_question].type.response_list.length) {
@@ -181,7 +182,7 @@ function validateCurrentQuestion(forward) {
 					if(checkLanguage() === 'english') {
 						alert('Something has gone terribly wrong; you\'ve selected more answers than exist.');						
 					} else {
-						alert('!!!TRANSLATE');
+						alert('Det har uppstått ett allvarligt fel, du har valt fler alternativ än tillgängligt');
 					}
 				}
 			} else if (counter > poll.question_list[current_question].type.n) {
@@ -189,7 +190,7 @@ function validateCurrentQuestion(forward) {
 					if(checkLanguage() === 'english') {
 						alert('Please select no more than '+poll.question_list[current_question].type.n+' options.');
 					} else {
-						alert('!!!TRANSLATE');
+						alert('Var god och välj max '+poll.question_list[current_question].type.n+' alternativ.');
 					}
 				}
 			} else if (counter < poll.question_list[current_question].type.require) {
@@ -197,7 +198,7 @@ function validateCurrentQuestion(forward) {
 					if(checkLanguage() === 'english') {
 						alert('Please select at least '+poll.question_list[current_question].type.require+' options.');						
 					} else {
-						alert('!!!TRANSLATE');
+						alert('Var god och välj minst '+poll.question_list[current_question].type.require+' alternativ');
 					}
 				}
 			} else {
@@ -217,7 +218,7 @@ function validateCurrentQuestion(forward) {
 			if(checkLanguage() === 'english') {
 				alert('Please fill in the textbox.');	
 			} else {
-				alert('!!!TRANSLATE');
+				alert('Var god och fyll i textrutan');
 			}
 		} else {
 			return true;
@@ -238,7 +239,7 @@ function validateCurrentQuestion(forward) {
 			if(checkLanguage() === 'english') {
 				alert('Please enter some text.');	
 			} else {
-				alert('!!!TRANSLATE');
+				alert('Var god och fyll i textrutan');
 			}
 		}
 		return false;
@@ -433,7 +434,7 @@ function submitPoll() {
 					if(checkLanguage() === 'swedish') {
 						alert('Error: '+response.msg);	
 					} else {
-						alert('!!!TRANSLATE');
+						alert('Fel: ' + response.msg);
 					}
 				}
 			});
