@@ -41,7 +41,12 @@ function storePoll() {
 	} else {
 		// WARN: THIS IS UNCLEAR AND AMBIGUOUS
 		if (firstRun) {
-			alert('Your progress will not be saved until you submit the completed poll.\n\n To enable incremental saving, leave private browsing mode.');
+			if(checkLanguage !== 'english') {
+				alert('Your progress will not be saved until you submit the completed poll.\n\n To enable incremental saving, leave private browsing mode.');
+			} else {
+				alert('!!!TRANSLATE');
+			}
+			
 			firstRun = false;
 		}
 
@@ -137,15 +142,27 @@ function validateCurrentQuestion(forward) {
 			// Otherwise, we're invalid, and let's find out how
 			} else if ($('#text-'+String(n_special)).val() === '') {
 				if (forward && poll.question_list[current_question].type.response_list[n_special].explanation.required) {
-					alert('Please enter some text.');
+					if(checkLanguage() === 'english') {
+						alert('Please enter some text.');
+					} else {
+						alert('!!!TRANSLATE');
+					}
 				}
 			} else if(counter === 0) {
 				if (forward) {
-					alert('Please pick an option.');
+					if(checkLanguage() === 'english') {
+						alert('Please pick an option.');	
+					} else {
+						alert('!!!TRANSLATE');
+					}
 				}
 			} else {
 				if (forward) {
-					alert('Please pick only one option.');
+					if(checkLanguage() === 'english') {
+						alert('Please pick only one option.');	
+					} else {
+						alert('!!!TRANSLATE');
+					}
 				}
 			}
 			return false;
@@ -153,19 +170,35 @@ function validateCurrentQuestion(forward) {
 			// STUB: You should really ASSERT that counter >= 0 and counter <= ...response_list.length
 			if(counter < 0) {
 				if (forward) {
-					alert('Something has gone terribly wrong; you\'ve selected less than zero answers.');
+					if(checkLanguage() === 'english') {
+						alert('Something has gone terribly wrong; you\'ve selected less than zero answers.');
+					} else {
+						alert('!!!TRANSLATE');
+					}
 				}
 			} else if (counter > poll.question_list[current_question].type.response_list.length) {
 				if (forward) {
-					alert('Something has gone terribly wrong; you\'ve selected more answers than exist.');
+					if(checkLanguage() === 'english') {
+						alert('Something has gone terribly wrong; you\'ve selected more answers than exist.');						
+					} else {
+						alert('!!!TRANSLATE');
+					}
 				}
 			} else if (counter > poll.question_list[current_question].type.n) {
 				if (forward) {
-					alert('Please select no more than '+poll.question_list[current_question].type.n+' options.');
+					if(checkLanguage() === 'english') {
+						alert('Please select no more than '+poll.question_list[current_question].type.n+' options.');
+					} else {
+						alert('!!!TRANSLATE');
+					}
 				}
 			} else if (counter < poll.question_list[current_question].type.require) {
 				if (forward) {
-					alert('Please select at least '+poll.question_list[current_question].type.require+' options.');
+					if(checkLanguage() === 'english') {
+						alert('Please select at least '+poll.question_list[current_question].type.require+' options.');						
+					} else {
+						alert('!!!TRANSLATE');
+					}
 				}
 			} else {
 				return true;
@@ -173,19 +206,40 @@ function validateCurrentQuestion(forward) {
 			return false;
 		}
 	} else if (poll.question_list[current_question].type.name === 'slider') {
+		if(typeof poll.question_list[current_question].type.response_list === 'undefined'
+			|| typeof poll.question_list[current_question].type.response_list[0].explanation === 'undefined'
+			|| typeof poll.question_list[current_question].type.response_list[0].explanation.required === 'undefined') {
+			return true;
+		} else if((poll.question_list[current_question].type.response_list[0].explanation.required === false
+				|| poll.question_list[current_question].type.response_list[0].explanation.required === 'false')) {
+			return true;	
+		} else if($('#text-0').val() <= 0){
+			if(checkLanguage() === 'english') {
+				alert('Please fill in the textbox.');	
+			} else {
+				alert('!!!TRANSLATE');
+			}
+		} else {
+			return true;
+		}
 		// STUB: Check to see if slider is in valid range and divisible by increment. It's silly, I know...
-		return true;
+		
 	} else if (poll.question_list[current_question].type.name === 'not_a_question') {
 		return true;
 	} else if (poll.question_list[current_question].type.name === 'open') {
 		// If we aren't required to answer it, return true
 		if(typeof poll.question_list[current_question].type.response_list[0].explanation.required !== 'undefined'
-			&&  poll.question_list[current_question].type.response_list[0].explanation.required === false) {
+			&& (poll.question_list[current_question].type.response_list[0].explanation.required === false
+				|| poll.question_list[current_question].type.response_list[0].explanation.required === 'false') ) {
 			return true;
 		} else if ( $('#text-0').val() !== '') {
 			return true;
 		} else if (forward) {
-			alert('Please enter some text.');
+			if(checkLanguage() === 'english') {
+				alert('Please enter some text.');	
+			} else {
+				alert('!!!TRANSLATE');
+			}
 		}
 		return false;
 	}
@@ -376,7 +430,11 @@ function submitPoll() {
 
 				} else {
 					// If something went wrong, alert the error message
-					alert('Error: '+response.msg);
+					if(checkLanguage() === 'swedish') {
+						alert('Error: '+response.msg);	
+					} else {
+						alert('!!!TRANSLATE');
+					}
 				}
 			});
 		});
@@ -740,7 +798,7 @@ function updateBottomButtons() {
 function renderBottomButtons() {
 	// Render 'back' and 'next' buttons
 	var temp = '';
-	if(typeof poll.question_list[current_question].language === 'undefined' || poll.question_list[current_question].language === 'english') {
+	if(checkLanguage() === 'english') {
 		temp += '<div id="verybottombuttons" data-role="controlgroup" data-type="horizontal" text-align="center" margin-left="auto" margin-right="auto" align="center">';
 		temp += '<a href="#" class="lastquestion" id="lastquestion" data-transition="slide" data-direction= "reverse" data-role="button" data-icon="carat-l" data-iconpos="left">Back</a>';
 		// STUB: Check to see if you should render a 'skip' button
@@ -756,6 +814,25 @@ function renderBottomButtons() {
 	$('#bottombuttons').html(temp);
 	$('#bottombuttons').trigger('create');
 	updateBottomButtons();
+}
+
+function checkLanguage() {
+	// If this specific question is flagged for english...
+	if(poll.question_list[current_question].language !== 'undefined' && poll.question_list[current_question].language === 'english') {
+		return 'english';
+	// Else, if this specific question is flagged for swedish...
+	} else if (poll.question_list[current_question].language !== 'undefined' && poll.question_list[current_question].language === 'swedish') {
+		return 'swedish';
+	// Else, if this whole poll is flagged for english...
+	} else if (poll.language !== 'undefined' && poll.language === 'english') {
+		return 'english';
+	// Else, if this whole poll is flagged for english...
+	} else if (poll.language !== 'undefined' && poll.language === 'swedish') {
+		return 'swedish';
+	// Else, default to swedish...
+	} else {
+		return 'swedish';
+	}
 }
 
 /**

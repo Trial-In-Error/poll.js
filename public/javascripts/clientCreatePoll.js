@@ -292,15 +292,17 @@ function setupSlider() {
 			alert('Please use only numbers in the bound and increment fields!');
 		} else {
 			var temp = {body: $('#sliderBody').val(),
-				type: {name: 'slider', min: $('#sliderLower'), max: $('#sliderUpper'), step: $('#sliderIncrement'),
+				type: {name: 'slider', min: $('#sliderLower').val(), max: $('#sliderUpper').val(), step: $('#sliderIncrement').val(),
 					response_list: [{}]
 				}
 			}
 			if( $('#sliderRemoveExplanation').is(':visible') ) {
 				temp.type.response_list[0].explanation = {};
-				temp.type.response_list[0].explanation.always_explainable = $('#sliderExplanationRequiredTrue').prop('checked');
+				temp.type.response_list[0].explanation.always_explainable = true;
 				temp.type.response_list[0].explanation.explain_text = $('#sliderExplanationHintText').val();
+				temp.type.response_list[0].explanation.required = $('#sliderExplanationRequiredTrue').prop('checked');
 			}
+			poll.question_list.push(temp);
 			$('#sliderForm').hide();
 			chooseQuestionType();
 		}
