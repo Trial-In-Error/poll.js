@@ -970,7 +970,14 @@ window.onunload = function() {};
 $(window).bind('pageshow', pageShowHelper);
 
 $( document ).on( "swipeleft", ".ui-page", function( event ) {
-	nextQuestion();
+	if(typeof poll.question_list[current_question].closing_slide !== 'undefined'
+		&& poll.question_list[current_question].closing_slide) {
+		console.log('swiped to submit')
+		submitPoll();
+	} else {
+		console.log('swiped to advance')
+		nextQuestion();		
+	}
 });
 // The same for the navigating to the previous page
 $( document ).on( "swiperight", ".ui-page", function( event ) {
