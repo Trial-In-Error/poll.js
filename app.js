@@ -3,7 +3,7 @@ var session = require('express-session');
 var path = require('path');
 var passport = require('passport');
 var flash = require('connect-flash');
-var favicon = require('static-favicon');
+var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
@@ -11,7 +11,6 @@ var util = require('util');
 var LocalStrategy = require('passport-local').Strategy;
 var Chance = require('chance');
 var alea = new Chance();
-var flash = require('connect-flash');
 var bcrypt = require('bcryptjs');
 var helper = require('./bin/helper');
 
@@ -69,6 +68,9 @@ var pollOverview = require('./routes/pollOverview');
 //http://docs.nodejitsu.com/articles/HTTP/servers/how-to-create-a-HTTPS-server
 //http://stackoverflow.com/questions/11744975/enabling-https-on-express-js
 var app = express();
+
+app.use(favicon(__dirname + '/public/images/favicon.ico'));
+
 var exists_list = {};
 var build_min_list = require('./bin/build_min_list.js');
 var printList = helper.buildPrintList;
@@ -211,7 +213,7 @@ passport.use('anonymous', new LocalStrategy(
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
-app.use(favicon());
+
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded());

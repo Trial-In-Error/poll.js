@@ -753,7 +753,11 @@ function updateBottomButtons() {
 		$('#nextquestion').hide();
 		if(document.getElementById('submit') === null) {
 			//temp = $('#verybottombuttons div').html();
-			$('#verybottombuttons div').append('<a href="/polloverview/'+poll._id+'" class="submit" id="submit" data-role="button" data-icon="carat-r" data-iconpos="right">Submit</a>');
+			if(checkLanguage() === 'english') {
+				$('#verybottombuttons div').append('<a href="/polloverview/'+poll._id+'" class="submit" id="submit" data-role="button" data-icon="carat-r" data-iconpos="right">Submit</a>');	
+			} else {
+				$('#verybottombuttons div').append('<a href="/polloverview/'+poll._id+'" class="submit" id="submit" data-role="button" data-icon="carat-r" data-iconpos="right">Svara</a>');
+			}			
 			$('#verybottombuttons').trigger('create');
 			$('#submit').show();
 			$('#submit').on('click', submitPoll);

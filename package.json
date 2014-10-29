@@ -11,7 +11,7 @@
 		"express": "~4.2.0",
 		"express-session": "*",
 		"chance": "*",
-		"static-favicon": "~1.0.0",
+		"serve-favicon": "*",
 		"morgan": "~1.0.0",
 		"look": "*",
 		"cookie-parser": "~1.0.1",
