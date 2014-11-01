@@ -29,9 +29,9 @@
 		"nodetime": "*",
 		"superagent": "*",
 		"connect-flash": "*", 
-		"forever": "*" 
-	},
-	"devDependencies": {
+		"forever": "*", 
+
+
 		"grunt": "*",
 		"load-grunt-tasks": "*",
 		"grunt-contrib-jshint": "*",
@@ -46,7 +46,9 @@
 		"grunt-strip-json-comments": "*",
 		"grunt-jsbeautifier": "^0.2.7",
 		"grunt-lineending": "^0.2.2",
-		"grunt-text-replace": "*",
+		"grunt-text-replace": "*"
+	},
+	"devDependencies": {
 		"should": "*",
 		"mocha": "*",
 		"istanbul": "*",
