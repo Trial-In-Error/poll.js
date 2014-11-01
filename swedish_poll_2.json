@@ -1,0 +1,149 @@
+{
+	"name": "Politik poll",
+	"id": "19",
+	"open": false,
+	"owner": "Konrad",
+	"allow_skipping": false,
+	"question_list":
+	[
+		{
+			"body": "Ålder",
+			"type":
+			{
+				"name": "pick_n",
+				"n": 1,
+				"response_list":
+				[
+					{
+						"body": "9-13"
+					},
+					{
+						"body": "14-17"
+					},
+					{
+						"body": "18-29"
+					},
+					{
+						"body": "30-45"
+					},
+					{
+						"body": "46-60"
+					},
+					{
+						"body": "61+"
+					}
+				]
+			},
+			"opening_slide": true
+		},
+		{
+			"body": "Kön",
+			"type":
+			{
+				"name": "pick_n",
+				"n": 1,
+				"response_list":
+				[
+					{
+						"body": "Kvinna"
+					},
+					{
+						"body": "Man"
+					},
+					{
+						"body": "Annat"
+					}
+				]
+			}
+		},
+		{
+			"body": "Är politik viktigt för dig?",
+			"type":
+			{
+				"name": "pick_n",
+				"n": 1,
+				"response_list":
+				[
+					{
+						"body": "Mycket"
+					},
+					{
+						"body": "Sådär"
+					},
+					{
+						"body": "Lite"
+					}
+				]
+			}
+		},
+		{
+			"body": "Hur ofta tycker du att det ska vara val?",
+			"type":
+			{
+				"name": "pick_n",
+				"n": 1,
+				"response_list":
+				[
+					{
+						"body": "Varje år"
+					},
+					{
+						"body": "Vartannat år"
+					},
+					{
+						"body": "Var tredje år"
+					},
+					{
+						"body": "Var fjärde år"
+					},
+					{
+						"body": "Var femte år"
+					},
+					{
+						"body": "Var sjätte år"
+					},
+					{
+						"body": "Annat"
+					}
+				]
+			}
+		},
+		{
+			"body": "Tycker du att det ska vara fler folkomröstningar?",
+			"type":
+			{
+				"name": "pick_n",
+				"n": 1,
+				"response_list":
+				[
+					{
+						"body": "Ja"
+					},
+					{
+						"body": "Nej"
+					},
+					{
+						"body": "Vet ej / Ingen åsikt"
+					}
+				]
+			}
+		},
+		{
+			"body": "Vid vilken ålder bör vi ha rösträtt?",
+			"type":
+			{
+				"name": "open",
+				"response_list":
+				[
+					{
+						"explanation": {
+							"always_explainable": true,
+							"required": true
+						} 
+					}
+				]
+			},
+			"closing_slide": true
+		}
+	]
+}
