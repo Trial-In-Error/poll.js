@@ -3,33 +3,68 @@
 		version : "1.0"
 	};
 	var flashpoll = {};
-	// maggio.datafunc = {}
+
 	var pollchart = {
-		/*
-* Object holding the c3 chart 
+
+		backgroundColors : ["#F7F2E0","#F7F8E0","#F8E0EC","#FAFAFA","#E6E0F8","#E0F8E6","#F8E0E0"],
+// backgroundColors : ["#F7F2E0","#F7F8E0","#31B404","#5FB404","#4B8A08","#298A08","#088A08"],
+// backgroundColors : ["#F7F2E0","#F7F8E0","#31B404","#5FB404","#4B8A08","#298A08","#088A08"],
+/**
+* Reference to matrix and chartobj
 */
-colorscheme : ["#FF6F00","#6FFF00","#006FFF"],
+data : [],
+/**
+*Chart container ids
+*/
 chart : [],
+/**
+*Base chart name
+*/
 chartID : "charty",
+/**
+*Nummer of charts in the visualization
+*/
 nrOfCharts : 0,
-varibles : {
-	container : null
+
+options : {
+	tooltip : true,
+	legend : true,
+	axis : true,
+	colorscheme : 0,
+},
+currentCharts : {},
+optionChart : [],
+
+addOption : function(index,option,value){
+	pollchart.optionChart[index][option]=value;
 }
-};
+}
+
+/**
+* tables for choosing visualizations
+*/
 var tables  ={
 	//[con,cat]
 	questions : [
-	[null,[1,1],[1,2]],
-	[[1,0],[1,1],[1,2]],
-	[[2,0],[2,1],[2,2]],
+	// 	Cat    0      1     2
+	/*Con 0*/[null,[1,1],[1,2]],
+	/*Con 1*/[[1,0],[2,1],[2,2]],
+	/*Con 2*/[[2,0],[3,1],[3,2]],
+	/*Con 3*/[[3,0]]
 	],
+
 	charts    :[
-	[[histogram],[pie,bar],[stackedBar,heatmap,lineCat,bar]],
-	[[histogram,scatter,line,regressionline],[lineCat,stackedArea],[bubble]]
+	[[/*histogram*/],[pie,bar,bar2],[stackedBar,heatmap,lineCat,bar,bar2]],
+	[[scatter,line,regressionline],[lineCat,stackedBar,bar,bar2,pie],[bubble]],
+	[[bubble]]
 	]
 	,
-
-
+	charts2    :[
+	[[/*histogram*/],[pie,bar,bar2],[stackedBar,heatmap2,lineCat,bar,bar2]],
+	[[scatter,line,regressionline],[lineCat,stackedBar,bar,bar2,pie],[bubble]],
+	[[bubble]]
+	]
+	,
 };
 //Flashpoll var
 var polldata = {
@@ -48,6 +83,18 @@ var matrixArray = [];
 * Array holding all the function for different charttypes
 */
 var chartFunctions = [bar,line,scatter,regressionline,regressionline,normalLine,pie,stackedArea,stackedBar,bubble,slideBar,slidePie,line,heatmap,histogram];
+var chartNames = {
+	"bar" : bar,
+	"line" : line,
+	"scatter" : scatter,
+	"regressionline" : regressionline,
+	"pie" : pie,
+	"stackedbar"  : stackedBar,
+	"bubble" : bubble,
+	"heatmap" : heatmap2,
+	"slidebar" : slideBar,
+	"slidepie" : slidePie
+}
 /**
 *
 */
@@ -65,9 +112,52 @@ var header=[];
 * id of chart container
 */
 var container;
+/*
+* Holds colorscheme for visualizations
+*/
+var datacolors = {
+	colors : [
+	['#02A79C','#88CBC4','#1F4557','#8FC043','#D2E090','#5A6C40','#EF921A','#F1DB71','#901F2F'],
+	['#8FC043','#D2E090','#5A6C40','#F2F7D8','#EF921A','#F1DB71','#901F2F','#FFF608'],
+	['#EF921A','#F1DB71','#901F2F','#FFF608','#D12A09','#6A2383','#9360A4','#5F5858'],
+	['#D12A09','#6A2383','#9360A4','#5F5858','#02A79C','#88CBC4','#1F4557','#8FC043'],
+	['#02A79C','#D12A09'],
+	['#8FC043','#02A79C','#88CBC4','#1F4557']
+	],
+	tileBackground :  '#FFF6c8',
+	curretGroup : 0,
+	count : 0,
+	getColor : function(group,names,isRow){
+	
+		// var c = pollchart.options.colorscheme;
+		index = 0;
+		datacolors.index = (datacolors.index + 1) % (datacolors.colors[0].length);
 
-var colors = ['#FF0000','#00FF00','#0000FF','#F007F0','#012310','#01930F0'];
+		if($.inArray(group,names) != -1){
+			return datacolors.colors[pollchart.options.colorscheme][getIndex2(names,group)];
+			// return "#FFFFFF";
+		}else {
+			// if(index==2){
+			// 	datacolors.count++;
+			// 	if(datacolors.count.length == count){
+			// 		datacolors.count=0;
+			// 	}
+			// }
+			if(group.id == "frequency" || group.id == "mean" || isRow){
+				if(datacolors.colors[pollchart.options.colorscheme][group.index] == null){
+						return datacolors.colors[pollchart.options.colorscheme][getIndex2(names,group.id)];
+				}
+						return datacolors.colors[pollchart.options.colorscheme][group.index];
+						// console.log(datacolors.colors[pollchart.options.colorscheme][group.index]);
+						// return "#FF0000";
+					}else{
+									return datacolors.colors[pollchart.options.colorscheme][getIndex2(names,group.id)];
 
+					}
+		}
+
+	}
+}
 var size;
 
 /**
@@ -87,56 +177,174 @@ var label = new Array();
 *
 **/
 
-var ashton = {
+/**
+* Object holding methods handling data from Opine-r
+*/
+var opine = {
 
-	dataTypes : {"pick_n":"nominal", "slider" : "ratio"},
-	initOne : function(data,question,nr){
-		if(question.length==1){
-			var matrix = ashton.getSingeMatrix(data,question[0]);
-			if(matrix[1][0]!=null){
-				addInfo(data.name,data.question_list[question[0]].body);
-				chartFunctions[nr](matrix);
-			}
-		}else{
-			var matrix=ashton.getDoubleMatrix(data,question);
-				addInfo("matrix[0][0],data.question_list[question[0]].body "+ "<br>"+ "data.question_list[question[1]].body");
-				chartFunctions[nr](matrix);
+/**
+*Data types for questions
+*/
+dataTypes : {"pick_n":"nominal", "slider" : "ratio"},
+
+readOptions : function(options){
+	for(key in options){
+		pollchart.options[key] = options[key];
+	}
+},
+/**
+*Visualize one graph from a dataset
+*param{json} data - jsonfile with the polldata
+*param{array} question - array containing the positions of the qustions in the poll
+*param{int} nr - nr of what chart to use
+*/
+initOne : function(data,question,chart){
+	
+	if(question.length==1){
+		var matrix = opine.getSingeMatrix(data,question[0]);
+		if(matrix[1][0]!=null){
+			addInfo2(data.name,data.question_list[question[0]].body);
+			chart(matrix);
 		}
-	},
-	init : function(data,question){
-		console.log(tables.charts[0][1][0]);
+	}else{
+		var matrix=opine.getDoubleMatrix(data,question);
+		console.log(matrix);
+		addInfo2("matrix[0][0],data.question_list[question[0]].body "+ "<br>"+ "data.question_list[question[1]].body");
+		chart(matrix);
+	}
+},
+/**
+*Visualizes all posible graphs from a set of questions from a poll
+*and render the visualizations in a grid
+*param{json} data - jsonfile with the polldata
+*param{array} question - array containing the positions of the qustions in the poll
+*/
+init : function(data,question){
+
 	//functions + questions
-	var visualizationTypes = ashton.calculateVisualizations(question,data);
-	for (var i = 0; i < visualizationTypes.length; i++) {
-		if(visualizationTypes[i].ids.length==1){
-			var matrix = ashton.getSingeMatrix(data,visualizationTypes[i].ids[0]);
-			if(matrix[1][0]!=null){
+	var visualizationTypes = opine.calculateVisualizations(question,data,false);
+	// createTable();
+		// pollchart.nrOfCharts = 0;
+		for (var i = 0; i < visualizationTypes.length; i++) {
+			if(visualizationTypes[i].ids.length==1){
+				var matrix = opine.getSingeMatrix(data,visualizationTypes[i].ids[0]);
+				if(matrix[1][0]!=null){
 					for (var u = 0; u < visualizationTypes[i].types.length; u++) {
-				addInfo(data.name,data.question_list[visualizationTypes[i].ids[0]].body);
-				visualizationTypes[i].types[u](matrix);
-			};
+							addInfo();
+							var rnd = Math.floor(Math.random()*4);
+							pollchart.options.colorscheme = rnd;
+							var variable = {};
+							for (var key in pollchart.options) {
+								variable[key]  = pollchart.options[key];
+							}
+							pollchart.optionChart.push(variable);
+						pollchart.currentCharts[pollchart.chart[pollchart.nrOfCharts-1]] = {chart : [i,u,], data : data, question : question};
+						visualizationTypes[i].types[u](matrix);
+					};
+				}
+			}
+			else{
+				for (var u = 0; u < visualizationTypes[i].types.length; u++) {
+					var matrix=opine.getDoubleMatrix(data,visualizationTypes[i].ids);
+					if(matrix==null){
+						continue;
+					}
+					addInfo();
+						var rnd = Math.floor(Math.random()*4);
+							pollchart.options.colorscheme = rnd;
+							var variable = {};
+							for (var key in pollchart.options) {
+								variable[key]  = pollchart.options[key];
+							}
+							pollchart.optionChart.push(variable);
+					pollchart.currentCharts[pollchart.chart[pollchart.nrOfCharts-1]] = {chart : [i,u], data : data, question : question};
+					visualizationTypes[i].types[u](matrix);
+					// addInfo();					
+					// pollchart.currentCharts[pollchart.chart[pollchart.nrOfCharts-1]] = {chart : [i,u,], data : data, question : question};
+					// chartDataModel(visualizationTypes[i].types[u],matrix);
+				};
+			}
+
+		}
+		console.log(pollchart.optionChart);
+		 new Masonry(container, { "columnWidth": ".tumbchart", "itemSelector": ".tumbchart", "gutter": ".gutter-sizer" })
+	},
+/**
+*Visualize one graph from a dataset
+*param{json} data - jsonfile with the polldata
+*param{array} question - array containing the positions of the qustions in the poll
+*param{int} nr - nr of what chart to use
+*/
+visualizeOne : function(data,question,nr){
+	//functions + questions
+	console.log(nr);
+	var visualizationTypes = opine.calculateVisualizations(question,data,true);
+	console.log(visualizationTypes);
+	// createTable();
+	pollchart.nrOfCharts = 0;
+	if(visualizationTypes[nr[0]].ids.length==1){
+		var matrix = opine.getSingeMatrix(data,visualizationTypes[nr[0]].ids[0]);
+		if(matrix[1][0]!=null){
+				// pollchart.nrOfCharts ++;
+				addInfo2(data.name,data.question_list[visualizationTypes[nr[0]].ids[0]].body);
+				visualizationTypes[nr[0]].types[nr[1]](matrix);
+				
 			}
 		}
 		else{
-			for (var u = 0; u < visualizationTypes[i].types.length; u++) {
-					var matrix=ashton.getDoubleMatrix(data,visualizationTypes[i].ids);
-				addInfo(matrix[0][0],data.question_list[visualizationTypes[i].ids[0]].body + "<br>"+ data.question_list[visualizationTypes[i].ids[1]].body);
-				console.log(matrix);
-				visualizationTypes[i].types[u](matrix);
-			};
-		}
+				// pollchart.nrOfCharts ++;
+				var matrix=opine.getDoubleMatrix(data,visualizationTypes[nr[0]].ids);
+				addInfo2(matrix[0][0],data.question_list[visualizationTypes[nr[0]].ids[0]].body + "<br>"+ data.question_list[visualizationTypes[nr[0]].ids[1]].body);
+				visualizationTypes[nr[0]].types[nr[1]](matrix);			
+			}
 
+		},
+
+		/**
+*Visualize one graph from a dataset
+*param{json} data - jsonfile with the polldata
+*param{array} question - array containing the positions of the qustions in the poll
+*param{int} nr - nr of what chart to use
+*/
+visualizeChart : function(data,question,chart){
+	var matrix;
+	// createTable();
+	pollchart.nrOfCharts = 0;
+	var dt = "frequency";
+	console.log(question);
+	if(question.length==1){
+		matrix = opine.getSingeMatrix(data,question);
+		addInfo2(data.name,data.question_list[question[0]].body);
 	}
-},
-
-calculateVisualizations : function(q,data){
+	else{
+			// pollchart.nrOfCharts ++;
+			matrix=opine.getDoubleMatrix(data,question);
+			var subtitle = "";
+			for(i=0; i<question.length; i++){
+				subtitle += "-";
+				subtitle += data.question_list[question[i]].body;
+				subtitle += "<br/>"
+			}
+			addInfo2(data.name,subtitle);
+		}
+		chartNames[chart](matrix);
+	},
+		/**
+*Function that finds all possiables visualizations from a
+* set of questions
+*param{json} data - jsonfile with the polldata
+*param{q} q - array containing the positions of the qustions in the poll
+*/
+calculateVisualizations : function(q,data,single){
+	console.log(q);
+	console.log(data);
 	var array = data.question_list;
 	var combinations =[];
 	for (var i = 0; i < q.length; i++) {
 		combinations.push(
 		{
 			ids:[q[i]],
-			types: ashton.getListOfCharts([array[q[i]].type.name]),
+			types: opine.getListOfCharts([array[q[i]].type.name],single),
 		});
 
 
@@ -144,32 +352,130 @@ calculateVisualizations : function(q,data){
 			combinations.push(
 			{
 				ids:[q[i],q[j]],
-				types: ashton.getListOfCharts([array[q[i]].type.name,array[q[j]].type.name]),
+				types: opine.getListOfCharts([array[q[i]].type.name,array[q[j]].type.name],single),
 
 			});
+			if(array[q[i]].type.name=="slider" && array[q[j]].type.name=="slider"){
+				for (var u = j+1; u < q.length; u++) {
+					combinations.push(
+					{
+						ids:[q[i],q[j],q[u]],
+						types: opine.getListOfCharts([array[q[i]].type.name,array[q[j]].type.name,array[q[u]].type.name],single),
+
+					});
+				}
+			}
 		}
 	}
-
-
-// console.log(combinations);
-return combinations;
+	return combinations;
 },
+		/**
+*This method selects the appropiate transformationfunction for the datatype
+*param{json} data - jsonfile with the polldata
+*param{array} visualizationTypes - array containing the questiontypes to visualize
+*/
 getSingeMatrix : function(data,visualizationTypes){
 	var index = visualizationTypes;
+	var type = data.question_list[index].type.name;
 	var matrix = [];
 	if(data.question_list[index].type.response_list.length==0){
 		return;
 	}
+	if(type =="pick_n"){
+		matrix = opine.singleCategorical(data,index);
+	}else if(type =="slider"){
+		matrix =  opine.singleContinuous(data,index);
+	}
+	return matrix;
+},
+				/**
+*Transforms the requested jsondata into a matrix
+*This method is used for a single questions of categorical type
+*param{json} data - jsonfile with the polldata
+*param{array} visualizationTypes - array containing the questiontypes to visualize
+*/
+singleCategorical : function(data,index){
+	var matrix = [];
 	data.question_list[index].type.response_list.forEach(function(d){
 		if(d.answers!=null){
-					matrix.push([d.body,d.answers.length]);
+			matrix.push([d.body,d.answers.length]);
+		}else{
+			matrix.push([d.body,0]);
 		}
 
 	});
 	matrix.unshift(["title","frequency"]);
 	return matrix;
 },
-getDoubleMatrix : function(data,visualizationTypes){
+				/**
+*Transforms the requested jsondata into a matrix
+*This method is used for a single questions of continuous type
+*param{json} data - jsonfile with the polldata
+*param{int} index - index of the question
+*/
+singleContinuous : function(data,index){
+	var matrix = [];
+	data.question_list[index].type.response_list[0].answers.forEach(function(d){
+		matrix.push(d.value);
+	});
+	matrix.unshift(data.question_list[index].body);
+	return matrix;
+},
+/**
+* This function is used for combination of two or more questions
+* defines the number of categorical and countinuous data and launches the appropiate method
+* for generating the matrix
+*param{json} data - jsonfile with the polldata
+*param{array} ids - array containing index of the relevant questions
+*/
+getDoubleMatrix : function(data,ids){
+	var matrix;
+	var cat = 0, con = 0;
+	for (var i = 0; i < ids.length; i++) {
+		var index = ids[i];
+		var type = data.question_list[index].type.name;
+		console.log(type);
+		if(type=="pick_n"){
+			cat++;
+		}else{
+			con++;
+		}
+	};
+	if(cat==2){
+		console.log("mixed");
+		matrix = opine.getDoubleCategorical(data,ids);
+	}else if(con>0 && cat ==0){
+		matrix = opine.getContinuous(data,ids);
+	}else if(con==1 && cat == 1){
+		matrix = opine.getMixedMatrix(data,ids);
+	}else if(con==2 && cat == 1){
+		matrix = opine.getMixedMatrix(data,ids);
+	}
+	// console.log(matrix);
+	return matrix;
+},
+/**
+*pushes continous data into into a matrix
+*param{json} data - jsonfile with the polldata
+*param{array} visualizationTypes - array containing the questiontypes to visualize
+*/
+getContinuous : function(data,visualizationTypes){
+	var matrix =[];
+	for (var i = 0; i < visualizationTypes.length; i++) {
+		matrix.push([data.question_list[visualizationTypes[i]].body]);	
+		data.question_list[visualizationTypes[i]].type.response_list[0].answers.forEach(function(d){
+			matrix[i].push(d.value);
+		});
+	};
+	return matrix;
+},
+/**
+*Transforms the requested jsondata into a matrix
+*This method is used for a combination of two categorical questions
+*param{json} data - jsonfile with the polldata
+*param{array} visualizationTypes - array containing the questiontypes to visualize
+*/
+getDoubleCategorical : function(data,visualizationTypes){
 	var matrix;
 	var first = true;
 	var names = [];
@@ -179,41 +485,40 @@ getDoubleMatrix : function(data,visualizationTypes){
 				//if question 1 of 2
 				if(visualizationTypes[0] == j){
 					var ac = 0;
-				
+
 					//Loops through each response
 					data.question_list[j].type.response_list.forEach(function(d){
-							names.push(d.body);
+						names.push(d.body);
 						//for each user	
-						d.answers.forEach(function(c){
-
-							for (var k = 0; k < data.question_list.length; k++) {
+						if(d.answers!=null){
+							d.answers.forEach(function(c){
+								for (var k = 0; k < data.question_list.length; k++) {
 							//if question 2 of 2
 							if(visualizationTypes[1] == k){
-							
+
 								var pc = 0 ;
 								//Loops through each response
 								data.question_list[k].type.response_list.forEach(function(l){
 									if(h.length < data.question_list[k].type.response_list.length){
-											h.push(l.body);
+										h.push(l.body);
 									}
 									
-										
-								if(first){
 
-									matrix = buildEmptyMatrix(data.question_list[j].type.response_list.length,data.question_list[k].type.response_list.length);
-									console.log(matrix);
-									first = false;
-								}
-								if(l.answers != null){
+									if(first){
+
+										matrix = buildEmptyMatrix(data.question_list[j].type.response_list.length,data.question_list[k].type.response_list.length);
+										first = false;
+									}
+									if(l.answers != null){
 								//for each user	
 								l.answers.forEach(function(p){
-									if(c.user == p.user){
+									if(c.user.username == p.user.username){
 										matrix[ac][pc]++;
 									}
 								});	
-								}
-								pc++;
-							});
+							}
+							pc++;
+						});
 								break;
 							}
 
@@ -221,59 +526,164 @@ getDoubleMatrix : function(data,visualizationTypes){
 
 						
 					});	
+						}else{
+
+						}
 						ac++;
+
 					});
-					break;
-				}
-				
-			};
-			matrix = ashton.addSideNames(matrix,names);
-			h.unshift(data.name);
-			matrix.unshift(h);
-			return matrix;
-		},
-		addSideNames : function(matrix,names){
-			for (var i = 0; i < matrix.length; i++) {
-				matrix[i].unshift(names[i]);
-			};
-			return matrix;
-		},
-		getQuestionList : function(data){
-			data.question_list.forEach(function(d){
+break;
+}
 
-			});
-		},
-		getListOfCharts : function(q){
-			var val;
-			var categorical = 0;
-			var continuous = 0;
-			for (var i = 0; i < q.length; i++) {
-				val = ashton.dataTypes[q[i]];
-				if(val == "nominal" ){
-					categorical++
-				}else if(val=="ratio"){
-					continuous++;
-				}
-			};
-			console.log(q);
-			return getvistypes(categorical,continuous);
+};
+console.log(names);
+matrix = opine.addSideNames(matrix,names);
+h.unshift(data.name);
+matrix.unshift(h);
+return matrix;
+},
+				/**
+*Transforms the requested jsondata into a matrix
+*this method is used for a combination of a categorical varible and a continous varible
+*param{json} data - jsonfile with the polldata
+*param{array} visualizationTypes - array containing the questiontypes to visualize
+*/
+getMixedMatrix : function(data,visualizationTypes){
+	var matrix = [];
+	console.log(visualizationTypes);
+	var categorical,continuous;
+	var names = [];
+	for (var i = 0; i < visualizationTypes.length; i++) {
+		if(data.question_list[visualizationTypes[i]].type.name == "pick_n"){
+			categorical=visualizationTypes[i];
 		}
-	}
-	maggio.visualizeSet = function(url,cnt,question){
-		d3.json(url, function(data) {
-			container = cnt;
-			ashton.init(data,question);
+		if(data.question_list[visualizationTypes[i]].type.name == "slider"){
+			continuous=visualizationTypes[i];
+		}
+	};
 
-		});
-	}
-	maggio.visualizeSpecific = function(url,cnt,question,nr){
-			d3.json(url, function(data) {
-			container = cnt;
-			ashton.initOne(data,question,nr);
+	var position=0;
+					//Loops through each response
+					data.question_list[categorical].type.response_list.forEach(function(d){
+						var temp = [];
+						matrix.push([d.body]);
 
-		});
-	}
+						//if response exist
+						if(d.answers!=null){
+								//for each user	
+								d.answers.forEach(function(c){
+									var currentUser =c.user.username;
+								//Loops through each continuous response
+								data.question_list[continuous].type.response_list[0].answers.forEach(function(l){
+									if(currentUser == l.user.username){
+										temp.push(parseInt(l.value));
+									}
 
+								});
+							});
+							}
+							matrix[position].push(Math.round(ss.mean(temp)));
+							position++;
+						});	
+					matrix.unshift(["Answer","Mean"]);
+					console.log(matrix);
+					return matrix;
+				},
+				addSideNames : function(matrix,names){
+					for (var i = 0; i < matrix.length; i++) {
+						matrix[i].unshift(names[i]);
+					};
+					return matrix;
+				},
+				getQuestionList : function(data){
+					data.question_list.forEach(function(d){
+
+					});
+				},
+				getListOfCharts : function(q,single){
+					var val;
+					var categorical = 0;
+					var continuous = 0;
+					console.log(q);
+					for (var i = 0; i < q.length; i++) {
+						val = opine.dataTypes[q[i]];
+						if(val == "nominal" ){
+							categorical++
+						}else if(val=="ratio"){
+							continuous++;
+						}
+					};
+					return getvistypes(categorical,continuous,single);
+				},
+
+			}
+							/**
+*Implement this function i a html page to visulize all options a set of questions
+*have to offer. The function
+*param{json} data - jsonfile with the polldata
+*param{array} visualizationTypes - array containing the questiontypes to visualize
+*/
+maggio.visualizeSet = function(url,cnt,question,options){
+	d3.json(url, function(data) {
+		container = cnt;
+		opine.readOptions(options);
+		console.log(pollchart.options);
+		opine.init(data,question);
+
+	});
+}
+			/*maggio.visualizeSpecific = function(url,cnt,question,nr){
+				d3.json(url, function(data) {
+					container = cnt;
+					opine.initOne(data,question,nr);
+
+				});
+}*/
+maggio.visualClick = function(id,url){
+
+	var dia = "<div id='dia'></div>";
+	var test = pollchart.currentCharts[id +""];
+	var q = arrayToString(test.question);
+	var c = arrayToString(test.chart);
+	var lastChar = id.split(pollchart.chartID).slice(-1)[0];
+	console.log(pollchart.optionChart);
+	var string = "single.html?url="+url +"&chart="+c+"&id="+q+"&color="+pollchart.optionChart[parseInt(lastChar)-1].colorscheme;
+	console.log(string);
+	window.location.href = string;
+
+
+}
+maggio.visualizeOne = function(url,cnt,question,nr,color){
+	
+	d3.json(url, function(data) {
+		pollchart.options.colorscheme = parseInt(color);
+		console.log(pollchart.options);
+	console.log(pollchart.options.colorscheme);
+		container = cnt;
+		opine.visualizeOne(data,question,nr);
+
+	});
+}
+maggio.visualizeChart = function(url,cnt,question,chart){
+	d3.json(url, function(data) {
+		container = cnt;
+		opine.visualizeChart(data,question,chart);
+	});
+}
+
+
+function arrayToString(array){
+	var res = "";
+	for (var i = 0; i < array.length; i++) {
+		if(i>0){
+			res += "+" + array[i];
+		}else{
+			res += ""+array[i];
+		}
+
+	};
+	return res;
+}
 /**
 *Get data from url and visualize it with chosen graph
 *param{String} url - url of csv file
@@ -311,7 +721,6 @@ maggio.chart = function(url,nr,cnt){
 */
 function getCSV(url, callback){
 	d3.csv(url, function(data) {
-		console.log(data);
 		matrix = [];
 		var row = 0;
 		data.forEach( function(d){
@@ -531,13 +940,22 @@ flashpoll.getChartList = function(qArray){
 	return getvistypes(cat,con);
 }
 
-function getvistypes(cat,con){
-	console.log(cat +"  " + con);
+function getvistypes(cat,con,single){
 	var r = tables.questions[con][cat];
-	return getvistable(r[0],r[1]);
+	if(single){
+		return getvistable2(r[0],r[1]);
+	}else{
+		return getvistable(r[0],r[1]);
+	}
+	
 }
 function getvistable(con,cat){
+	console.log(con +" - " + cat);
 	return tables.charts[con-1][cat];
+}
+function getvistable2(con,cat){
+	console.log(con +" - " + cat);
+	return tables.charts2[con-1][cat];
 }
 /**
 * Visualizes the questions
@@ -546,7 +964,6 @@ function plotallTypes(data,data2,list,array){
 	for (var j = 0; j < list.length; j++) {
 		if(list[j].ids.length>1){
 			var matrix = getFlashpollmatrix(data,list[j],array);
-			console.log(matrix);
 			for (var i = 0; i < list[j].types.length; i++) {
 				addInfo("Combined","y-axis: " + getQuestionText(list[j].ids[0],array)+"/ x-axis:  "+ getQuestionText(list[j].ids[1],array));
 				list[j].types[i](matrix);
@@ -561,7 +978,6 @@ function plotallTypes(data,data2,list,array){
 
 					matrix.unshift(["X","frequency"]);
 					for (var i = 0; i < list[j].types.length; i++) {	
-						console.log(matrix);
 						addInfo(getQuestionText(list[j].ids[0],array));
 						list[j].types[i](matrix);
 					}
@@ -608,7 +1024,6 @@ function getFlashpollmatrix(data,comb,array){
 	data.forEach(function(d){
 		
 		if(ids.questionType[0] != "ORDER" && ids.questionType[1] !="ORDER"){
-			console.log("EJ ORDER");
 			matrix = twoNominal(d,matrix,ids);
 		}
 		/*else if(ids.questionType[0] == "ORDER" && ids.questionType[1] == "ORDER"){
@@ -741,6 +1156,12 @@ function buildEmptyMatrix(rows,columns){
 /**
 *############################################ CHART FUNCTIONS ##################################################
 */
+
+function chartDataModel (callback, matrix) {
+	// callback(matrix);
+	var temp = normalizeByRow(matrix);
+	callback(temp);
+}
 /**
 * Plots a column/ barchart depending on size of the array
 * Column is array is smaller then 10, else bar chart.
@@ -749,46 +1170,201 @@ function buildEmptyMatrix(rows,columns){
 */
 function bar(matrix){
 	var m = matrix;
-	// matrix.unshift(header);
+	var r = 0;
+	console.log(matrix);
+	if(matrix.length>4){r = 70;}
+					
+	var names = columnNames(matrix);
 	var rot = matrix.length > 8; rotated : false ? rotated : true;
 	var c = 0;
-	console.log(m);
-	// var index = addChart();
 	var chart = c3.generate({
 		bindto: "#"+pollchart.chart[pollchart.nrOfCharts-1],
+
 		data: {
+
 			x : m[0][0],
 			columns : m,
-			type: 'bar'
+			type: 'bar',
+			color: function (color, d) {
+				console.log(d);
+				return datacolors.getColor(d,names);
+			}
 		},
-		axis: {
-			rotated : rot,
-			x: {
-				// height : 85,
-				type: 'categorized',
-				tick: {
-					// rotate: 40
+		bar: {
+			width : 100,
+			width: {
+            ratio: 0.5 // this makes bar width 50% of length between ticks
+        }
+    },
+
+    tooltip: {
+    	show : pollchart.options.tooltip
+    },
+    legend : {
+    	show : pollchart.options.legend
+    },
+    axis: {
+    	rotated : rot,
+
+    	x: {
+    		show : pollchart.options.axis,
+    		height : 85,
+    		type: 'categorized',
+    		tick: {
+    			rotate : r
+    
+				// 	rotate: function(){
+				// 		if(matrix.length>3){return 70;}
+				// 		else {return 0;}}
 				},
 			},
-			// y :{
-			// 	max : 10
-			// },
+			y : {
+				show : pollchart.options.axis,
+				label : matrix[0][1]
+			},
+
 			width: {
 				ratio: 100
 			},
-		}
+		},
+		scroll : {enabled : true},
+		zoom : {enabled : false},
+		
+
 	});
+	pollchart.data.push({chart : chart, matrix : matrix});
+}
+/**
+* Plots a column/ barchart depending on size of the array
+* Column is array is smaller then 10, else bar chart.
+*
+*param{Array} matrix - array holding the table
+*/
+function bar2(matrix){
+	var m = matrix;
+	var names = matrix[0];
+	var rot = matrix.length > 8; rotated : false ? rotated : true;
+	var c = 0;
+
+	var chart = c3.generate({
+		bindto: "#"+pollchart.chart[pollchart.nrOfCharts-1],
+
+		data: {
+
+			x : m[0][0],
+			rows : m,
+			type: 'bar',
+			color: function (color, d) {
+				console.log(d);
+				return datacolors.getColor(d,names,true);
+			}
+		},
+		bar: {
+			width : 100,
+			width: {
+            ratio: 0.5 // this makes bar width 50% of length between ticks
+        }
+    },
+
+    tooltip: {
+    	show : pollchart.options.tooltip
+    },
+    legend : {
+    	show : false
+    },
+    axis: {
+    	rotated : rot,
+
+    	x: {
+    		show : pollchart.options.axis,
+    		height : 85,
+    		type: 'categorized',
+    		tick: {
+    			// rotate : 0
+				// 	rotate: function(){
+				// 		if(matrix.length>3){return 70;}
+				// 		else {return 1;}},
+				},
+			},
+			y : {
+				show : pollchart.options.axis,
+				label : matrix[0][1]
+			},
+
+			width: {
+				ratio: 100
+			},
+		},
+		scroll : {enabled : true},
+		zoom : {enabled : false},
+		
+
+	});
+	pollchart.data.push({chart : chart, matrix : matrix});
+}
+function bardouble(matrix,ylabel){
+	var m = matrix;
+	var barmax = getRowMax(m,0,1);
+	console.log(m);
+	var rot = matrix.length > 8; rotated : false ? rotated : true;
+	var c = 0;
+	// var index = addChart();
+	var chart = c3.generate({
+		bindto: "#"+pollchart.chart[pollchart.nrOfCharts-1],
+
+		data: {
+
+			x : m[0][0],
+			columns : m,
+			type: 'bar',
+			color: function (color, d) {
+				return datacolors.getColor(d,names);
+			}
+		},
+		tooltip: {
+			show : pollchart.options.tooltip
+		},
+		legend : {
+			show : pollchart.options.legend
+		},
+		bar: {
+			width : 100,
+			width: {
+            ratio: 0.5 // this makes bar width 50% of length between ticks
+        }
+    },
+    axis: {
+    	rotated : rot,
+    	x: {
+    		height : 85,
+    		type: 'categorized',
+    		tick: {
+    			rotate : 70
+					// rotate: function(d){
+					// 	if(barmax>5){return 70;}
+					// 	else {return 0;}},
+				},
+			},
+			y : {
+				label : ylabel
+			},
+
+			width: {
+				ratio: 100
+			},
+		},
+		scroll : {enabled : true},
+		zoom : {enabled : false}
+	});
+	pollchart.data.push({chart : chart, matrix : matrix});
 }
 function histogram(matrix){
-	// console.log(matrix);
-	// var dd = getAverage(matrix);
-	// dd.unshift(header);
-	// console.log(matrix);
-	pollchart.chart = c3.generate({
-		bindto: container,
+	// var d = disk(matrix);
+	console.log(matrix);
+	var chart = c3.generate({
+		bindto: "#"+pollchart.chart[pollchart.nrOfCharts-1],
 		data: {
-			x : dd[0][0],
-			columns : dd,
+			rows : matrix,
 			type: 'bar',
 		},
 		axis: {
@@ -811,15 +1387,28 @@ function lineCat(matrix){
 			x : matrix[0][0],
 			columns : matrix,
 			type: 'line',
+			color: function (color, d) {
+				return datacolors.getColor(d,names);
+			}
 
+		},
+		tooltip: {
+			show : pollchart.options.tooltip
+		},
+		legend : {
+			show : pollchart.options.legend
 		},
 		axis: {
 			x: {
+				show : pollchart.options.axis,
 				height : 100,
 				type: 'categorized',
 				tick : {
 					rotate : 70
 				}
+			},
+			y :{
+				show : pollchart.options.axis,
 			}
 		}
 	});
@@ -832,21 +1421,29 @@ function lineCat(matrix){
 */
 function line(matrix){
 	// matrix.unshift(header);
-	console.log(matrix);
 	var t = new Object();
+	var names=columnNames(matrix);
 	t[matrix[1][0]] = matrix[0][0];
-	console.log(matrix);
-	chart = c3.generate({
+	var chart = c3.generate({
 		bindto: "#"+pollchart.chart[pollchart.nrOfCharts-1],
 		data: {
 			xs :t,
 			columns : matrix,
-			type: 'line'
+			type: 'line',
+			color: function (color, d) {
+				return datacolors.getColor(d,names);
+			}
 		},
-
+		tooltip: {
+			show : pollchart.options.tooltip
+		},
+		legend : {
+			show : pollchart.options.legend
+		},
 		axis: {
 			x: {
 				// type: 'categorized',
+				show : pollchart.options.axis,
 				label : matrix[0][0],
 				height : 100,
 				tick: {
@@ -857,6 +1454,7 @@ function line(matrix){
             }
         },
         y:{
+        	show : pollchart.options.axis,
         	label: matrix[1][0]
         }
     },
@@ -880,26 +1478,41 @@ function line(matrix){
 function scatter(matrix){
 	var t = new Object();
 	var title = new Object();
+	var names = columnNames(matrix);
 	t[matrix[1][0]]=matrix[0][0];
 	title["label"] = matrix[1][0];
-	console.log(title);
-	chart = c3.generate({
-		bindto: container,
+	var chart = c3.generate({
+		bindto: "#"+pollchart.chart[pollchart.nrOfCharts-1],
 		data: {
 			xs: t,
 			columns : matrix,
-			type: 'scatter'
+			type: 'scatter',
+			color: function (color, d) {
+				console.log(d);
+				return datacolors.getColor(d,names);
+			}
 
+		},
+		tooltip: {
+			show : pollchart.options.tooltip
+		},
+		legend : {
+			show : pollchart.options.legend
 		},
 		axis: {
 			x: {
+				show : pollchart.options.axis,
 				label: matrix[0][0],
 				tick: {
 					fit: false
 				}
 			},
 			y: {
+				show : pollchart.options.axis,
 				label: matrix[1][0],
+				tick: {
+					fit: false
+				},
 			}
 		},
 		legend: {
@@ -907,6 +1520,9 @@ function scatter(matrix){
 		},
 		tooltip: {
 			show : false
+		},
+		point: {
+			r: function(d){return 4}
 		}
 		
 	});
@@ -925,30 +1541,36 @@ function scatter(matrix){
 function regressionline(matrix){
 	var t = new Object();
 	var title = new Object();
+	var names = columnNames(matrix);
 	var toggle = 0;
 	t[matrix[1][0]]=matrix[0][0];
 	var y = matrix[1][0];
 	var x = matrix[0][0];
 	title["label"] = matrix[1][0];
-	console.log(matrix);
-
-	chart = c3.generate({
-		bindto: container,
+	var chart = c3.generate({
+		bindto: "#"+pollchart.chart[pollchart.nrOfCharts-1],
 		data: {
 			xs: t,
 			columns : matrix,
 			type: 'scatter',
+				color: function (color, d) {
+				console.log(d);
+				return datacolors.getColor(d,names);
+			},
 			onclick: function (d, i) { 
-				
+				console.log(toggle);
 				var id = d.x;
 				if(toggle==0){
 					var data2 = matrixToPoints(matrix);
-					setChartText(y + " increses " + increase + " for each " +  x);
+
+					console.log(data2);
+					setChartText(y + " increases " + Math.round(increase) + " for each " +  x);
 					chart.load({
 						columns: 
-
-						data2[1]
-
+						[
+						[data2[1][0][0],data2[1][0][1],data2[1][0][data2[1][0].length-1]],
+						[data2[1][1][0],data2[1][1][1],data2[1][1][data2[1][1].length-1]]
+						]
 						,
 						type:'line'
 					});
@@ -970,8 +1592,15 @@ function regressionline(matrix){
 			},
 
 		},
+		tooltip: {
+			show : pollchart.options.tooltip
+		},
+		legend : {
+			show : pollchart.options.legend
+		},
 		axis: {
 			x: {
+				show : pollchart.options.axis,
 				label: matrix[0][0],
 				tick : {
 					fit : false,
@@ -980,6 +1609,7 @@ function regressionline(matrix){
 				}
 			},
 			y: {
+				show : pollchart.options.axis,
 				label: matrix[1][0],
 			}
 		},
@@ -988,12 +1618,15 @@ function regressionline(matrix){
 		},
 		tooltip: {
 			show : false
+		},
+		point: {
+			r: function(d){return 4}
 		}
 		
 	});
 
 
-	
+
 }
 
 
@@ -1004,10 +1637,9 @@ function regressionline(matrix){
 * [name,value1, value2, ... ,value-n]
 */
 function normalLine(array){
-	console.log(array);
 	var buckets = disk(array);
 	var chart = c3.generate({
-		bindto: container,
+		bindto: "#"+pollchart.chart[pollchart.nrOfCharts-1],
 		data: {
 			columns:[buckets[1]],
 			type: 'bar'
@@ -1019,12 +1651,16 @@ function normalLine(array){
 		},
 		axis: {
 			x: {
+				show : pollchart.options.axis,
 				type: 'category',
 				categories : buckets[0],
 				tick: {
 					rotate: 75
 				},
 				height: 100
+			},
+			y: {
+				show : pollchart.options.axis,
 			}
 		}
 	});
@@ -1040,14 +1676,30 @@ function normalLine(array){
 
 function pie(matrix){
 	var m = matrix.slice(1,matrix.length);
-	console.log(matrix);
 	// m.shift();
+	var names = columnNames(matrix);
 	var chart = c3.generate({
 		bindto: "#"+pollchart.chart[pollchart.nrOfCharts-1],
 		data: {
 			columns: m,
 			type : 'pie',
+			color: function (color, d) {
+				
+				return datacolors.getColor(d,names);
+			}
+		},
+		tooltip: {
+			show : pollchart.options.tooltip
+		},
+		legend : {
+			show : pollchart.options.legend
+		},
+		pie :{
+			label :{
+				show : pollchart.options.axis,
+			}
 		}
+		
 	});
 }
 /**
@@ -1061,7 +1713,7 @@ function regLine(matrix){
 	var data = matrixToPoints(matrix);
 	chart = c3.generate({
 		
-		bindto: container,
+		bindto: "#"+pollchart.chart[pollchart.nrOfCharts-1],
 		data: {
 			  // x : label[1],
 			  columns: [data[1][1]]
@@ -1069,6 +1721,7 @@ function regLine(matrix){
 			,
 			axis: {
 				x: {
+					show : pollchart.options.axis,
 					label: data[0][0][0],
 					tick : {
 						count : 8,
@@ -1076,11 +1729,15 @@ function regLine(matrix){
 					}
 				},
 				y: {
+					show : pollchart.options.axis,
 					label: data[0][1][0],
 				}
 			},
-			legend: {
-				show: false
+			tooltip: {
+				show : pollchart.options.tooltip
+			},
+			legend : {
+				show : pollchart.options.legend
 			},
 		});
 }
@@ -1091,12 +1748,10 @@ function regLine(matrix){
 function stackedArea(matrix){
 	var obj = new Object();
 	obj[matrix[0][0]] = '#ff0000';
-	console.log(matrix);
-
 
 	matrix.shift();
 	chart = c3.generate({
-		bindto: container,
+		bindto: "#"+pollchart.chart[pollchart.nrOfCharts-1],
 		data: {
 			// x : header[0],
 			columns:
@@ -1113,6 +1768,7 @@ function stackedArea(matrix){
 		},
 		axis : {
 			x: {
+				show : pollchart.options.axis,
 				type: 'categorized',
 				height: 90,
 				tick : {
@@ -1125,6 +1781,7 @@ function stackedArea(matrix){
 
 },
 y : {
+	show : pollchart.options.axis,
 	label : header[0],
 }
 },
@@ -1140,21 +1797,19 @@ y : {
 *param{Array} matrix - array holding the table
 */
 function stackedBar(matrix){
-	console.log(matrix);
 	var toggle = 1;
 	var rot = matrix.length > 10; rotated : false ? rotated : true;
-	var names = columnNames(matrix);
-	names = names.slice(1,names.length);
+	var names2 = columnNames(matrix);
+	names = names2.slice(1,names2.length);
 	// matrix.unshift(header);
 
-	chart = c3.generate({
+	var chart = c3.generate({
 		bindto: "#"+pollchart.chart[pollchart.nrOfCharts-1],
 		data: {
 			x : matrix[0][0],
 			columns : matrix,
 			onclick: function (d, i) { 
 				var id = d.x;
-				console.log("click");
 				if(toggle==0){
 					chart.groups([
 						names]);
@@ -1168,12 +1823,17 @@ function stackedBar(matrix){
 
 			},
 			type: 'bar',
+			color: function (color, d) {
+
+				return datacolors.getColor(d,names2);
+			},
 
 			groups :  [names],
 		},
 		axis: {
 			rotated : rot,
 			x: {
+				show : pollchart.options.axis,
 				height : 120,
 				type: 'categorized',
 				tick: {
@@ -1181,23 +1841,34 @@ function stackedBar(matrix){
 				},
 			},
 			y : {
+				show : pollchart.options.axis,
 				// label: matrix[0][0]
 			}
+		},
+		tooltip: {
+			show : pollchart.options.tooltip
+		},
+		legend : {
+			show : pollchart.options.legend
 		},
 
 	});
 }
 
 function bubble(matrix){
-	console.log(matrix);
+
 	var t = new Object();
 	var title = new Object();
 	t[matrix[1][0]]=matrix[0][0];
 	title["label"] = matrix[1][0];
-	console.log(t);
-	var bubbles = matrix.pop();
+
+	var values = matrix.pop();
+	var my = values.shift();
+	var max = ss.max(values);
+	max = max/100;
+	// var sum = getArrayMax(values);
 	chart = c3.generate({
-		bindto: container,
+		bindto: "#"+pollchart.chart[pollchart.nrOfCharts-1],
 		data: {
 			xs: t,
 			columns : matrix,
@@ -1205,17 +1876,19 @@ function bubble(matrix){
 			label: function(){return "Radie" },
 			color: function (color, d) {
             // d will be 'id' when called for legends
-            return d3.rgb(255-bubbles[d.index +1],0,0);
+            return datacolors.colors[0][0];
         }
     },
     axis: {
     	x: {
+    		show : pollchart.options.axis,
     		label: matrix[0][0],
     		tick: {
     			fit: false
     		}
     	},
     	y: {
+    		show : pollchart.options.axis,
     		label: matrix[1][0],
     	}
     },
@@ -1223,16 +1896,16 @@ function bubble(matrix){
     	show: false
     },
     tooltip: {
+    	show : pollchart.options.tooltip,
     	format: {
     		title: function (d) { return 'Radie'; },
-    		name:  function () { return bubbles[0] },
+    		name:  function () { return values[0] },
     		value: function (value, ratio, id,d) {
 
-    			return bubbles[getIndex(matrix[1],value) ];
+    			return values[getIndex(matrix[1],value) ];
     		}
     	},
     	contents: function (d, defaultTitleFormat, defaultValueFormat, color) {
-    		console.log(d);
     		var $$ = this, config = $$.config,
     		titleFormat = config.tooltip_format_title || defaultTitleFormat,
     		nameFormat = config.tooltip_format_name || function (name) { return name; },
@@ -1243,13 +1916,15 @@ function bubble(matrix){
 
     			if (! text) {
     				title = titleFormat ? titleFormat(d[i].x) : d[i].x;
-    				text = "<table class='" + $$.CLASS.tooltip + "'>" + (title || title === 0 ? "<tr><th colspan='2'>" + title + "</th></tr>" : "");
+    				text = "<table class='" + $$.CLASS.tooltip + "'>" + (title || title === 0 ? "<tr><th colspan='2'>" +  my + "</th></tr>" : "");
     			}
 
-    			name = nameFormat(d[i].name);
+    			// name = nameFormat(d[i].name);
+    			// console.log(name);
+    			name = "value";
     			value = valueFormat(d[i].value, d[i].ratio, d[i].id, d[i].index);
               // bgcolor = $$.levelColor ? $$.levelColor(d[i].value) : color(d[i].id);
-              bgcolor = "#ff0000";
+              bgcolor = datacolors.colors[0][0];
               text += "<tr class='" + $$.CLASS.tooltipName + "-" + d[i].id + "'>";
               text += "<td class='name'><span style='background-color:" + bgcolor + "'></span>" + name + "</td>";
               text += "<td class='value'>" + value + "</td>";
@@ -1259,7 +1934,7 @@ function bubble(matrix){
       },
   },
   point: {
-  	r: function(d){return 100/bubbles[d.index + 1]}
+  	r: function(d){ return values[d.index + 1] / max;}
   }
 
 });
@@ -1276,9 +1951,19 @@ function slideBar(matrix){
 			type: 'bar',
 
 		},
+		tooltip: {
+			show : pollchart.options.tooltip
+		},
+		legend : {
+			show : pollchart.options.legend
+		},
 		axis: {
 			x: {
+				show : pollchart.options.axis,
 				type: 'categorized'
+			},
+			y : {
+				show : pollchart.options.axis,
 			}
 		}
 	});
@@ -1295,6 +1980,12 @@ function slidePie(matrix){
 			type: 'pie',
 
 		},
+		tooltip: {
+			show : pollchart.options.tooltip
+		},
+		legend : {
+			show : pollchart.options.legend
+		},
 		donut: {
 			title: function(){return matrix[1][0];}
 		},
@@ -1304,117 +1995,37 @@ function slidePie(matrix){
 			}
 		}
 	});
-	console.log(matrix);
-
+	
 }
-
-/*function heatmap(){
-	var dd = normalize();
-	var c = 0, u=0;
-	var tet = [2,4];
-	// var names = columnNames(matrix);
-	dd.unshift(header);
-	console.log(dd);
-	chart = c3.generate({
-		bindto: container,
-		data: {
-			columns : [
-			[matrix[0][0],2,2],
-			[matrix[1][0],4,4],
-			[matrix[2][0],6,6]],
-			type: 'scatter',
-
-// 			  labels: {
-//            format: {
-//            	y: function (v, id) { console.log(v); console.log(id); return "Default Format on ";} },
-//             // format: {
-//                 // y: d3.format('$'),
-// //                y: function (v, id) { return "Y Format on " + id; },
-// //                y2: function (v, id) { return "Y2 Format on " + id; }
-
-//         }
-
-			// groups :  [names]
-		},
-		axis: {
-			x: {
-				type: 'category',
-		// categories: [header[1],header[2]],
-		categories: function(d){
-
-			return [header[1],header[2]];
-		},
-	},
-	y: {
-		
-		show : false,
-				// categories: [matrix[0][0],matrix[1][0],matrix[2][0]]
-			}
-		},
-		point: {
-			r: function(d){ return dd[d.value/2][d.x +1] * 0.5},
-			focus: { 
-				expand: {
-					enabled: false } } ,
-				},
-				tooltip: {
-					format: {
-						title: function (d) { return 'Radie'; },
-						name:  function (d) { return d; },
-						value: function (value, ratio, id) {
-    			// console.log(ratio);
-    			return dd[value/2][0];
-    		}
-    	},
-    	contents: function (d, defaultTitleFormat, defaultValueFormat, color) {
-    		console.log(d);
-    		var $$ = this, config = $$.config,
-    		titleFormat = config.tooltip_format_title || defaultTitleFormat,
-    		nameFormat = config.tooltip_format_name || function (name) { return name; },
-    		valueFormat = config.tooltip_format_value || defaultValueFormat,
-    		text, i, title, value, name, bgcolor;
-    		for (i = 0; i < d.length; i++) {
-    			if (! (d[i] && (d[i].value || d[i].value === 0))) { continue; }
-
-    			if (! text) {
-    				title = titleFormat ? titleFormat(d[i].x) : d[i].x;
-    				text = "<table class='" + $$.CLASS.tooltip + "'>" + (title || title === 0 ? "<tr><th colspan='2'>" + title + "</th></tr>" : "");
-    			}
-
-    			name = nameFormat(d[i].name);
-    			value = valueFormat(d[i].value, d[i].ratio, d[i].id, d[i].index);
-    			bgcolor = $$.levelColor ? $$.levelColor(d[i].value) : color(d[i].id);
-              // bgcolor = "#ff0000";
-              text += "<tr class='" + $$.CLASS.tooltipName + "-" + d[i].id + "'>";
-              text += "<td class='name'><span style='background-color:" + bgcolor + "'></span>" + name + "</td>";
-              text += "<td class='value'>" + value + "</td>";
-              text += "</tr>";
-          }
-          return text + "</table>";
-      },
-  },
-
-});*/
-// }
 function heatmap(matrix){
-	console.log(matrix);
-	var head =  matrix[0].slice(1,matrix[0].length);
-	matrix.shift();
-	var array = matrixToRevArray(matrix);
-	console.log(head);
-	var w = (window.innerWidth > 0) ? window.innerWidth : screen.width;
-	console.log(array);
-	console.log(matrix);
-	var margin = { top: 100, right: 0, bottom: 20, left: 75 },
+	var m = matrix;
+	console.log(m);
+	var head =  m[0].slice(1,m[0].length);
+	console.log(m);
+	m=m.slice(1,m.length);
+	var array = matrixToRevArray(m);
+	var w = $("#charty1").width();
+	var gridSize = Math.floor(w / 6);
+
+	if($("#charty1").height() > 100){
+		var h = $("#charty1").height()-50;
+	}else{
+		var h =  w;
+	}
+	
+	// var h = 900;
+	var shiftR = 10;
+	var margin = { top: 75, right: 0, bottom: 0, left: 0 },
 	width =  w- margin.left - margin.right,
-	height = 400 - margin.top - margin.bottom,
-	gridSize = Math.floor(width / 10),
-	legendWidth = (gridSize/2 + 4),
-	dim_1 = columnNames(matrix),
+	height = h - margin.top - margin.bottom,
+
+	legendWidth = (gridSize/4),
+	dim_1 = columnNames(m),
+	textLength = 0;
 	dim_2 = head,
 	rowlength = dim_1.length;
 	columnlength = dim_2.length;
-          //antal färger
+          //antal fÃ¤rger
           buckets = 8;
           var svg = d3.select("#"+pollchart.chart[pollchart.nrOfCharts-1]).append("svg")
           .attr("width", width + margin.left + margin.right)
@@ -1424,9 +2035,201 @@ function heatmap(matrix){
 
           var maxNum = Math.round(d3.max(array,function(d){ return d; }));
 
-          var colors = colorbrewer.RdYlGn[buckets];
+          // var colors = colorbrewer.RdYlGn[buckets];
+          // var colors = datacolors.colors[5];
+          // var colorScale = d3.scale.quantile()
+          // .domain([0, buckets - 1, maxNum])
+          // .range(colors);
 
-          var colorScale = d3.scale.quantile()
+          var colors = [];
+
+// the first color
+var color1 = datacolors.colors[0][0];
+
+// the second color
+var color2 = datacolors.colors[0][2];
+
+// the number of colors to generate
+var n = 7;
+
+// make an interpolater named rgb
+rgb = d3.interpolateRgb(color1, color2);
+
+// use the interpolater to make evenly spaced colors
+for(var i = 0; i < n; i++) {
+	colors.push(rgb(i/(n-1)));
+}
+  var colorScale = d3.scale.quantile()
+          .domain([0, buckets - 1, maxNum])
+          .range(colors);
+
+          //Header
+//           var dim1Labels = svg.selectAll(".dim1Label")
+//           .data(dim_1)
+//           .enter().append("text")
+//           .text(function (d) { ;return d; })
+//           .attr("x", 10)
+//           .attr("y", function (d, i) { return i * gridSize; })
+//           .style("font-weight","bold")
+//           // .style("text-anchor", "end")
+//           .attr("transform", "translate(-6," + gridSize / 1.5 + ")")
+//           .attr("class","mono");
+
+     //Header
+     // var dim2Labels = svg.selectAll(".dim2Label")
+     // .data(dim_2)
+
+     // .enter().append("text")
+
+                // .text(function(d) { return d; })
+                // .attr("x", function(d, i) { return (i * gridSize) + 20; })
+
+                // .attr("y", 0)
+                // .style("text-anchor", "middle")
+                // .attr("transform", "translate(" + gridSize / 2 + ", -6)")
+                // .attr("class","mono")
+                // .attr("dy", ".71em")
+                // .text(function(d) {return d})
+//                 .style("font-weight","bold")
+// 				.attr("transform", function(d,i) {    // transform all the text elements
+//   return "translate(" + // First translate
+//   ((i * gridSize)+ textLength*(shiftR)+gridSize/2)  + ",-10) " + // Translation params same as your existing x & y 
+//     "rotate(-45)"            // THEN rotate them to give a nice slope
+// });
+
+
+          //heatmap
+          var count=0,count2=0;
+          var heatMap = svg.selectAll(".dim2")
+          .data(array)
+          .enter().append("g")
+           // .style("fill", colors[0])
+           .attr("class", "dim2");
+
+           var rec = heatMap.append("rect")
+           .attr("x", function(d) { count++; return ((count%columnlength - 1) * gridSize) + textLength*(shiftR)+gridSize; })
+           .attr("y", function(d) { count2++; return ( Math.ceil(count2/(columnlength))-1) * gridSize; })
+           .attr("rx", 4)
+           .attr("ry", 4)
+           .attr("class", "dim2 bordered")
+           .attr("width", gridSize-2)
+           .attr("height", gridSize-2)
+           .attr("class", "square")
+           rec.transition()
+           .style("fill", function(d) {;return colorScale(d); });
+           heatMap.append("title").text(function(d) {return d; });
+
+       //     var count=0,count2=0;
+       //     heatMap.append("text")
+       //    // .attr("class", "mono")
+       //    .text(function(d) { return  Math.round(d); })
+       //    .attr("x", function(d) { count++; return ((count%columnlength - 1) * gridSize) + textLength*(shiftR)+gridSize + gridSize/3; })
+       //    .attr("y", function(d) { count2++; return ( Math.ceil(count2/(columnlength))-1) * gridSize + gridSize/2; })
+       //    .style("font-size", gridSize/3+"px")
+       //    .style("font-family", "Calibri")
+       //    // .style("stroke-width","0px")
+       //    .style("text-shadow","none");
+
+
+
+       //    var ledc=0;
+       //    var legend = svg.selectAll(".legend")
+       //    .data([0].concat(colorScale.quantiles()), function(d) {return d; })
+       //    .enter().append("g")
+       //    .attr("class", "legend");
+
+       //    legend.append("rect")
+       //    .attr("x", function(d, i) { return  (i%4 * legendWidth *4+ textLength*(shiftR)+35) ; })
+       //    .attr("y", function(d, i) {k=0; if(i>3){k=1} return (rowlength) * (gridSize) + k * 30 + 20; })
+       //    .attr("rx", 4)
+       //    .attr("ry", 4)
+       //    .attr("width", 25)
+       //    .attr("height", 25)
+       //    .style("fill", function(d, i) { return colors[i]; })
+       //    .attr("class", "square");
+
+       //    legend.append("text")
+       //    .attr("class", "mono")
+       //    .text(function(d) { return  Math.round(d)+"+"; })
+       //    .attr("x", function(d, i) { return  (i%4 * legendWidth *4 + textLength*(shiftR)+35) ; })
+       //    .attr("y", function(d, i) {k=0; if(i>3){k=1} return (rowlength) * (gridSize) + k * 30 + 35; })
+       //    .style("font-size", "13px")
+       //    .style("font-family", "Calibri")
+       //    .style("font-weight","bold");
+       // /*     .attr("x", function(d, i) { return gridSize * 11 + 25; })
+       //      .attr("y", function(d, i) { return (i * legendWidth + 20); })
+       //      */
+       //      var title = svg.append("text")
+       //      .attr("class", "mono")
+       //      .attr("x", 0)
+       //      .attr("y", rowlength * (gridSize+1) + 35)         
+       //      // .style("font-size", gridSize/5+"px")
+       //      .text("Legend")
+       //      .style("font-weight","bold");
+   }
+
+   function heatmap2(matrix){
+   	var maxwidth = 2000;
+   	var m = matrix;
+   	console.log(m);
+   	var head =  m[0].slice(1,m[0].length);
+   	console.log(m);
+   	m=m.slice(1,m.length);
+   	var array = matrixToRevArray(m);
+   	var w =  window.innerWidth;
+   	if(w>maxwidth){
+   		w=maxwidth;
+   	}
+   	var gridSize = Math.floor(w / 10);
+   	var h = 100 + gridSize * (m.length+2);
+
+	// var h = 900;
+	var shiftR = 10;
+	var margin = { top: 100, right: 0, bottom: 0, left: 0 },
+	width =  w- margin.left - margin.right,
+	height = h - margin.top - margin.bottom,
+	legendWidth = (gridSize/2 + 4),
+	dim_1 = columnNames(m),
+	textLength = 12;
+	dim_2 = head,
+	rowlength = dim_1.length;
+	columnlength = dim_2.length;
+
+          //antal fÃ¤rger
+          buckets = 8;
+          var svg = d3.select("#"+pollchart.chart[pollchart.nrOfCharts-1]).append("svg")
+          .attr("width", width + margin.left + margin.right)
+          .attr("height", height + margin.top + margin.bottom)
+          .append("g")
+          .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+          var maxNum = Math.round(d3.max(array,function(d){ return d; }));
+
+          // var colors = colorbrewer.RdYlGn[buckets];
+          // var colors = datacolors.colors[4];
+          // var colorScale = d3.scale.quantile()
+          // .domain([0, buckets - 1, maxNum])
+          // .range(colors);
+
+                    var colors = [];
+
+// the first color
+var color1 = datacolors.colors[0][0];
+
+// the second color
+var color2 = datacolors.colors[0][2];
+
+// the number of colors to generate
+var n = 7;
+
+// make an interpolater named rgb
+rgb = d3.interpolateRgb(color1, color2);
+
+// use the interpolater to make evenly spaced colors
+for(var i = 0; i < n; i++) {
+	colors.push(rgb(i/(n-1)));
+}
+  var colorScale = d3.scale.quantile()
           .domain([0, buckets - 1, maxNum])
           .range(colors);
 
@@ -1434,10 +2237,13 @@ function heatmap(matrix){
           var dim1Labels = svg.selectAll(".dim1Label")
           .data(dim_1)
           .enter().append("text")
-          .text(function (d) { ;return d; })
-          .attr("x", 20)
+          .text(function (d) { 
+          	if(d.length>12){return d.substring(0,12)+"...";} 
+          	else {return d;} })
+          .attr("x", 10)
           .attr("y", function (d, i) { return i * gridSize; })
-          .style("text-anchor", "end")
+          .style("font-weight","bold")
+          // .style("text-anchor", "end")
           .attr("transform", "translate(-6," + gridSize / 1.5 + ")")
           .attr("class","mono");
 
@@ -1456,28 +2262,47 @@ function heatmap(matrix){
                 // .attr("class","mono")
                 // .attr("dy", ".71em")
                 .text(function(d) {return d})
+                .style("font-weight","bold")
 				.attr("transform", function(d,i) {    // transform all the text elements
   return "translate(" + // First translate
-  ((i * gridSize)+30)  + ",-10) " + // Translation params same as your existing x & y 
+  ((i * gridSize)+ textLength*(shiftR)+gridSize/2)  + ",-10) " + // Translation params same as your existing x & y 
     "rotate(-45)"            // THEN rotate them to give a nice slope
 });
+
+
           //heatmap
           var count=0,count2=0;
           var heatMap = svg.selectAll(".dim2")
           .data(array)
-          .enter().append("rect")
-          .attr("x", function(d) { count++; return ((count%columnlength - 1) * gridSize) +50; })
-          .attr("y", function(d) { count2++; return ( Math.ceil(count2/(columnlength))-1) * gridSize; })
-          .attr("rx", 4)
-          .attr("ry", 4)
-          .attr("class", "dim2 bordered")
-          .attr("width", gridSize-2)
-          .attr("height", gridSize-2)
-          .style("fill", colors[0])
-          .attr("class", "square")
-          heatMap.transition()
-          .style("fill", function(d) {return colorScale(d); });
-          heatMap.append("title").text(function(d) {return d; });
+          .enter().append("g")
+           // .style("fill", colors[0])
+           .attr("class", "dim2");
+
+           var rec = heatMap.append("rect")
+           .attr("x", function(d) { count++; return ((count%columnlength - 1) * gridSize) + textLength*(shiftR)+gridSize; })
+           .attr("y", function(d) { count2++; return ( Math.ceil(count2/(columnlength))-1) * gridSize; })
+           .attr("rx", 4)
+           .attr("ry", 4)
+           .attr("class", "dim2 bordered")
+           .attr("width", gridSize-2)
+           .attr("height", gridSize-2)
+           .attr("class", "square")
+           rec.transition()
+           .style("fill", function(d) {;return colorScale(d); });
+           heatMap.append("title").text(function(d) {return d; });
+
+           var count=0,count2=0;
+           heatMap.append("text")
+          // .attr("class", "mono")
+          .text(function(d) { return  Math.round(d); })
+          .attr("x", function(d) { count++; return ((count%columnlength - 1) * gridSize) + textLength*(shiftR)+gridSize + gridSize/3; })
+          .attr("y", function(d) { count2++; return ( Math.ceil(count2/(columnlength))-1) * gridSize + gridSize/2; })
+          .style("font-size", gridSize/3+"px")
+          .style("font-family", "Calibri")
+          // .style("stroke-width","0px")
+          .style("text-shadow","none");
+
+
 
           var ledc=0;
           var legend = svg.selectAll(".legend")
@@ -1486,32 +2311,33 @@ function heatmap(matrix){
           .attr("class", "legend");
 
           legend.append("rect")
-          .attr("x", function(d, i) { return  (i%4 * legendWidth*2 + 20 ) ; })
-          .attr("y", function(d, i) {k=0; if(i>3){k=1} return (k+rowlength) * (gridSize+1) + 15; })
+          .attr("x", function(d, i) { return  (i%4 * legendWidth + textLength*(shiftR)+30) ; })
+          .attr("y", function(d, i) {k=0; if(i>3){k=1} return (rowlength) * (gridSize) + k * 30 + 20; })
           .attr("rx", 4)
           .attr("ry", 4)
-          .attr("width", gridSize)
-          .attr("height", gridSize)
+          .attr("width", 25)
+          .attr("height", 25)
           .style("fill", function(d, i) { return colors[i]; })
           .attr("class", "square");
           
           legend.append("text")
           .attr("class", "mono")
           .text(function(d) { return  Math.round(d)+"+"; })
-          .attr("x", function(d, i) { return  (i%4 * legendWidth*2 + 25 ) ; })
-          .attr("y", function(d, i) {k=0; if(i>3){k=1} return (k+rowlength) * (gridSize+1) + 30; })
+          .attr("x", function(d, i) { return  (i%4 * legendWidth + textLength*(shiftR)+35) ; })
+          .attr("y", function(d, i) {k=0; if(i>3){k=1} return (rowlength) * (gridSize) + k * 30 + 35; })
           .style("font-size", "13px")
-          .style("font-family", "Times New Roman")
-          .style("font-weight","bold")
+          .style("font-family", "Calibri")
+          .style("font-weight","bold");
        /*     .attr("x", function(d, i) { return gridSize * 11 + 25; })
             .attr("y", function(d, i) { return (i * legendWidth + 20); })
             */
             var title = svg.append("text")
             .attr("class", "mono")
-            .attr("x", -40)
+            .attr("x", 0)
             .attr("y", rowlength * (gridSize+1) + 35)         
-            .style("font-size", "16px")
+            // .style("font-size", gridSize/5+"px")
             .text("Legend")
+            .style("font-weight","bold");
         }
 /**
 * ##################################### MATRIX FUNCTINOS ###############################################
@@ -1533,7 +2359,6 @@ function matrixToRevArray(matrix){
 function disk(data){
 	var header = [];
 	var bucketsize =5;
-	console.log(data);
 	var head = data[0].splice(0,1);
 	var buckets = new Array(bucketsize);
 	var min = Math.min.apply(Math, data[0]),
@@ -1571,7 +2396,6 @@ function matrixToPoints(matrix){
 
 	label.push(matrix[0].splice(0,1));
 	label.push(matrix[1].splice(0,1));
-	console.log(matrix);
 	var data= new Array();
 	var max = 0;
 	for(var j = 0; j<2; j++){
@@ -1579,17 +2403,18 @@ function matrixToPoints(matrix){
 			if(j==0){
 				data[i]=new Array();
 			}
-			data[i].push(matrix[j][i]);
-			// console.log(matrix[j][i]);
+			data[i].push(Math.round(matrix[j][i]));
 			
 		}
 		if(max < ss.max(matrix[0])){
 			max = ss.max(matrix[0]);
 		}
 	}
-	console.log(data);
 	return [label,linearRegression(data, max)];
 }
+/**
+*
+*/
 function getAverage(matrix){
 	var mat,temp;
 	mat=[];
@@ -1601,7 +2426,6 @@ function getAverage(matrix){
 		mat[j]=temp;
 		mat[j].unshift(matrix[j][0])
 	}
-	console.log(mat);
 	return matrix;
 }
 /**
@@ -1613,7 +2437,6 @@ function getAverage(matrix){
 *
 */
 function normalizeArea(matrix){
-	// console.log(matrix);
 	for(var i = 0; i<matrix.length; i++){
 		for(var j = 1; j<matrix[i].length; j++){
 			if(i != 0){
@@ -1632,7 +2455,6 @@ function normalizeMatrix(matrix){
 			matrix[i][j] = (matrix[i][j]/sum).toFixed(2);
 		}
 	}
-	console.log(matrix);
 	return matrix;
 }
 /**
@@ -1641,6 +2463,13 @@ function normalizeMatrix(matrix){
 function addChart(chart){
 	matrixArray.push(chart);
 	return matrixArray.length-1;
+}
+/**
+* ################################ Transformations ##################################################################
+*/
+maggio.deleteData = function(index, row){
+	var matrix = pollchart.data.matrix;
+	console.log(matrix);
 }
 
 /**
@@ -1652,12 +2481,22 @@ function addChart(chart){
 *param{var} value - value of the object whoms position is searched
 */
 function getIndex(array, value){
-	// console.log(array);
 	for(var i = 1; i < array.length; i++){
-		// console.log(value + " ||  " + array[i]);
-		if(value == array[i]){
-			
+		if(value == array[i]){	
 			return i;
+		}
+	}
+	return null;
+}
+/**
+* Returns the position of the value in the array
+*param{Array} array - array to be searched
+*param{var} value - value of the object whoms position is searched
+*/
+function getIndex2(array, value){
+	for(var i = 1; i < array.length; i++){
+		if(value == array[i]){	
+			return i-1;
 		}
 	}
 	return null;
@@ -1680,10 +2519,12 @@ function getSumMatrix(matrix){
 	}
 	return sum;
 }
-function getSumArray(array){
+function getSumArray(array,offset){
 	var sum = 0 ;
-	for(var j= 0; j<array.length; j++){
-		sum += array[j];
+	console.log(array);
+
+	for(var j= offset; j<array.length; j++){
+		sum += parseInt(array[j]);
 	}
 	return sum;
 }
@@ -1695,13 +2536,29 @@ function matrixToArray(m){
 			array[(i*m[0].length)+j] = m[i][j];
 	};
 };
-
+function getArrayMax(a,offset){
+	var max = 0;
+	for (var i = 1; i < a.length; i++) {
+		if(max<a[i].length){
+			max=a[i].length;
+		}
+	}
+	return max;
+}
+function getRowMax(matrix,index,offset){
+	var max = 0;
+	for (var i = offset; i < matrix.length; i++) {
+		if(max<matrix[i][index].length){
+			max=matrix[i][index].length;
+		}
+	}
+	return max;
+}
 /**
 *
 */ 
 function mergeQ(answers,meta){
 	var returnvalue = addMetaToMatrix(buildDataMatrix(answers),meta);
-	console.log(returnvalue);
 	bar(returnvalue);
 }
 function buildDataMatrix(answers){
@@ -1734,19 +2591,15 @@ var increase;
 function linearRegression(data, max){
 	var linear_regression_line = ss.linear_regression()
 	.data(data).line();
-	console.log(linear_regression_line(1));
-	console.log(linear_regression_line(max));
-	console.log(max);
 	increase = (linear_regression_line(1) -linear_regression_line(0)).toFixed(1);
 	var d = new Array();
 	var h = new Array();
 	h.push(label[0][0]);
 	d.push(label[1][0]);
 	for(var i = 0; i<=max; i++){
-		d.push(linear_regression_line(i));
+		d.push(Math.round(linear_regression_line(i)));
 		h.push(i);
 	}
-	console.log(label[1][0]);
 	return [h,d]
 }
 /**
@@ -1767,7 +2620,6 @@ function ChiSq(x,n) {
 function chiSquareTest(){
 	var sValue = 0.05;
 	var test = addTotal();
-	console.log(test);
 	var chimatrix = [];
 	var chiSquare = 0;
 	var df;
@@ -1785,12 +2637,7 @@ function chiSquareTest(){
 		chimatrix.push(temp);
 	};
 	df = (test.length-3) * (test[1].length-3);
-	// console.log("chiSquare" + chiSquare);
-		// console.log("df " + df);
-		pvalue = ChiSq(chiSquare,df);
-	// console.log("P-value : " + pvalue);
-	// console.log(chimatrix);
-	// return [chimatrix,chiSquare,pvalue];
+	pvalue = ChiSq(chiSquare,df);
 	return pvalue > sValue ? true : false;
 }
 
@@ -1798,14 +2645,11 @@ function calcExp(rowtot, coltot, sampsize){
 	return (rowtot*coltot)/sampsize;
 }
 function calcChiPart(expected,accual){
-	// console.log("EXP: " + (accual-expected));
-	// console.log("CHI PART: " + Math.pow(accual-expected,2)/expected);
 	return (Math.pow(accual-expected,2))/expected;
 }
 function addTotal(){
 	var m = [];
 	m.unshift(header);
-	console.log(header);
 	m[0].push("total");
 	var bottom = [];
 	bottom.push("total");
@@ -1836,7 +2680,6 @@ function addTotal(){
 	};
 	bottom.push(absTotal);
 	m.push(bottom);
-	console.log(m);
 	return m;
 }
 
@@ -1854,21 +2697,69 @@ function createSlider(){
 		setBarSet($("#sliderb").val(),matrix);
 	});
 }
-function addInfo(title,info){
+function addInfo(){
+	pollchart.nrOfCharts++;
+	pollchart.chart.push(pollchart.chartID+pollchart.nrOfCharts);
+	// var info = "<div><h2>"+title+"</h2><p id='maggioInfo'>"+info+"</p></div>";
+	// $(container).append(info);
+	if(container == "#char"){
+		$(container).append("<div id='charty' class='tumbchart' style='height : 600px'></div>");
+	}else{
+		$(container).append("<div class='tumbchart' id='"+pollchart.chart[pollchart.nrOfCharts-1]+"'style ='background-color : #FFF6c8'></div>");
+
+	}
+}
+function addInfo2(title,info){
 	pollchart.nrOfCharts++;
 	pollchart.chart.push(pollchart.chartID+pollchart.nrOfCharts);
 	var info = "<div><h2>"+title+"</h2><p id='maggioInfo'>"+info+"</p></div>";
 	$(container).append(info);
 	if(container == "#char"){
-		$(container).append("<div id='charty' style='height : 600px'></div>");
+		$(container).append("<div id='charty' class='tumbchart' style='height : 600px'></div>");
 	}else{
-		$(container).append("<div id='"+pollchart.chart[pollchart.nrOfCharts-1]+"'></div>");
+		$(container).append("<div class='tumbchart' id='"+pollchart.chart[pollchart.nrOfCharts-1]+"'></div>");
 
 	}
 }
+var tableId = "#tableId";
+var tablerow;
+var cells = [];
+function addSqaure(){
+	pollchart.nrOfCharts++;
+	pollchart.chart.push(pollchart.chartID+pollchart.nrOfCharts);
+	if(pollchart%4 == 0){
+		$(tableId).append('<tr></tr>');
+	}
+	$(tableId).append("<div id='"+pollchart.chart[pollchart.nrOfCharts-1]+"'></div>");
+}
+
+function createTable(){
+	var myTableDiv = document.getElementById(container);
+	var table = document.createElement('TABLE');
+	var tableBody = document.createElement('TBODY');
+	table.appendChild(tableBody);
+
+
+    //TABLE ROWS
+    for (i = 0; i < 4; i++) {
+    	var tr = document.createElement('TR');
+    	for (j = 0; j < 3; j++) {
+    		var td = document.createElement('TD')
+            // td.appendChild(document.createTextNode("<div id='"+pollchart.chart[pollchart.nrOfCharts-1]+"' background-color='"+pollchart.backgroundColors[(i+j)%pollchart.backgroundColors.length]+"''></div>"));
+            td.appendChild(document.createTextNode(i));           
+            tr.appendChild(td);
+        }
+        tableBody.appendChild(tr);
+    }  
+    myTableDiv.appendChild(table)
+
+}
+
 function setChartText(text){
+	var w = window.innerWidth/2;
+
 	d3.select(container + ' svg').append("text")
-	.attr("x", "200")
+	.attr("x", w)
 	.attr("y", "55")
 	.attr("dy", "-.7em")
 	.style("text-anchor", "middle")
@@ -1878,10 +2769,9 @@ function setChartText(text){
 	.attr("fill", "Black")
 	.text(text);
 }
-function removeChartText(){
+function removeChartText(element){
 	console.log("removing...");
-	console.log(d3.select("#chart1"));
-	d3.select("text").remove();
+	d3.select(element).remove();
 }
 
 var set = 0;
@@ -1903,25 +2793,23 @@ function loadData(matrix){
 	});
 }
 function changeLabel(label,value){
-	console.log(value);
 	$(label).text("Current plot: " +value);
 }
 function getMytitle(){
-	console.log(set);
 	return matrix[set][0];
 }
+
 /**
 * Normalize a datamatrix without a top header as first row
 * First coloumn is text
 */
-function normalize(matrix,hop){
+function normalize (matrix){
 	var ratio =0;
 	var temp;
 	var result = [];
 	for (var i = 0; i < matrix.length; i++) {
 		for (var j = 1; j < matrix[i].length; j++) {
 			temp = matrix[i][j];
-			console.log(temp);
 			if(temp > ratio){
 				ratio = temp;
 			}
@@ -1931,14 +2819,56 @@ function normalize(matrix,hop){
 	
 	for (var i = 0; i < matrix.length; i++) {
 		result[i] = new Array();
+		result[i].push(matrix[i][0]);
 		for (var j = 1; j < matrix[i].length; j++) {
 			result[i][j] = Math.round(matrix[i][j]/ratio);
 		};
 	};
 	return result;
 }
+/**
+* Normalize a datamatrix without a top header as first row
+* First coloumn is text
+*/
+/*function normalizeByColumn(matrix){
+	var result = [];
+	result.push(matrix[0]);
+	for (var i = 1; i < matrix.length; i++) {
+		var temp=[];
+		for (var j = 1; j < Things.length; j++) {
+			matrix[i][j]
+		};
+		result.push(normalizeRow(matrix[i]));
+	};
+	return result;
+}*/
+/**
+* Normalize a datamatrix without a top header as first row
+* First coloumn is text
+*/
+function normalizeByRow (matrix){
+	var result = [];
+	result.push(matrix[0]);
+	for (var i = 1; i < matrix.length; i++) {
+		result.push(normalizeRow(matrix[i]));
+	};
+	return result;
+}
+function normalizeRow(array){
 
-
+	var max = getArrayMax(array.slice(1,array.length),0);
+	var sum = getSumArray(array,1);
+	for (var i = 1; i < array.length; i++) {
+		var value = parseInt(array[i]);
+		array[i] = Math.round(value/sum*100);
+	};
+	return array;
+}
+function averageByRow(matrix){
+	for (var i = 0; i < matrix.length; i++) {
+			// matrix[i] = matrix[i][]
+		};
+	}
 //add maggio to context
 this.maggio = maggio;
 }();
