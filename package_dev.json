@@ -51,6 +51,7 @@
 
 		// These need to be in dependencies so that heroku installs them!
 		"grunt": "*",
+		"grunt-cli": "*",
 		"load-grunt-tasks": "*",
 		"grunt-contrib-jshint": "*",
 		"grunt-lintspaces": "*",

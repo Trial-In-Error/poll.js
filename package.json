@@ -33,6 +33,7 @@
 
 
 		"grunt": "*",
+		"grunt-cli": "*",
 		"load-grunt-tasks": "*",
 		"grunt-contrib-jshint": "*",
 		"grunt-lintspaces": "*",
