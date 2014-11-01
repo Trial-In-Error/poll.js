@@ -421,7 +421,7 @@ function submitPoll() {
 					//clearStorage();
 					window.localStorage.removeItem('poll'+tempID);
 					window.localStorage.removeItem('current'+tempID);
-					//window.location.replace('/polloverview/'+tempID);
+					window.location.replace('/polloverview/'+tempID);
 					//window.localStorage['poll'+tempID] = JSON.stringify(batchSanitize([poll])[0]);
 					//window.localStorage['current'+tempID] = 0;
 					current_question = 0;
@@ -754,9 +754,9 @@ function updateBottomButtons() {
 		if(document.getElementById('submit') === null) {
 			//temp = $('#verybottombuttons div').html();
 			if(checkLanguage() === 'english') {
-				$('#verybottombuttons div').append('<a href="/polloverview/'+poll._id+'" class="submit" id="submit" data-role="button" data-icon="carat-r" data-iconpos="right">Submit</a>');	
+				$('#verybottombuttons div').append('<a href="#" class="submit" id="submit" data-role="button" data-icon="carat-r" data-iconpos="right">Submit</a>');	
 			} else {
-				$('#verybottombuttons div').append('<a href="/polloverview/'+poll._id+'" class="submit" id="submit" data-role="button" data-icon="carat-r" data-iconpos="right">Svara</a>');
+				$('#verybottombuttons div').append('<a href="#" class="submit" id="submit" data-role="button" data-icon="carat-r" data-iconpos="right">Svara</a>');
 			}			
 			$('#verybottombuttons').trigger('create');
 			$('#submit').show();
