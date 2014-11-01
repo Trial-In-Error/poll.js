@@ -5,7 +5,7 @@
 function constructRow(tableContent, poll, data) {
 	tableContent += '<li>';
 	// WARN: THIS IS SHIT DESIGN; IT'S DUPLICATED BELOW AND HAS ALREADY CAUSED ME PROBLEMS
-	if(poll.open || poll.open === 'true') {
+	if(poll.open === true || poll.open === 'true') {
 		tableContent += '<a href="/poll/' + poll._id + '" rel="external" data-ajax="false">';	
 	} else {
 		tableContent += '<a href="/polloverview/' + poll._id + '" rel="external" data-ajax="false">';
@@ -13,7 +13,7 @@ function constructRow(tableContent, poll, data) {
 	tableContent += '<h2>'+ poll.name + '</h2>';
 	tableContent += '<p>';
 	tableContent += 'Created by ' + poll.owner + '.</p>';
-	if(poll.open || poll.open === 'true') {
+	if(poll.open === true || poll.open === 'true') {
 		tableContent += '<h4 style="display:none;"> open </h4>';	
 	} else {
 		tableContent += '<h4 style="display:none;"> closed </h4>';	
@@ -54,7 +54,7 @@ function populateTable() {
 		if (typeof data !== 'undefined' && typeof data.polls !== 'undefined') {
 			$.each(JSON.parse(data.polls), function() {
 				// WARN: THIS IS SHIT DESIGN; IT'S DUPLICATED ABOVE AND HAS ALREADY CAUSED ME PROBLEMS
-				if (this.open || this.open === 'true') {
+				if (this.open === true || this.open === 'true') {
 					openPolls.push(this);
 				} else {
 					closedPolls.push(this);
