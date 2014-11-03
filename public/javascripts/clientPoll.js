@@ -5,6 +5,25 @@ var user_token = ('00000000' + value).slice(-8);
 eval($('#data')[0].innerHTML); // jshint ignore:line
 var firstRun = true;
 
+function checkLanguage() {
+	// If this specific question is flagged for english...
+	if(poll.question_list[current_question].language !== 'undefined' && poll.question_list[current_question].language === 'english') {
+		return 'english';
+	// Else, if this specific question is flagged for swedish...
+	} else if (poll.question_list[current_question].language !== 'undefined' && poll.question_list[current_question].language === 'swedish') {
+		return 'swedish';
+	// Else, if this whole poll is flagged for english...
+	} else if (poll.language !== 'undefined' && poll.language === 'english') {
+		return 'english';
+	// Else, if this whole poll is flagged for english...
+	} else if (poll.language !== 'undefined' && poll.language === 'swedish') {
+		return 'swedish';
+	// Else, default to swedish...
+	} else {
+		return 'swedish';
+	}
+}
+
 /**
  *	Checks if browser supports html5's localStorage. Note that, by design, it checks for both sessionStorage and localStorage being supported.
  *	Called as a helper in many functions; storePoll(), loadPoll(), pollIsStored(), and clearStorage().
@@ -45,9 +64,7 @@ function storePoll() {
 				alert('Your progress will not be saved until you submit the completed poll.\n\n To enable incremental saving, leave private browsing mode.');
 			} else {
 				alert('Din svar kommer ej att sparas förrän du har slutfört formuläret \n\n För att spara kontinuerligt var god att lämna privat surf.');
-				
 			}
-			
 			firstRun = false;
 		}
 
@@ -153,7 +170,7 @@ function validateCurrentQuestion(forward) {
 			} else if(counter === 0) {
 				if (forward) {
 					if(checkLanguage() === 'english') {
-						alert('Please pick an option.');	
+						alert('Please pick an option.');
 					} else {
 						alert('Vad god och välj ett alternativ.');
 					}
@@ -161,7 +178,7 @@ function validateCurrentQuestion(forward) {
 			} else {
 				if (forward) {
 					if(checkLanguage() === 'english') {
-						alert('Please pick only one option.');	
+						alert('Please pick only one option.');
 					} else {
 						alert('Endast ett alternativ är tillåtet.');
 					}
@@ -181,7 +198,7 @@ function validateCurrentQuestion(forward) {
 			} else if (counter > poll.question_list[current_question].type.response_list.length) {
 				if (forward) {
 					if(checkLanguage() === 'english') {
-						alert('Something has gone terribly wrong; you\'ve selected more answers than exist.');						
+						alert('Something has gone terribly wrong; you\'ve selected more answers than exist.');
 					} else {
 						alert('Det har uppstått ett allvarligt fel, du har valt fler alternativ än tillgängligt.');
 					}
@@ -197,7 +214,7 @@ function validateCurrentQuestion(forward) {
 			} else if (counter < poll.question_list[current_question].type.require) {
 				if (forward) {
 					if(checkLanguage() === 'english') {
-						alert('Please select at least '+poll.question_list[current_question].type.require+' options.');						
+						alert('Please select at least '+poll.question_list[current_question].type.require+' options.');
 					} else {
 						alert('Var god och välj minst '+poll.question_list[current_question].type.require+' alternativ.');
 					}
@@ -214,10 +231,10 @@ function validateCurrentQuestion(forward) {
 			return true;
 		} else if((poll.question_list[current_question].type.response_list[0].explanation.required === false
 				|| poll.question_list[current_question].type.response_list[0].explanation.required === 'false')) {
-			return true;	
+			return true;
 		} else if($('#text-0').val() <= 0){
 			if(checkLanguage() === 'english') {
-				alert('Please fill in the textbox.');	
+				alert('Please fill in the textbox.');
 			} else {
 				alert('Var god och fyll i textrutan.');
 			}
@@ -225,7 +242,7 @@ function validateCurrentQuestion(forward) {
 			return true;
 		}
 		// STUB: Check to see if slider is in valid range and divisible by increment. It's silly, I know...
-		
+
 	} else if (poll.question_list[current_question].type.name === 'not_a_question') {
 		return true;
 	} else if (poll.question_list[current_question].type.name === 'open') {
@@ -238,7 +255,7 @@ function validateCurrentQuestion(forward) {
 			return true;
 		} else if (forward) {
 			if(checkLanguage() === 'english') {
-				alert('Please enter some text.');	
+				alert('Please enter some text.');
 			} else {
 				alert('Var god och fyll i textrutan.');
 			}
@@ -433,7 +450,7 @@ function submitPoll() {
 				} else {
 					// If something went wrong, alert the error message
 					if(checkLanguage() === 'swedish') {
-						alert('Error: '+response.msg);	
+						alert('Error: '+response.msg);
 					} else {
 						alert('Fel: ' + response.msg);
 					}
@@ -754,10 +771,10 @@ function updateBottomButtons() {
 		if(document.getElementById('submit') === null) {
 			//temp = $('#verybottombuttons div').html();
 			if(checkLanguage() === 'english') {
-				$('#verybottombuttons div').append('<a href="#" class="submit" id="submit" data-role="button" data-icon="carat-r" data-iconpos="right">Submit</a>');	
+				$('#verybottombuttons div').append('<a href="#" class="submit" id="submit" data-role="button" data-icon="carat-r" data-iconpos="right">Submit</a>');
 			} else {
 				$('#verybottombuttons div').append('<a href="#" class="submit" id="submit" data-role="button" data-icon="carat-r" data-iconpos="right">Svara</a>');
-			}			
+			}
 			$('#verybottombuttons').trigger('create');
 			$('#submit').show();
 			$('#submit').on('click', submitPoll);
@@ -815,30 +832,11 @@ function renderBottomButtons() {
 		temp += '<a href="#" class="lastquestion" id="lastquestion" data-transition="slide" data-direction= "reverse" data-role="button" data-icon="carat-l" data-iconpos="left">Bakåt</a>';
 		// STUB: Check to see if you should render a 'skip' button
 		temp += '<a href="#" class="skipquestion" id="skipquestion" data-transition="slide" data-role="button">Hoppa</a>';
-		temp += '<a href="#" class="nextquestion" id="nextquestion" data-transition="slide" data-role="button" data-icon="carat-r" data-iconpos="right">Nästa</a>';		
+		temp += '<a href="#" class="nextquestion" id="nextquestion" data-transition="slide" data-role="button" data-icon="carat-r" data-iconpos="right">Nästa</a>';
 	}
 	$('#bottombuttons').html(temp);
 	$('#bottombuttons').trigger('create');
 	updateBottomButtons();
-}
-
-function checkLanguage() {
-	// If this specific question is flagged for english...
-	if(poll.question_list[current_question].language !== 'undefined' && poll.question_list[current_question].language === 'english') {
-		return 'english';
-	// Else, if this specific question is flagged for swedish...
-	} else if (poll.question_list[current_question].language !== 'undefined' && poll.question_list[current_question].language === 'swedish') {
-		return 'swedish';
-	// Else, if this whole poll is flagged for english...
-	} else if (poll.language !== 'undefined' && poll.language === 'english') {
-		return 'english';
-	// Else, if this whole poll is flagged for english...
-	} else if (poll.language !== 'undefined' && poll.language === 'swedish') {
-		return 'swedish';
-	// Else, default to swedish...
-	} else {
-		return 'swedish';
-	}
 }
 
 /**
@@ -969,17 +967,18 @@ window.onunload = function() {};
 
 $(window).bind('pageshow', pageShowHelper);
 
-$( document ).on( "swipeleft", ".ui-page", function( event ) {
+$( document ).on( 'swipeleft', '.ui-page', function( event ) {
 	if(typeof poll.question_list[current_question].closing_slide !== 'undefined'
 		&& poll.question_list[current_question].closing_slide) {
-		console.log('swiped to submit')
+		console.log('swiped to submit');
 		submitPoll();
 	} else {
-		console.log('swiped to advance')
-		nextQuestion();		
+		console.log('swiped to advance');
+		nextQuestion();
 	}
 });
 // The same for the navigating to the previous page
-$( document ).on( "swiperight", ".ui-page", function( event ) {
+$( document ).on( 'swiperight', '.ui-page', function( event ) {
 	lastQuestion();
+	console.log('swiped to retreat');
 });

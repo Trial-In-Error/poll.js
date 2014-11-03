@@ -14,7 +14,12 @@ module.exports = function(grunt) {
 		},
 		clean: {
 			dist: {
-				src: ['./logs/*', './*.log', './public/dist/**/*.js', './public/dist/**/*.css', '!*.gitignore']
+				src: [
+					'./logs/*',
+					'./*.log',
+					'./public/dist/**/*.js',
+					'./public/dist/**/*.css',
+					'!*.gitignore']
 			}
 		},
 		uglify: {
@@ -39,15 +44,14 @@ module.exports = function(grunt) {
 							'public/javascripts/**/*.js',
 							'Gruntfile.js',
 							'package_dev.json',
-							'*.js',
 							'bin/*.js',
 							'routes/*.js',
 							'test/*.js',
 							'!logs/*',
 							'!public/javascripts/jquery_2_1_1.js',
 							'!public/javascripts/jquery_mobile_1_4_3.js',
-							'!public/javascripts/prettyprint.js'
-
+							'!public/javascripts/prettyprint.js',
+							'!public/javascripts/newpollvis.js'
 					],
 					options: {
 							trailingspaces: true,
@@ -59,22 +63,7 @@ module.exports = function(grunt) {
 							showCodes: true
 					}
 			}
-	},
-		/*qunit: {
-			dist:
-			{
-
-			},
-			clientsrc:
-			{
-
-			},
-			serversrc:
-			{
-
-			},*/
-			//files: ['test/**/*.html']
-		//},
+		},
 		jshint: {
 			// Custom options
 			options: {
@@ -97,17 +86,41 @@ module.exports = function(grunt) {
 					document: true
 				}
 			},
-			dist:
-			{
-				src: ['Gruntfile.js', 'app.js', 'bin/*.js', 'public/javascripts/*.js', '!public/javascripts/detector.js', 'routes/*.js', '!test/**/*.js', 'bin/*.js', '!public/dist/javascripts/*.js', '!public/javascripts/jquery_2_1_1.js', '!public/javascripts/jquery_mobile_1_4_3.js', '!public/javascripts/prettyprint.js'],
+			dist: {
+				src: [
+					'Gruntfile.js',
+					'app.js',
+					'bin/*.js',
+					'public/javascripts/*.js',
+					'!public/javascripts/detector.js',
+					'routes/*.js', '!test/**/*.js', 'bin/*.js', 
+					'!public/dist/javascripts/*.js',
+					'!public/javascripts/jquery_2_1_1.js',
+					'!public/javascripts/jquery_mobile_1_4_3.js',
+					'!public/javascripts/prettyprint.js',
+					'!public/javascripts/newpollvis.js',
+					'!public/javascripts/c3.min.js',
+					'!public/javascripts/d3.min.js'
+				],
 			},
-			clientsrc:
-			{
-				src: ['public/javascripts/*.js', '!public/javascripts/jquery_2_1_1.js', '!public/javascripts/jquery_mobile_1_4_3.js', '!public/javascripts/prettyprint.js'],
+			clientsrc: {
+				src: [
+					'public/javascripts/*.js',
+					'!public/javascripts/jquery_2_1_1.js',
+					'!public/javascripts/jquery_mobile_1_4_3.js',
+					'!public/javascripts/prettyprint.js',
+					'!public/javascripts/newpollvis.js',
+					'!public/javascripts/c3.min.js',
+					'!public/javascripts/d3.min.js'
+				],
 			},
 			serversrc:
 			{
-				src: ['routes/*.js', '!test/**/*.js', 'bin/*.js'],
+				src: [
+					'routes/*.js',
+					'!test/**/*.js',
+					'bin/*.js'
+				],
 			},
 			gruntfile:
 			{
@@ -156,7 +169,7 @@ module.exports = function(grunt) {
 					overwrite: true
 				},
 				files: {
-					'': ['**/.js', '**/.json', '**/.md', '**/*.gitignore', 'bin/*', 'public/javascripts/*.js', 'public/dist/javascripts/*.js', 'public/stylesheets/*.css', 'routes/*', 'views/*', '!*.png', '!*.svg', '!*.jpg', '!*.jpeg', '!*.log']
+					'': ['**/.js', '**/.json', '**/.md', '**/*.gitignore', 'bin/*', 'public/javascripts/*.js', 'public/dist/javascripts/*.js', 'public/stylesheets/*.css', 'routes/*', 'views/*', '!*.png', '!*.svg', '!*.jpg', '!*.jpeg', '!*.log', '!/logs/*']
 				}
 			},
 			gruntfile: {

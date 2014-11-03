@@ -1,3 +1,7 @@
+// Don't warn about multi-line strings
+/*jshint multistr: true */
+// Don't warn about circular function references
+/*jshint -W003 */
 firstLoad = true;
 poll = {};
 
@@ -87,8 +91,8 @@ function setupPickSeveral() {
 	$('#pickSeveralRemoveResponse').on('click', function() {
 		if(pickSeveralResponseCount > 0) {
 			pickSeveralResponseCount -= 1;
-			console.log('Removing '+pickSeveralResponseCount)
-			$('#pickSeveralResponse'+pickSeveralResponseCount).remove();			
+			console.log('Removing '+pickSeveralResponseCount);
+			$('#pickSeveralResponse'+pickSeveralResponseCount).remove();
 		}
 	});
 
@@ -109,7 +113,8 @@ function setupPickSeveral() {
 		// Set up the next button's behavior
 		$('#next').off();
 		$('#next').on('click', function() {
-			for(var i = 0; i < pickSeveralResponseCount; i++) {
+			var i;
+			for(i = 0; i < pickSeveralResponseCount; i+=1) {
 				if($('#pickSeveralResponse'+i+'ResponseBody').val().length <= 0) {
 					alert('Please fill in all response body fields!');
 					return;
@@ -123,8 +128,8 @@ function setupPickSeveral() {
 				type: {name: 'pick_n', n: pickSeveralResponseCount, require: 1,
 					response_list: []
 				}
-			}
-			for(var i = 0; i < pickSeveralResponseCount; i++) {
+			};
+			for(i = 0; i < pickSeveralResponseCount; i+=1) {
 				console.log('Pushing response '+i+' with value of '+ $('#pickSeveralResponse'+i+'ResponseBody').val());
 				temp.type.response_list.push({body: $('#pickSeveralResponse'+i+'ResponseBody').val()});
 			}
@@ -147,8 +152,8 @@ function setupPickOne() {
 	$('#pickOneRemoveResponse').on('click', function() {
 		if(pickOneResponseCount > 0) {
 			pickOneResponseCount -= 1;
-			console.log('Removing '+pickOneResponseCount)
-			$('#pickOneResponse'+pickOneResponseCount).remove();			
+			console.log('Removing '+pickOneResponseCount);
+			$('#pickOneResponse'+pickOneResponseCount).remove();
 		}
 	});
 
@@ -169,7 +174,7 @@ function setupPickOne() {
 		// Set up the explanation toggle handler
 		$('#pickOneResponse'+pickOneResponseCount+'AddExplanation').off();
 		$('#pickOneResponse'+pickOneResponseCount+'AddExplanation').on('click', function() {
-			var thisCount = this.id.split("Response")[1].split("Add")[0]
+			var thisCount = this.id.split('Response')[1].split('Add')[0];
 			console.log('Add/Remove clicked.'+thisCount);
 			if($('#pickOneResponse'+thisCount+'ExplanationHintText').length <= 0) {
 				console.log('Chose to add.');
@@ -185,7 +190,7 @@ function setupPickOne() {
 				$('#pickOneResponse'+thisCount+'AddExplanation').val('Remove explanation field.');
 				$('#pickOneResponse'+thisCount+'AddExplanation').button('refresh');
 				$('#pickOneResponse'+thisCount).trigger('create');
-			} else {			
+			} else {
 				console.log('Chose to remove.');
 				$('#pickOneResponse'+thisCount+'ExplanationRequired').parent().parent().parent().remove();
 				//$('#pickOneResponse'+thisCount+'ExplanationHintText').parent().remove();
@@ -201,7 +206,8 @@ function setupPickOne() {
 		// Set up the next button's behavior
 		$('#next').off();
 		$('#next').on('click', function() {
-			for(var i = 0; i < pickOneResponseCount; i++) {
+			var i;
+			for(i = 0; i < pickOneResponseCount; i+=1) {
 				if($('#pickOneResponse'+i+'ResponseBody').val().length <= 0) {
 					alert('Please fill in all response body fields!');
 					return;
@@ -215,8 +221,8 @@ function setupPickOne() {
 				type: {name: 'pick_n', n: 1, require: 1,
 					response_list: []
 				}
-			}
-			for(var i = 0; i < pickOneResponseCount; i++) {
+			};
+			for(i = 0; i < pickOneResponseCount; i+=1) {
 				console.log('Pushing response '+i+' with value of '+ $('#pickOneResponse'+i+'ResponseBody').val());
 				// If the add explanation button says "Remove"...
 				if( $('#pickOneResponse'+i+'AddExplanation').val().indexOf('Remove') !== -1 ) {
@@ -253,7 +259,7 @@ function setupInformational() {
 		if($('#informationalBody').val().length <= 0) {
 			alert('Please fill in all required fields!');
 		} else {
-			poll.question_list.push({body: $('#informationalForm').val(), type: {name: 'not_a_question'}})
+			poll.question_list.push({body: $('#informationalForm').val(), type: {name: 'not_a_question'}});
 			$('#informationalForm').hide();
 			chooseQuestionType();
 		}
@@ -294,7 +300,7 @@ function setupSlider() {
 		//$('#sliderRemoveExplanation').checkboxradio('refresh');
 		$('#sliderRemoveExplanation').button('refresh');
 		$('#sliderRemoveExplanation').parent().hide();
-	})
+	});
 
 	$('#sliderAddExplanation').on('click', function() {
 		$('#sliderExplanation').show();
@@ -305,8 +311,7 @@ function setupSlider() {
 		$('#sliderAddExplanation').parent().hide();
 		//$('#sliderTextFieldRequired').show();
 		//$('#sliderExplanationHintText').show();
-		
-	})
+	});
 
 	// Set up the next button's behavior
 	// STUB: VALIDATE FOR EXPLANATION FILLED OUT
@@ -326,7 +331,7 @@ function setupSlider() {
 				type: {name: 'slider', min: $('#sliderLower').val(), max: $('#sliderUpper').val(), step: $('#sliderIncrement').val(),
 					response_list: [{}]
 				}
-			}
+			};
 			if( $('#sliderRemoveExplanation').is(':visible') ) {
 				temp.type.response_list[0].explanation = {};
 				temp.type.response_list[0].explanation.always_explainable = true;
@@ -366,7 +371,7 @@ function setupTextField() {
 						{ always_explainable: true, explain_text: $('#textFieldHint').val(), required:$('#textFieldRequiredTrue').prop('checked') }
 					} ]
 				}
-			})
+			});
 			$('#textFieldForm').hide();
 			chooseQuestionType();
 		}
@@ -375,7 +380,7 @@ function setupTextField() {
 
 function setupIntro() {
 	document.body.scrollTop = document.documentElement.scrollTop = 0;
-	$('#introForm').show();	
+	$('#introForm').show();
 	$('#next').off();
 	$('#next').on('click', function() {
 		if ($('#welcomeText').val().length <= 0) {
@@ -408,7 +413,7 @@ function setupPoll() {
 			poll.owner = $('#pollCreator').val();
 			poll.open = true;
 			// STUB: ASSUMES SWEDISH
-			poll.language = "swedish";
+			poll.language = 'swedish';
 			$('#metadataForm').hide();
 			setupIntro();
 		}
@@ -432,3 +437,4 @@ function pageShowHelper() {
 }
 
 $(window).bind('pageshow', pageShowHelper);
+/*jshint +W003 */

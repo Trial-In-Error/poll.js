@@ -287,7 +287,7 @@ router.post('/importpoll', helper.reqCreateRight, helper.ensureAuth, function(re
 	if(req.body.password) {
 		delete req.body.password;
 	}
-	if(typeof req.body === "string") {
+	if(typeof req.body === 'string') {
 		pollToImport = JSON.parse(req.body);
 	} else {
 		try {

@@ -45,7 +45,7 @@ function populateTable() {
 				}
 
 				// Render the graph if it's not a slider or not_a_question
-				console.log("Loading from: "+window.location.origin+"/pollroute/frequency"+window.location.pathname.split('/polloverview')[1]+"/"+questionCounter)
+				console.log('Loading from: '+window.location.origin+'/pollroute/frequency'+window.location.pathname.split('/polloverview')[1]+'/'+questionCounter);
 				if(data.question_list[questionCounter].type.name === 'slider') {
 					$('#collapsibleGraph-'+questionCounter).append('<p style="text-shadow: none;">This question was a slider, and is not being visualized yet.</p>');
 				} else if (data.question_list[questionCounter].type.name === 'not_a_question') {
@@ -73,7 +73,7 @@ $(document).ready(function() {
 	// Populate the user table on initial page load
 	populateTable();
 	//$(document).ready(function(){
-    //	$("#side").height( $("#main").height() );
+	//$("#side").height( $("#main").height() );
 	//});
 });
 
