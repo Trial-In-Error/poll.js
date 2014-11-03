@@ -215,6 +215,7 @@ app.set('view engine', 'jade');
 
 
 app.use(logger('dev'));
+app.use(bodyParser({limit: '5mb'}));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded());
 //app.use(bodyParser.text());

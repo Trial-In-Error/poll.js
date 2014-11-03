@@ -132,7 +132,7 @@
 			"body": "Vid vilken ålder bör vi ha rösträtt?",
 			"type":
 			{
-				"name": "open",
+				"name": "slider",
 				"response_list":
 				[
 					{
