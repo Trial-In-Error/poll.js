@@ -5,18 +5,11 @@ function populateTable() {
 	var tableContent = '';
 
 	// jQuery AJAX call for JSON
-	var token;
-	if(window.location.href.indexOf('/pollroute/exportpolljsonclean/')!== -1) {
-		token = '/pollroute/exportpolljsonclean/';
-	} else {
-		token = '/grid/';
-	}
-	$.getJSON( token + window.location.href.split('/').pop(), function( data ) {
+	$.getJSON( '/pollroute/exportpolljsonclean/'+window.location.href.split('/').pop(), function( data ) {
 		// Inject the whole content string into our existing HTML table
 		if(data.msg === null) {
 			alert('Network error!');
 		} else {
-			console.log(data.msg);
 			$('#pollTitle').text(data.name);
 			$('#pollMetadata').hide();
 

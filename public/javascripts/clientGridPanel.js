@@ -72,9 +72,12 @@ function populateTable() {
 $(document).ready(function() {
 	// Populate the user table on initial page load
 	populateTable();
-	//$(document).ready(function(){
-	//$("#side").height( $("#main").height() );
-	//});
+	$('.ui-collapsible-heading').on('click', function() {
+		$('.item').removeClass('highlighted');
+		console.log('Clicked on question '+this.parentNode.id.split('-').pop()+'.');
+		//console.log(this);
+		$('.question-'+this.parentNode.id.split('-').pop()).addClass('highlighted');
+	})
 });
 
 //function appendText() {
