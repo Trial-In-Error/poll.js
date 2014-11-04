@@ -1,0 +1,74 @@
+
+extends layout
+
+block content
+
+	//WARN: THIS IS REALLY UNCOOL; the scripts should be declared in head, not body
+	script(src='/javascripts/clientPollGrid.js')
+	script(src='/javascripts/d3.min.js')
+	script(src='/javascripts/c3.min.js')
+	script(src='/javascripts/masonry.pkgd.min.js')
+	script(src='/javascripts/newpollvis.js')
+
+	style.
+		.item { background-color: #5f5f5f; height: 18vw; width: 18%; margin-bottom: 2vw;}
+
+		.item.big { width: 58%; height: 58vw; }
+		
+		.grid-sizer {width: 18%;}
+		
+		@media screen and (min-width: 720px) {
+			.item { width: 8%; height: 8vw; margin-bottom: 2vw;}
+			.grid-sizer {width: 8%;}
+		}
+		
+		.gutter-sizer {width: 2.22%;}
+		
+		.container {margin: 0px;}
+
+	div(id='container' class='js-masonry container' data-masonry-options='{ "columnWidth": ".grid-sizer", "itemSelector": ".item", "gutter": ".gutter-sizer" }')
+		div(class='gutter-sizer')
+		div(class='grid-sizer')
+		div(class='item')
+		div(class='item')
+		div(class='item')
+		div(class='item')
+		div(class='item')
+		div(class='item')
+		div(class='item')
+		div(class='item')
+		div(class='item')
+		div(class='item')
+		div(class='item')
+		div(class='item')
+		div(class='item')
+		div(class='item')
+		div(class='item')
+		div(class='item')
+		div(class='item')
+		div(class='item')
+		div(class='item')
+		div(class='item')
+		div(class='item')
+		div(class='item')
+		div(class='item')
+		div(class='item')
+		div(class='item')
+		div(class='item')
+		div(class='item')
+		div(class='item')
+		div(class='item')
+		div(class='item')
+		div(class='item')
+		div(class='item')
+		div(class='item')
+		div(class='item')
+		div(class='item')
+		div(class='item')
+		div(class='item')
+		div(class='item')
+		div(class='item')
+		div(class='item')
+
+block panel
+	div(id='collapsibleSet' data-role='collapsibleset' data-mini='true' data-inset='false' style='max-width: 100%; margin:0 auto;')

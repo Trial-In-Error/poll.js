@@ -93,7 +93,7 @@ module.exports = function(grunt) {
 					'bin/*.js',
 					'public/javascripts/*.js',
 					'!public/javascripts/detector.js',
-					'routes/*.js', '!test/**/*.js', 'bin/*.js', 
+					'routes/*.js', '!test/**/*.js', 'bin/*.js',
 					'!public/dist/javascripts/*.js',
 					'!public/javascripts/jquery_2_1_1.js',
 					'!public/javascripts/jquery_mobile_1_4_3.js',
