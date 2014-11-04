@@ -62,19 +62,21 @@ $(window).load(function() {
 
 	$('.item').on('click', function() {
 		console.log(this);
-
+		if($('#gridPanel').hasClass('ui-panel-open')) {
+			$('.js-masonry').width(window.innerWidth-$('#gridPanel').width()-2*parseInt($('.js-masonry').parent().css('padding'))-getScrollbarWidth());
+		} else {
 			$('.js-masonry').width(window.innerWidth-2*parseInt($('.js-masonry').parent().css('padding'))-getScrollbarWidth());
-			$('.js-masonry').data('masonry').columnWidth = $('.grid-sizer').width()
+		}
 
-
-			$('.big').removeClass('big');
-			$('.item').width($('.grid-sizer').width());
-			$('.item').height($('.grid-sizer').width());
-			$('.item').css('margin-bottom', $('.gutter-sizer:first').width());
-			this.classList.add('big');
-			$('.big').width(6*$('.grid-sizer').width()+5*$('.gutter-sizer').width());
-			$('.big').height(6*$('.grid-sizer').width()+5*$('.gutter-sizer').width());
-			$('.js-masonry').data('masonry').reloadItems();
+		$('.js-masonry').data('masonry').columnWidth = $('.grid-sizer').width()
+		$('.big').removeClass('big');
+		$('.item').width($('.grid-sizer').width());
+		$('.item').height($('.grid-sizer').width());
+		$('.item').css('margin-bottom', $('.gutter-sizer:first').width());
+		this.classList.add('big');
+		$('.big').width(6*$('.grid-sizer').width()+5*$('.gutter-sizer').width());
+		$('.big').height(6*$('.grid-sizer').width()+5*$('.gutter-sizer').width());
+		$('.js-masonry').data('masonry').reloadItems();
 		$('.js-masonry').data('masonry').layout();
 });
 })
