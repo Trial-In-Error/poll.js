@@ -967,18 +967,28 @@ window.onunload = function() {};
 
 $(window).bind('pageshow', pageShowHelper);
 
+// on swipe left
 $( document ).on( 'swipeleft', '.ui-page', function( event ) {
-	if(typeof poll.question_list[current_question].closing_slide !== 'undefined'
-		&& poll.question_list[current_question].closing_slide) {
-		console.log('swiped to submit');
-		submitPoll();
-	} else {
-		console.log('swiped to advance');
-		nextQuestion();
+	// if we are NOT on a slider
+	if(!$(event.target).closest(".ui-slider, ui-slider-track").length) {
+		// then either submit or advance
+		if(typeof poll.question_list[current_question].closing_slide !== 'undefined'
+			&& poll.question_list[current_question].closing_slide) {
+			console.log('swiped to submit');
+			submitPoll();
+		} else {
+			console.log('swiped to advance');
+			nextQuestion();
+		}		
 	}
 });
-// The same for the navigating to the previous page
+
+// on swipe right
 $( document ).on( 'swiperight', '.ui-page', function( event ) {
-	lastQuestion();
-	console.log('swiped to retreat');
+	// if we are NOT on a slider
+	if(!$(event.target).closest(".ui-slider, ui-slider-track").length) {
+		// then retreat
+		lastQuestion();
+		console.log('swiped to retreat');
+	}
 });
