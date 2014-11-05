@@ -73,11 +73,13 @@ $(document).ready(function() {
 	// Populate the user table on initial page load
 	populateTable();
 	$('.ui-collapsible-heading').on('click', function() {
+		var index = this.parentNode.id.split('-').pop();
 		$('.item').removeClass('highlighted');
-		console.log('Clicked on question '+this.parentNode.id.split('-').pop()+'.');
-		//console.log(this);
-		$('.question-'+this.parentNode.id.split('-').pop()).addClass('highlighted');
-	})
+		console.log('Clicked on question '+index+'.');
+		if(!$('#collapsible-'+index).hasClass('ui-collapsible-collapsed')) {
+			$('.question-'+this.parentNode.id.split('-').pop()).addClass('highlighted');
+		}	
+	});
 });
 
 //function appendText() {

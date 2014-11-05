@@ -54,7 +54,15 @@ function populateTable() {
 
 
 					//(url, container, questionNumber, type of graph)
-					maggio.visualizeChart(window.location.origin+'/pollroute/exportpolljson'+window.location.pathname.split('polloverview')[1], '#collapsibleGraph-'+questionCounter, [(parseInt(questionCounter)+1).toString()], ['bar']);
+					console.log("url: "+ window.location.origin+'/pollroute/exportpolljson'+window.location.pathname.split('polloverview')[1]);
+					console.log("container: "+'#collapsibleGraph-'+questionCounter);
+					console.log("questionNumber: "+[(parseInt(questionCounter)).toString()]);
+					console.log("type: "+['bar']);
+
+					maggio.visualizeChart(window.location.origin+'/pollroute/exportpolljson'+window.location.pathname.split('polloverview')[1],
+						'#collapsibleGraph-'+questionCounter,
+						[(parseInt(questionCounter)).toString()],
+						['bar']);
 					//loadMatrixCSV(window.location.origin+"/pollroute/frequency"+window.location.pathname.split('/polloverview')[1]+"/"+questionCounter,"#collapsibleGraph-"+questionCounter);
 
 

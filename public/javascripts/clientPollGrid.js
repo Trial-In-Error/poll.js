@@ -78,5 +78,9 @@ $(window).load(function() {
 		$('.big').height(6*$('.grid-sizer').width()+5*$('.gutter-sizer').width());
 		$('.js-masonry').data('masonry').reloadItems();
 		$('.js-masonry').data('masonry').layout();
+
+		// remove old graph
+
+		// draw new graph with some of old graph's options
+	});
 });
-})

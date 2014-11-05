@@ -25,13 +25,18 @@ chartID : "charty",
 *Nummer of charts in the visualization
 */
 nrOfCharts : 0,
-
+/**
+* Default chart options
+*/
 options : {
 	tooltip : true,
 	legend : true,
 	axis : true,
 	colorscheme : 0,
 },
+/**
+*
+*/
 currentCharts : {},
 optionChart : [],
 
@@ -54,14 +59,14 @@ var tables  ={
 	],
 
 	charts    :[
-	[[/*histogram*/],[pie,bar,bar2],[stackedBar,heatmap,lineCat,bar,bar2]],
-	[[scatter,line,regressionline],[lineCat,stackedBar,bar,bar2,pie],[bubble]],
+	[[/*histogram*/],[pie,bar/*,bar2*/],[stackedBar,heatmap,lineCat,bar/*,bar2*/]],
+	[[scatter,line,regressionline],[lineCat,stackedBar,bar/*,bar2*/,pie],[bubble]],
 	[[bubble]]
 	]
 	,
 	charts2    :[
-	[[/*histogram*/],[pie,bar,bar2],[stackedBar,heatmap2,lineCat,bar,bar2]],
-	[[scatter,line,regressionline],[lineCat,stackedBar,bar,bar2,pie],[bubble]],
+	[[/*histogram*/],[pie,bar/*,bar2*/],[stackedBar,heatmap2,lineCat,bar/*,bar2*/]],
+	[[scatter,line,regressionline],[lineCat,stackedBar,bar/*,bar2*/,pie],[bubble]],
 	[[bubble]]
 	]
 	,
@@ -311,7 +316,6 @@ visualizeChart : function(data,question,chart){
 	// createTable();
 	pollchart.nrOfCharts = 0;
 	var dt = "frequency";
-	console.log(question);
 	if(question.length==1){
 		matrix = opine.getSingeMatrix(data,question);
 		addInfo2(data.name,data.question_list[question[0]].body);
@@ -376,7 +380,13 @@ calculateVisualizations : function(q,data,single){
 */
 getSingeMatrix : function(data,visualizationTypes){
 	var index = visualizationTypes;
-	var type = data.question_list[index].type.name;
+	try{
+		var type = data.question_list[index].type.name;	
+	} catch(err) {
+		console.log("question index: "+index);
+		console.log(err);
+	}
+	
 	var matrix = [];
 	if(data.question_list[index].type.response_list.length==0){
 		return;
@@ -1177,6 +1187,7 @@ function bar(matrix){
 	var names = columnNames(matrix);
 	var rot = matrix.length > 8; rotated : false ? rotated : true;
 	var c = 0;
+	console.log("#"+pollchart.chart[pollchart.nrOfCharts-1])
 	var chart = c3.generate({
 		bindto: "#"+pollchart.chart[pollchart.nrOfCharts-1],
 
@@ -1381,6 +1392,7 @@ function histogram(matrix){
 */
 function lineCat(matrix){
 	// matrix.unshift(header);
+	var names = columnNames(matrix);
 	chart = c3.generate({
 		bindto: "#"+pollchart.chart[pollchart.nrOfCharts-1],
 		data: {
@@ -2004,7 +2016,7 @@ function heatmap(matrix){
 	console.log(m);
 	m=m.slice(1,m.length);
 	var array = matrixToRevArray(m);
-	var w = $("#charty1").width();
+	var w = $(".tumbchart").width();
 	var gridSize = Math.floor(w / 6);
 
 	if($("#charty1").height() > 100){
@@ -2025,7 +2037,7 @@ function heatmap(matrix){
 	dim_2 = head,
 	rowlength = dim_1.length;
 	columnlength = dim_2.length;
-          //antal fÃ¤rger
+          //antal färger
           buckets = 8;
           var svg = d3.select("#"+pollchart.chart[pollchart.nrOfCharts-1]).append("svg")
           .attr("width", width + margin.left + margin.right)
@@ -2195,7 +2207,7 @@ for(var i = 0; i < n; i++) {
 	rowlength = dim_1.length;
 	columnlength = dim_2.length;
 
-          //antal fÃ¤rger
+          //antal färger
           buckets = 8;
           var svg = d3.select("#"+pollchart.chart[pollchart.nrOfCharts-1]).append("svg")
           .attr("width", width + margin.left + margin.right)
@@ -2697,6 +2709,9 @@ function createSlider(){
 		setBarSet($("#sliderb").val(),matrix);
 	});
 }
+/**
+* adds a container for the next chart
+*/
 function addInfo(){
 	pollchart.nrOfCharts++;
 	pollchart.chart.push(pollchart.chartID+pollchart.nrOfCharts);
@@ -2709,15 +2724,16 @@ function addInfo(){
 
 	}
 }
+
 function addInfo2(title,info){
 	pollchart.nrOfCharts++;
 	pollchart.chart.push(pollchart.chartID+pollchart.nrOfCharts);
 	var info = "<div><h2>"+title+"</h2><p id='maggioInfo'>"+info+"</p></div>";
 	$(container).append(info);
 	if(container == "#char"){
-		$(container).append("<div id='charty' class='tumbchart' style='height : 600px'></div>");
+		$(container).append("<div id='charty' class='tumbchart' style='height : 600px; width : 100px'></div>");
 	}else{
-		$(container).append("<div class='tumbchart' id='"+pollchart.chart[pollchart.nrOfCharts-1]+"'></div>");
+		$(container).append("<div class='tumbchart' id='"+pollchart.chart[pollchart.nrOfCharts-1]+"' style='height : 600px; width : 100%'></div>");
 
 	}
 }

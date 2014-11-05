@@ -84,3 +84,12 @@ a.heading-hyperlink:active {color: #000000 !important;}
     color: #333 ;
     text-shadow: 0  1px 0 #f3f3f3;
   }
+
+.noselect {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
