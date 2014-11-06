@@ -924,7 +924,9 @@ function skipQuestion() {
  *	Calls ajax.on('click'...) for each of the bottom buttons to link the click event to the proper functions.
  *	//WARN: This may be an inappropriate way to do setup with Jquery Mobile. Look into it.
  */
-//$(document).ready(function() {
+$(document).ready(function() {
+	$(blockOverscroll);
+})
 
 function pageShowHelper() {
 	// WARN: If problems with page transitions occur, this line is likely to blame
@@ -1019,3 +1021,23 @@ $( document ).on( 'swiperight', '.ui-page', function( event ) {
 		console.log('swiped to retreat');
 	}
 });
+
+function blockOverscroll ( ) {
+
+    var pageDirectionX;
+
+    function pX(e){
+        return e.originalEvent.changedTouches[0].pageX;
+    }
+
+    $(document).on('touchstart', function(e){
+        pageDirectionX = pX(e);
+    });
+
+    $(document).on('touchmove', function(e){
+        if ( pageDirectionX !== pX(e) ) {
+            e.preventDefault();
+            //console.log('Stopping overscroll effect');
+        }
+    });
+}
