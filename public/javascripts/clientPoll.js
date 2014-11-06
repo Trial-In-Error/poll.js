@@ -794,9 +794,9 @@ function updateBottomButtons() {
 		if(document.getElementById('submit') === null) {
 			//temp = $('#verybottombuttons div').html();
 			if(checkLanguage() === 'english') {
-				$('#verybottombuttons div').append('<a href="#" class="submit" id="submit" data-role="button" data-icon="carat-r" data-iconpos="right">Submit</a>');
+				$('#verybottombuttons div').append('<a href="#" class="submit" id="submit" data-mini="'+String(window.innerWidth<=320)+'" data-role="button" data-icon="carat-r" data-iconpos="right">Submit</a>');
 			} else {
-				$('#verybottombuttons div').append('<a href="#" class="submit" id="submit" data-role="button" data-icon="carat-r" data-iconpos="right">Svara</a>');
+				$('#verybottombuttons div').append('<a href="#" class="submit" id="submit" data-mini="'+String(window.innerWidth<=320)+'" data-role="button" data-icon="carat-r" data-iconpos="right">Svara</a>');
 			}
 			$('#verybottombuttons').trigger('create');
 			$('#submit').show();
@@ -846,16 +846,16 @@ function renderBottomButtons() {
 	var temp = '';
 	if(checkLanguage() === 'english') {
 		temp += '<div id="verybottombuttons" data-role="controlgroup" data-type="horizontal" text-align="center" margin-left="auto" margin-right="auto" align="center">';
-		temp += '<a href="#" class="lastquestion" id="lastquestion" data-transition="slide" data-direction= "reverse" data-role="button" data-icon="carat-l" data-iconpos="left">Back</a>';
+		temp += '<a href="#" class="lastquestion" id="lastquestion" data-mini="'+String(window.innerWidth<=320)+'" data-transition="slide" data-direction= "reverse" data-role="button" data-icon="carat-l" data-iconpos="left">Back</a>';
 		// STUB: Check to see if you should render a 'skip' button
-		temp += '<a href="#" class="skipquestion" id="skipquestion" data-transition="slide" data-role="button">Skip</a>';
-		temp += '<a href="#" class="nextquestion" id="nextquestion" data-transition="slide" data-role="button" data-icon="carat-r" data-iconpos="right">Next</a>';
+		temp += '<a href="#" class="skipquestion" id="skipquestion" data-mini="'+String(window.innerWidth<=320)+'" data-transition="slide" data-role="button">Skip</a>';
+		temp += '<a href="#" class="nextquestion" id="nextquestion" data-mini="'+String(window.innerWidth<=320)+'" data-transition="slide" data-role="button" data-icon="carat-r" data-iconpos="right">Next</a>';
 	} else {
 		temp += '<div id="verybottombuttons" data-role="controlgroup" data-type="horizontal" text-align="center" margin-left="auto" margin-right="auto" align="center">';
-		temp += '<a href="#" class="lastquestion" id="lastquestion" data-transition="slide" data-direction= "reverse" data-role="button" data-icon="carat-l" data-iconpos="left">Bakåt</a>';
+		temp += '<a href="#" class="lastquestion" id="lastquestion" data-mini="'+String(window.innerWidth<=320)+'" data-transition="slide" data-direction= "reverse" data-role="button" data-icon="carat-l" data-iconpos="left">Bakåt</a>';
 		// STUB: Check to see if you should render a 'skip' button
-		temp += '<a href="#" class="skipquestion" id="skipquestion" data-transition="slide" data-role="button">Hoppa</a>';
-		temp += '<a href="#" class="nextquestion" id="nextquestion" data-transition="slide" data-role="button" data-icon="carat-r" data-iconpos="right">Nästa</a>';
+		temp += '<a href="#" class="skipquestion" id="skipquestion" data-mini="'+String(window.innerWidth<=320)+'" data-transition="slide" data-role="button">Hoppa</a>';
+		temp += '<a href="#" class="nextquestion" id="nextquestion" data-mini="'+String(window.innerWidth<=320)+'" data-transition="slide" data-role="button" data-icon="carat-r" data-iconpos="right">Nästa</a>';
 	}
 	$('#bottombuttons').html(temp);
 	$('#bottombuttons').trigger('create');
