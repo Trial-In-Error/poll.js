@@ -374,14 +374,31 @@ function answerQuestion(forward) {
 		} else if (forward) {
 			current_question += 1;
 		} else {
-			current_question -= 1;
+			if( typeof poll.question_list[current_question].opening_slide === 'undefined'
+				|| ( !poll.question_list[current_question].opening_slide
+				|| poll.question_list[current_question].opening_slide === 'false' ) ) {
+				//console.log('-------------------------------------');
+				//console.log('BEEP');
+				//console.log('-------------------------------------');
+				current_question -= 1;
+				return true;
+			}
 			return false;
 		}
 		return true;
-	// Otherwise, if invalid and going forwards
+	// Otherwise, if invalid
 	} else {
-		if (!forward) {
+		// and if going backwards, then try to go backwards
+		//console.log('forward: '+forward);
+		//console.log('current_question: '+current_question);
+		if (!forward && ( typeof poll.question_list[current_question].opening_slide === 'undefined'
+				|| !poll.question_list[current_question].opening_slide
+				|| poll.question_list[current_question].opening_slide !== 'false' ) ) {
+				//console.log('-------------------------------------');
+				//console.log('BOOP');
+				//console.log('-------------------------------------');
 			current_question -= 1;
+			return true;
 		}
 		return false;
 	}
@@ -870,13 +887,17 @@ function nextQuestion() {
  */
 function lastQuestion() {
 	// WARN: Currently, you 'lose' invalid answers when you hit back, but keep them if they're valid
-	answerQuestion(false);
-	storePoll();
-	updateBottomButtons();
-	//updateTextField();
-	renderCurrentQuestion();
-	updateTextField();
-	$.mobile.changePage($('#frontpage'), {allowSamePageTransition: true, transition: 'slide', reverse: true});
+	if( answerQuestion(false) && ( typeof poll.question_list[current_question+1].opening_slide === 'undefined'
+		|| !poll.question_list[current_question+1].opening_slide
+		|| poll.question_list[current_question+1].opening_slide === 'false' ) ) {
+		storePoll();
+		updateBottomButtons();
+		//updateTextField();
+		renderCurrentQuestion();
+		updateTextField();
+		$.mobile.changePage($('#frontpage'), {allowSamePageTransition: true, transition: 'slide', reverse: true});		
+	}
+
 }
 
 //STUB: STUBSTUB
