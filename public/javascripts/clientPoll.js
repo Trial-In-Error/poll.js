@@ -470,10 +470,16 @@ function submitPoll() {
  */
 function loadPoll() {
 	if ( supportsHTML5Storage() ) {
-		console.log(window.location.pathname.toLowerCase().split('poll/').slice(-1));
-		poll = JSON.parse(window.localStorage['poll'+window.location.pathname.toLowerCase().split('poll/').slice(-1)]);
+		var pollID = window.location.pathname.toLowerCase().split('poll/').slice(-1);
+		console.log(pollID);
+		poll = JSON.parse(window.localStorage['poll'+pollID]);
 		console.log('LOADPOLL PRE CURRENT QUESTION'+current_question);
-		current_question = parseInt(window.localStorage['current'+window.location.pathname.toLowerCase().split('poll/').slice(-1)]);
+		var localCurrent = parseInt(window.localStorage['current'+pollID]);
+		if( localCurrent > 0 && localCurrent < poll.question_list.length ) {
+			current_question = localCurrent;
+		} else {
+			current_question = 0;
+		}
 		console.log('LOADPOLL POST CURRENT QUESTION'+current_question);
 	} else {
 		// STUB: DOESN'T WORK. CONSIDER COOKIES INSTEAD
