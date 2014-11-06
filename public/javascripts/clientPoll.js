@@ -917,16 +917,6 @@ function skipQuestion() {
 	$.mobile.changePage($('#frontpage'), {allowSamePageTransition: true, transition: 'slide'});
 }
 
-/**
- *	Called once on page load.
- *	Calls pollIsStored(), loadPoll(), storePoll() to manipulate the locally saved poll.
- *	Calls renderCurrentQuestion(), renderBottomButtons() to render the current question properly.
- *	Calls ajax.on('click'...) for each of the bottom buttons to link the click event to the proper functions.
- *	//WARN: This may be an inappropriate way to do setup with Jquery Mobile. Look into it.
- */
-$(document).ready(function() {
-	$(blockOverscroll);
-})
 
 function pageShowHelper() {
 	// WARN: If problems with page transitions occur, this line is likely to blame
@@ -1023,6 +1013,7 @@ $( document ).on( 'swiperight', '.ui-page', function( event ) {
 });
 
 function blockOverscroll ( ) {
+	console.log('Overscroll is now being blocked.');
 
     var pageDirectionX;
 
@@ -1037,7 +1028,19 @@ function blockOverscroll ( ) {
     $(document).on('touchmove', function(e){
         if ( pageDirectionX !== pX(e) ) {
             e.preventDefault();
-            //console.log('Stopping overscroll effect');
+            console.log('Stopping overscroll effect');
         }
     });
 }
+
+
+/**
+ *	Called once on page load.
+ *	Calls pollIsStored(), loadPoll(), storePoll() to manipulate the locally saved poll.
+ *	Calls renderCurrentQuestion(), renderBottomButtons() to render the current question properly.
+ *	Calls ajax.on('click'...) for each of the bottom buttons to link the click event to the proper functions.
+ *	//WARN: This may be an inappropriate way to do setup with Jquery Mobile. Look into it.
+ */
+$(document).ready(function() {
+	$(blockOverscroll);
+})
