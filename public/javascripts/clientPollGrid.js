@@ -7,6 +7,7 @@ function openPanel() {
 	$('.item').css('margin-bottom', $('.gutter-sizer:first').width());
 	$('.big').width(6*$('.grid-sizer').width()+5*$('.gutter-sizer').width());
 	$('.big').height(6*$('.grid-sizer').width()+5*$('.gutter-sizer').width());
+	$('.js-masonry').data('masonry').reloadItems();
 	$('.js-masonry').data('masonry').layout();
 }
 
@@ -19,6 +20,7 @@ function closePanel() {
 	$('.item').css('margin-bottom', $('.gutter-sizer:first').width());
 	$('.big').width(6*$('.grid-sizer').width()+5*$('.gutter-sizer').width());
 	$('.big').height(6*$('.grid-sizer').width()+5*$('.gutter-sizer').width());
+	$('.js-masonry').data('masonry').reloadItems();
 	$('.js-masonry').data('masonry').layout();
 }
 
@@ -51,6 +53,11 @@ $(window).load(function() {
 	$('.ui-footer').hide();
 	$('.ui-header').hide();
 
+	var url = window.location.origin+'/pollroute/exportpolljson/'+window.location.pathname.split('grid/').pop();
+	var array = [1,2,3];
+	var options = {tooltip : false, legend : false, axis : false};
+	maggio.visualizeSet(url, ".js-masonry",array,options);
+
 	$('.js-masonry').width(window.innerWidth-2*parseInt($('.js-masonry').parent().css('padding'))-getScrollbarWidth());
 	$('.js-masonry').data('masonry').columnWidth = $('.grid-sizer').width()
 	$('.big').removeClass('big');
@@ -76,6 +83,7 @@ $(window).load(function() {
 		this.classList.add('big');
 		$('.big').width(6*$('.grid-sizer').width()+5*$('.gutter-sizer').width());
 		$('.big').height(6*$('.grid-sizer').width()+5*$('.gutter-sizer').width());
+		$('.big').css('max-height', '');
 		$('.js-masonry').data('masonry').reloadItems();
 		$('.js-masonry').data('masonry').layout();
 

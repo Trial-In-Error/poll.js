@@ -11,10 +11,11 @@ block content
 	script(src='/javascripts/newpollvis.js')
 	script(src='/javascripts/clientGridPanel.js')
 
+	link(rel='stylesheet', href='/stylesheets/c3.css')
 	link(rel='stylesheet', href='/stylesheets/roundList.css')
 
 	style.
-		.item { background-color: #5f5f5f; height: 18vw; width: 18%; margin-bottom: 2vw;}
+		.item { background-color: #5f5f5f; height: 18vw; width: 18%; margin-bottom: 2vw; overflow: hidden;}
 
 		.item.big { width: 58%; height: 58vw; }
 		
@@ -31,49 +32,9 @@ block content
 
 		.item.highlighted {background-color: #9f9f9f}
 
-	div(id='container' class='js-masonry container' data-masonry-options='{ "columnWidth": ".grid-sizer", "itemSelector": ".item", "gutter": ".gutter-sizer" }')
+	div(id='container' class='js-masonry container' data-masonry-options='{ "columnWidth": ".grid-sizer", "itemSelector": ".item", "gutter": ".gutter-sizer" }' style="min-height: 100% !important;")
 		div(class='gutter-sizer')
 		div(class='grid-sizer')
-		div(class='item question-0')
-		div(class='item question-1 question-2')
-		div(class='item question-0 question-3')
-		div(class='item question-4')
-		div(class='item question-2')
-		div(class='item question-3')
-		div(class='item question-2')
-		div(class='item question-0 question-1')
-		div(class='item question-4 question-0')
-		div(class='item question-2')
-		div(class='item question-4 question-1')
-		div(class='item question-1 question-3')
-		div(class='item question-2')
-		div(class='item question-3 question-4 question-0')
-		div(class='item question-1')
-		div(class='item question-1 question-2')
-		div(class='item question-0')
-		div(class='item')
-		div(class='item')
-		div(class='item')
-		div(class='item')
-		div(class='item')
-		div(class='item')
-		div(class='item')
-		div(class='item')
-		div(class='item')
-		div(class='item')
-		div(class='item')
-		div(class='item')
-		div(class='item')
-		div(class='item')
-		div(class='item')
-		div(class='item')
-		div(class='item')
-		div(class='item')
-		div(class='item')
-		div(class='item')
-		div(class='item')
-		div(class='item')
-		div(class='item')
 
 block panel
 	div(id='collapsibleSet' data-role='collapsibleset' data-mini='true' data-inset='false' style='max-width: 100%; margin:0 auto;')
