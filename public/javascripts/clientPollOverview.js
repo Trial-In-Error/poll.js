@@ -1,6 +1,6 @@
 // Fill table with data
 // CSS for this page blatantly stolen from: http://red-team-design.com/css3-ordered-list-styles/
-function populateTable() {
+function populateTable(callback) {
 	// Empty content string
 	var tableContent = '';
 
@@ -22,10 +22,13 @@ function populateTable() {
 
 				// Inside the collapsible, add a grid
 				$('#collapsible-'+questionCounter).append('<div class="ui-grid-a" id="grid-'+questionCounter+'"></div>');
+				//$('#collapsible-'+questionCounter).append('<div id="grid-'+questionCounter+'"></div>');
 
 				// Inside the grid, add a div for the question list and a div for the graph
-				$('#grid-'+questionCounter).append('<div class="ui-block-a" style="padding: 15px;" id=collapsibleDiv-'+questionCounter+'></div>');
-				$('#grid-'+questionCounter).append('<div class="ui-block-b" style="padding: 0px;" id=collapsibleGraph-'+questionCounter+'></div>');
+				$('#grid-'+questionCounter).append('<div class="ui-block-a" style="height:65vh;padding: 15px;" id=collapsibleDiv-'+questionCounter+'></div>');
+				$('#grid-'+questionCounter).append('<div class="ui-block-b" style="height:65vh;padding: 0px;" id=collapsibleGraph-'+questionCounter+'></div>');
+				//$('#grid-'+questionCounter).append('<div style="padding: 15px; width: 400px !important; height:75vh" id=collapsibleDiv-'+questionCounter+'></div>');
+				//$('#grid-'+questionCounter).append('<div style="padding: 0px; width: 400px !important; height:75vh" id=collapsibleGraph-'+questionCounter+'></div>');
 				//$('#collapsibleGraph-'+questionCounter).append('<p style="text-shadow: none;">Put a graph here!</p>');
 				$('#collapsible-'+questionCounter).append($('<h4></h4>').text(data.question_list[questionCounter].body));
 				$('#collapsibleDiv-'+questionCounter).append($('<ol class="rounded-list"></ol>'));
@@ -44,51 +47,52 @@ function populateTable() {
 					}
 				}
 
-				// Render the graph if it's not a slider or not_a_question
-				console.log('Loading from: '+window.location.origin+'/pollroute/frequency'+window.location.pathname.split('/polloverview')[1]+'/'+questionCounter);
+				// If the question is not a slider or not_a_question
 				if(data.question_list[questionCounter].type.name === 'slider') {
 					$('#collapsibleGraph-'+questionCounter).append('<p style="text-shadow: none;">This question was a slider, and is not being visualized yet.</p>');
 				} else if (data.question_list[questionCounter].type.name === 'not_a_question') {
 					$('#collapsibleGraph-'+questionCounter).append('<p style="text-shadow: none;">This prompt could not be responded to.</p>');
 				} else {
-
-
+					
+					$("#collapsibleGraph-"+questionCounter).height( $("#collapsibleDiv-"+questionCounter).height() );
+					//$('#collapsibleSet').trigger('create');
+					console.log('HEIGHTHEIGHTHEIGHT:'+$('#collapsibleGraph-'+questionCounter).height())
+					console.log('WIDTHWIDTHWIDTHWID:'+$('#collapsibleGraph-'+questionCounter).width())
+					// Then render the graph
 					//(url, container, questionNumber, type of graph)
 					console.log("url: "+ window.location.origin+'/pollroute/exportpolljson'+window.location.pathname.split('polloverview')[1]);
 					console.log("container: "+'#collapsibleGraph-'+questionCounter);
 					console.log("questionNumber: "+[(parseInt(questionCounter)).toString()]);
 					console.log("type: "+['bar']);
 
-					maggio.visualizeChart(window.location.origin+'/pollroute/exportpolljson'+window.location.pathname.split('polloverview')[1],
-						'#collapsibleGraph-'+questionCounter,
-						[(parseInt(questionCounter)).toString()],
-						['bar']);
 					//loadMatrixCSV(window.location.origin+"/pollroute/frequency"+window.location.pathname.split('/polloverview')[1]+"/"+questionCounter,"#collapsibleGraph-"+questionCounter);
 
 
 
 
 				}
-				//$("#collapsibleDiv-"+questionCounter).height( $("#collapsibleGraph-"+questionCounter).height() );
+				//
 			}
 			$('#collapsibleSet').trigger('create');
 		}
+		callback(data);
 	});
 }
 
 // DOM Ready =============================================================
 $(document).ready(function() {
 	// Populate the user table on initial page load
-	populateTable();
-	//$(document).ready(function(){
-	//$("#side").height( $("#main").height() );
-	//});
-});
+	populateTable(function(data) {
+		//$('#collapsibleSet').trigger('create');
+			$('.ui-collapsible-heading').on('click', function() {
+				questionCounter = this.parentNode.id.split('-').pop();
+				maggio.visualizeChart(
+					window.location.origin+'/pollroute/exportpolljson'+window.location.pathname.split('polloverview')[1],
+					'#collapsibleGraph-'+questionCounter,
+					[(parseInt(questionCounter)).toString()],
+					['bar'], null);
+			})
+	});
 
-//function appendText() {
-//    var txt1 = "<p>Text.</p>";              // Create text with HTML
-//    var txt2 = $("<p></p>").text("Text.");  // Create text with jQuery
-//    var txt3 = document.createElement("p");
-//    txt3.innerHTML = "Text.";               // Create text with DOM
-//    $("body").append(txt1, txt2, txt3);     // Append new elements
-//}
+
+});

@@ -53,31 +53,34 @@ var datacolors = {
 	curretGroup : 0,
 	count : 0,
 	getColor : function(group,names,isRow){
-
+		var currColor = optionHandler.array[optionHandler.pointer].color;
 		// var c = pollchart.options.colorscheme;
 		index = 0;
 		datacolors.index = (datacolors.index + 1) % (datacolors.colors[0].length);
-
 		if($.inArray(group,names) != -1){
-			return datacolors.colors[pollchart.options.colorscheme][getIndex2(names,group)];
+			// return null;
+			return datacolors.colors[currColor][getIndex2(names,group)];
 		}else {
+			if(group.id==optionHandler.array[optionHandler.pointer].answer){
+				return "#000000";
+			}
 			// if(index==2){
 			// 	datacolors.count++;
 			// 	if(datacolors.count.length == count){
 			// 		datacolors.count=0;
 			// 	}
 			// }
-			if(group.id == "frequency" || group.id == "mean" || isRow){
-				if(datacolors.colors[pollchart.options.colorscheme][group.index] == null){
-					return datacolors.colors[pollchart.options.colorscheme][getIndex2(names,group.id)];
-				}
-				return datacolors.colors[pollchart.options.colorscheme][group.index];
-						// console.log(datacolors.colors[pollchart.options.colorscheme][group.index]);
-						// return "#FF0000";
-					}else{
-						return datacolors.colors[pollchart.options.colorscheme][getIndex2(names,group.id)];
+			// if(group.id == "frequency" || group.id == "mean" || isRow){
+			// 	if(datacolors.colors[pollchart.options.colorscheme][group.index] == null){
+			// 		return datacolors.colors[currColor][getIndex2(names,group.id)];
+			// 	}
+			// 	return datacolors.colors[currColor][group.index];
+			// 			// console.log(datacolors.colors[pollchart.options.colorscheme][group.index]);
+			// 			// return "#FF0000";
+			// 		}else{
+						return datacolors.colors[currColor][getIndex2(names,group.id)];
 
-					}
+					// }
 				}
 
 			}
@@ -145,7 +148,7 @@ var flashpoll = {
 		}
 			console.log(pollchart.chartVis);
 		// console.log(pollchart.optionChart);
-		new Masonry(container, { "columnWidth": ".tumbchart", "itemSelector": ".tumbchart", "gutter": ".gutter-sizer" })
+		//new Masonry(container, { "columnWidth": ".tumbchart", "itemSelector": ".tumbchart", "gutter": ".gutter-sizer" })
 	},
 	/*
 	*Visualize one graph from a dataset
@@ -509,12 +512,15 @@ var label = new Array();
 *param{json} data - jsonfile with the polldata
 *param{array} visualizationTypes - array containing the questiontypes to visualize
 */
-maggio.visualizeSet = function(url,cnt,question,options){
+maggio.visualizeSet = function(url,cnt,question,options,callback){
 	console.log(flashpoll);
+	console.log('CALLBACK-------------------------------------v');
+	console.log(callback);
+	console.log('CALLBACK-------------------------------------^');
 	d3.json(url, function(data) {
 		container = cnt;
 		var opt = optionHandler.addOptions(options);
-		opine.init(data,question,opt);
+		opine.init(data,question,opt,callback);
 	});
 }
 maggio.visualClick = function(id,url){
@@ -532,17 +538,20 @@ maggio.visualClick = function(id,url){
 }
 maggio.visualizeOne = function(url,cnt,question,nr,color){
 	d3.json(url, function(data) {
+	
 		pollchart.options.colorscheme = parseInt(color);
-		console.log(pollchart.options);
-		console.log(pollchart.options.colorscheme);
+
 		container = cnt;
-		opine.visualizeOne(data,question,nr);
+		opine.visualizeOne(data,question,nr,color);
 	});
 }
-maggio.visualizeChart = function(url,cnt,question,chart){
+/**
+*
+*/
+maggio.visualizeChart = function(url,cnt,question,chart,answer){
 	d3.json(url, function(data) {
 		container = cnt;
-		opine.visualizeChart(data,question,chart);
+		opine.visualizeChart(data,question,chart,0,answer);
 	});
 }
 maggio.visualizeCharty = function(url,cnt,question,chart){
@@ -706,15 +715,15 @@ function normalizeArea(matrix){
 	return matrix;
 }
 
-function normalizeMatrix(matrix){
-	var sum = getSumMatrix(matrix);
-	for(var i = 0; i<matrix.length; i++){
-		for(var j= 0; j<matrix[i].length; j++){
-			matrix[i][j] = (matrix[i][j]/sum).toFixed(2);
-		}
-	}
-	return matrix;
-}
+// function normalizeMatrix(matrix){
+// 	var sum = getSumMatrix(matrix);
+// 	for(var i = 0; i<matrix.length; i++){
+// 		for(var j= 0; j<matrix[i].length; j++){
+// 			matrix[i][j] = (matrix[i][j]/sum).toFixed(2);
+// 		}
+// 	}
+// 	return matrix;
+// }
 /**
 * Adds a chart to the array of charts and returns the position of the chart
 */
@@ -727,11 +736,11 @@ function addChart(chart){
 * Normalize a datamatrix without a top header as first row
 * First coloumn is text
 */
-function normalize (matrix){
+function normalize (matrix,offset){
 	var ratio =0;
 	var temp;
 	var result = [];
-	for (var i = 0; i < matrix.length; i++) {
+	for (var i = offset; i < matrix.length; i++) {
 		for (var j = 1; j < matrix[i].length; j++) {
 			temp = matrix[i][j];
 			if(temp > ratio){
@@ -740,14 +749,15 @@ function normalize (matrix){
 		};
 	};
 	ratio = ratio/100;
-	
-	for (var i = 0; i < matrix.length; i++) {
+	result.push(matrix[0]);
+	for (var i = offset; i < matrix.length; i++) {
 		result[i] = new Array();
 		result[i].push(matrix[i][0]);
 		for (var j = 1; j < matrix[i].length; j++) {
 			result[i][j] = Math.round(matrix[i][j]/ratio);
 		};
 	};
+	console.log(result);
 	return result;
 }
 /**
@@ -988,7 +998,6 @@ initOne : function(data,question,chart){
 		}
 	}else{
 		var matrix=opine.getDoubleMatrix(data,question);
-		console.log(matrix);
 		addInfo2("matrix[0][0],data.question_list[question[0]].body "+ "<br>"+ "data.question_list[question[1]].body");
 		chart(matrix);
 	}
@@ -999,17 +1008,29 @@ initOne : function(data,question,chart){
 *param{json} data - jsonfile with the polldata
 *param{array} question - array containing the positions of the qustions in the poll
 */
-init : function(data,question, options){
-		optionHandler.isMobile();
+init : function(data,question,options,callback){
+
+	var performance = new Timetool();
+	
+	var matrixMemory = new Object();
+	optionHandler.isMobile();
 	var visualizationTypes = opine.calculateVisualizations(question,data,false);
 	for (var i = 0; i < visualizationTypes.length; i++) {
 		if(visualizationTypes[i].ids.length==1){
-			var matrix = opine.getSingeMatrix(data,visualizationTypes[i].ids[0]);
+			var matrix;
+			// console.log(matrixMemory.visualizationTypes[i].ids[0]);
+			// if(matrixMemory[visualizationTypes[i].ids[0]+""]==null){
+				matrix = opine.getSingeMatrix(data,visualizationTypes[i].ids[0]);
+				// matrixMemory[visualizationTypes[i].ids[0]+""]=matrix;
+			// }else{
+				// console.log("saved");
+				// matrix = matrixMemory.visualizationTypes[i].ids[0];
+
+			// }
 			if(matrix[1][0]!=null){
 				for (var u = 0; u < visualizationTypes[i].types.length; u++) {
 					addInfo([visualizationTypes[i].ids[0]]);
 					var rnd = Math.floor(Math.random()*4);
-					pollchart.options.colorscheme = rnd;
 					var variable = {};
 					for (var key in pollchart.options) {
 						variable[key]  = pollchart.options[key];
@@ -1019,13 +1040,25 @@ init : function(data,question, options){
 					optionHandler.addChart("#"+pollchart.chart[pollchart.nrOfCharts-1]);
 					optionHandler.updateOption(optionHandler.size-1,"matrix",matrix);
 					optionHandler.updateOption(optionHandler.size-1,"chart",visualizationTypes[i].types[u]);
-					visualizationTypes[i].types[u](optionHandler.getOption(optionHandler.size-1));
+					optionHandler.updateOption(optionHandler.size-1,"color",rnd);
+					optionHandler.updateOption(optionHandler.size-1,"id",optionHandler.size-1);
+					optionHandler.updateOption(optionHandler.size-1,"ylabel", visualizationTypes[i].ylabels);
+					optionHandler.updateOption(optionHandler.size-1,"xlabel", visualizationTypes[i].xlabels);
+					var chart = visualizationTypes[i].types[u](optionHandler.getOption(optionHandler.size-1));
+					optionHandler.updateOption(optionHandler.size-1,"c3",chart);
 				};
 			}
 		}
 		else{
 			for (var u = 0; u < visualizationTypes[i].types.length; u++) {
-				var matrix=opine.getDoubleMatrix(data,visualizationTypes[i].ids);
+				var matrix;
+				console.log(matrixMemory['visualizationTypes[i].ids+""']);
+				// if(matrixMemory[visualizationTypes[i].ids+""]==null){
+					matrix = matrix=opine.getDoubleMatrix(data,visualizationTypes[i].ids);
+				// }else{
+				// 	console.log("saved");
+				// 	matrix = matrixMemory['visualizationTypes[i].ids+""'];
+				// }
 				if(matrix==null){
 					continue;
 				}
@@ -1037,21 +1070,26 @@ init : function(data,question, options){
 					variable[key]  = pollchart.options[key];
 				}
 
-					pollchart.optionChart.push(variable);
-					pollchart.currentCharts[pollchart.chart[pollchart.nrOfCharts-1]] = {chart : [i,u,], data : data, question : question};
-					optionHandler.addChart("#"+pollchart.chart[pollchart.nrOfCharts-1]);
-					optionHandler.updateOption(optionHandler.size-1,"matrix",matrix);
-					optionHandler.updateOption(optionHandler.size-1,"chart",visualizationTypes[i].types[u]);
-				visualizationTypes[i].types[u](optionHandler.getOption(optionHandler.size-1));
-					// addInfo();					
-					// pollchart.currentCharts[pollchart.chart[pollchart.nrOfCharts-1]] = {chart : [i,u,], data : data, question : question};
-					// chartDataModel(visualizationTypes[i].types[u],matrix);
+				pollchart.optionChart.push(variable);
+				pollchart.currentCharts[pollchart.chart[pollchart.nrOfCharts-1]] = {chart : [i,u,], data : data, question : question};
+				optionHandler.addChart("#"+pollchart.chart[pollchart.nrOfCharts-1]);
+				optionHandler.updateOption(optionHandler.size-1,"matrix",matrix);
+				optionHandler.updateOption(optionHandler.size-1,"chart",visualizationTypes[i].types[u]);
+				optionHandler.updateOption(optionHandler.size-1,"color",rnd);
+				optionHandler.updateOption(optionHandler.size-1,"id",optionHandler.size-1);
+				optionHandler.updateOption(optionHandler.size-1,"ylabel", visualizationTypes[i].ylabels);
+				optionHandler.updateOption(optionHandler.size-1,"xlabel", visualizationTypes[i].xlabels);
+				var chart = visualizationTypes[i].types[u](optionHandler.getOption(optionHandler.size-1));
+				optionHandler.updateOption(optionHandler.size-1,"c3",chart);
+			
 				};
 			}
 
 		}
-		console.log(pollchart.optionChart);
-		new Masonry(container, { "columnWidth": ".tumbchart", "itemSelector": ".tumbchart", "gutter": ".gutter-sizer" })
+		console.log(matrixMemory);
+		console.log(performance.stopTimer());
+		//new Masonry(container, { "columnWidth": ".tumbchart", "itemSelector": ".tumbchart", "gutter": ".gutter-sizer" })
+		callback();
 	},
 /**
 *Visualize one graph from a dataset
@@ -1059,40 +1097,44 @@ init : function(data,question, options){
 *param{array} question - array containing the positions of the qustions in the poll
 *param{int} nr - nr of what chart to use
 */
-visualizeOne : function(data,question,nr){
-		optionHandler.isMobile();
+visualizeOne : function(data,question,nr,color){
+	optionHandler.isMobile();
 	//functions + questions
-	console.log(nr);
 	var visualizationTypes = opine.calculateVisualizations(question,data,true);
-	console.log(visualizationTypes);
 	// createTable();
 	pollchart.nrOfCharts = 0;
 	if(visualizationTypes[nr[0]].ids.length==1){
 		var matrix = opine.getSingeMatrix(data,visualizationTypes[nr[0]].ids[0]);
 		if(matrix[1][0]!=null){
-				// pollchart.nrOfCharts ++;
-				addInfo2(data.name,data.question_list[visualizationTypes[nr[0]].ids[0]].body);
-				var cont = "#"+pollchart.chart[pollchart.nrOfCharts-1];	
-				var op = defaultOptions;
-				op.matrix = matrix;
-				op.container = cont;
-				console.log(op);
-				visualizationTypes[nr[0]].types[nr[1]](op);
-				
-			}
-		}
-		else{
-				// pollchart.nrOfCharts ++;
-				var matrix=opine.getDoubleMatrix(data,visualizationTypes[nr[0]].ids);
-				addInfo2(matrix[0][0],data.question_list[visualizationTypes[nr[0]].ids[0]].body + "<br>"+ data.question_list[visualizationTypes[nr[0]].ids[1]].body);
-				var cont = "#"+pollchart.chart[pollchart.nrOfCharts-1];	
-				var op = defaultOptions;
-				op.matrix = matrix;
-				op.container = cont;
-				visualizationTypes[nr[0]].types[nr[1]](op);			
-			}
+			addInfo2(data.name,data.question_list[visualizationTypes[nr[0]].ids[0]].body);
+			optionHandler.addChart("#"+pollchart.chart[pollchart.nrOfCharts-1]);
+			optionHandler.updateOption(optionHandler.size-1,"matrix",matrix);
+			optionHandler.updateOption(optionHandler.size-1,"chart",visualizationTypes[nr[0]].types[nr[1]]);
+			optionHandler.updateOption(optionHandler.size-1,"color",color);
+			optionHandler.updateOption(optionHandler.size-1,"id",optionHandler.size-1);
+			optionHandler.updateOption(optionHandler.size-1,"ylabel", visualizationTypes[nr[0]].ylabels);
+			optionHandler.updateOption(optionHandler.size-1,"xlabel", visualizationTypes[nr[0]].xlabels);
+			var chart = visualizationTypes[nr[0]].types[nr[1]](optionHandler.getOption(optionHandler.size-1));
+			optionHandler.updateOption(optionHandler.size-1,"c3",chart);
 
-		},
+		}
+	}
+	else{
+		var matrix=opine.getDoubleMatrix(data,visualizationTypes[nr[0]].ids);
+		addInfo2(matrix[0][0],data.question_list[visualizationTypes[nr[0]].ids[0]].body + "<br>"+ data.question_list[visualizationTypes[nr[0]].ids[1]].body);
+		optionHandler.addChart("#"+pollchart.chart[pollchart.nrOfCharts-1]);
+		optionHandler.updateOption(optionHandler.size-1,"matrix",matrix);
+		optionHandler.updateOption(optionHandler.size-1,"chart",visualizationTypes[nr[0]].types[nr[1]]);
+		optionHandler.updateOption(optionHandler.size-1,"color",color)
+		optionHandler.updateOption(optionHandler.size-1,"id",optionHandler.size-1)
+		optionHandler.updateOption(optionHandler.size-1,"ylabel", visualizationTypes[nr[0]].ylabels);
+		optionHandler.updateOption(optionHandler.size-1,"xlabel", visualizationTypes[nr[0]].xlabels);
+		var chart = visualizationTypes[nr[0]].types[nr[1]](optionHandler.getOption(optionHandler.size-1));	
+		optionHandler.updateOption(optionHandler.size-1,"c3",chart);		
+		console.log(optionHandler);
+	}
+
+},
 
 		/**
 *Visualize one graph from a dataset
@@ -1100,15 +1142,17 @@ visualizeOne : function(data,question,nr){
 *param{array} question - array containing the positions of the qustions in the poll
 *param{int} nr - nr of what chart to use
 */
-visualizeChart : function(data,question,chart){
+visualizeChart : function(data,question,chart,color,answer){
 	optionHandler.isMobile();
 	var matrix;
 	// createTable();
 	pollchart.nrOfCharts = 0;
-	// var dt = "frequency";
+	if(color==null){
+		var color = Math.floor(Math.random()*4);
+	}
 	if(question.length==1){
 		matrix = opine.getSingeMatrix(data,question);
-		addInfo2(data.name,data.question_list[question[0]].body);
+		addInfo(data.name,data.question_list[question[0]].body);
 	}
 	else{
 			// pollchart.nrOfCharts ++;
@@ -1119,13 +1163,17 @@ visualizeChart : function(data,question,chart){
 				subtitle += data.question_list[question[i]].body;
 				subtitle += "<br/>"
 			}
-			addInfo2(data.name,subtitle);
+			addInfo(data.name,subtitle);
 		}
-	var cont = "#"+pollchart.chart[pollchart.nrOfCharts-1];	
-				var op = defaultOptions;
-				op.matrix = matrix;
-				op.container = cont;
-		chartNames[chart](op);
+		optionHandler.addChart(container);
+		optionHandler.updateOption(optionHandler.size-1,"matrix",matrix);
+		optionHandler.updateOption(optionHandler.size-1,"chart",chartNames[chart]);
+		optionHandler.updateOption(optionHandler.size-1,"color",color)
+		optionHandler.updateOption(optionHandler.size-1,"id",optionHandler.size-1)
+		optionHandler.updateOption(optionHandler.size-1,"answer",answer)
+		optionHandler.pointer = optionHandler.size-1;
+		var chart = chartNames[chart](optionHandler.getOption(optionHandler.size-1));
+		optionHandler.updateOption(optionHandler.size-1,"c3",chart);
 	},
 	visualizeCharty : function(data,question,chart,contain){
 		var matrix;
@@ -1156,8 +1204,6 @@ visualizeChart : function(data,question,chart){
 *param{q} q - array containing the positions of the qustions in the poll
 */
 calculateVisualizations : function(q,data,single){
-	console.log(q);
-	console.log(data);
 	var array = data.question_list;
 	var combinations =[];
 	for (var i = 0; i < q.length; i++) {
@@ -1165,23 +1211,40 @@ calculateVisualizations : function(q,data,single){
 		{
 			ids:[q[i]],
 			types: getListOfCharts([array[q[i]].type.name],single),
+			ylabel : "Frequency",
+			xlabel : "Categories"
 		});
 
 
 		for (var j = i+1; j < q.length; j++) {
-			combinations.push(
-			{
-				ids:[q[i],q[j]],
-				types: getListOfCharts([array[q[i]].type.name,array[q[j]].type.name],single),
+			if((array[q[i]].type.name=="slider" && array[q[j]].type.name=="pick_n") || (array[q[j]].type.name=="slider" && array[q[i]].type.name=="pick_n")){
+				combinations.push(
+				{
+					ids:[q[i],q[j]],
+					types: getListOfCharts([array[q[i]].type.name,array[q[j]].type.name],single),
+					ylabel : "Mean",
+					xlabel : "Categories"
 
-			});
+				});
+			}else{
+				combinations.push(
+				{
+					ids:[q[i],q[j]],
+					types: getListOfCharts([array[q[i]].type.name,array[q[j]].type.name],single),
+					ylabel : array[q[j]].body,
+					xlabel : array[q[i]].body
+
+				});
+			}
+
 			if(array[q[i]].type.name=="slider" && array[q[j]].type.name=="slider"){
 				for (var u = j+1; u < q.length; u++) {
 					combinations.push(
 					{
 						ids:[q[i],q[j],q[u]],
 						types: getListOfCharts([array[q[i]].type.name,array[q[j]].type.name,array[q[u]].type.name],single),
-
+						ylabel : array[q[j]].body,
+						xlabel : array[q[i]].body
 					});
 				}
 			}
@@ -1254,7 +1317,6 @@ getDoubleMatrix : function(data,ids){
 	for (var i = 0; i < ids.length; i++) {
 		var index = ids[i];
 		var type = data.question_list[index].type.name;
-		console.log(type);
 		if(type=="pick_n"){
 			cat++;
 		}else{
@@ -1262,16 +1324,14 @@ getDoubleMatrix : function(data,ids){
 		}
 	};
 	if(cat==2){
-		console.log("mixed");
 		matrix = opine.getDoubleCategorical(data,ids);
-	}else if(con>0 && cat ==0){
-		matrix = opine.getContinuous(data,ids);
+	}else if(con==2 && cat ==0){
+		matrix = opine.getContinuous2(data,ids);
 	}else if(con==1 && cat == 1){
 		matrix = opine.getMixedMatrix(data,ids);
 	}else if(con==2 && cat == 1){
 		matrix = opine.getMixedMatrix(data,ids);
 	}
-	// console.log(matrix);
 	return matrix;
 },
 /**
@@ -1279,14 +1339,30 @@ getDoubleMatrix : function(data,ids){
 *param{json} data - jsonfile with the polldata
 *param{array} visualizationTypes - array containing the questiontypes to visualize
 */
-getContinuous : function(data,visualizationTypes){
+getContinuous2 : function(data,visualizationTypes){
 	var matrix =[];
-	for (var i = 0; i < visualizationTypes.length; i++) {
-		matrix.push([data.question_list[visualizationTypes[i]].body]);	
-		data.question_list[visualizationTypes[i]].type.response_list[0].answers.forEach(function(d){
-			matrix[i].push(d.value);
+	// for (var i = 0; i < visualizationTypes.length; i++) {
+		//Paste title
+		matrix.push([data.question_list[visualizationTypes[0]].body]);	
+		matrix.push([data.question_list[visualizationTypes[1]].body]);	
+		//Insert all answers
+		data.question_list[visualizationTypes[0]].type.response_list[0].answers.forEach(function(d){
+			matrix[0].push(d.value);
+			data.question_list[visualizationTypes[1]].type.response_list[0].answers.forEach(function(k){
+				if(d.user.username != null){
+					if(d.user.username == k.user.username){
+						matrix[1].push(k.value);
+					}
+				}else if(d.user.token != null)
+				{
+					if(d.user.username == k.user.username){
+						matrix[1].push(k.value);
+					}
+				}
+				
+			});
 		});
-	};
+	// };
 	return matrix;
 },
 /**
@@ -1332,9 +1408,16 @@ getDoubleCategorical : function(data,visualizationTypes){
 									if(l.answers != null){
 								//for each user	
 								l.answers.forEach(function(p){
-									if(c.user.username == p.user.username){
-										matrix[ac][pc]++;
+									if(c.user.username != null){
+										if(c.user.username == p.user.username){
+											matrix[ac][pc]++;
+										}
+									}else if(c.user.token != null){
+										if(c.user.token == p.user.token){
+											matrix[ac][pc]++;
+										}
 									}
+
 								});	
 							}
 							pc++;
@@ -1346,17 +1429,16 @@ getDoubleCategorical : function(data,visualizationTypes){
 
 						
 					});	
-						}else{
+}else{
 
-						}
-						ac++;
+}
+ac++;
 
-					});
+});
 break;
 }
 
 };
-console.log(names);
 matrix = addSideNames(matrix,names);
 h.unshift(data.name);
 matrix.unshift(h);
@@ -1370,7 +1452,6 @@ return matrix;
 */
 getMixedMatrix : function(data,visualizationTypes){
 	var matrix = [];
-	console.log(visualizationTypes);
 	var categorical,continuous;
 	var names = [];
 	for (var i = 0; i < visualizationTypes.length; i++) {
@@ -1392,12 +1473,24 @@ getMixedMatrix : function(data,visualizationTypes){
 						if(d.answers!=null){
 								//for each user	
 								d.answers.forEach(function(c){
-									var currentUser =c.user.username;
+									if(c.user.username != null){
+										var currentUser =c.user.username;
+									}else if(c.user.token != null){
+										var currentUser =c.user.token;
+									}
+
 								//Loops through each continuous response
 								data.question_list[continuous].type.response_list[0].answers.forEach(function(l){
-									if(currentUser == l.user.username){
-										temp.push(parseInt(l.value));
+									if(c.user.username != null){
+										if(currentUser == l.user.username){
+											temp.push(parseInt(l.value));
+										}
+									}else if(c.user.token != null){
+										if(currentUser == l.user.token){
+											temp.push(parseInt(l.value));
+										}
 									}
+
 
 								});
 							});
@@ -1406,7 +1499,6 @@ getMixedMatrix : function(data,visualizationTypes){
 							position++;
 						});	
 					matrix.unshift(["Answer","Mean"]);
-					console.log(matrix);
 					return matrix;
 				},
 				getQuestionList : function(data){
@@ -1422,8 +1514,10 @@ getMixedMatrix : function(data,visualizationTypes){
 var optionHandler = {
 array : [],
 size : 0,
+pointer: 0,
 addChart : function(container){
-	var c = defaultOptions;
+	var c = JSON.parse(JSON.stringify(defaultOptions));
+	// var c = defaultOptions;
 	c.container = container;
 	optionHandler.size++;
 	optionHandler.array.push(c);
@@ -1454,7 +1548,9 @@ getOption : function(index){
 */
 var defaultOptions = {
 	c3 : null,
+	classname : null,
 	chart : null,
+	id: null,
 	container: null,
 	matrix: null,
 	tooltip : true,
@@ -1466,6 +1562,9 @@ var defaultOptions = {
 	mobile:false,
 	legendOffset : 80,
 	visualization: null,
+	color:0,
+	interaction : true,
+	answer : null,
 	size: {
        	 width: "50vw",
          height: "50vw"
@@ -1573,6 +1672,16 @@ function addTotal(){
 	m.push(bottom);
 	return m;
 }
+/** @constructor */
+Timetool = function(){
+	var startTime = performance.now();
+	var endTime;
+	this.stopTimer = function(){
+		var now = performance.now();
+		endTime = now - startTime;
+		return endTime;
+	}
+}
 var transformer = {
 
 	deleteChart : function(id){
@@ -1582,17 +1691,56 @@ var transformer = {
 
 	},
 	redraw : function(index,options){
-		optionHandler.array[index].chart(options);
+		optionHandler.array[index].chart(optionHandler.array[index]);
 	},
 	addChartInfo : function(id){
+
 		var index = id.split("charty").slice(-1)[0]-1;
-		console.log(index);
-			console.log(optionHandler);
+
+		if(optionHandler.array[index].classname == "tumbheat"){
+			d3.select("#tumbheat" + index).remove();
+			console.log("tumbheat" + optionHandler.array[index].container);
+			optionHandler.array[index].container = id;
+			heatmap2(optionHandler.array[index]);
+			return;
+		}
 		optionHandler.array[index].legend=true;
 		optionHandler.array[index].tooltip = true;
 		optionHandler.array[index].axis = true;
+		optionHandler.array[index].interaction = true;
 		optionHandler.array[index].container = id;
 		optionHandler.array[index].chart(optionHandler.array[index]);
+	},
+	removeInfo : function(id){
+		var index = id.split("charty").slice(-1)[0]-1;
+		if(optionHandler.array[index].classname == "tumbheat"){
+			d3.select("#tumbheat" + index).remove();
+			console.log("tumbheat" + optionHandler.array[index].container);
+			optionHandler.array[index].container = id;
+			heatmap(optionHandler.array[index]);
+			return;
+		}
+		optionHandler.array[index].legend=false;
+		optionHandler.array[index].tooltip = false;
+		optionHandler.array[index].axis = false;
+		optionHandler.array[index].interaction = false;
+		optionHandler.array[index].container = id;
+		optionHandler.array[index].chart(optionHandler.array[index]);
+	},
+	resize : function(id){
+				var index = id.split("charty").slice(-1)[0]-1;
+				optionHandler.array[index].c3.resize({height:$(id).height(), width:$(id).width()})
+
+	},
+	normalizeRows : function(id){
+					var index = id.split("charty").slice(-1)[0]-1;
+					optionHandler.array[index].c3.unload();
+					optionHandler.array[index].c3.load({columns : normalizeByRow(optionHandler.array[index].matrix)});
+	},
+	normalizeMatrix : function(id){
+		var index = id.split("charty").slice(-1)[0]-1;
+					optionHandler.array[index].c3.unload();
+					optionHandler.array[index].c3.load({columns : normalize(optionHandler.array[index].matrix,1)});
 	}
 }
 /**
@@ -1602,6 +1750,7 @@ var transformer = {
 *param{Array} matrix - array holding the table
 */
 function bar(options){
+	optionHandler.pointer = options.id;
 	var m = options.matrix;
 	console.log(options);
 	var r = 0;
@@ -1610,14 +1759,20 @@ function bar(options){
 	var rot = m.length > 4; rotated : false ? rotated : true;
 	if(rot){r = 70;}
 	var c = 0;
+	console.log('CONTAINER-------------------v');
+	console.log(options.container);
+	console.log('Height:'+$(options.container).height());
+	console.log('Width:'+$(options.container).width());
+	console.log('CONTAINER-------------------^');
 	var chart = c3.generate({
 		bindto: options.container,
+		interaction: { enabled:  options.interaction },
 		data: {
 			x : m[0][0],
 			columns : m,
 			type: 'bar',
 			color: function (color, d) {
-				return datacolors.getColor(d,names);
+				return datacolors.getColor(d,names,options.color);
 			}
 		},
 		bar: {
@@ -1638,26 +1793,27 @@ function bar(options){
 
     	x: {
     		show : options.axis,
-    		height : r+20,
+    		height : r+50,
     		type: 'categorized',
     		tick: {
     			rotate : r
 
-			
-			},
-		},
-		y : {
-			show : options.axis,
-			label : options.ylabel
-		},
 
-		width: {
-			ratio: 100
-		},
-	},
+    		},
+    	},
+    	y : {
+    		show : options.axis,
+    		label : options.ylabel
+    	},
+
+    	width: {
+    		ratio: 100
+    	},
+    },
 
 
 });
+	return chart;
 	// pollchart.data.push({chart : chart, matrix : matrix});
 }
 /**
@@ -1674,7 +1830,7 @@ function bar2(matrix){
 
 	var chart = c3.generate({
 		bindto: "#"+pollchart.chart[pollchart.nrOfCharts-1],
-
+		interaction: { enabled:  options.interaction },
 		data: {
 
 			x : m[0][0],
@@ -1789,6 +1945,7 @@ function histogram(matrix){
 	console.log(matrix);
 	var chart = c3.generate({
 		bindto: "#"+pollchart.chart[pollchart.nrOfCharts-1],
+		interaction: { enabled:  options.interaction },
 		data: {
 			rows : matrix,
 			type: 'bar',
@@ -1806,10 +1963,12 @@ function histogram(matrix){
 *param{Array} matrix - array holding the table
 */
 function lineCat(options){
+	optionHandler.pointer = options.id;
 	// matrix.unshift(header);
 	var names = columnNames(options.matrix);
-	chart = c3.generate({
+	var chart = c3.generate({
 		bindto: options.container,
+		interaction: { enabled:  options.interaction },
 		data: {
 			x : options.matrix[0][0],
 			columns : options.matrix,
@@ -1839,7 +1998,7 @@ function lineCat(options){
 			}
 		}
 	});
-
+	return chart;
 }
 
 	/**
@@ -1847,12 +2006,14 @@ function lineCat(options){
 *param{Array} matrix - array holding the table
 */
 function line(options){
+	optionHandler.pointer = options.id;
 	// matrix.unshift(header);
 	var t = new Object();
 	var names=columnNames(options.matrix);
 	t[options.matrix[1][0]] = options.matrix[0][0];
 	var chart = c3.generate({
 		bindto: options.container,
+		interaction: { enabled:  options.interaction },
 		data: {
 			xs :t,
 			columns : options.matrix,
@@ -1881,7 +2042,7 @@ function line(options){
             }
         },
         y:{
-        	show : pollchart.options.axis,
+        	show : options.axis,
         	label: options.ylabel
         }
     },
@@ -1889,7 +2050,7 @@ function line(options){
     	show: false
     },
 });
-
+	return chart;
 }
 /**
 * Plots a scatter plot comparing two values
@@ -1903,6 +2064,7 @@ function line(options){
 *param{Array} matrix - array holding the table
 */
 function scatter(options){
+	optionHandler.pointer = options.id;
 	var t = new Object();
 	var title = new Object();
 	var names = columnNames(options.matrix);
@@ -1910,6 +2072,7 @@ function scatter(options){
 	title["label"] = options.matrix[1][0];
 	var chart = c3.generate({
 		bindto: options.container,
+		interaction: { enabled:  options.interaction },
 		data: {
 			xs: t,
 			columns :options.matrix,
@@ -1952,6 +2115,7 @@ function scatter(options){
 		}
 		
 	});
+	return chart;
 }
 /**
 * Plots a scatter plot that turns into a linear regression chart
@@ -1965,6 +2129,7 @@ function scatter(options){
 *param{Array} matrix - array holding the table
 */
 function regressionline(options){
+	optionHandler.pointer = options.id;
 	var t = new Object();
 	var title = new Object();
 	var names = columnNames(options.matrix);
@@ -1975,6 +2140,7 @@ function regressionline(options){
 	title["label"] = options.matrix[1][0];
 	var chart = c3.generate({
 		bindto: options.container,
+		interaction: { enabled:  options.interaction },
 		data: {
 			xs: t,
 			columns : options.matrix,
@@ -2052,7 +2218,7 @@ function regressionline(options){
 	});
 
 
-
+return chart;
 }
 
 
@@ -2066,6 +2232,7 @@ function normalLine(array){
 	var buckets = disk(array);
 	var chart = c3.generate({
 		bindto: "#"+pollchart.chart[pollchart.nrOfCharts-1],
+		interaction: { enabled:  options.interaction },
 		data: {
 			columns:[buckets[1]],
 			type: 'bar'
@@ -2090,6 +2257,7 @@ function normalLine(array){
 			}
 		}
 	});
+	return chart;
 }
 
 /**
@@ -2101,17 +2269,18 @@ function normalLine(array){
 */
 
 function pie(options){
+	optionHandler.pointer = options.id;
 	var m = options.matrix.slice(1,options.matrix.length);
 	var names = columnNames(options.matrix);
 	var chart = c3.generate({
 		bindto: options.container,
-		// size: options.size,
+		interaction: { enabled:  options.interaction },
 		data: {
 			columns: m,
 			type : 'pie',
 			color: function (color, d) {
-				
-				return datacolors.getColor(d,names);
+				console.log(options.color);
+				return datacolors.getColor(d,names,options.color);
 			}
 		},
 		tooltip: {
@@ -2127,6 +2296,7 @@ function pie(options){
 		}
 		
 	});
+	return chart;
 }
 /**
 * Plots a regression line of the relation av two datasets
@@ -2135,36 +2305,37 @@ function pie(options){
 * [[x, x1, x2,..,xn],[y,y1,y2,...,yn]]
 */
 function regLine(options){
-	
+	optionHandler.pointer = options.id;
 	var data = matrixToPoints(options.matrix);
-	chart = c3.generate({
-		
+	var chart = c3.generate({
+		interaction: { enabled:  options.interaction },
 		bindto: options.container,
 		data: {
-			  columns: [data[1][1]]
-			}
-			,
-			axis: {
-				x: {
-					show : options.axis,
-					label: options.xlabel,
-					tick : {
-						count : 8,
-						format: function (x) { return Math.floor(x); }
-					}
-				},
-				y: {
-					show : options.axis,
-					label: data[0][1][0],
+			columns: [data[1][1]]
+		}
+		,
+		axis: {
+			x: {
+				show : options.axis,
+				label: options.xlabel,
+				tick : {
+					count : 8,
+					format: function (x) { return Math.floor(x); }
 				}
 			},
-			tooltip: {
-				show : options.tooltip
-			},
-			legend : {
-				show : options.legend
-			},
-		});
+			y: {
+				show : options.axis,
+				label: data[0][1][0],
+			}
+		},
+		tooltip: {
+			show : options.tooltip
+		},
+		legend : {
+			show : options.legend
+		},
+	});
+	return chart;
 }
 
 /**
@@ -2177,6 +2348,7 @@ function stackedArea(matrix){
 	matrix.shift();
 	chart = c3.generate({
 		bindto: "#"+pollchart.chart[pollchart.nrOfCharts-1],
+		interaction: { enabled:  options.interaction },
 		data: {
 			// x : header[0],
 			columns:
@@ -2212,6 +2384,7 @@ y : {
 },
 
 });
+	return chart;
 }
 
 
@@ -2222,17 +2395,19 @@ y : {
 *param{Array} matrix - array holding the table
 */
 function stackedBar(options){
+	optionHandler.pointer = options.id;
 	var toggle = 1;
 	console.log(options.matrix);
 	var r = 0;
 	var rot = options.matrix.length > 7; rotated : false ? rotated : true;
-		if(rot){r = 70;}
+	if(rot){r = 70;}
 	var names2 = columnNames(options.matrix);
 	names = names2.slice(1,names2.length);
 	// matrix.unshift(header);
 
 	var chart = c3.generate({
 		bindto: options.container,
+		interaction: { enabled:  options.interaction },
 		data: {
 			x : options.matrix[0][0],
 			columns : options.matrix,
@@ -2281,10 +2456,11 @@ function stackedBar(options){
 		},
 
 	});
+	return chart;
 }
 
 function bubble(options){
-
+	optionHandler.pointer = options.id;
 	var t = new Object();
 	var title = new Object();
 	t[options.matrix[1][0]]=options.matrix[0][0];
@@ -2295,8 +2471,9 @@ function bubble(options){
 	var max = ss.max(values);
 	max = max/100;
 	// var sum = getArrayMax(values);
-	chart = c3.generate({
+	var chart = c3.generate({
 		bindto: options.container,
+		interaction: { enabled:  options.interaction },
 		data: {
 			xs: t,
 			columns : options.matrix,
@@ -2366,13 +2543,15 @@ function bubble(options){
   }
 
 });
+return chart;
 }
 
 function slideBar(matrix){
 	createSlider();
 	// matrix.unshift(header);
-	chart = c3.generate({
+	var chart = c3.generate({
 		bindto: "#"+pollchart.chart[pollchart.nrOfCharts-1],
+		interaction: { enabled:  options.interaction },
 		data: {
 			x : header[0],
 			rows : [header,matrix[0]],
@@ -2395,13 +2574,14 @@ function slideBar(matrix){
 			}
 		}
 	});
-
+	return chart;
 }
 function slidePie(matrix){
 	createSlider();
 	// matrix.unshift(header);
-	chart = c3.generate({
+	var chart = c3.generate({
 		bindto: "#"+pollchart.chart[pollchart.nrOfCharts-1],
+		interaction: { enabled:  options.interaction },
 		data: {
 			x : header[0],
 			rows : [header,matrix[0]],
@@ -2423,6 +2603,7 @@ function slidePie(matrix){
 			}
 		}
 	});
+	return chart;
 	
 }
 function heatmap(options){
@@ -2453,8 +2634,13 @@ function heatmap(options){
 	rowlength = dim_1.length;
 	columnlength = dim_2.length;
           //antal färger
+
+          var index = options.container.split("charty").slice(-1)[0]-1;
           buckets = 8;
+          optionHandler.array[optionHandler.size-1].classname="tumbheat";
           var svg = d3.select(options.container).append("svg")
+          .attr("class","tumbheat")
+          .attr("id","tumbheat" + index)
           .attr("width", width + margin.left + margin.right)
           .attr("height", height + margin.top + margin.bottom)
           .append("g")
@@ -2471,10 +2657,10 @@ function heatmap(options){
           var colors = [];
 
 // the first color
-var color1 = datacolors.colors[0][0];
+var color1 = datacolors.colors[options.color][0];
 
 // the second color
-var color2 = datacolors.colors[0][2];
+var color2 = datacolors.colors[options.color][2];
 
 // the number of colors to generate
 var n = 7;
@@ -2511,43 +2697,44 @@ var colorScale = d3.scale.quantile()
            rec.transition()
            .style("fill", function(d) {;return colorScale(d); });
            heatMap.append("title").text(function(d) {return d; });
-   }
-   function heatmap2(options){
-   	 $(options.container).css("margin-left",0)
-   	var maxwidth = 2000;
-   	var m = options.matrix;
-   	console.log(m);
-   	var head =  m[0].slice(1,m[0].length);
-   	console.log(m);
-   	m=m.slice(1,m.length);
-   	var array = matrixToRevArray(m);
-   	var w =  window.innerWidth;
-   	if(w>maxwidth){
-   		w=maxwidth;
-   	}
-   	var gridSize;
-   	if(window.innerWidth>window.innerHeight){
-   		gridSize = Math.floor(w / 20);
-   	}else{
-   		gridSize = Math.floor(w / 10);
-   	}
-   	var tileMargin = gridSize/2;
-   	var h = 100 + gridSize * (m.length+2);
-
-   	var shiftR = 10;
-   	var margin = { top: gridSize*2, right: 0, bottom: 0, left: 0 },
-   	width =  w- margin.left - margin.right,
-   	height = h - margin.top - margin.bottom,
-   	legendWidth = (gridSize/1.5),
-   	dim_1 = columnNames(m),
-   	textLength = gridSize/4,
-   	dim_2 = head,
-   	rowlength = dim_1.length;
-   	columnlength = dim_2.length;
-
+       }
+       function heatmap2(options){
+       	$(options.container).css("margin-left",0)
+       	var maxwidth = 2000;
+       	var m = options.matrix;
+       	console.log(m);
+       	var head =  m[0].slice(1,m[0].length);
+       	console.log(m);
+       	m=m.slice(1,m.length);
+       	var array = matrixToRevArray(m);
+       	var w =  $("#charty1").width();
+       	if(w>maxwidth){
+       		w=maxwidth;
+       	}
+       	var gridSize;
+       	if(window.innerWidth>window.innerHeight){
+       		gridSize = Math.floor(w / 8);
+       	}else{
+       		gridSize = Math.floor(w / 8);
+       	}
+       	var tileMargin = gridSize/2;
+       	var h = 100 + gridSize * (m.length+2);
+       	var shiftR = 10;
+       	var margin = { top: gridSize*2, right: 0, bottom: 0, left: 0 },
+       	width =  w- margin.left - margin.right,
+       	height = h - margin.top - margin.bottom,
+       	legendWidth = (gridSize/1.5),
+       	dim_1 = columnNames(m),
+       	textLength = gridSize/4,
+       	dim_2 = head,
+       	rowlength = dim_1.length;
+       	columnlength = dim_2.length;
+       	var index = options.container.split("charty").slice(-1)[0]-1;
           //antal färger
           buckets = 8;
           var svg = d3.select(options.container).append("svg")
+          .attr("class","heat")
+          .attr("id","tumbheat" + index)
           .attr("width", width + margin.left + margin.right)
           .attr("height", height + margin.top + margin.bottom)
           .append("g")
@@ -2593,7 +2780,7 @@ var colorScale = d3.scale.quantile()
           .attr("x", 10)
           .attr("y", function (d, i) { return i * gridSize; })
           .style("font-weight","bold")
-           .style("font-size", gridSize/3+"px")
+          .style("font-size", gridSize/3+"px")
           // .style("text-anchor", "end")
           .attr("transform", "translate(-6," + gridSize / 1.5 + ")")
           .attr("class","heatlabel");
@@ -2614,7 +2801,7 @@ var colorScale = d3.scale.quantile()
                 // .attr("dy", ".71em")
                 .text(function(d) {return d})
                 .style("font-weight","bold")
-                 .style("font-size", gridSize/3+"px")
+                .style("font-size", gridSize/3+"px")
 				.attr("transform", function(d,i) {    // transform all the text elements
   return "translate(" + // First translate
   ((i * gridSize)+ textLength*(shiftR)+gridSize/2)  + ",-10) " + // Translation params same as your existing x & y 
@@ -2645,13 +2832,13 @@ var colorScale = d3.scale.quantile()
 
            var count=0,count2=0;
            heatMap.append("text")
-       
-          .text(function(d) { return  Math.round(d); })
-          .attr("x", function(d) { count++; return ((count%columnlength - 1) * gridSize) + textLength*(shiftR)+gridSize + gridSize/3; })
-          .attr("y", function(d) { count2++; return ( Math.ceil(count2/(columnlength))-1) * gridSize + gridSize/2; })
-          .style("font-size", gridSize/3+"px")
+
+           .text(function(d) { return  Math.round(d); })
+           .attr("x", function(d) { count++; return ((count%columnlength - 1) * gridSize) + textLength*(shiftR)+gridSize + gridSize/3; })
+           .attr("y", function(d) { count2++; return ( Math.ceil(count2/(columnlength))-1) * gridSize + gridSize/2; })
+           .style("font-size", gridSize/3+"px")
           // .style("font-family", "Calibri")
-             .attr("class", "rectext")
+          .attr("class", "rectext")
           .style("stroke-width","0px")
           .style("text-shadow","none");
 
@@ -2679,7 +2866,7 @@ var colorScale = d3.scale.quantile()
           .attr("x", function(d, i) { return  (i%4 * legendWidth + textLength*(shiftR))+ tileMargin/4 ; })
           .attr("y", function(d, i) {k=0; if(i>3){k=1} return (rowlength) * (gridSize) + k * legendWidth + tileMargin*3/2; })
           .attr("class", "heatlegend")
-               .style("font-size", legendWidth/3+"px");
+          .style("font-size", legendWidth/3+"px");
        /*     .attr("x", function(d, i) { return gridSize * 11 + 25; })
             .attr("y", function(d, i) { return (i * legendWidth + 20); })
             */
@@ -2690,5 +2877,4 @@ var colorScale = d3.scale.quantile()
             // .style("font-size", gridSize/5+"px")
             .text("Legend")
             .style("font-weight","bold");
-
         }

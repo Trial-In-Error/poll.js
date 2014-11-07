@@ -5,7 +5,7 @@ function populateTable() {
 	var tableContent = '';
 
 	// jQuery AJAX call for JSON
-	$.getJSON( 'http://opine-r.herokuapp.com/pollroute/exportpolljson/543bd6451a6fdb0200d315f7', function( data ) {
+	$.getJSON( window.location.origin+'/pollroute/exportpolljson/'+window.location.href.split('/grid/').pop(), function( data ) {
 		// Inject the whole content string into our existing HTML table
 		if(data.msg === null) {
 			alert('Network error!');
