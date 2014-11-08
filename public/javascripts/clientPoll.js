@@ -953,6 +953,7 @@ function pageShowHelper() {
 			if(firstRun) {
 				firstRun = false;
 				window.onbeforeunload = function() {
+					console.log('triggered');
 					return 'Do you want to leave this poll? Your progress will be saved.';
 					// history.pushstate and location.hash
 					// http://www.webdesignerdepot.com/2013/03/how-to-manage-the-back-button-with-javascript/
