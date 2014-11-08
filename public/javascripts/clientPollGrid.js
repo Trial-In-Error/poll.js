@@ -10,9 +10,13 @@ var gutterSizer;
 var gridPanel;
 
 function redrawAll() {
-	parent.height(grandparent.height()).width(grandparent.width())
-	svg.height(grandparent.height())
-	svg.width(grandparent.width())
+	parent.height(grandparent.height()).width(grandparent.width());
+	svg.height(grandparent.height());
+	svg.width(grandparent.width());
+}
+
+function suppressPieChartInteractions() {
+	$('svg').find(':not(.big):not(.big *).c3-chart-arc').attr('class', '').children().children().css('stroke', '#fff');
 }
 
 function openPanel() {
@@ -114,6 +118,7 @@ $(window).load(function() {
 		items.height(gridSizer.width());
 		masonry.css('padding', '0px');
 
+		suppressPieChartInteractions();
 		masonry.data('masonry').reloadItems();
 		masonry.data('masonry').layout();
 
@@ -140,6 +145,7 @@ $(window).load(function() {
 				$('.big').css('max-height', '');
 				//transformer.resize('#'+this.id);
 				transformer.addChartInfo('#'+this.id);
+				suppressPieChartInteractions();
 				$('.js-masonry').data('masonry').reloadItems();
 				$('.js-masonry').data('masonry').layout();
 		});

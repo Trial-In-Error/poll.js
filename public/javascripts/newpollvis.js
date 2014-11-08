@@ -1563,7 +1563,7 @@ var defaultOptions = {
 	legendOffset : 80,
 	visualization: null,
 	color:0,
-	interaction : true,
+	interaction : false,
 	answer : null,
 	size: {
        	 width: "50vw",
@@ -2700,20 +2700,18 @@ var colorScale = d3.scale.quantile()
        }
        function heatmap2(options){
        	$(options.container).css("margin-left",0)
-       	var maxwidth = 2000;
+      
        	var m = options.matrix;
        	console.log(m);
        	var head =  m[0].slice(1,m[0].length);
        	console.log(m);
        	m=m.slice(1,m.length);
        	var array = matrixToRevArray(m);
-       	var w =  $("#charty1").width();
-       	if(w>maxwidth){
-       		w=maxwidth;
-       	}
+       	var w =  $(options.container).width();
+     
        	var gridSize;
        	if(window.innerWidth>window.innerHeight){
-       		gridSize = Math.floor(w / 8);
+       		gridSize = Math.floor(w / 16);
        	}else{
        		gridSize = Math.floor(w / 8);
        	}
