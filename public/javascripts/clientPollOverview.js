@@ -1,3 +1,5 @@
+var poll = JSON.parse(window.localStorage['recent']);
+
 // Fill table with data
 // CSS for this page blatantly stolen from: http://red-team-design.com/css3-ordered-list-styles/
 function populateTable(callback) {
@@ -86,6 +88,7 @@ $(document).ready(function() {
 		//$('#collapsibleSet').trigger('create');
 			$('.ui-collapsible-heading').on('click', function() {
 				questionCounter = this.parentNode.id.split('-').pop();
+				//if(poll.question_list[questionCounter])
 				maggio.visualizeChart(
 					window.location.origin+'/pollroute/exportpolljson'+window.location.pathname.split('polloverview')[1],
 					'#collapsibleGraph-'+questionCounter,

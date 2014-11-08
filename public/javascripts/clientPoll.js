@@ -444,21 +444,26 @@ function submitPoll() {
 				// Check for successful (blank) response
 				console.log('Response: '+JSON.stringify(response));
 				if ( response.msg === '' ) {
-					// Delete local storage of results
-					// WARN: Do onbeforeunload more elegantly?
-					//current_question = 0;
-					//clearStorage();
-					//console.log(batchSanitize([poll])[0]);
-					poll = {};
-					console.log('Submission complete; sanitizing local storage.');
-					$(window).unbind('pageshow');
-					//clearStorage();
-					window.localStorage.removeItem('poll'+tempID);
-					window.localStorage.removeItem('current'+tempID);
-					window.location.replace('/polloverview/'+tempID);
+					(function(callback) {
+						window.localStorage['recent'] = JSON.stringify(poll);
+						console.log('Stored: '+window.localStorage['recent']);
+						console.log('!!!');
+						console.log('!!!');
+						console.log('!!!');
+						poll = {};
+						console.log('Submission complete; sanitizing local storage.');
+						$(window).unbind('pageshow');
+						//clearStorage();
+						window.localStorage.removeItem('poll'+tempID);
+						window.localStorage.removeItem('current'+tempID);
+						current_question = 0;
+						callback();
+					})(function() {
+						window.location.replace('/polloverview/'+tempID);	
+					});
 					//window.localStorage['poll'+tempID] = JSON.stringify(batchSanitize([poll])[0]);
 					//window.localStorage['current'+tempID] = 0;
-					current_question = 0;
+					
 					//console.log('SUBMITPOLL CURRENT QUESTION'+current_question);
 					//clearStorage();
 					//poll = batchSanitize([poll])[0];
