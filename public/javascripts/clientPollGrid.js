@@ -16,7 +16,7 @@ function redrawAll() {
 }
 
 function suppressPieChartInteractions() {
-	$('svg').find(':not(.big):not(.big *).c3-chart-arc').attr('class', '').children().children().css('stroke', '#fff');
+	$('svg').find(':not(.big):not(.big *).c3-chart-arc').attr('class', '').children().children().css('stroke', 'rgba(255, 255, 255, 0)');
 }
 
 function openPanel() {
