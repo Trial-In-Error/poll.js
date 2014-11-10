@@ -49,7 +49,9 @@ var datacolors = {
 	['#EF921A','#F1DB71','#901F2F','#FFF608','#D12A09','#6A2383','#9360A4','#5F5858'],
 	['#D12A09','#6A2383','#9360A4','#5F5858','#02A79C','#88CBC4','#1F4557','#8FC043'],
 	],
+	//Background color of tiles
 	tileBackground :  '#FFF6c8',
+	highlightColor : "#000000",
 	curretGroup : 0,
 	count : 0,
 	getColor : function(group,names,isRow){
@@ -58,11 +60,13 @@ var datacolors = {
 		index = 0;
 		datacolors.index = (datacolors.index + 1) % (datacolors.colors[0].length);
 		if($.inArray(group,names) != -1){
-			// return null;
 			return datacolors.colors[currColor][getIndex2(names,group)];
 		}else {
-			if(group.id==optionHandler.array[optionHandler.pointer].answer){
-				return "#000000";
+			//if users choice
+			if(group.id==optionHandler.array[optionHandler.pointer].answer || group == optionHandler.array[optionHandler.pointer].answer){
+				//Change legend color
+				$(".c3-legend-item-18-29 .c3-legend-item-tile" ).css("fill","rgb(0,0,0)");
+				return highlightColor;
 			}
 			// if(index==2){
 			// 	datacolors.count++;
@@ -85,6 +89,13 @@ var datacolors = {
 
 			}
 		}
+var  eventHandler = function(){
+	
+	$(".norm "+"#charty1").click(
+		function(){
+			 alert('button clicked');
+		});
+}
 /**
 *	flashpoll handles fetching and parsing data from flashpoll
 */
@@ -148,7 +159,7 @@ var flashpoll = {
 		}
 			console.log(pollchart.chartVis);
 		// console.log(pollchart.optionChart);
-		//new Masonry(container, { "columnWidth": ".tumbchart", "itemSelector": ".tumbchart", "gutter": ".gutter-sizer" })
+		new Masonry(container, { "columnWidth": ".tumbchart", "itemSelector": ".tumbchart", "gutter": ".gutter-sizer" })
 	},
 	/*
 	*Visualize one graph from a dataset
@@ -340,7 +351,6 @@ function getSumMatrix(matrix){
 }
 function getSumArray(array,offset){
 	var sum = 0 ;
-	console.log(array);
 
 	for(var j= offset; j<array.length; j++){
 		sum += parseInt(array[j]);
@@ -514,9 +524,6 @@ var label = new Array();
 */
 maggio.visualizeSet = function(url,cnt,question,options,callback){
 	console.log(flashpoll);
-	console.log('CALLBACK-------------------------------------v');
-	console.log(callback);
-	console.log('CALLBACK-------------------------------------^');
 	d3.json(url, function(data) {
 		container = cnt;
 		var opt = optionHandler.addOptions(options);
@@ -853,6 +860,18 @@ function buildEmptyMatrix(rows,columns){
 					};
 					return getvistypes(categorical,continuous,single);
 				};
+
+function swapCategorical(matrix){
+	var retMatrix=[];
+	for (var i = 0; i < matrix[0].length; i++) {
+		var temp = [];
+		for (var j = 0; j < matrix.length; j++) {
+				temp.push(matrix[j][i]);
+		};
+					retMatrix.push(temp);
+	};
+	return retMatrix;
+}
 function createSlider(){
 	var slider = "<div><input id='sliderb' type='range' min='1' max='"+ matrix.length + "' value='1'/></div>";
 	var label = "<label id='sliderLabel' for='male'>"+ "Current plot: " + getMytitle() + "</label>";
@@ -874,8 +893,14 @@ function addInfo(qustions){
 	// if(container == "#char"){
 	// 	$(container).append("<div id='charty' class='tumbchart' style='height : 600px'></div>");
 	// }else{
-		$(container).append("<div class='item tumbchart' id='"+pollchart.chart[pollchart.nrOfCharts-1]+"'style ='background-color : #FFF6c8'></div>");
+	// $(container).append("<div class='tumbchart' id='"+pollchart.chart[pollchart.nrOfCharts-1]+"'></div>");
 
+	var id = "tumb"+(pollchart.nrOfCharts-1);
+		console.log(id);
+		$(container).append("<div class='item' id='"+id+"'></div>");
+		$("#"+id).append("<div class='tumbchart' id='"+pollchart.chart[pollchart.nrOfCharts-1]+"'></div>");
+		$("#" + pollchart.chart[pollchart.nrOfCharts-1]).height($("#"+id).height());
+		console.log($("#" + pollchart.chart[pollchart.nrOfCharts-1]));
 		for (var i = 0; i < qustions.length; i++) {
 			$("#"+pollchart.chart[pollchart.nrOfCharts-1]).addClass("question-"+qustions[i]);
 		};
@@ -1012,20 +1037,22 @@ init : function(data,question,options,callback){
 
 	var performance = new Timetool();
 	
-	var matrixMemory = new Object();
+	var matrixMemory = buildEmptyMatrix(data.question_list.length,data.question_list.length);
+	console.log("MATRIX MEMORY");
+	console.log(matrixMemory);
 	optionHandler.isMobile();
 	var visualizationTypes = opine.calculateVisualizations(question,data,false);
+	console.log(visualizationTypes);
 	for (var i = 0; i < visualizationTypes.length; i++) {
 		if(visualizationTypes[i].ids.length==1){
 			var matrix;
-			// console.log(matrixMemory.visualizationTypes[i].ids[0]);
-			// if(matrixMemory[visualizationTypes[i].ids[0]+""]==null){
+			
+			if(matrixMemory[question[0]][0]!=0){
+				matrix =matrixMemory[question[0]][0];
+			}else{
 				matrix = opine.getSingeMatrix(data,visualizationTypes[i].ids[0]);
-				// matrixMemory[visualizationTypes[i].ids[0]+""]=matrix;
-			// }else{
-				// console.log("saved");
-				// matrix = matrixMemory.visualizationTypes[i].ids[0];
-
+			}
+// 
 			// }
 			if(matrix[1][0]!=null){
 				for (var u = 0; u < visualizationTypes[i].types.length; u++) {
@@ -1039,11 +1066,14 @@ init : function(data,question,options,callback){
 					pollchart.currentCharts[pollchart.chart[pollchart.nrOfCharts-1]] = {chart : [i,u,], data : data, question : question};
 					optionHandler.addChart("#"+pollchart.chart[pollchart.nrOfCharts-1]);
 					optionHandler.updateOption(optionHandler.size-1,"matrix",matrix);
+					optionHandler.updateOption(optionHandler.size-1,"orgmatrix",matrix.slice(0));
 					optionHandler.updateOption(optionHandler.size-1,"chart",visualizationTypes[i].types[u]);
 					optionHandler.updateOption(optionHandler.size-1,"color",rnd);
 					optionHandler.updateOption(optionHandler.size-1,"id",optionHandler.size-1);
 					optionHandler.updateOption(optionHandler.size-1,"ylabel", visualizationTypes[i].ylabels);
 					optionHandler.updateOption(optionHandler.size-1,"xlabel", visualizationTypes[i].xlabels);
+					optionHandler.array[optionHandler.size-1].questions.push(data.question_list[visualizationTypes[i].ids[0]].type.name);
+					optionHandler.updateOption(optionHandler.size-1,"title", data.question_list[visualizationTypes[i].ids[0]].body);
 					var chart = visualizationTypes[i].types[u](optionHandler.getOption(optionHandler.size-1));
 					optionHandler.updateOption(optionHandler.size-1,"c3",chart);
 				};
@@ -1052,13 +1082,12 @@ init : function(data,question,options,callback){
 		else{
 			for (var u = 0; u < visualizationTypes[i].types.length; u++) {
 				var matrix;
-				console.log(matrixMemory['visualizationTypes[i].ids+""']);
-				// if(matrixMemory[visualizationTypes[i].ids+""]==null){
-					matrix = matrix=opine.getDoubleMatrix(data,visualizationTypes[i].ids);
-				// }else{
-				// 	console.log("saved");
-				// 	matrix = matrixMemory['visualizationTypes[i].ids+""'];
-				// }
+
+				if(matrixMemory[question[0]][question[0]]!=0){
+					matrix =matrixMemory[question[0]][question[1]];
+				}else{
+					matrix=opine.getDoubleMatrix(data,visualizationTypes[i].ids);
+				}
 				if(matrix==null){
 					continue;
 				}
@@ -1074,22 +1103,33 @@ init : function(data,question,options,callback){
 				pollchart.currentCharts[pollchart.chart[pollchart.nrOfCharts-1]] = {chart : [i,u,], data : data, question : question};
 				optionHandler.addChart("#"+pollchart.chart[pollchart.nrOfCharts-1]);
 				optionHandler.updateOption(optionHandler.size-1,"matrix",matrix);
+				optionHandler.updateOption(optionHandler.size-1,"orgmatrix",matrix.slice(0));
 				optionHandler.updateOption(optionHandler.size-1,"chart",visualizationTypes[i].types[u]);
 				optionHandler.updateOption(optionHandler.size-1,"color",rnd);
 				optionHandler.updateOption(optionHandler.size-1,"id",optionHandler.size-1);
 				optionHandler.updateOption(optionHandler.size-1,"ylabel", visualizationTypes[i].ylabels);
 				optionHandler.updateOption(optionHandler.size-1,"xlabel", visualizationTypes[i].xlabels);
+
+				optionHandler.updateOption(optionHandler.size-1,"title", "Question combination");
+				optionHandler.updateOption(optionHandler.size-1,"info", 
+					"Question 1 " + data.question_list[visualizationTypes[i].ids[0]].body 
+					+ "<br>" + 
+					"Question 2 " + data.question_list[visualizationTypes[i].ids[1]].body
+					);
+				optionHandler.array[optionHandler.size-1].questions.push(data.question_list[visualizationTypes[i].ids[0]].type.name);
+				optionHandler.array[optionHandler.size-1].questions.push(data.question_list[visualizationTypes[i].ids[1]].type.name);
+
 				var chart = visualizationTypes[i].types[u](optionHandler.getOption(optionHandler.size-1));
 				optionHandler.updateOption(optionHandler.size-1,"c3",chart);
-			
-				};
-			}
 
+			};
 		}
-		console.log(matrixMemory);
-		console.log(performance.stopTimer());
-		//new Masonry(container, { "columnWidth": ".tumbchart", "itemSelector": ".tumbchart", "gutter": ".gutter-sizer" })
-		callback();
+
+	}
+	console.log(matrixMemory);
+	console.log(performance.stopTimer());
+	new Masonry(container, { "columnWidth": ".item", "itemSelector": ".item", "gutter": ".gutter-sizer" })
+		// callback();
 	},
 /**
 *Visualize one graph from a dataset
@@ -1101,6 +1141,7 @@ visualizeOne : function(data,question,nr,color){
 	optionHandler.isMobile();
 	//functions + questions
 	var visualizationTypes = opine.calculateVisualizations(question,data,true);
+	console.log(visualizationTypes[nr[0]].ylabel);
 	// createTable();
 	pollchart.nrOfCharts = 0;
 	if(visualizationTypes[nr[0]].ids.length==1){
@@ -1109,11 +1150,12 @@ visualizeOne : function(data,question,nr,color){
 			addInfo2(data.name,data.question_list[visualizationTypes[nr[0]].ids[0]].body);
 			optionHandler.addChart("#"+pollchart.chart[pollchart.nrOfCharts-1]);
 			optionHandler.updateOption(optionHandler.size-1,"matrix",matrix);
+			optionHandler.updateOption(optionHandler.size-1,"orgmatrix",matrix.slice(0));
 			optionHandler.updateOption(optionHandler.size-1,"chart",visualizationTypes[nr[0]].types[nr[1]]);
 			optionHandler.updateOption(optionHandler.size-1,"color",color);
 			optionHandler.updateOption(optionHandler.size-1,"id",optionHandler.size-1);
-			optionHandler.updateOption(optionHandler.size-1,"ylabel", visualizationTypes[nr[0]].ylabels);
-			optionHandler.updateOption(optionHandler.size-1,"xlabel", visualizationTypes[nr[0]].xlabels);
+			optionHandler.updateOption(optionHandler.size-1,"ylabel", visualizationTypes[nr[0]].ylabel);
+			optionHandler.updateOption(optionHandler.size-1,"xlabel", visualizationTypes[nr[0]].xlabel);
 			var chart = visualizationTypes[nr[0]].types[nr[1]](optionHandler.getOption(optionHandler.size-1));
 			optionHandler.updateOption(optionHandler.size-1,"c3",chart);
 
@@ -1121,9 +1163,11 @@ visualizeOne : function(data,question,nr,color){
 	}
 	else{
 		var matrix=opine.getDoubleMatrix(data,visualizationTypes[nr[0]].ids);
+		console.log(matrix);
 		addInfo2(matrix[0][0],data.question_list[visualizationTypes[nr[0]].ids[0]].body + "<br>"+ data.question_list[visualizationTypes[nr[0]].ids[1]].body);
 		optionHandler.addChart("#"+pollchart.chart[pollchart.nrOfCharts-1]);
 		optionHandler.updateOption(optionHandler.size-1,"matrix",matrix);
+		optionHandler.updateOption(optionHandler.size-1,"orgmatrix",matrix.slice(0));
 		optionHandler.updateOption(optionHandler.size-1,"chart",visualizationTypes[nr[0]].types[nr[1]]);
 		optionHandler.updateOption(optionHandler.size-1,"color",color)
 		optionHandler.updateOption(optionHandler.size-1,"id",optionHandler.size-1)
@@ -1152,7 +1196,7 @@ visualizeChart : function(data,question,chart,color,answer){
 	}
 	if(question.length==1){
 		matrix = opine.getSingeMatrix(data,question);
-		addInfo(data.name,data.question_list[question[0]].body);
+		addInfo2(data.name,data.question_list[question[0]].body);
 	}
 	else{
 			// pollchart.nrOfCharts ++;
@@ -1163,7 +1207,7 @@ visualizeChart : function(data,question,chart,color,answer){
 				subtitle += data.question_list[question[i]].body;
 				subtitle += "<br/>"
 			}
-			addInfo(data.name,subtitle);
+			addInfo2(data.name,subtitle);
 		}
 		optionHandler.addChart(container);
 		optionHandler.updateOption(optionHandler.size-1,"matrix",matrix);
@@ -1506,7 +1550,17 @@ getMixedMatrix : function(data,visualizationTypes){
 
 					});
 				},
+				getTransformations : function(questions,data){
+					if(data.question_list[questions[0]].type.name == "pick_n" 
+						&& data.question_list[questions[1]].type.name == "pick_n"){
+						return ["norm", "swap"];
+				}
+				else if(data.question_list[questions[0]].type.name == "slider" 
+					&& data.question_list[questions[0]].type.name == "slider"){
+					return ["", ""];
 			}
+		}
+	}
 /**
 * optionHandler holds all the charts data and functions for
 * updating and adding options
@@ -1552,6 +1606,7 @@ var defaultOptions = {
 	chart : null,
 	id: null,
 	container: null,
+	orgmatrix : null,
 	matrix: null,
 	tooltip : true,
 	legend : true,
@@ -1565,6 +1620,10 @@ var defaultOptions = {
 	color:0,
 	interaction : false,
 	answer : null,
+	questions : [],
+	title:  "no title",
+	info : "no info about the visualization",
+	norm : false,
 	size: {
        	 width: "50vw",
          height: "50vw"
@@ -1694,24 +1753,44 @@ var transformer = {
 		optionHandler.array[index].chart(optionHandler.array[index]);
 	},
 	addChartInfo : function(id){
-
+		
 		var index = id.split("charty").slice(-1)[0]-1;
+		console.log(id);
 
 		if(optionHandler.array[index].classname == "tumbheat"){
 			d3.select("#tumbheat" + index).remove();
 			console.log("tumbheat" + optionHandler.array[index].container);
 			optionHandler.array[index].container = id;
 			heatmap2(optionHandler.array[index]);
+
+			var norm= $('<input type="button" value="normalize q1" id="btnnorm'+index+'" class="norm"/>');
+			$("#tumb" + index).prepend(norm);
+
+			var swap= $('<input type="button" value="swap" id="btnswap'+index+'" class="swap"/>');
+			$("#tumb" + index).prepend(swap);
+			$("#tumb" + index).prepend("<p id='title"+index+"' class='titleText'>"+optionHandler.array[index].info+"</p>");
+			$("#tumb" + index).prepend("<h2 id='info"+index+"'	class='infoText'>"+optionHandler.array[index].title+"</h2>");
+			
 			return;
 		}
+		$("#tumb" + index).prepend("<p id='title"+index+"' class='titleText'>"+optionHandler.array[index].info+"</p>");
+		$("#tumb" + index).prepend("<h2 id='info"+index+"'	class='infoText'>"+optionHandler.array[index].title+"</h2>");
+
+
+		$(id).height($("#tumb" + index).height() -  $("#title"+index).height() -  $("#info"+index).height() - $("#btncharty1").height());
 		optionHandler.array[index].legend=true;
 		optionHandler.array[index].tooltip = true;
 		optionHandler.array[index].axis = true;
 		optionHandler.array[index].interaction = true;
 		optionHandler.array[index].container = id;
-		optionHandler.array[index].chart(optionHandler.array[index]);
+		var chart = optionHandler.array[index].chart(optionHandler.array[index]);
+		optionHandler.array[index].c3 = chart;
+
+		transformer.setTransButtons(optionHandler.array[index],index);
+
 	},
 	removeInfo : function(id){
+
 		var index = id.split("charty").slice(-1)[0]-1;
 		if(optionHandler.array[index].classname == "tumbheat"){
 			d3.select("#tumbheat" + index).remove();
@@ -1725,22 +1804,90 @@ var transformer = {
 		optionHandler.array[index].axis = false;
 		optionHandler.array[index].interaction = false;
 		optionHandler.array[index].container = id;
-		optionHandler.array[index].chart(optionHandler.array[index]);
+		optionHandler.array[index].matrix = orgmatrix;
+		var chart = optionHandler.array[index].chart(optionHandler.array[index]);
+		optionHandler.array[index].c3 = chart;
 	},
 	resize : function(id){
-				var index = id.split("charty").slice(-1)[0]-1;
-				optionHandler.array[index].c3.resize({height:$(id).height(), width:$(id).width()})
+		var index = id.split("charty").slice(-1)[0]-1;
+		optionHandler.array[index].c3.resize({height:$(id).height(), width:$(id).width()})
 
 	},
 	normalizeRows : function(id){
-					var index = id.split("charty").slice(-1)[0]-1;
-					optionHandler.array[index].c3.unload();
-					optionHandler.array[index].c3.load({columns : normalizeByRow(optionHandler.array[index].matrix)});
-	},
-	normalizeMatrix : function(id){
+		console.log(id);
 		var index = id.split("charty").slice(-1)[0]-1;
-					optionHandler.array[index].c3.unload();
-					optionHandler.array[index].c3.load({columns : normalize(optionHandler.array[index].matrix,1)});
+		if(optionHandler.array[index].c3!=null){
+						// optionHandler.array[index].c3.unload();
+						// optionHandler.array[index].c3.load({columns : normalizeByRow(optionHandler.array[index].matrix)});
+						if(optionHandler.array[index].norm == false){
+							optionHandler.array[index].matrix = normalizeByRow(optionHandler.array[index].matrix);
+							optionHandler.array[index].norm = true;
+						}else if(optionHandler.array[index].norm = true){
+							optionHandler.array[index].matrix = optionHandler.array[index].orgmatrix.slice(0);
+							optionHandler.array[index].norm = false;
+						}
+						var chart = optionHandler.array[index].chart(optionHandler.array[index]);
+						optionHandler.array[index].c3 = chart;
+					}else{
+						$(id + " svg").remove();
+						optionHandler.array[index].matrix = normalizeByRow(optionHandler.array[index].matrix);
+						heatmap2(optionHandler.array[index]);
+					}
+				},
+				normalizeMatrix : function(id){
+					var index = id.split("btnnormM").slice(-1)[0]-1;
+					if(optionHandler.array[index].c3!=null){
+						optionHandler.array[index].c3.unload();
+						optionHandler.array[index].c3.load({columns : normalize(optionHandler.array[index].matrix,1)});
+					}
+
+				},
+				swapcategories : function(id){
+					var index = id.split("charty").slice(-1)[0]-1;
+					if(optionHandler.array[index].c3!=null){
+						// optionHandler.array[index].c3.unload();
+						// optionHandler.array[index].c3.load({columns : normalizeByRow(optionHandler.array[index].matrix)});
+						optionHandler.array[index].matrix = swapCategorical(optionHandler.array[index].matrix);
+						var chart = optionHandler.array[index].chart(optionHandler.array[index]);
+						optionHandler.array[index].c3 = chart;
+					}else{
+						$(id + " svg").remove();
+						optionHandler.array[index].matrix = swapCategorical(optionHandler.array[index].matrix);
+						heatmap2(optionHandler.array[index]);
+					}
+
+				},
+			setTransButtons : function(options,index){
+			console.log(options);
+					if(options.questions.length == 1){
+							console.log("ONE QUESTION");
+							if(functionName(options.chart)=="bar"){
+											var swap= $('<input type="button" value="swap" id="btnswap'+index+'" class="swap"/>');
+				$("#tumb" + index).append(swap);
+							}
+						return;
+					}
+					else if(options.questions.length == 2){
+								console.log("TWO QUESTIONS");
+						var q1 = options.questions[0];
+						var q2 = options.questions[1];
+										console.log(q1 + "---" + q2);
+			// One is slider one is pick_n
+			if(q1 != q2){
+				var swap= $('<input type="button" value="swap" id="btnswap'+index+'" class="swap"/>');
+				$("#tumb" + index).append(swap);
+
+			}else if(q1 == "pick_n" && q2 == "pick_n"){
+				console.log("TO PICK N");
+				var isNormalized = "Normalize first";
+				var norm= $('<input type="button" value="'+ isNormalized +'" id="btnnorm'+index+'" class="norm"/>');
+				$("#tumb" + index).append(norm);
+
+				var swap= $('<input type="button" value="swap" id="btnswap'+index+'" class="swap"/>');
+				$("#tumb" + index).append(swap);
+			}
+		}
+
 	}
 }
 /**
@@ -1759,21 +1906,17 @@ function bar(options){
 	var rot = m.length > 4; rotated : false ? rotated : true;
 	if(rot){r = 70;}
 	var c = 0;
-	console.log('CONTAINER-------------------v');
-	console.log(options.container);
-	console.log('Height:'+$(options.container).height());
-	console.log('Width:'+$(options.container).width());
-	console.log('CONTAINER-------------------^');
 	var chart = c3.generate({
 		bindto: options.container,
-		interaction: { enabled:  options.interaction },
+		interaction: { enabled:  options.interaction},
 		data: {
 			x : m[0][0],
 			columns : m,
 			type: 'bar',
 			color: function (color, d) {
 				return datacolors.getColor(d,names,options.color);
-			}
+			},
+			section : {enabled : false}
 		},
 		bar: {
 			width : 100,
@@ -1783,7 +1926,8 @@ function bar(options){
     },
 
     tooltip: {
-    	show : options.tooltip
+    	show : options.tooltip,
+    	grouped : false
     },
     legend : {
     	show : options.legend
@@ -1793,7 +1937,8 @@ function bar(options){
 
     	x: {
     		show : options.axis,
-    		height : r+50,
+    		height : r,
+    		label : options.xlabel,
     		type: 'categorized',
     		tick: {
     			rotate : r
@@ -1803,7 +1948,8 @@ function bar(options){
     	},
     	y : {
     		show : options.axis,
-    		label : options.ylabel
+    		label : options.ylabel,
+    		padding : 100
     	},
 
     	width: {
@@ -2612,11 +2758,19 @@ function heatmap(options){
 	var head =  m[0].slice(1,m[0].length);
 	console.log(m);
 	m=m.slice(1,m.length);
+	var dim_1 = columnNames(m);
+	var textLength = 0;
+	var dim_2 = head;
+	var rowlength = dim_1.length;
+	var columnlength = dim_2.length;
+	var maxSize = rowlength > columnlength ? rowlength : columnlength;
 	var array = matrixToRevArray(m);
 	var w = $(".tumbchart").width();
-	var gridSize = Math.floor(w / 6);
+	
+	var gridSize = Math.floor(w / (maxSize + 1));
+	var padding = gridSize/maxSize;
 	// if($("#charty1").height() > 1){
-		var h = $("#charty1").height();
+		var h = $(".tumbchart").height();
 	// }else{
 		// var h =  w;
 	// }
@@ -2627,12 +2781,8 @@ function heatmap(options){
 	width =  w- margin.left - margin.right,
 	height = h - margin.top - margin.bottom,
 
-	legendWidth = (gridSize/4),
-	dim_1 = columnNames(m),
-	textLength = 0;
-	dim_2 = head,
-	rowlength = dim_1.length;
-	columnlength = dim_2.length;
+	legendWidth = (gridSize/4);
+
           //antal färger
 
           var index = options.container.split("charty").slice(-1)[0]-1;
@@ -2691,42 +2841,59 @@ var colorScale = d3.scale.quantile()
            .attr("rx", 4)
            .attr("ry", 4)
            .attr("class", "dim2 bordered")
-           .attr("width", gridSize-2)
-           .attr("height", gridSize-2)
+           .attr("width", gridSize-padding)
+           .attr("height", gridSize-padding)
            .attr("class", "square")
            rec.transition()
            .style("fill", function(d) {;return colorScale(d); });
            heatMap.append("title").text(function(d) {return d; });
        }
-       function heatmap2(options){
-       	$(options.container).css("margin-left",0)
-      
-       	var m = options.matrix;
-       	console.log(m);
-       	var head =  m[0].slice(1,m[0].length);
-       	console.log(m);
-       	m=m.slice(1,m.length);
-       	var array = matrixToRevArray(m);
-       	var w =  $(options.container).width();
-     
-       	var gridSize;
-       	if(window.innerWidth>window.innerHeight){
-       		gridSize = Math.floor(w / 16);
-       	}else{
-       		gridSize = Math.floor(w / 8);
-       	}
-       	var tileMargin = gridSize/2;
-       	var h = 100 + gridSize * (m.length+2);
-       	var shiftR = 10;
-       	var margin = { top: gridSize*2, right: 0, bottom: 0, left: 0 },
-       	width =  w- margin.left - margin.right,
-       	height = h - margin.top - margin.bottom,
-       	legendWidth = (gridSize/1.5),
-       	dim_1 = columnNames(m),
-       	textLength = gridSize/4,
-       	dim_2 = head,
-       	rowlength = dim_1.length;
-       	columnlength = dim_2.length;
+ function heatmap2(options){
+    $(options.container).css("margin-left",0)
+    var m = options.matrix;
+	var head =  m[0].slice(1,m[0].length);
+	m=m.slice(1,m.length);
+	var dim_1 = columnNames(m);
+	console.log(dim_1);
+	var longest = 5;
+	var dim_2 = head;
+	var rowlength = dim_1.length;
+	var columnlength = dim_2.length;
+	var maxSize = rowlength > columnlength ? rowlength : columnlength;
+	var array = matrixToRevArray(m);
+	var w = $(".tumbchart").width();
+	w = w*2/3;
+	var fontSize = 12;
+	// w=w*2/3;
+	
+	var textLength = fontSize*longest;
+	var gridSize = Math.floor((w - textLength)/(maxSize));
+	var padding = gridSize/maxSize;
+	var marginTop = gridSize;
+
+console.log("Longest---->  " +longest);
+	console.log("Gridsize ---->  " + gridSize);
+console.log("Margin top ---->  " +marginTop);
+	var index = options.id;
+	// if($("#charty1").height() > 1){
+	// var h = $(".item").width() - $("#info" + index ).height()- $("#title" + index ).height();
+	var h = marginTop + gridSize * (columnlength +2);
+		console.log("title HEIGHT ---> " + $("#title" + index ).height());
+		console.log("info HEIGHT ---> " + $("#info" + index ).height());
+	console.log("SVG HEIGHT ---> " + h);
+	// $(".tumbchart").height();
+	// }else{
+		// var h =  w;
+	// }
+	
+	// var h = 900;
+	var shiftR = 10;
+	var margin = { top: 0, right: 0, bottom: 0, left: 0 },
+	width =  w- margin.left - margin.right,
+	height = h - margin.top - margin.bottom,
+
+	legendWidth = (gridSize/2);
+
        	var index = options.container.split("charty").slice(-1)[0]-1;
           //antal färger
           buckets = 8;
@@ -2749,10 +2916,10 @@ var colorScale = d3.scale.quantile()
           var colors = [];
 
 // the first color
-var color1 = datacolors.colors[0][0];
+var color1 = datacolors.colors[options.color][0];
 
 // the second color
-var color2 = datacolors.colors[0][2];
+var color2 = datacolors.colors[options.color][2];
 
 // the number of colors to generate
 var n = 7;
@@ -2773,14 +2940,15 @@ var colorScale = d3.scale.quantile()
           .data(dim_1)
           .enter().append("text")
           .text(function (d) { 
-          	if(d.length>12){return d.substring(0,12)+"...";} 
-          	else {return d;} })
-          .attr("x", 10)
-          .attr("y", function (d, i) { return i * gridSize; })
+          	// if(d.length>12){return d.substring(0,12)+"...";} 
+          	// else {
+          	return d;})
+          .attr("x", 0)
+          .attr("y", function (d, i) { return i * gridSize + gridSize/2 + marginTop; })
           .style("font-weight","bold")
-          .style("font-size", gridSize/3+"px")
-          // .style("text-anchor", "end")
-          .attr("transform", "translate(-6," + gridSize / 1.5 + ")")
+          .style("font-size", fontSize+"px")
+             .style("font-family","Lato")
+          .style("text-anchor", "start")
           .attr("class","heatlabel");
 
      //Header
@@ -2797,16 +2965,16 @@ var colorScale = d3.scale.quantile()
                 // .attr("transform", "translate(" + gridSize / 2 + ", -6)")
                 .attr("class","heatlabel")
                 // .attr("dy", ".71em")
-                .text(function(d) {return d})
+                .text(function(d) {console.log(d); return d})
                 .style("font-weight","bold")
-                .style("font-size", gridSize/3+"px")
+                   .style("font-family","Lato")
+                .style("font-size", fontSize+"px")
+                .attr("text-anchor","center")
 				.attr("transform", function(d,i) {    // transform all the text elements
   return "translate(" + // First translate
-  ((i * gridSize)+ textLength*(shiftR)+gridSize/2)  + ",-10) " + // Translation params same as your existing x & y 
+  ((i * gridSize) + textLength+gridSize/2)  + ","+marginTop+") " + // Translation params same as your existing x & y 
     "rotate(-45)"            // THEN rotate them to give a nice slope
 });
-
-
           //heatmap
           var count=0,count2=0;
           var heatMap = svg.selectAll(".dim2")
@@ -2816,13 +2984,13 @@ var colorScale = d3.scale.quantile()
            .attr("class", "dim2");
 
            var rec = heatMap.append("rect")
-           .attr("x", function(d) { count++; return ((count%columnlength - 1) * gridSize) + textLength*(shiftR)+gridSize; })
-           .attr("y", function(d) { count2++; return ( Math.ceil(count2/(columnlength))-1) * gridSize; })
+           .attr("x", function(d) { count++; return ((count%columnlength - 1) * gridSize) + textLength +gridSize; })
+           .attr("y", function(d) { count2++; return ( Math.ceil(count2/(columnlength))-1) * gridSize + marginTop; })
            .attr("rx", 4)
            .attr("ry", 4)
            .attr("class", "dim2 bordered")
-           .attr("width", gridSize-2)
-           .attr("height", gridSize-2)
+           .attr("width", gridSize-padding)
+           .attr("height", gridSize-padding)
            .attr("class", "square")
            rec.transition()
            .style("fill", function(d) {;return colorScale(d); });
@@ -2832,11 +3000,14 @@ var colorScale = d3.scale.quantile()
            heatMap.append("text")
 
            .text(function(d) { return  Math.round(d); })
-           .attr("x", function(d) { count++; return ((count%columnlength - 1) * gridSize) + textLength*(shiftR)+gridSize + gridSize/3; })
-           .attr("y", function(d) { count2++; return ( Math.ceil(count2/(columnlength))-1) * gridSize + gridSize/2; })
-           .style("font-size", gridSize/3+"px")
+           .attr("x", function(d) { count++; return ((count%columnlength - 1) * gridSize) + textLength+ gridSize+ gridSize/2; })
+           .attr("y", function(d) { count2++; return ( Math.ceil(count2/(columnlength))-1) * gridSize + marginTop + gridSize/2; })
+           .attr("text-anchor","end")
+          .style("font-size", gridSize/3+"px")
+          .style("font-family","Lato")
           // .style("font-family", "Calibri")
           .attr("class", "rectext")
+
           .style("stroke-width","0px")
           .style("text-shadow","none");
 
@@ -2849,8 +3020,8 @@ var colorScale = d3.scale.quantile()
           .attr("class", "legend");
 
           legend.append("rect")
-          .attr("x", function(d, i) { return  (i%4 * legendWidth + textLength*(shiftR)) ; })
-          .attr("y", function(d, i) {k=0; if(i>3){k=1} return (rowlength) * (gridSize) + k * legendWidth + tileMargin; })
+          .attr("x", function(d, i) { return  (i%4 * legendWidth + textLength) ; })
+          .attr("y", function(d, i) {k=0; if(i>3){k=1} return (rowlength) * (gridSize) + k * legendWidth + marginTop; })
           .attr("rx", 4)
           .attr("ry", 4)
           .attr("width", legendWidth-2)
@@ -2861,18 +3032,22 @@ var colorScale = d3.scale.quantile()
           legend.append("text")
           .attr("class", "heatlegend")
           .text(function(d) { return  Math.round(d)+"+"; })
-          .attr("x", function(d, i) { return  (i%4 * legendWidth + textLength*(shiftR))+ tileMargin/4 ; })
-          .attr("y", function(d, i) {k=0; if(i>3){k=1} return (rowlength) * (gridSize) + k * legendWidth + tileMargin*3/2; })
+ 			.attr("x", function(d, i) { return  (i%4 * legendWidth + textLength) ; })
+          .attr("y", function(d, i) {k=0; if(i>3){k=1} return (rowlength) * (gridSize) + k * legendWidth + marginTop+ legendWidth/2; })
+           .attr("text-anchor","start")
           .attr("class", "heatlegend")
-          .style("font-size", legendWidth/3+"px");
+             .style("font-family","Lato")
+          .style("font-size", fontSize/1.5+"px")
+                ;
        /*     .attr("x", function(d, i) { return gridSize * 11 + 25; })
             .attr("y", function(d, i) { return (i * legendWidth + 20); })
             */
             var title = svg.append("text")
             .attr("class", "legendtitle")
             .attr("x", 0)
-            .attr("y", rowlength * (gridSize+1) + tileMargin*2)         
-            // .style("font-size", gridSize/5+"px")
+            .attr("y", rowlength * (gridSize) + marginTop + legendWidth)         
+            .style("font-size", fontSize+"px")
+               .style("font-family","Lato")
             .text("Legend")
             .style("font-weight","bold");
         }

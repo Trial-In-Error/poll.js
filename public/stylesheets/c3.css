@@ -1,18 +1,33 @@
 /*-- Chart --*/
-
-.c3 svg {
-  font: 10px sans-serif;
+.c3-event-rects {
+    pointer-events: auto !important;
 }
+.c3 svg {
+  font-family:'Lato', sans-serif;
+  font-size: 15px;
+}
+/*@media (max-width: 5000px) {
+  .c3 { font-size: 40px; }
+}*/
+/*@media (max-width: 1000px) {
+  .c3 { font-size: 20px; }
+}
+@media (max-width: 1000px) {
+  .c3 { font-size: large; }
+}
+@media (max-width: 500px) {
+  .c3 { font-size: medium; }
+}*/
 .c3 path, .c3 line {
   fill: none;
   stroke: #000;
+  stroke-width: 2px;
 }
 .c3 text {
   -webkit-user-select: none;
-     -moz-user-select: none;
-          user-select: none;
+  -moz-user-select: none;
+   user-select: none;
 }
-
 .c3-legend-item-tile,
 .c3-xgrid-focus,
 .c3-ygrid,
@@ -28,18 +43,27 @@
 .c3-chart-arc text {
   fill: #fff;
   font-size: 13px;
+  font-size: 1.5vw;
+
+
 }
 
 /*-- Axis --*/
-
 .c3-axis-x .tick {
+  font-weight:bold;
 }
 .c3-axis-x-label {
+  font-weight:bold;
+font-size:1vw;
+  /*size: 5px;*/
 }
 
 .c3-axis-y .tick {
+ font-weight:bold;
 }
 .c3-axis-y-label {
+  font-size: 1vw;
+  font-weight: bold;
 }
 
 .c3-axis-y2 .tick {
@@ -64,11 +88,14 @@
 /*-- Text on Chart --*/
 
 .c3-text {
+  
 }
 
 .c3-text.c3-empty {
   fill: #808080;
-  font-size: 2em;
+  font-size: small;
+  font-size: 1.5vw;
+
 }
 
 /*-- Line --*/
@@ -104,16 +131,9 @@
 
 /*-- Focus --*/
 
-.c3-target.c3-focused {
-  opacity: 1;
-}
 .c3-target.c3-focused path.c3-line, .c3-target.c3-focused path.c3-step {
   stroke-width: 2px;
 }
-.c3-target.c3-defocused {
-  opacity: 0.3 !important;
-}
-
 
 /*-- Region --*/
 
@@ -136,7 +156,10 @@
 /*-- Legend --*/
 
 .c3-legend-item {
-  font-size: 12px;
+  font-weight:bold;
+  /*font-size: 15px;*/
+  font-size: 2vw;
+
 }
 
 .c3-legend-background {
@@ -148,17 +171,14 @@
 
 /*-- Tooltip --*/
 
-.c3-tooltip-container {
-  z-index: 10;
-}
 .c3-tooltip {
   border-collapse:collapse;
   border-spacing:0;
   background-color:#fff;
   empty-cells:show;
   -webkit-box-shadow: 7px 7px 12px -9px rgb(119,119,119);
-     -moz-box-shadow: 7px 7px 12px -9px rgb(119,119,119);
-          box-shadow: 7px 7px 12px -9px rgb(119,119,119);
+  -moz-box-shadow: 7px 7px 12px -9px rgb(119,119,119);
+  box-shadow: 7px 7px 12px -9px rgb(119,119,119);
   opacity: 0.9;
 }
 .c3-tooltip tr {
@@ -199,6 +219,8 @@
 .c3-chart-arcs .c3-chart-arcs-gauge-unit {
   fill: #000;
   font-size: 16px;
+  font-size: 1.5vw;
+
 }
 .c3-chart-arcs .c3-chart-arcs-gauge-max {
   fill: #777;
@@ -210,4 +232,73 @@
 .c3-chart-arc .c3-gauge-value {
   fill: #000;
   font-size: 28px;
+  font-size: 1.5vw;
+
+}
+
+
+body{
+  background-color: '#000000';
+}
+
+/*
+* This css file is a compliment to the c3.css file
+*/
+#chart1{
+  text-align: center;
+}
+.heatlabel, .heatlegend, .titleText, .infoText{
+  font-family: 'Lato', sans-serif;
+}
+/*.recttext{
+  font-size: 100px;
+}*/
+@media screen and (max-width: 320px) {
+
+  .heatlabel {
+     font-size: 6px;
+  }
+}
+@media screen and (max-width: 720px) {
+
+  .heatlabel{
+    font-size: 12px;
+  }
+
+}
+@media screen and (max-width: 1024px) {
+
+  .heatlabel{
+     font-size: 24px;
+  }
+}
+@media screen and (max-width: 320px) {
+
+
+  .heatlegend{
+     font-size: 3px;
+  }
+
+}
+@media screen and (max-width: 720px) {
+
+
+  .heatlegend{
+     font-size:6px;
+  }
+}
+@media screen and (max-width: 1024px) {
+
+  .heatlegend{
+    font-size: 12px;
+  }
+
+}
+.item{
+  text-align: center;
+    margin-left: auto ;
+  margin-right: auto ;
+}
+.infoText .titleText{
+  font-family: 'Lato', sans-serif;
 }
