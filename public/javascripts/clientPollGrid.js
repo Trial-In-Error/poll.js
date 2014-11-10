@@ -1,4 +1,3 @@
-
 var scrollbarWidth = getScrollbarWidth();
 var svg;
 var parent;
@@ -8,6 +7,7 @@ var items;
 var gridSizer;
 var gutterSizer;
 var gridPanel;
+var masonryBig = 5;
 
 function redrawAll() {
 	parent.height(grandparent.height()).width(grandparent.width());
@@ -27,7 +27,7 @@ function openPanel() {
 	var jQueryStart = new Date();
 	masonry.width(window.innerWidth-gridPanel.width()-2*parseInt(masonry.parent().css('padding'))-scrollbarWidth).data('masonry').columnWidth = gridSizer.width();
 	items.css('max-height', '').width(gridSizer.width()).height(gridSizer.width()).css('margin-bottom', gutterSizer.width());
-	$('.big').width(6*gridSizer.width()+5*gutterSizer.width()).height(6*gridSizer.width()+5*gutterSizer.width());
+	$('.big').width(masonryBig*gridSizer.width()+(masonryBig-1)*gutterSizer.width()).height(masonryBig*gridSizer.width()+(masonryBig-1)*gutterSizer.width());
 	console.log('Execution time: jQuery: '+String(new Date() - jQueryStart));
 	var redrawStart = new Date();
 	redrawAll();
@@ -47,7 +47,7 @@ function closePanel() {
 	var jQueryStart = new Date();
 	masonry.width(window.innerWidth-2*parseInt(masonry.parent().css('padding'))-scrollbarWidth).data('masonry').columnWidth = gridSizer.width();
 	items.css('max-height', '').width(gridSizer.width()).height(gridSizer.width()).css('margin-bottom', gutterSizer.width());
-	$('.big').width(6*gridSizer.width()+5*gutterSizer.width()).height(6*gridSizer.width()+5*gutterSizer.width());
+	$('.big').width(masonryBig*gridSizer.width()+(masonryBig-1)*gutterSizer.width()).height(masonryBig*gridSizer.width()+(masonryBig-1)*gutterSizer.width());
 	console.log('Execution time: jQuery: '+String(new Date() - jQueryStart));
 	var redrawStart = new Date();
 	redrawAll();
@@ -140,8 +140,8 @@ $(window).load(function() {
 				$('.item').height($('.grid-sizer').width());
 				$('.item').css('margin-bottom', $('.gutter-sizer:first').width());
 				this.classList.add('big');
-				$('.big').width(6*$('.grid-sizer').width()+5*$('.gutter-sizer').width());
-				$('.big').height(6*$('.grid-sizer').width()+5*$('.gutter-sizer').width());
+				$('.big').width(masonryBig*$('.grid-sizer').width()+(masonryBig-1)*$('.gutter-sizer').width());
+				$('.big').height(masonryBig*$('.grid-sizer').width()+(masonryBig-1)*$('.gutter-sizer').width());
 				$('.big').css('max-height', '');
 				//transformer.resize('#'+this.id);
 				transformer.addChartInfo('#'+this.id);
@@ -154,36 +154,3 @@ $(window).load(function() {
 	});
 
 });
-
-
-
-/*
-
-		$('.item').on('click', function() {
-			console.log(this);
-			if($('#gridPanel').hasClass('ui-panel-open')) {
-				$('.js-masonry').width(window.innerWidth-$('#gridPanel').width()-2*parseInt($('.js-masonry').parent().css('padding'))-getScrollbarWidth());
-			} else {
-				$('.js-masonry').width(window.innerWidth-2*parseInt($('.js-masonry').parent().css('padding'))-getScrollbarWidth());
-			}
-				$('.js-masonry').data('masonry').columnWidth = $('.grid-sizer').width()
-				if($('.big:first').length > 0) {
-					$('.big:first').width($('.grid-sizer').width());
-					$('.big:first').height($('.grid-sizer').width());
-					transformer.removeInfo('#'+$('.big:first')[0].id);
-					$('.big').removeClass('big');
-				}
-				$('.item').width($('.grid-sizer').width());
-				$('.item').height($('.grid-sizer').width());
-				$('.item').css('margin-bottom', $('.gutter-sizer:first').width());
-				this.classList.add('big');
-				$('.big').width(6*$('.grid-sizer').width()+5*$('.gutter-sizer').width());
-				$('.big').height(6*$('.grid-sizer').width()+5*$('.gutter-sizer').width());
-				$('.big').css('max-height', '');
-				//transformer.resize('#'+this.id);
-				transformer.addChartInfo('#'+this.id);
-				$('.js-masonry').data('masonry').reloadItems();
-				$('.js-masonry').data('masonry').layout();
-		});
-	});
-*/

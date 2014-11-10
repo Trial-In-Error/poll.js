@@ -81,21 +81,34 @@ function populateTable(callback) {
 	});
 }
 
+function stripPunctuationAndHyphenate(string) {
+	return string.replace(/[\.,\\/#!$%\^&\*;:{}=_`~()]/g,"").replace(/\s{2,}/g,"-");
+}
+
 // DOM Ready =============================================================
 $(document).ready(function() {
 	// Populate the user table on initial page load
 	populateTable(function(data) {
 		//$('#collapsibleSet').trigger('create');
-			$('.ui-collapsible-heading').on('click', function() {
-				questionCounter = this.parentNode.id.split('-').pop();
-				//if(poll.question_list[questionCounter])
-				maggio.visualizeChart(
-					window.location.origin+'/pollroute/exportpolljson'+window.location.pathname.split('polloverview')[1],
-					'#collapsibleGraph-'+questionCounter,
-					[(parseInt(questionCounter)).toString()],
-					['bar'], null);
-			})
+		$('.ui-collapsible-heading').on('click', function() {
+			var questionCounter = this.parentNode.id.split('-').pop();
+			var answers = [];
+			for (responseCounter in poll.question_list[questionCounter].type.response_list) {
+				if(poll.question_list[questionCounter].type.response_list[responseCounter].answers[0].value) {
+					answers.push(poll.question_list[questionCounter].type.response_list[responseCounter].body);
+					//poll.question_list[questionCounter].type.response_list[responseCounter].body
+					//$('#collapsibleGraph-'+questionCounter+' *').find('target-'stripPunctuationAndHyphenate(poll.question_list[questionCounter].type.response_list[responseCounter].body))
+					//$('#collapsibleGraph-'+questionCounter).find('.c3-chart-bar.c3-target-'+stripPunctuationAndHyphenate(poll.question_list[questionCounter].type.response_list[responseCounter].body)+'-').children().children().css('fill', '#DD0000').css('stroke', '#D0000')
+				}
+			}
+			console.log('ANSWERS---------------------v');
+			console.log(answers);
+			console.log('ANSWERS---------------------^');
+			maggio.visualizeChart(
+				window.location.origin+'/pollroute/exportpolljson'+window.location.pathname.split('polloverview')[1],
+				'#collapsibleGraph-'+questionCounter,
+				[(parseInt(questionCounter)).toString()],
+				['bar'], answers[0]);
+		});
 	});
-
-
 });
