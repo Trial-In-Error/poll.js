@@ -1108,6 +1108,17 @@ init : function(data,question,options,callback){
 					variable[key]  = pollchart.options[key];
 				}
 
+					console.log("QUESTION    " + data.question_list[visualizationTypes[i].ids[0]].type.name);
+		if(data.question_list[visualizationTypes[i].ids[0]].type.name == "pick_n" && data.question_list[visualizationTypes[i].ids[1]].type.name == "pick_n" ){
+			console.log("STAT");
+			var val = chiSquareTest(copyMatrix(matrix));
+			if(val == true){
+					optionHandler.updateOption(optionHandler.size-1,"independence","Questions are independent");
+			}else{
+					optionHandler.updateOption(optionHandler.size-1,"independence","Questions are dependent ");
+			}
+		}
+
 				pollchart.optionChart.push(variable);
 				pollchart.currentCharts[pollchart.chart[pollchart.nrOfCharts-1]] = {chart : [i,u,], data : data, question : question};
 				optionHandler.addChart("#"+pollchart.chart[pollchart.nrOfCharts-1]);
@@ -1137,8 +1148,8 @@ init : function(data,question,options,callback){
 	}
 	console.log(matrixMemory);
 	console.log(performance.stopTimer());
-	// new Masonry(container, { "columnWidth": ".item", "itemSelector": ".item", "gutter": ".gutter-sizer" })
-		callback();
+	new Masonry(container, { "columnWidth": ".item", "itemSelector": ".item", "gutter": ".gutter-sizer" })
+		 callback();
 	},
 /**
 *Visualize one graph from a dataset
@@ -1172,8 +1183,9 @@ visualizeOne : function(data,question,nr,color){
 	}
 	else{
 		var matrix=opine.getDoubleMatrix(data,visualizationTypes[nr[0]].ids);
-		console.log(matrix);
-		addInfo2(matrix[0][0],data.question_list[visualizationTypes[nr[0]].ids[0]].body + "<br>"+ data.question_list[visualizationTypes[nr[0]].ids[1]].body);
+
+
+		addInfo2(matrix[0][0],data.question_list[visualizationTypes[nr[0]].ids[0]].type.name + "<br>"+ data.question_list[visualizationTypes[nr[0]].ids[1]].body);
 		optionHandler.addChart("#"+pollchart.chart[pollchart.nrOfCharts-1]);
 		optionHandler.updateOption(optionHandler.size-1,"matrix",matrix);
 		optionHandler.updateOption(optionHandler.size-1,"orgmatrix",matrix.slice(0));
@@ -1633,6 +1645,8 @@ var defaultOptions = {
 	title:  "no title",
 	info : "no info about the visualization",
 	norm : false,
+	correlation : null,
+	independence: null,
 	size: {
        	 width: "50vw",
          height: "50vw"
@@ -1675,9 +1689,9 @@ function ChiSq(x,n) {
 	return 1-p
 }
 
-function chiSquareTest(){
+function chiSquareTest(matrix){
 	var sValue = 0.05;
-	var test = addTotal();
+	var test = addTotal(matrix);
 	var chimatrix = [];
 	var chiSquare = 0;
 	var df;
@@ -1696,6 +1710,7 @@ function chiSquareTest(){
 	};
 	df = (test.length-3) * (test[1].length-3);
 	pvalue = ChiSq(chiSquare,df);
+	// return pvalue
 	return pvalue > sValue ? true : false;
 }
 
@@ -1705,9 +1720,10 @@ function calcExp(rowtot, coltot, sampsize){
 function calcChiPart(expected,accual){
 	return (Math.pow(accual-expected,2))/expected;
 }
-function addTotal(){
+function addTotal(matrix){
 	var m = [];
-	m.unshift(header);
+	m.unshift(matrix[0]);
+	matrix.shift();
 	m[0].push("total");
 	var bottom = [];
 	bottom.push("total");
@@ -1767,38 +1783,52 @@ var transformer = {
 		console.log(id);
 
 		if(optionHandler.array[index].classname == "tumbheat"){
+
 			d3.select("#tumbheat" + index).remove();
 			console.log("tumbheat" + optionHandler.array[index].container);
-			heatmap2(optionHandler.array[index]);
+			
 
 			var norm= $('<input type="button" value="normalize q1" id="btnnorm'+index+'" class="norm"/>');
 			$("#tumb" + index).append(norm);
 
-			var swap= $('<input type="button" value="swap" id="btnswap'+index+'" class="swap"/>');
+			var swap= transformer.getSwapButton(index);
 			$("#tumb" + index).append(swap);
-			$("#tumb" + index).prepend("<p id='title"+index+"' class='titleText'>"+optionHandler.array[index].info+"</p>");
-			$("#tumb" + index).prepend("<h2 id='info"+index+"'	class='infoText'>"+optionHandler.array[index].title+"</h2>");
-			
+				if(optionHandler.array[index].independence!=null){
+			$("#tumb" + index).prepend("<p id='relation"+index+"' class='relation'>"+optionHandler.array[index].independence+"</p>");
+		}
+		
+			$("#tumb" + index).prepend("<p id='title"+index+"' class='infoText'>"+optionHandler.array[index].info+"</p>");
+			$("#tumb" + index).prepend("<h2 id='info"+index+"'	class='titleText'>"+optionHandler.array[index].title+"</h2>");
+						var newHeight = $("#tumb" + index).height() -  $(".titleText").height() -  $(".infoText").height()*2 - $(".swap").height();
+		console.log(newHeight);
+		var ind = parseInt(index)+1;
+		console.log(ind);
+		$("#charty" + ind ).css('height',newHeight);
+		$("#charty" + ind ).css('max-height','none');
+		heatmap2(optionHandler.array[index]);
 			return;
 		}
 		transformer.setTransButtons(optionHandler.array[index],index);
-
+		if(optionHandler.array[index].independence!=null){
+			$("#tumb" + index).prepend("<p id='relation"+index+"' class='relation'>"+optionHandler.array[index].independence+"</p>");
+		}
+		
 		$("#tumb" + index).prepend("<p id='title"+index+"' class='titleText'>"+optionHandler.array[index].info+"</p>");
 		$("#tumb" + index).prepend("<h2 id='info"+index+"'	class='infoText'>"+optionHandler.array[index].title+"</h2>");
 
 		// $(id).css('height',"" + $("#tumb" + index).height() -  $(".title").height() -  $(".info").height() - $(".swap").height());
 		var newHeight = $("#tumb" + index).height() -  $(".titleText").height() -  $(".infoText").height()*2 - $(".swap").height();
-		console.log('NEWNEWNEWN HEIGHT:'+newHeight);
+		console.log(newHeight);
 		var ind = parseInt(index)+1;
-				console.log(ind);
+		console.log(ind);
 		$("#charty" + ind ).css('height',newHeight);
 		$("#charty" + ind ).css('max-height','none');
 		// $(id).height($("#tumb" + index).height() -  $(".title").height() -  $(".info").height() - $(".swap").height());
-optionHandler.array[index].legend=true;
-optionHandler.array[index].tooltip = true;
-optionHandler.array[index].axis = true;
-optionHandler.array[index].interaction = true;
- optionHandler.array[index].container = '#charty'+ind;
+		optionHandler.array[index].legend=true;
+		optionHandler.array[index].tooltip = true;
+		optionHandler.array[index].axis = true;
+		optionHandler.array[index].interaction = true;
+// optionHandler.array[index].container = id;
 		// transformer.setTransButtons(optionHandler.array[index],index);
 		
 		// $(id).height($("#tumb" + index).height - $(".titleText").height() - $(".infoText").height() - - $(".infoText").height());
@@ -1811,11 +1841,20 @@ optionHandler.array[index].interaction = true;
 
 	},
 	removeInfo : function(id){
-	$(".infoText").remove();
+		$(".infoText").remove();
 		$(".titleText").remove();
 		$(".swap").remove();
 		$(".norm").remove();
+
+
 		var index = id.split("tumb").slice(-1)[0];
+
+		var ind = parseInt(index) + 1;
+		console.log(ind);
+		console.log("chart height: " + $("#charty"+ ind).height());
+		$("#charty" + ind ).css('max-height','none');
+		$("#charty" +ind).css("height",$(id).width());
+			console.log("chart height after : " + $("#charty" + ind ).height());
 		if(optionHandler.array[index].classname == "tumbheat"){
 			d3.select("#tumbheat" + index).remove();
 			console.log("tumbheat" + optionHandler.array[index].container);
@@ -1823,11 +1862,12 @@ optionHandler.array[index].interaction = true;
 			heatmap(optionHandler.array[index]);
 			return;
 		}
+		
+
 		optionHandler.array[index].legend=false;
 		optionHandler.array[index].tooltip = false;
 		optionHandler.array[index].axis = false;
 		optionHandler.array[index].interaction = false;
-		// optionHandler.array[index].container = id;
 		optionHandler.array[index].matrix = copyMatrix(optionHandler.array[index].orgmatrix);
 		var chart = optionHandler.array[index].chart(optionHandler.array[index]);
 		optionHandler.array[index].c3 = chart;
@@ -1839,7 +1879,7 @@ optionHandler.array[index].interaction = true;
 	},
 	normalizeRows : function(id){
 		console.log(id);
-		var index = id.split("tumb").slice(-1)[0]-1;
+		var index = id.split("charty").slice(-1)[0]-1;
 		if(optionHandler.array[index].c3!=null){
 						// optionHandler.array[index].c3.unload();
 						// optionHandler.array[index].c3.load({columns : normalizeByRow(optionHandler.array[index].matrix)});
@@ -1892,7 +1932,7 @@ optionHandler.array[index].interaction = true;
 					if(options.questions.length == 1){
 						console.log("ONE QUESTION");
 						if(functionName(options.chart)=="bar"){
-							var swap= $('<input type="button" value="swap" id="btnswap'+index+'" class="swap"/>');
+							var swap= transformer.getSwapButton(index);
 							$("#tumb" + index).prepend(swap);
 					// $(swap).insertBefore($("#charty" + (options.id + 1)));
 				}
@@ -1905,7 +1945,7 @@ optionHandler.array[index].interaction = true;
 				console.log(q1 + "---" + q2);
 			// One is slider one is pick_n
 			if(q1 != q2){
-				var swap= $('<input type="button" value="swap" id="btnswap'+index+'" class="swap"/>');
+				var swap= getSwapButton(index);
 				$("#tumb" + index).append(swap);
 
 			}else if(q1 == "pick_n" && q2 == "pick_n"){
@@ -1913,13 +1953,17 @@ optionHandler.array[index].interaction = true;
 				var isNormalized = "Normalize first";
 				var norm= $('<input type="button" value="'+ isNormalized +'" id="btnnorm'+index+'" class="norm"/>');
 				// $(norm).insertBefore($("#charty" + (options.id + 1)));
-				// $("#tumb" + index).append(norm);
+				$("#tumb" + index).prepend(norm);
 
 				var swap= $('<input type="button" value="swap" id="btnswap'+index+'" class="swap"/>');
 				// $(swap).insertBefore($("#charty"+ (options.id + 1)));
+					$("#tumb" + index).prepend(swap);
 			}
 		}
 
+	},
+	getSwapButton : function(index){
+		return	$('<input type="button" value="swap" id="btnswap'+index+'" class="swap" />');
 	}
 }
 /**
@@ -2796,12 +2840,12 @@ function heatmap(options){
 	var columnlength = dim_2.length;
 	var maxSize = rowlength > columnlength ? rowlength : columnlength;
 	var array = matrixToRevArray(m);
-	var w = $(".tumbchart").width();
+	var w = $(options.container).width();
 	
 	var gridSize = Math.floor(w / (maxSize + 1));
 	var padding = gridSize/maxSize;
 	// if($("#charty1").height() > 1){
-		var h = $(".tumbchart").height();
+		var h = $(options.container).height();
 	// }else{
 		// var h =  w;
 	// }
@@ -2907,9 +2951,10 @@ console.log("Longest---->  " +longest);
 console.log("Margin top ---->  " +marginTop);
 	var index = options.id;
 	// if($("#charty1").height() > 1){
-	var h = $(options.container).width() - $(".infoText").height()- $(".titleText").height()*2;
+			console.log($(options.container).height() );
+	var h = $(options.container).width();
 	// var h = marginTop + gridSize * (columnlength +2);
-		console.log($("#info3").height() );
+	
 		console.log("info HEIGHT ---> " + $("#title" + index ).height());
 	console.log("SVG HEIGHT ---> " + h);
 	// $(".tumbchart").height();

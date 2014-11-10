@@ -2,7 +2,7 @@ var scrollbarWidth = getScrollbarWidth();
 var svg;
 var parent;
 var grandparent;
-var masonry;
+var $container;
 var items;
 var gridSizer;
 var gutterSizer;
@@ -89,17 +89,27 @@ $(window).load(function() {
 	$('.ui-header').hide();
 
 	var url = window.location.origin+'/pollroute/exportpolljson/'+window.location.pathname.split('grid/').pop();
-	var array = [0];
+	var array = [0, 1, 2, 3, 4];
 	var options = {tooltip : false, legend : false, axis : false};
-	var container = '.js-masonry';
+	var container = '#container';
 	maggio.visualizeSet(url, container, array, options, function() {
 
-		// initialize Masonry
-		new Masonry(container, { "columnWidth": ".grid-sizer", "itemSelector": ".item", "gutter": ".gutter-sizer" })
+		// initialize Isotope with Packery packing
+		$container = $('#container').isotope({
+			itemSelector: '.item',
+			layoutMode: 'packery',
+			packery: {
+				columnWidth: '.grid-sizer',
+				gutter: '.gutter-sizer',
+				itemSelector: '.item'
+			},
+			getSortData: {
+				category: '[data-category]',
+			}
+		});
 
 		// set up cached values for open/close panel
 		svg = $('svg');
-		masonry = $('.js-masonry');
 		items = $('.item');
 		gridSizer = $('.grid-sizer');
 		gutterSizer = $('.gutter-sizer');
@@ -111,44 +121,47 @@ $(window).load(function() {
 		grandparent = parent.parent();
 		//parent.height(grandparent.height());
 
-		masonry.width(window.innerWidth-2*parseInt(masonry.parent().css('padding'))-scrollbarWidth);
-		masonry.data('masonry').columnWidth = gridSizer.width()
+		$container.width(window.innerWidth-2*parseInt($container.parent().css('padding'))-scrollbarWidth);
+		$container.isotope({packery: {columnWidth: gridSizer.width()} })
+		$container.isotope({packery: {gutter: gutterSizer.width()} })
 		$('.big').removeClass('big');
 		items.width(gridSizer.width());
 		items.height(gridSizer.width());
-		masonry.css('padding', '0px');
+		$container.css('padding', '0px');
 
 		suppressPieChartInteractions();
-		masonry.data('masonry').reloadItems();
-		masonry.data('masonry').layout();
+		$container.isotope('reloadItems');
+		$container.isotope('layout');
 
 		items.on('click', function() {
 			console.log(this);
 			if($('#gridPanel').hasClass('ui-panel-open')) {
-				masonry.width(window.innerWidth-$('#gridPanel').width()-2*parseInt($('.js-masonry').parent().css('padding'))-getScrollbarWidth());
+				$container.width(window.innerWidth-$('#gridPanel').width()-2*parseInt($container.parent().css('padding'))-getScrollbarWidth());
 			} else {
-				masonry.width(window.innerWidth-2*parseInt($('.js-masonry').parent().css('padding'))-getScrollbarWidth());
+				$container.width(window.innerWidth-2*parseInt($container.parent().css('padding'))-getScrollbarWidth());
 			}
-				masonry.data('masonry').columnWidth = $('.grid-sizer').width()
-				if($('.big:first').length > 0) {
-					$('.big:first').width($('.grid-sizer').width());
-					$('.big:first').height($('.grid-sizer').width());
-					transformer.removeInfo('#'+$('.big:first')[0].id);
-					$('.big').removeClass('big');
-				}
-				$('.item').width($('.grid-sizer').width());
-				$('.item').height($('.grid-sizer').width());
-				$('.item').css('margin-bottom', $('.gutter-sizer:first').width());
-				this.classList.add('big');
-				$('.big').width(masonryBig*$('.grid-sizer').width()+(masonryBig-1)*$('.gutter-sizer').width());
-				$('.big').height(masonryBig*$('.grid-sizer').width()+(masonryBig-1)*$('.gutter-sizer').width());
-				$('.big').css('max-height', '');
-				//transformer.resize('#'+this.id);
-				console.log('HEIHEIHEI'+$('#tumb1').height());
-				transformer.addChartInfo('#'+this.id);
-				suppressPieChartInteractions();
-				$('.js-masonry').data('masonry').reloadItems();
-				$('.js-masonry').data('masonry').layout();
+			$container.isotope({ packery: {columnWidth : gridSizer.width() } })
+			if($('.big:first').length > 0) {
+				$('.big:first').width(gridSizer.width());
+				$('.big:first').height(gridSizer.width());
+				transformer.removeInfo('#'+$('.big:first')[0].id);
+				$('.big').removeClass('big');
+			}
+			$('.item').width(gridSizer.width());
+			$('.item').height(gridSizer.width());
+			//$('.item').css('margin-bottom', gutterSizer.width());
+			this.classList.add('big');
+			$('.big').width(masonryBig*gridSizer.width()+(masonryBig-1)*gutterSizer.width());
+			$('.big').height(masonryBig*gridSizer.width()+(masonryBig-1)*gutterSizer.width());
+			$('.big').css('max-height', '');
+			//transformer.resize('#'+this.id);
+			console.log('HEIHEIHEI'+$('#tumb1').height());
+			transformer.addChartInfo('#'+this.id);
+			suppressPieChartInteractions();
+			$container.isotope({packery: {columnWidth: gridSizer.width()} })
+			$container.isotope({packery: {gutter: gutterSizer.width()} })
+			$container.isotope('reloadItems');
+			$container.isotope('layout');
 		});
 
 		console.log('Visualize callback complete.');

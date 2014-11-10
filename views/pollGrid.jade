@@ -10,19 +10,21 @@ block content
 	script(src='/javascripts/masonry.pkgd.min.js')
 	script(src='/javascripts/newpollvis.js')
 	script(src='/javascripts/clientGridPanel.js')
+	script(src='/javascripts/isotope.min.js')
+	script(src='/javascripts/packery-mode.pkgd.min.js')
 
 	link(rel='stylesheet', href='/stylesheets/c3.css')
 	link(rel='stylesheet', href='/stylesheets/roundList.css')
 
 	style.
-		.item { background-color: #5f5f5f; height: 18vw; width: 18%; margin-bottom: 2vw; overflow: hidden; cursor: pointer;}
+		.item { background-color: #5f5f5f; height: 18vw; width: 18%;overflow: hidden; cursor: pointer;}
 
 		.item.big { width: 48%; height: 48vw; cursor: auto;}
 		
 		.grid-sizer {width: 18%;}
 		
 		@media screen and (min-width: 720px) {
-			.item { width: 8%; height: 8vw; margin-bottom: 2vw;}
+			.item { width: 8%; height: 8vw;}
 			.grid-sizer {width: 8%;}
 		}
 		
@@ -32,7 +34,7 @@ block content
 
 		.item.highlighted {background-color: #9f9f9f}
 
-	div(id='container' class='js-masonry container' data-masonry-options='{ "columnWidth": ".grid-sizer", "itemSelector": ".item", "gutter": ".gutter-sizer" }' style="min-height: 100% !important;")
+	div(id='container' class='container')
 		div(class='gutter-sizer')
 		div(class='grid-sizer')
 
