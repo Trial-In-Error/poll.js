@@ -872,6 +872,14 @@ function swapCategorical(matrix){
 	};
 	return retMatrix;
 }
+function copyMatrix(matrix){
+	var newArray = [];
+
+for (var i = 0; i < matrix.length; i++){
+    newArray[i] = matrix[i].slice();
+}
+return newArray;
+}
 function createSlider(){
 	var slider = "<div><input id='sliderb' type='range' min='1' max='"+ matrix.length + "' value='1'/></div>";
 	var label = "<label id='sliderLabel' for='male'>"+ "Current plot: " + getMytitle() + "</label>";
@@ -1065,7 +1073,7 @@ init : function(data,question,options,callback){
 					pollchart.optionChart.push(variable);
 					pollchart.currentCharts[pollchart.chart[pollchart.nrOfCharts-1]] = {chart : [i,u,], data : data, question : question};
 					optionHandler.addChart("#"+pollchart.chart[pollchart.nrOfCharts-1]);
-					optionHandler.updateOption(optionHandler.size-1,"matrix",matrix);
+					optionHandler.updateOption(optionHandler.size-1,"matrix",matrix.slice(0));
 					optionHandler.updateOption(optionHandler.size-1,"orgmatrix",matrix.slice(0));
 					optionHandler.updateOption(optionHandler.size-1,"chart",visualizationTypes[i].types[u]);
 					optionHandler.updateOption(optionHandler.size-1,"color",rnd);
@@ -1074,6 +1082,7 @@ init : function(data,question,options,callback){
 					optionHandler.updateOption(optionHandler.size-1,"xlabel", visualizationTypes[i].xlabels);
 					optionHandler.array[optionHandler.size-1].questions.push(data.question_list[visualizationTypes[i].ids[0]].type.name);
 					optionHandler.updateOption(optionHandler.size-1,"title", data.question_list[visualizationTypes[i].ids[0]].body);
+					optionHandler.updateOption(optionHandler.size-1,"info", "Frequency of response");
 					var chart = visualizationTypes[i].types[u](optionHandler.getOption(optionHandler.size-1));
 					optionHandler.updateOption(optionHandler.size-1,"c3",chart);
 				};
@@ -1102,8 +1111,8 @@ init : function(data,question,options,callback){
 				pollchart.optionChart.push(variable);
 				pollchart.currentCharts[pollchart.chart[pollchart.nrOfCharts-1]] = {chart : [i,u,], data : data, question : question};
 				optionHandler.addChart("#"+pollchart.chart[pollchart.nrOfCharts-1]);
-				optionHandler.updateOption(optionHandler.size-1,"matrix",matrix);
-				optionHandler.updateOption(optionHandler.size-1,"orgmatrix",matrix.slice(0));
+				optionHandler.updateOption(optionHandler.size-1,"matrix",copyMatrix(matrix));
+				optionHandler.updateOption(optionHandler.size-1,"orgmatrix",copyMatrix(matrix));
 				optionHandler.updateOption(optionHandler.size-1,"chart",visualizationTypes[i].types[u]);
 				optionHandler.updateOption(optionHandler.size-1,"color",rnd);
 				optionHandler.updateOption(optionHandler.size-1,"id",optionHandler.size-1);
@@ -1128,8 +1137,8 @@ init : function(data,question,options,callback){
 	}
 	console.log(matrixMemory);
 	console.log(performance.stopTimer());
-	new Masonry(container, { "columnWidth": ".item", "itemSelector": ".item", "gutter": ".gutter-sizer" })
-		// callback();
+	// new Masonry(container, { "columnWidth": ".item", "itemSelector": ".item", "gutter": ".gutter-sizer" })
+		callback();
 	},
 /**
 *Visualize one graph from a dataset
@@ -1754,48 +1763,63 @@ var transformer = {
 	},
 	addChartInfo : function(id){
 		
-		var index = id.split("charty").slice(-1)[0]-1;
+		var index = id.split("tumb").slice(-1)[0];
 		console.log(id);
 
 		if(optionHandler.array[index].classname == "tumbheat"){
 			d3.select("#tumbheat" + index).remove();
 			console.log("tumbheat" + optionHandler.array[index].container);
-			optionHandler.array[index].container = id;
 			heatmap2(optionHandler.array[index]);
 
 			var norm= $('<input type="button" value="normalize q1" id="btnnorm'+index+'" class="norm"/>');
-			$("#tumb" + index).prepend(norm);
+			$("#tumb" + index).append(norm);
 
 			var swap= $('<input type="button" value="swap" id="btnswap'+index+'" class="swap"/>');
-			$("#tumb" + index).prepend(swap);
+			$("#tumb" + index).append(swap);
 			$("#tumb" + index).prepend("<p id='title"+index+"' class='titleText'>"+optionHandler.array[index].info+"</p>");
 			$("#tumb" + index).prepend("<h2 id='info"+index+"'	class='infoText'>"+optionHandler.array[index].title+"</h2>");
 			
 			return;
 		}
+		transformer.setTransButtons(optionHandler.array[index],index);
+
 		$("#tumb" + index).prepend("<p id='title"+index+"' class='titleText'>"+optionHandler.array[index].info+"</p>");
 		$("#tumb" + index).prepend("<h2 id='info"+index+"'	class='infoText'>"+optionHandler.array[index].title+"</h2>");
 
+		// $(id).css('height',"" + $("#tumb" + index).height() -  $(".title").height() -  $(".info").height() - $(".swap").height());
+		var newHeight = $("#tumb" + index).height() -  $(".titleText").height() -  $(".infoText").height()*2 - $(".swap").height();
+		console.log('NEWNEWNEWN HEIGHT:'+newHeight);
+		var ind = parseInt(index)+1;
+				console.log(ind);
+		$("#charty" + ind ).css('height',newHeight);
+		$("#charty" + ind ).css('max-height','none');
+		// $(id).height($("#tumb" + index).height() -  $(".title").height() -  $(".info").height() - $(".swap").height());
+optionHandler.array[index].legend=true;
+optionHandler.array[index].tooltip = true;
+optionHandler.array[index].axis = true;
+optionHandler.array[index].interaction = true;
+ optionHandler.array[index].container = '#charty'+ind;
+		// transformer.setTransButtons(optionHandler.array[index],index);
+		
+		// $(id).height($("#tumb" + index).height - $(".titleText").height() - $(".infoText").height() - - $(".infoText").height());
+		
 
-		$(id).height($("#tumb" + index).height() -  $("#title"+index).height() -  $("#info"+index).height() - $("#btncharty1").height());
-		optionHandler.array[index].legend=true;
-		optionHandler.array[index].tooltip = true;
-		optionHandler.array[index].axis = true;
-		optionHandler.array[index].interaction = true;
-		optionHandler.array[index].container = id;
 		var chart = optionHandler.array[index].chart(optionHandler.array[index]);
 		optionHandler.array[index].c3 = chart;
 
-		transformer.setTransButtons(optionHandler.array[index],index);
+		
 
 	},
 	removeInfo : function(id){
-
-		var index = id.split("charty").slice(-1)[0]-1;
+	$(".infoText").remove();
+		$(".titleText").remove();
+		$(".swap").remove();
+		$(".norm").remove();
+		var index = id.split("tumb").slice(-1)[0];
 		if(optionHandler.array[index].classname == "tumbheat"){
 			d3.select("#tumbheat" + index).remove();
 			console.log("tumbheat" + optionHandler.array[index].container);
-			optionHandler.array[index].container = id;
+			// optionHandler.array[index].container = id;
 			heatmap(optionHandler.array[index]);
 			return;
 		}
@@ -1803,34 +1827,40 @@ var transformer = {
 		optionHandler.array[index].tooltip = false;
 		optionHandler.array[index].axis = false;
 		optionHandler.array[index].interaction = false;
-		optionHandler.array[index].container = id;
-		optionHandler.array[index].matrix = orgmatrix;
+		// optionHandler.array[index].container = id;
+		optionHandler.array[index].matrix = copyMatrix(optionHandler.array[index].orgmatrix);
 		var chart = optionHandler.array[index].chart(optionHandler.array[index]);
 		optionHandler.array[index].c3 = chart;
 	},
 	resize : function(id){
-		var index = id.split("charty").slice(-1)[0]-1;
+		var index = id.split("tumb").slice(-1)[0]-1;
 		optionHandler.array[index].c3.resize({height:$(id).height(), width:$(id).width()})
 
 	},
 	normalizeRows : function(id){
 		console.log(id);
-		var index = id.split("charty").slice(-1)[0]-1;
+		var index = id.split("tumb").slice(-1)[0]-1;
 		if(optionHandler.array[index].c3!=null){
 						// optionHandler.array[index].c3.unload();
 						// optionHandler.array[index].c3.load({columns : normalizeByRow(optionHandler.array[index].matrix)});
 						if(optionHandler.array[index].norm == false){
-							optionHandler.array[index].matrix = normalizeByRow(optionHandler.array[index].matrix);
+							optionHandler.array[index].matrix = copyMatrix(normalizeByRow(optionHandler.array[index].matrix));
 							optionHandler.array[index].norm = true;
 						}else if(optionHandler.array[index].norm = true){
-							optionHandler.array[index].matrix = optionHandler.array[index].orgmatrix.slice(0);
+							optionHandler.array[index].matrix = copyMatrix(optionHandler.array[index].orgmatrix);
 							optionHandler.array[index].norm = false;
 						}
 						var chart = optionHandler.array[index].chart(optionHandler.array[index]);
 						optionHandler.array[index].c3 = chart;
 					}else{
 						$(id + " svg").remove();
-						optionHandler.array[index].matrix = normalizeByRow(optionHandler.array[index].matrix);
+						if(optionHandler.array[index].norm == false){
+							optionHandler.array[index].matrix = copyMatrix(normalizeByRow(optionHandler.array[index].matrix));
+							optionHandler.array[index].norm = true;
+						}else if(optionHandler.array[index].norm = true){
+							optionHandler.array[index].matrix = copyMatrix(optionHandler.array[index].orgmatrix);
+							optionHandler.array[index].norm = false;
+						}
 						heatmap2(optionHandler.array[index]);
 					}
 				},
@@ -1857,21 +1887,22 @@ var transformer = {
 					}
 
 				},
-			setTransButtons : function(options,index){
-			console.log(options);
+				setTransButtons : function(options,index){
+					console.log(options);
 					if(options.questions.length == 1){
-							console.log("ONE QUESTION");
-							if(functionName(options.chart)=="bar"){
-											var swap= $('<input type="button" value="swap" id="btnswap'+index+'" class="swap"/>');
-				$("#tumb" + index).append(swap);
-							}
-						return;
-					}
-					else if(options.questions.length == 2){
-								console.log("TWO QUESTIONS");
-						var q1 = options.questions[0];
-						var q2 = options.questions[1];
-										console.log(q1 + "---" + q2);
+						console.log("ONE QUESTION");
+						if(functionName(options.chart)=="bar"){
+							var swap= $('<input type="button" value="swap" id="btnswap'+index+'" class="swap"/>');
+							$("#tumb" + index).prepend(swap);
+					// $(swap).insertBefore($("#charty" + (options.id + 1)));
+				}
+				return;
+			}
+			else if(options.questions.length == 2){
+				console.log("TWO QUESTIONS");
+				var q1 = options.questions[0];
+				var q2 = options.questions[1];
+				console.log(q1 + "---" + q2);
 			// One is slider one is pick_n
 			if(q1 != q2){
 				var swap= $('<input type="button" value="swap" id="btnswap'+index+'" class="swap"/>');
@@ -1881,10 +1912,11 @@ var transformer = {
 				console.log("TO PICK N");
 				var isNormalized = "Normalize first";
 				var norm= $('<input type="button" value="'+ isNormalized +'" id="btnnorm'+index+'" class="norm"/>');
-				$("#tumb" + index).append(norm);
+				// $(norm).insertBefore($("#charty" + (options.id + 1)));
+				// $("#tumb" + index).append(norm);
 
 				var swap= $('<input type="button" value="swap" id="btnswap'+index+'" class="swap"/>');
-				$("#tumb" + index).append(swap);
+				// $(swap).insertBefore($("#charty"+ (options.id + 1)));
 			}
 		}
 
@@ -1948,8 +1980,7 @@ function bar(options){
     	},
     	y : {
     		show : options.axis,
-    		label : options.ylabel,
-    		padding : 100
+    		label : options.ylabel
     	},
 
     	width: {
@@ -2855,8 +2886,8 @@ var colorScale = d3.scale.quantile()
 	m=m.slice(1,m.length);
 	var dim_1 = columnNames(m);
 	console.log(dim_1);
-	var longest = 5;
 	var dim_2 = head;
+		var longest = getArrayMax(dim_1);
 	var rowlength = dim_1.length;
 	var columnlength = dim_2.length;
 	var maxSize = rowlength > columnlength ? rowlength : columnlength;
@@ -2876,10 +2907,10 @@ console.log("Longest---->  " +longest);
 console.log("Margin top ---->  " +marginTop);
 	var index = options.id;
 	// if($("#charty1").height() > 1){
-	// var h = $(".item").width() - $("#info" + index ).height()- $("#title" + index ).height();
-	var h = marginTop + gridSize * (columnlength +2);
-		console.log("title HEIGHT ---> " + $("#title" + index ).height());
-		console.log("info HEIGHT ---> " + $("#info" + index ).height());
+	var h = $(options.container).width() - $(".infoText").height()- $(".titleText").height()*2;
+	// var h = marginTop + gridSize * (columnlength +2);
+		console.log($("#info3").height() );
+		console.log("info HEIGHT ---> " + $("#title" + index ).height());
 	console.log("SVG HEIGHT ---> " + h);
 	// $(".tumbchart").height();
 	// }else{

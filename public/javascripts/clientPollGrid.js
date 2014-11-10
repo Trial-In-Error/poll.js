@@ -89,7 +89,7 @@ $(window).load(function() {
 	$('.ui-header').hide();
 
 	var url = window.location.origin+'/pollroute/exportpolljson/'+window.location.pathname.split('grid/').pop();
-	var array = [0,1,2,3,4];
+	var array = [0];
 	var options = {tooltip : false, legend : false, axis : false};
 	var container = '.js-masonry';
 	maggio.visualizeSet(url, container, array, options, function() {
@@ -105,8 +105,8 @@ $(window).load(function() {
 		gutterSizer = $('.gutter-sizer');
 		gridPanel = $('#gridPanel');
 
-		svg.parent().wrapInner('<div style="position:relative; margin:0 auto;"></div>');
-		svg.css('position', 'absolute').each(function () { $(this)[0].setAttribute('viewBox', '0 0 '+gridSizer.width()+' '+gridSizer.width() ) });
+		//svg.parent().wrapInner('<div style="position:relative; margin:0 auto;"></div>');
+		svg/*.css('position', 'absolute')*/.each(function () { $(this)[0].setAttribute('viewBox', '0 0 '+gridSizer.width()+' '+gridSizer.width() ) });
 		parent = svg.parent();
 		grandparent = parent.parent();
 		//parent.height(grandparent.height());
@@ -144,6 +144,7 @@ $(window).load(function() {
 				$('.big').height(masonryBig*$('.grid-sizer').width()+(masonryBig-1)*$('.gutter-sizer').width());
 				$('.big').css('max-height', '');
 				//transformer.resize('#'+this.id);
+				console.log('HEIHEIHEI'+$('#tumb1').height());
 				transformer.addChartInfo('#'+this.id);
 				suppressPieChartInteractions();
 				$('.js-masonry').data('masonry').reloadItems();
