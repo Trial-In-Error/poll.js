@@ -25,16 +25,16 @@ function openPanel() {
 	gridPanel.panel('open');
 	console.log('Execution time: Panel:  '+String(new Date() - panelStart));
 	var jQueryStart = new Date();
-	masonry.width(window.innerWidth-gridPanel.width()-2*parseInt(masonry.parent().css('padding'))-scrollbarWidth).data('masonry').columnWidth = gridSizer.width();
-	items.css('max-height', '').width(gridSizer.width()).height(gridSizer.width()).css('margin-bottom', gutterSizer.width());
+	$container.width(window.innerWidth-gridPanel.width()-2*parseInt($container.parent().css('padding'))-scrollbarWidth).isotope({ packery: {columnWidth: gridSizer.width(), gutter: gutterSizer.width()} });
+	items.css('max-height', '').width(gridSizer.width()).height(gridSizer.width());
 	$('.big').width(masonryBig*gridSizer.width()+(masonryBig-1)*gutterSizer.width()).height(masonryBig*gridSizer.width()+(masonryBig-1)*gutterSizer.width());
 	console.log('Execution time: jQuery: '+String(new Date() - jQueryStart));
 	var redrawStart = new Date();
 	redrawAll();
 	console.log('Execution time: Redraw: '+String(new Date() - redrawStart));
 	var masonryStart = new Date();
-	//$('.js-masonry').data('masonry').reloadItems();
-	masonry.data('masonry').layout();
+	//$container.isotope('reloadItems');
+	$container.isotope('layout');
 	console.log('Execution time: Masonry:'+String(new Date() - masonryStart));
 	console.log('Execution time: '+String(new Date() - start));
 }
@@ -45,8 +45,8 @@ function closePanel() {
 	gridPanel.panel('close');
 	console.log('Execution time: Panel:  '+String(new Date() - panelStart));
 	var jQueryStart = new Date();
-	masonry.width(window.innerWidth-2*parseInt(masonry.parent().css('padding'))-scrollbarWidth).data('masonry').columnWidth = gridSizer.width();
-	items.css('max-height', '').width(gridSizer.width()).height(gridSizer.width()).css('margin-bottom', gutterSizer.width());
+	$container.width(window.innerWidth-2*parseInt($container.parent().css('padding'))-scrollbarWidth).isotope({ packery: {columnWidth: gridSizer.width(), gutter: gutterSizer.width()} });
+	items.css('max-height', '').width(gridSizer.width()).height(gridSizer.width());
 	$('.big').width(masonryBig*gridSizer.width()+(masonryBig-1)*gutterSizer.width()).height(masonryBig*gridSizer.width()+(masonryBig-1)*gutterSizer.width());
 	console.log('Execution time: jQuery: '+String(new Date() - jQueryStart));
 	var redrawStart = new Date();
@@ -54,7 +54,8 @@ function closePanel() {
 	console.log('Execution time: Redraw: '+String(new Date() - redrawStart));
 	var masonryStart = new Date();
 	//$('.js-masonry').data('masonry').reloadItems();
-	masonry.data('masonry').layout();
+	//$container.isotope('reloadItems');
+	$container.isotope('layout');
 	console.log('Execution time: Masonry:'+String(new Date() - masonryStart));
 	console.log('Execution time: '+String(new Date() - start));
 }
