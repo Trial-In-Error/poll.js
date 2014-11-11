@@ -15,7 +15,7 @@ var tables  ={
 	]
 	,
 	charts2    :[
-	[[/*histogram*/],[pie,bar/*,bar2*/],[stackedBar,heatmap2,lineCat,bar/*,bar2*/]],
+	[[histogram],[pie,bar/*,bar2*/],[stackedBar,heatmap2,lineCat,bar/*,bar2*/]],
 	[[scatter,line,regressionline],[lineCat,stackedBar,bar/*,bar2*/,pie],[bubble]],
 	[[bubble]]
 	]
@@ -51,7 +51,7 @@ var datacolors = {
 	],
 	//Background color of tiles
 	tileBackground :  '#FFF6c8',
-	highlightColor : "#FF0000",
+	highlightColor : "#EE474D",
 	curretGroup : 0,
 	count : 0,
 	getColor : function(group,names,isRow){
@@ -67,9 +67,15 @@ var datacolors = {
 		}else {
 			//if users choice
 			if(optionHandler.array[optionHandler.pointer].answer != null){
+				console.log(optionHandler.array[optionHandler.pointer].answer);
 				if(group.id==optionHandler.array[optionHandler.pointer].answer || group == optionHandler.array[optionHandler.pointer].answer){
 				//Change legend color
-				$(".c3-legend-item-18-29 .c3-legend-item-tile" ).css("fill","rgb(0,0,0)");
+				// $(".c3-legend-item-"+optionHandler.array[optionHandler.pointer].answer +" .c3-legend-item-tile" ).css("fill",this.highlightColor);
+
+				// var answer = optionHandler.array[optionHandler.pointer].answer.substring(0,optionHandler.array[optionHandler.pointer].answer.length-1);
+				var answer = stripPunctuationAndHyphenate(optionHandler.array[optionHandler.pointer].answer);
+				console.log(answer);
+				$(".c3-legend-item-" +answer+"- .c3-legend-item-tile").css("fill",this.highlightColor)
 				return this.highlightColor;
 			}
 		}
@@ -95,6 +101,11 @@ var datacolors = {
 
 			}
 		}
+
+function stripPunctuationAndHyphenate(string) {
+return string.replace(/[\.,\\/#!$%\^&\*;:{}=_`~()]/g,"").replace(/\s{2,}/g,"-");
+}
+
 var  eventHandler = function(){
 	
 	$(".norm "+"#charty1").click(
@@ -641,6 +652,7 @@ function arrayToString(array){
 *param{Array} matrix - array holding the table
 */
 function disk(data){
+	console.log(data);
 	var header = [];
 	var bucketsize =5;
 	var head = data.splice(0,1);
@@ -660,8 +672,9 @@ function disk(data){
 			}
 		}
 	}
+		buckets.unshift("Freqency")
 	// buckets.unshift(head[0])
-	buckets.unshift("Freqency")
+
 	var ret = [];
 	ret.push(header);
 	ret.push(buckets);
@@ -1060,20 +1073,21 @@ init : function(data,question,options,callback){
 	console.log("MATRIX MEMORY");
 	console.log(matrixMemory);
 	optionHandler.isMobile();
-	var visualizationTypes = opine.calculateVisualizations(question,data,false);
+
+	var visualizationTypes = opine.calculateVisualizations(opine.reduceQuestionArray(data,question),data,false);
 	console.log(visualizationTypes);
 	for (var i = 0; i < visualizationTypes.length; i++) {
 		if(visualizationTypes[i].ids.length==1){
 			var matrix;
 			
-			if(matrixMemory[question[0]][0]!=0){
-				matrix =matrixMemory[question[0]][0];
-			}else{
-				matrix = opine.getSingeMatrix(data,visualizationTypes[i].ids[0]);
-			}
-// 
+			// if(matrixMemory[parseInt(visualizationTypes[i].ids[0]][0]!=0){
+				// matrix =matrixMemory[question[0]][0];
+			// }else{
+				matrix = opine.getSingeMatrix(data,parseInt(visualizationTypes[i].ids[0]));
+				// matrixMemory[parseInt(visualizationTypes[i].ids[0]][0];
 			// }
-			if(matrix[1][0]!=null){
+//			// }
+			// if(matrix[1][0]!=null){
 				for (var u = 0; u < visualizationTypes[i].types.length; u++) {
 					addInfo([visualizationTypes[i].ids[0]]);
 					var rnd = Math.floor(Math.random()*4);
@@ -1084,20 +1098,23 @@ init : function(data,question,options,callback){
 					pollchart.optionChart.push(variable);
 					pollchart.currentCharts[pollchart.chart[pollchart.nrOfCharts-1]] = {chart : [i,u,], data : data, question : question};
 					optionHandler.addChart("#"+pollchart.chart[pollchart.nrOfCharts-1]);
-					optionHandler.updateOption(optionHandler.size-1,"matrix",matrix.slice(0));
+					optionHandler.updateOption(optionHandler.size-1,"matrix", matrix.slice(0));
 					optionHandler.updateOption(optionHandler.size-1,"orgmatrix",matrix.slice(0));
 					optionHandler.updateOption(optionHandler.size-1,"chart",visualizationTypes[i].types[u]);
 					optionHandler.updateOption(optionHandler.size-1,"color",rnd);
 					optionHandler.updateOption(optionHandler.size-1,"id",optionHandler.size-1);
-					optionHandler.updateOption(optionHandler.size-1,"ylabel", visualizationTypes[i].ylabels);
-					optionHandler.updateOption(optionHandler.size-1,"xlabel", visualizationTypes[i].xlabels);
+					optionHandler.updateOption(optionHandler.size-1,"ylabel", visualizationTypes[i].ylabel);
+					optionHandler.updateOption(optionHandler.size-1,"xlabel", visualizationTypes[i].xlabel);
 					optionHandler.array[optionHandler.size-1].questions.push(data.question_list[visualizationTypes[i].ids[0]].type.name);
 					optionHandler.updateOption(optionHandler.size-1,"title", data.question_list[visualizationTypes[i].ids[0]].body);
 					optionHandler.updateOption(optionHandler.size-1,"info", "Frequency of response");
+					console.log(optionHandler.array[optionHandler.size-1].xlabel);
 					var chart = visualizationTypes[i].types[u](optionHandler.getOption(optionHandler.size-1));
+					console.log(chart);
 					optionHandler.updateOption(optionHandler.size-1,"c3",chart);
+					
 				};
-			}
+			// }
 		}
 		else{
 			for (var u = 0; u < visualizationTypes[i].types.length; u++) {
@@ -1148,8 +1165,8 @@ init : function(data,question,options,callback){
 				optionHandler.updateOption(optionHandler.size-1,"chart",visualizationTypes[i].types[u]);
 				optionHandler.updateOption(optionHandler.size-1,"color",rnd);
 				optionHandler.updateOption(optionHandler.size-1,"id",optionHandler.size-1);
-				optionHandler.updateOption(optionHandler.size-1,"ylabel", visualizationTypes[i].ylabels);
-				optionHandler.updateOption(optionHandler.size-1,"xlabel", visualizationTypes[i].xlabels);
+				optionHandler.updateOption(optionHandler.size-1,"ylabel", visualizationTypes[i].ylabel);
+				optionHandler.updateOption(optionHandler.size-1,"xlabel", visualizationTypes[i].xlabel);
 
 				optionHandler.updateOption(optionHandler.size-1,"title", "Question combination");
 				optionHandler.updateOption(optionHandler.size-1,"info", 
@@ -1385,7 +1402,7 @@ singleCategorical : function(data,index){
 singleContinuous : function(data,index){
 	var matrix = [];
 	data.question_list[index].type.response_list[0].answers.forEach(function(d){
-		matrix.push(d.value);
+			matrix.push(parseInt(d.value));
 	});
 	matrix.unshift(data.question_list[index].body);
 	return matrix;
@@ -1630,7 +1647,16 @@ getMixedMatrix : function(data,visualizationTypes){
 					&& data.question_list[questions[0]].type.name == "slider"){
 					return ["", ""];
 			}
-		}
+		},
+				reduceQuestionArray : function(data,array){
+				var questions = [];
+				for (var i = 0; i < array.length; i++) {
+					if(data.question_list[array[i]].type.name != "not_a_question" ){
+								questions.push(array[i]);
+					}
+				};
+				return questions;
+				}
 	}
 /**
 * optionHandler holds all the charts data and functions for
@@ -1875,6 +1901,7 @@ var transformer = {
 		var ind = parseInt(index)+1;
 		console.log(ind);
 		$("#charty" + ind ).css('height',newHeight);
+		$("#charty" + ind ).css('width',$(id).width());
 		$("#charty" + ind ).css('max-height','none');
 		// $(id).height($("#tumb" + index).height() -  $(".title").height() -  $(".info").height() - $(".swap").height());
 		optionHandler.array[index].legend=true;
@@ -1982,7 +2009,7 @@ var transformer = {
 					if(options.questions.length == 1){
 						console.log("ONE QUESTION");
 						if(functionName(options.chart)=="bar" || functionName(options.chart)=="histogram" ){
-							var swap= transformer.getSwapButton(index);
+							// var swap= transformer.getSwapButton(index);
 							// $("#tumb" + index).prepend(swap);
 								transformer.appendSwapButton(index);
 					// $(swap).insertBefore($("#charty" + (options.id + 1)));
@@ -2079,6 +2106,7 @@ function bar(options){
 	var names = columnNames(m);
 	var r = rotateText(names, options);
 	var rot = m.length > 4; rotated : false ? rotated : true;
+
 	var xMargin = xHeight(options);
 	var c = 0;
 	var chart = c3.generate({
@@ -2129,6 +2157,10 @@ function bar(options){
 
 
 });
+	if(rot){
+		$(options.container+" .c3-axis-x .tick text").remove();
+		// $("#charty2 .c3-axis-x .tick text").remove();
+	}
 	return chart;
 	// pollchart.data.push({chart : chart, matrix : matrix});
 }
@@ -2259,8 +2291,8 @@ function bardouble(matrix,ylabel){
 	pollchart.data.push({chart : chart, matrix : matrix});
 }
 function histogram(options){
-		console.log(options.matrix);
-	var d = disk(copyMatrix(options.matrix));
+	console.log(options.matrix);
+	var d = disk(options.matrix);
 	console.log(d);
 	optionHandler.pointer = options.id;
 	var names = d[0].slice(0);
@@ -2271,7 +2303,7 @@ function histogram(options){
 		bindto: options.container,
 		interaction: { enabled:  options.interaction },
 		data: {
-			x: d[0][0],
+			x: "Answer",
 			columns : d,
 			type: 'bar',
 			color: function (color, d) {
@@ -2323,6 +2355,7 @@ function lineCat(options){
 		},
 		axis: {
 			x: {
+				label : options.xlabel,
 				show : options.axis,
 				height : 100,
 				type: 'categorized',
@@ -2331,6 +2364,7 @@ function lineCat(options){
 				}
 			},
 			y :{
+				label : options.ylabel,
 				show : options.axis,
 			}
 		}
@@ -2736,7 +2770,7 @@ function stackedBar(options){
 	var toggle = 1;
 	console.log(options.matrix);
 	var r = 0;
-	var rot = options.matrix.length > 7; rotated : false ? rotated : true;
+	var rot = options.matrix.length > 3; rotated : false ? rotated : true;
 	if(rot){r = 70;}
 	var names2 = columnNames(options.matrix);
 	names = names2.slice(1,names2.length);
@@ -2794,6 +2828,9 @@ function stackedBar(options){
 		},
 
 	});
+	// if(rot){
+	// 	// $(options.container+" .c3-axis-x .tick text").css("text-anchor","start");
+	// }
 	return chart;
 }
 

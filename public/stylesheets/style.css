@@ -93,3 +93,7 @@ a.heading-hyperlink:active {color: #000000 !important;}
     -ms-user-select: none;
     user-select: none;
 }
+
+body *, input, select, textarea, button, .ui-button {
+    font-family: 'Lato', 'sans-serif' !important;
+}
