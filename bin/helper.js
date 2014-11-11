@@ -46,7 +46,8 @@ exports.ensureAuth = function(req, res, next) {
 				req.logIn(user, function(err) {
 					if (err) { return next(err); }
 					//console.log('User login successful.');
-					return res.redirect(String(redirect_to));
+					//return res.redirect(String(redirect_to));
+					next();
 				});
 				console.log(JSON.stringify(req.session.passport.user));
 				console.log(JSON.stringify(res.locals.session.passport.user));
