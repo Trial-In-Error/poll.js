@@ -8,7 +8,7 @@ function constructRow(tableContent, poll, data) {
 	if(poll.open === true || poll.open === 'true') {
 		tableContent += '<a href="/poll/' + poll._id + '" rel="external" data-ajax="false">';
 	} else {
-		tableContent += '<a href="/polloverview/' + poll._id + '" rel="external" data-ajax="false">';
+		tableContent += '<a href="/grid/' + poll._id + '" rel="external" data-ajax="false">';
 	}
 	tableContent += '<h2>'+ poll.name + '</h2>';
 	tableContent += '<p>';

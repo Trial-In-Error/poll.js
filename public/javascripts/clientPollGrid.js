@@ -8,6 +8,7 @@ var gridSizer;
 var gutterSizer;
 var gridPanel;
 var masonryBig = 5;
+var sortOn;
 
 function redrawAll() {
 	parent.height(grandparent.height()).width(grandparent.width());
@@ -105,7 +106,32 @@ $(window).load(function() {
 				itemSelector: '.item'
 			},
 			getSortData: {
-				category: '[data-category]',
+
+				// use this accursed function as follows:
+				// $container.isotope({ sortBy: 'question', sortAscending: false})
+				// do not use past midnight
+				// do not use in the presence of demons
+				// do not use and use and use
+				//      until dependency
+				question: function( itemElem ) {
+					console.log(sortOn);
+					if(typeof sortOn !== undefined) {
+						var classes = $('#'+itemElem.id+' .tumbchart').attr('class').split(/\s+/);
+						if(classes.indexOf('tumbchart') !== -1) {
+							classes.splice(classes.indexOf('tumbchart'), 1);
+						}
+						if(classes.indexOf('c3') !== -1) {
+							classes.splice(classes.indexOf('c3'), 1);
+						}
+						console.log(classes);
+						if(classes.indexOf('question-'+sortOn) !== -1) {
+							console.log('BING!');
+							return (1/classes.length);
+						} else {
+							return 0;
+						}
+					}
+				}
 			}
 		});
 
