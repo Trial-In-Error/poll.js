@@ -1837,25 +1837,28 @@ var transformer = {
 			d3.select("#tumbheat" + index).remove();
 			console.log("tumbheat" + optionHandler.array[index].container);
 			
-
+/*
 			var norm= $('<input type="button" value="normalize q1" id="btnnorm'+index+'" class="norm"/>');
 			$("#tumb" + index).prepend(norm);
 
 			var swap= transformer.getSwapButton(index);
-			$("#tumb" + index).prepend(swap);
-				if(optionHandler.array[index].independence!=null){
-			$("#tumb" + index).prepend("<p id='relation"+index+"' class='relation'>"+optionHandler.array[index].independence+"</p>");
-		}
-		
+			$("#tumb" + index).prepend(swap);*/
+
+					transformer.setTransButtons(optionHandler.array[index],index);
+
+			if(optionHandler.array[index].independence!=null){
+				$("#tumb" + index).prepend("<p id='relation"+index+"' class='relation'>"+optionHandler.array[index].independence+"</p>");
+			}
+
 			$("#tumb" + index).prepend("<p id='title"+index+"' class='infoText'>"+optionHandler.array[index].info+"</p>");
 			$("#tumb" + index).prepend("<h2 id='info"+index+"'	class='titleText'>"+optionHandler.array[index].title+"</h2>");
-		var newHeight = $("#tumb" + index).height() -  $(".titleText").height() -  $(".infoText").height()*4 - $(".swap").height();
-		console.log(newHeight);
-		var ind = parseInt(index)+1;
-		console.log(ind);
-		$("#charty" + ind ).css('height',newHeight);
-		$("#charty" + ind ).css('max-height','none');
-		heatmap2(optionHandler.array[index]);
+			var newHeight = $("#tumb" + index).height() -  $(".titleText").height() -  $(".infoText").height()*4 - $(".swap").height();
+			console.log(newHeight);
+			var ind = parseInt(index)+1;
+			console.log(ind);
+			$("#charty" + ind ).css('height',newHeight);
+			$("#charty" + ind ).css('max-height','none');
+			heatmap2(optionHandler.array[index]);
 			return;
 		}
 		transformer.setTransButtons(optionHandler.array[index],index);
@@ -1905,7 +1908,7 @@ var transformer = {
 		console.log("chart height: " + $("#charty"+ ind).height());
 		$("#charty" + ind ).css('max-height','none');
 		$("#charty" +ind).css("height",$(id).width());
-			console.log("chart height after : " + $("#charty" + ind ).height());
+		console.log("chart height after : " + $("#charty" + ind ).height());
 		if(optionHandler.array[index].classname == "tumbheat"){
 			d3.select("#tumbheat" + index).remove();
 			console.log("tumbheat" + optionHandler.array[index].container);
@@ -1980,7 +1983,8 @@ var transformer = {
 						console.log("ONE QUESTION");
 						if(functionName(options.chart)=="bar" || functionName(options.chart)=="histogram" ){
 							var swap= transformer.getSwapButton(index);
-							$("#tumb" + index).prepend(swap);
+							// $("#tumb" + index).prepend(swap);
+								transformer.appendSwapButton(index);
 					// $(swap).insertBefore($("#charty" + (options.id + 1)));
 				}
 				return;
@@ -1992,27 +1996,56 @@ var transformer = {
 				console.log(q1 + "---" + q2);
 			// One is slider one is pick_n
 			if(q1 != q2){
-				var swap= getSwapButton(index);
-				$("#tumb" + index).append(swap);
+				// var swap= getSwapButton(index);
+				// $("#tumb" + index).append(swap);
+					transformer.appendSwapButton(index);
 
 			}else if(q1 == "pick_n" && q2 == "pick_n"){
 				console.log("TO PICK N");
 				var isNormalized = "Normalize first";
-				var norm= $('<input type="button" value="'+ isNormalized +'" id="btnnorm'+index+'" class="norm"/>');
+				// var norm= $('<input type="button" value="'+ isNormalized +'" id="btnnorm'+index+'" class="norm"/>');
 				// $(norm).insertBefore($("#charty" + (options.id + 1)));
-				$("#tumb" + index).prepend(norm);
+				// $("#tumb" + index).prepend(norm);
+				transformer.appendNormButton(index);
 
-				var swap= $('<input type="button" value="swap" id="btnswap'+index+'" class="swap"/>');
+				// var swap= $('<input type="button" value="swap" id="btnswap'+index+'" class="swap"/>');
 				// $(swap).insertBefore($("#charty"+ (options.id + 1)));
-					$("#tumb" + index).prepend(swap);
+					// $("#tumb" + index).prepend(swap);
+				transformer.appendSwapButton(index);
+				}
 			}
-		}
 
-	},
-	getSwapButton : function(index){
-		return	$('<input type="button" value="swap" id="btnswap'+index+'" class="swap" />');
+		},
+		getSwapButton : function(index){
+			return	$('<input type="button" value="swap" id="btnswap'+index+'" class="swap" />');
+		},
+		getNormButton : function(index){
+				return 	$('<input type="button" value="'+ "isNormalized" +'" id="btnnorm'+index+'" class="norm"/>');
+		},
+		appendSwapButton : function(index){
+			var swap = transformer.getSwapButton(index);
+			$("#tumb" + index).prepend(swap);
+			$("#btnswap"+index).on('click', function(event) {
+				   console.log(event);
+				console.log("****SWAP***");
+				var i = event.currentTarget.id.split("btnswap").slice(-1)[0];
+				// $("#btnswap"+index).prop("value" ,"unnormalize first");
+				i++;
+				transformer.swapcategories("#charty" + i);
+			});
+		},
+		appendNormButton : function(index){
+			var norm = transformer.getNormButton(index);
+			$("#tumb" + index).prepend(norm);
+			$("#btnnorm" + index).on('click',function(event) {
+      console.log("****norm*****");
+      var i = event.currentTarget.id.split("btnnorm").slice(-1)[0];
+      console.log(event);
+      i++;
+      transformer.normalizeRows("#charty" + i);
+    });
+		}
 	}
-}
 function rotateText(names,options){
 		var max = getArrayMax(names);
 		if(max > 5 || names.length > 4){
@@ -3046,10 +3079,10 @@ console.log("Margin top ---->  " +marginTop);
 		// var h =  w;
 	// }
 	
-		var textLength = fontSize*longest;
-	var gridSize = Math.floor((h- textLength)/(maxSize));
+	var textLength = fontSize*longest;
+	var gridSize = Math.floor((h)/(maxSize + 3));
 	var padding = gridSize/maxSize;
-	var marginTop = 1.2 * gridSize;
+var marginTop = 1.2 * gridSize;
 	// var h = 900;
 	var shiftR = 10;
 	var margin = { top: 0, right: 0, bottom: 0, left: 0 },
