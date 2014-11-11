@@ -4,11 +4,18 @@ extends layout
 block content
 
 	//WARN: THIS IS REALLY UNCOOL; the scripts should be declared in head, not body
-	script(src='/javascripts/clientPollGrid.js')
+	if locals.expose.exists['newpollvis.js']
+		script(src='/dist/javascripts/newpollvis.js')
+	else
+		script(src='/javascripts/newpollvis.js')
+
+	if locals.expose.exists['clientPollGrid.js']
+		script(src='/dist/javascripts/clientPollGrid.js')
+	else
+		script(src='/javascripts/clientPollGrid.js')
+
 	script(src='/javascripts/d3.min.js')
 	script(src='/javascripts/c3.min.js')
-	script(src='/javascripts/masonry.pkgd.min.js')
-	script(src='/javascripts/newpollvis.js')
 	script(src='/javascripts/clientGridPanel.js')
 	script(src='/javascripts/isotope.min.js')
 	script(src='/javascripts/packery-mode.pkgd.min.js')

@@ -26,7 +26,9 @@ module.exports = function(grunt) {
 			options: {
 				banner: '/*! <%= pkg.name %> <%= grunt.template.today("dd-mm-yyyy") %> */\n',
 				mangle: true, //see mangle: except: {} once you know more!
-				//report: 'min'
+				compress: {
+					drop_console: true
+				}
 			},
 			dist: {
 				files: [{
