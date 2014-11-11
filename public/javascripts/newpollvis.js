@@ -9,7 +9,7 @@ var tables  ={
 	],
 
 	charts    :[
-	[[/*histogram*/],[pie,bar/*,bar2*/],[stackedBar,heatmap,lineCat,bar/*,bar2*/]],
+	[[histogram],[pie,bar/*,bar2*/],[stackedBar,heatmap,lineCat,bar/*,bar2*/]],
 	[[scatter,line,regressionline],[lineCat,stackedBar,bar/*,bar2*/,pie],[bubble]],
 	[[bubble]]
 	]
@@ -51,23 +51,28 @@ var datacolors = {
 	],
 	//Background color of tiles
 	tileBackground :  '#FFF6c8',
-	highlightColor : "#000000",
+	highlightColor : "#FF0000",
 	curretGroup : 0,
 	count : 0,
 	getColor : function(group,names,isRow){
 		var currColor = optionHandler.array[optionHandler.pointer].color;
-		// var c = pollchart.options.colorscheme;
+		console.log(" v-----------------NAMES---------------------v");
+		console.log(names);
+		console.log(" v----------------GROUPS---------------------v");
+		console.log(group);
 		index = 0;
 		datacolors.index = (datacolors.index + 1) % (datacolors.colors[0].length);
 		if($.inArray(group,names) != -1){
 			return datacolors.colors[currColor][getIndex2(names,group)];
 		}else {
 			//if users choice
-			if(group.id==optionHandler.array[optionHandler.pointer].answer || group == optionHandler.array[optionHandler.pointer].answer){
+			if(optionHandler.array[optionHandler.pointer].answer != null){
+				if(group.id==optionHandler.array[optionHandler.pointer].answer || group == optionHandler.array[optionHandler.pointer].answer){
 				//Change legend color
 				$(".c3-legend-item-18-29 .c3-legend-item-tile" ).css("fill","rgb(0,0,0)");
-				return highlightColor;
+				return this.highlightColor;
 			}
+		}
 			// if(index==2){
 			// 	datacolors.count++;
 			// 	if(datacolors.count.length == count){
@@ -82,7 +87,8 @@ var datacolors = {
 			// 			// console.log(datacolors.colors[pollchart.options.colorscheme][group.index]);
 			// 			// return "#FF0000";
 			// 		}else{
-						return datacolors.colors[currColor][getIndex2(names,group.id)];
+				console.log(getIndex2(names,group.id));
+				return datacolors.colors[currColor][getIndex2(names,group.id)];
 
 					// }
 				}
@@ -608,9 +614,13 @@ maggio.flashChart = function(url,cnt,question,chart,color){
 function matrixToRevArray(matrix){
 	var ret = [];
 	for (var i = 0; i < matrix.length; i++) {
-		for (var j = matrix[i].length-1; j > 0; j--) {
-			ret.push(matrix[i][j]);
+				// ret.push(matrix[i][matrix[i].length-1]);
+		for (var j = 1; j <matrix[i].length; j++) {
+			// ret.push(matrix[i][j]);
+			ret.push({col:i,row:j-1, value: matrix[i][j]})
 		};
+
+		console.log(ret);
 	};
 	return ret;
 }
@@ -633,10 +643,10 @@ function arrayToString(array){
 function disk(data){
 	var header = [];
 	var bucketsize =5;
-	var head = data[0].splice(0,1);
+	var head = data.splice(0,1);
 	var buckets = new Array(bucketsize);
-	var min = Math.min.apply(Math, data[0]),
-	max = Math.max.apply(Math, data[0]);
+	var min = Math.min.apply(Math, data),
+	max = Math.max.apply(Math, data);
 	var diff = max - min;
 	var step = diff/bucketsize;
 	for(var i = 0; i <= bucketsize; i++){
@@ -644,13 +654,14 @@ function disk(data){
 		var minm =  (step*i).toString();
 		var maxm =  (step*(i+1)).toString();
 		header[i] = minm.substring(0,4) + "-" +maxm.substring(0,4);
-		for(var j = 0; j < data[0].length; j++){
-			if(step*i<data[0][j] && step*(i+1) > data[0][j]){
+		for(var j = 0; j < data.length; j++){
+			if(step*i<data[j] && step*(i+1) > data[j]){
 				buckets[i]++;
 			}
 		}
 	}
-	buckets.unshift(head[0])
+	// buckets.unshift(head[0])
+	buckets.unshift("Freqency")
 	var ret = [];
 	ret.push(header);
 	ret.push(buckets);
@@ -1102,26 +1113,36 @@ init : function(data,question,options,callback){
 				}
 				addInfo(visualizationTypes[i].ids);
 				var rnd = Math.floor(Math.random()*4);
-				pollchart.options.colorscheme = rnd;
+								optionHandler.addChart("#"+pollchart.chart[pollchart.nrOfCharts-1]);
+			/*	pollchart.options.colorscheme = rnd;
 				var variable = {};
 				for (var key in pollchart.options) {
 					variable[key]  = pollchart.options[key];
-				}
+				}*/
 
 					console.log("QUESTION    " + data.question_list[visualizationTypes[i].ids[0]].type.name);
 		if(data.question_list[visualizationTypes[i].ids[0]].type.name == "pick_n" && data.question_list[visualizationTypes[i].ids[1]].type.name == "pick_n" ){
-			console.log("STAT");
+			console.log("ChiSquareTest");
 			var val = chiSquareTest(copyMatrix(matrix));
 			if(val == true){
-					optionHandler.updateOption(optionHandler.size-1,"independence","Questions are independent");
+					optionHandler.updateOption(optionHandler.size-1,"independence","ChiSquareTest: No relation between questions");
 			}else{
-					optionHandler.updateOption(optionHandler.size-1,"independence","Questions are dependent ");
+					optionHandler.updateOption(optionHandler.size-1,"independence","ChiSquareTest: Found relation between questions");
 			}
 		}
+		else if(data.question_list[visualizationTypes[i].ids[0]].type.name == "slider" && data.question_list[visualizationTypes[i].ids[1]].type.name == "slider" ){
+			console.log("Pearson correlation");
+			var prefs = new Object();
+			console.log(matrix);
+			prefs.p1 = matrix[0].slice(1);
+			prefs.p2 = matrix[1].slice(1);
+			var pearRes = pearsonCorrelation(prefs, "p1","p2");
+			optionHandler.updateOption(optionHandler.size-1,"independence","Pearson correlation: " + pearRes);
+		}
 
-				pollchart.optionChart.push(variable);
-				pollchart.currentCharts[pollchart.chart[pollchart.nrOfCharts-1]] = {chart : [i,u,], data : data, question : question};
-				optionHandler.addChart("#"+pollchart.chart[pollchart.nrOfCharts-1]);
+				// pollchart.optionChart.push(variable);
+				// pollchart.currentCharts[pollchart.chart[pollchart.nrOfCharts-1]] = {chart : [i,u,], data : data, question : question};
+
 				optionHandler.updateOption(optionHandler.size-1,"matrix",copyMatrix(matrix));
 				optionHandler.updateOption(optionHandler.size-1,"orgmatrix",copyMatrix(matrix));
 				optionHandler.updateOption(optionHandler.size-1,"chart",visualizationTypes[i].types[u]);
@@ -1149,7 +1170,7 @@ init : function(data,question,options,callback){
 	console.log(matrixMemory);
 	console.log(performance.stopTimer());
 	new Masonry(container, { "columnWidth": ".item", "itemSelector": ".item", "gutter": ".gutter-sizer" })
-		 callback();
+		callback();
 	},
 /**
 *Visualize one graph from a dataset
@@ -1397,6 +1418,35 @@ getDoubleMatrix : function(data,ids){
 	}else if(con==2 && cat == 1){
 		matrix = opine.getMixedMatrix(data,ids);
 	}
+	return matrix;
+},
+getSimpleDouble: function(data,visualizationTypes){
+	//Empty result matrix
+	var matrix =[];
+
+		//Name of first question
+		matrix.push([data.question_list[visualizationTypes[0]].body]);	
+		//Name of second question
+		matrix.push([data.question_list[visualizationTypes[1]].body]);	
+
+		//Iteration thorugh all questions
+		data.question_list[visualizationTypes[0]].type.response_list[0].answers.forEach(function(d){
+			matrix[0].push(d.value);
+			data.question_list[visualizationTypes[1]].type.response_list[0].answers.forEach(function(k){
+				if(d.user.username != null){
+					if(d.user.username == k.user.username){
+						matrix[1].push(k.value);
+					}
+				}else if(d.user.token != null)
+				{
+					if(d.user.username == k.user.username){
+						matrix[1].push(k.value);
+					}
+				}
+				
+			});
+		});
+	// };
 	return matrix;
 },
 /**
@@ -1789,17 +1839,17 @@ var transformer = {
 			
 
 			var norm= $('<input type="button" value="normalize q1" id="btnnorm'+index+'" class="norm"/>');
-			$("#tumb" + index).append(norm);
+			$("#tumb" + index).prepend(norm);
 
 			var swap= transformer.getSwapButton(index);
-			$("#tumb" + index).append(swap);
+			$("#tumb" + index).prepend(swap);
 				if(optionHandler.array[index].independence!=null){
 			$("#tumb" + index).prepend("<p id='relation"+index+"' class='relation'>"+optionHandler.array[index].independence+"</p>");
 		}
 		
 			$("#tumb" + index).prepend("<p id='title"+index+"' class='infoText'>"+optionHandler.array[index].info+"</p>");
 			$("#tumb" + index).prepend("<h2 id='info"+index+"'	class='titleText'>"+optionHandler.array[index].title+"</h2>");
-						var newHeight = $("#tumb" + index).height() -  $(".titleText").height() -  $(".infoText").height()*2 - $(".swap").height();
+		var newHeight = $("#tumb" + index).height() -  $(".titleText").height() -  $(".infoText").height()*4 - $(".swap").height();
 		console.log(newHeight);
 		var ind = parseInt(index)+1;
 		console.log(ind);
@@ -1841,11 +1891,12 @@ var transformer = {
 
 	},
 	removeInfo : function(id){
-		$(".infoText").remove();
+		/*$(".infoText").remove();
 		$(".titleText").remove();
 		$(".swap").remove();
-		$(".norm").remove();
-
+		$(".norm").remove();*/
+		console.log(id);
+		$(id+' :not(.tumbchart):not(.tumbchart *)').remove();
 
 		var index = id.split("tumb").slice(-1)[0];
 
@@ -1858,12 +1909,9 @@ var transformer = {
 		if(optionHandler.array[index].classname == "tumbheat"){
 			d3.select("#tumbheat" + index).remove();
 			console.log("tumbheat" + optionHandler.array[index].container);
-			// optionHandler.array[index].container = id;
 			heatmap(optionHandler.array[index]);
 			return;
 		}
-		
-
 		optionHandler.array[index].legend=false;
 		optionHandler.array[index].tooltip = false;
 		optionHandler.array[index].axis = false;
@@ -1875,14 +1923,13 @@ var transformer = {
 	resize : function(id){
 		var index = id.split("tumb").slice(-1)[0]-1;
 		optionHandler.array[index].c3.resize({height:$(id).height(), width:$(id).width()})
-
 	},
 	normalizeRows : function(id){
 		console.log(id);
 		var index = id.split("charty").slice(-1)[0]-1;
 		if(optionHandler.array[index].c3!=null){
 						// optionHandler.array[index].c3.unload();
-						// optionHandler.array[index].c3.load({columns : normalizeByRow(optionHandler.array[index].matrix)});
+						// optionHandler.array[index].c3.load({columns : copyMatrix(normalizeByRow(optionHandler.array[index].matrix)}));
 						if(optionHandler.array[index].norm == false){
 							optionHandler.array[index].matrix = copyMatrix(normalizeByRow(optionHandler.array[index].matrix));
 							optionHandler.array[index].norm = true;
@@ -1931,7 +1978,7 @@ var transformer = {
 					console.log(options);
 					if(options.questions.length == 1){
 						console.log("ONE QUESTION");
-						if(functionName(options.chart)=="bar"){
+						if(functionName(options.chart)=="bar" || functionName(options.chart)=="histogram" ){
 							var swap= transformer.getSwapButton(index);
 							$("#tumb" + index).prepend(swap);
 					// $(swap).insertBefore($("#charty" + (options.id + 1)));
@@ -1966,6 +2013,26 @@ var transformer = {
 		return	$('<input type="button" value="swap" id="btnswap'+index+'" class="swap" />');
 	}
 }
+function rotateText(names,options){
+		var max = getArrayMax(names);
+		if(max > 5 || names.length > 4){
+			return 70;
+		}else{
+			return 0;
+		}
+}
+function xHeight(options){
+	return $(options.container).height() * 0.25;
+}
+function lineAndBar(options){
+	var chart = c3.generate({
+		bindto: "#chart1",
+		data : {
+			columns : options,
+			type : 'bar'
+		}
+	});
+}
 /**
 * Plots a column/ barchart depending on size of the array
 * Column is array is smaller then 10, else bar chart.
@@ -1975,12 +2042,11 @@ var transformer = {
 function bar(options){
 	optionHandler.pointer = options.id;
 	var m = options.matrix;
-	console.log(options);
-	var r = 0;
 	if(m[0].length>4){r = 70;}
 	var names = columnNames(m);
+	var r = rotateText(names, options);
 	var rot = m.length > 4; rotated : false ? rotated : true;
-	if(rot){r = 70;}
+	var xMargin = xHeight(options);
 	var c = 0;
 	var chart = c3.generate({
 		bindto: options.container,
@@ -2013,7 +2079,7 @@ function bar(options){
 
     	x: {
     		show : options.axis,
-    		height : r,
+    		height : xMargin,
     		label : options.xlabel,
     		type: 'categorized',
     		tick: {
@@ -2025,10 +2091,6 @@ function bar(options){
     	y : {
     		show : options.axis,
     		label : options.ylabel
-    	},
-
-    	width: {
-    		ratio: 100
     	},
     },
 
@@ -2111,6 +2173,8 @@ function bardouble(matrix,ylabel){
 	console.log(m);
 	var rot = matrix.length > 8; rotated : false ? rotated : true;
 	var c = 0;
+
+
 	// var index = addChart();
 	var chart = c3.generate({
 		bindto: "#"+pollchart.chart[pollchart.nrOfCharts-1],
@@ -2161,22 +2225,41 @@ function bardouble(matrix,ylabel){
 	});
 	pollchart.data.push({chart : chart, matrix : matrix});
 }
-function histogram(matrix){
-	// var d = disk(matrix);
-	console.log(matrix);
+function histogram(options){
+		console.log(options.matrix);
+	var d = disk(copyMatrix(options.matrix));
+	console.log(d);
+	optionHandler.pointer = options.id;
+	var names = d[0].slice(0);
+	d[0].unshift("Answer");
+	var r = rotateText(names, options);
+	var xMargin = xHeight(options);
 	var chart = c3.generate({
-		bindto: "#"+pollchart.chart[pollchart.nrOfCharts-1],
+		bindto: options.container,
 		interaction: { enabled:  options.interaction },
 		data: {
-			rows : matrix,
+			x: d[0][0],
+			columns : d,
 			type: 'bar',
+			color: function (color, d) {
+				var id = d.index;
+				if(id != null){
+					return datacolors.getColor(names[d.index],names);
+				}
+				return datacolors.getColor(names[0],names);
+			}
 		},
 		axis: {
 			x: {
-				type: 'categorized'
+				height : xMargin,
+				type: 'categorized',
+				tick : {
+					rotate : 55
+				}
 			}
 		}
 	});
+	return chart;
 }
 
 /**
@@ -2624,6 +2707,7 @@ function stackedBar(options){
 	if(rot){r = 70;}
 	var names2 = columnNames(options.matrix);
 	names = names2.slice(1,names2.length);
+		var xMargin = xHeight(options);
 	// matrix.unshift(header);
 
 	var chart = c3.generate({
@@ -2658,7 +2742,7 @@ function stackedBar(options){
 			rotated : rot,
 			x: {
 				show : options.axis,
-				height : r+options.legendOffset,
+				height : xMargin,
 				type: 'categorized',
 				tick: {
 					rotate: 75
@@ -2911,8 +2995,10 @@ var colorScale = d3.scale.quantile()
            .attr("class", "dim2");
 
            var rec = heatMap.append("rect")
-           .attr("x", function(d) { count++; return ((count%columnlength - 1) * gridSize) + textLength*(shiftR)+gridSize; })
-           .attr("y", function(d) { count2++; return ( Math.ceil(count2/(columnlength))-1) * gridSize; })
+           // .attr("x", function(d) { count++; return ((count%columnlength - 1) * gridSize) + textLength*(shiftR)+gridSize; })
+           // .attr("y", function(d) { count2++; return ( Math.ceil(count2/(columnlength))-1) * gridSize; })
+           .attr("x", function(d) {return (d.row * gridSize); })
+           .attr("y", function(d) { return d.col * gridSize; })
            .attr("rx", 4)
            .attr("ry", 4)
            .attr("class", "dim2 bordered")
@@ -2920,8 +3006,8 @@ var colorScale = d3.scale.quantile()
            .attr("height", gridSize-padding)
            .attr("class", "square")
            rec.transition()
-           .style("fill", function(d) {;return colorScale(d); });
-           heatMap.append("title").text(function(d) {return d; });
+           .style("fill", function(d) {;return colorScale(d.value); });
+           heatMap.append("title").text(function(d) {return d.value; });
        }
  function heatmap2(options){
     $(options.container).css("margin-left",0)
@@ -2932,36 +3018,38 @@ var colorScale = d3.scale.quantile()
 	console.log(dim_1);
 	var dim_2 = head;
 		var longest = getArrayMax(dim_1);
+		var longest2 = getArrayMax(dim_2);
 	var rowlength = dim_1.length;
 	var columnlength = dim_2.length;
 	var maxSize = rowlength > columnlength ? rowlength : columnlength;
-	var array = matrixToRevArray(m);
-	var w = $(".tumbchart").width();
-	w = w*2/3;
+	var array = matrixToRevArray(copyMatrix(m));
+	console.log(array);
+	var w = $(options.container).width();
 	var fontSize = 12;
 	// w=w*2/3;
 	
-	var textLength = fontSize*longest;
-	var gridSize = Math.floor((w - textLength)/(maxSize));
-	var padding = gridSize/maxSize;
-	var marginTop = gridSize;
+
 
 console.log("Longest---->  " +longest);
 	console.log("Gridsize ---->  " + gridSize);
 console.log("Margin top ---->  " +marginTop);
 	var index = options.id;
 	// if($("#charty1").height() > 1){
-			console.log($(options.container).height() );
-	var h = $(options.container).width();
+	console.log($(options.container).height() );
+	var h = $(options.container).parent().width() - ($(options.container).parent().width() - $(options.container).height())
 	// var h = marginTop + gridSize * (columnlength +2);
-	
-		console.log("info HEIGHT ---> " + $("#title" + index ).height());
+		console.log("Parent HEIGHT ---> " + $(options.container).parent().height() );
+	console.log("info HEIGHT ---> " + $(options.container).height());
 	console.log("SVG HEIGHT ---> " + h);
 	// $(".tumbchart").height();
 	// }else{
 		// var h =  w;
 	// }
 	
+		var textLength = fontSize*longest;
+	var gridSize = Math.floor((h- textLength)/(maxSize));
+	var padding = gridSize/maxSize;
+	var marginTop = 1.2 * gridSize;
 	// var h = 900;
 	var shiftR = 10;
 	var margin = { top: 0, right: 0, bottom: 0, left: 0 },
@@ -3058,10 +3146,12 @@ var colorScale = d3.scale.quantile()
           .enter().append("g")
            // .style("fill", colors[0])
            .attr("class", "dim2");
-
+           console.log(heatMap);
            var rec = heatMap.append("rect")
-           .attr("x", function(d) { count++; return ((count%columnlength - 1) * gridSize) + textLength +gridSize; })
-           .attr("y", function(d) { count2++; return ( Math.ceil(count2/(columnlength))-1) * gridSize + marginTop; })
+           // .attr("x", function(d) { console.log("x  " + d);count++; return ((count%columnlength - 1) * gridSize) + textLength +gridSize; })
+           // .attr("y", function(d) { console.log("y   "+d);count2++; return ( Math.ceil(count2/(columnlength))-1) * gridSize + marginTop; })
+ 			.attr("x", function(d) {return (d.row * gridSize) + textLength; })
+           .attr("y", function(d) { return d.col * gridSize + marginTop; })
            .attr("rx", 4)
            .attr("ry", 4)
            .attr("class", "dim2 bordered")
@@ -3069,15 +3159,17 @@ var colorScale = d3.scale.quantile()
            .attr("height", gridSize-padding)
            .attr("class", "square")
            rec.transition()
-           .style("fill", function(d) {;return colorScale(d); });
-           heatMap.append("title").text(function(d) {return d; });
+           .style("fill", function(d) {return colorScale(d.value); });
+           heatMap.append("title").text(function(d) {return d.value; });
 
            var count=0,count2=0;
            heatMap.append("text")
 
-           .text(function(d) { return  Math.round(d); })
-           .attr("x", function(d) { count++; return ((count%columnlength - 1) * gridSize) + textLength+ gridSize+ gridSize/2; })
-           .attr("y", function(d) { count2++; return ( Math.ceil(count2/(columnlength))-1) * gridSize + marginTop + gridSize/2; })
+           .text(function(d) { return  Math.round(d.value); })
+           // .attr("x", function(d) { count++; return ((count%columnlength - 1) * gridSize) + textLength+ gridSize+ gridSize/2; })
+           // .attr("y", function(d) { count2++; return ( Math.ceil(count2/(columnlength))-1) * gridSize + marginTop + gridSize/2; })
+           .attr("x", function(d) {return (d.row * gridSize) + textLength + gridSize/2;  })
+           .attr("y", function(d) { ; return d.col * gridSize + marginTop + gridSize/2; })
            .attr("text-anchor","end")
           .style("font-size", gridSize/3+"px")
           .style("font-family","Lato")
@@ -3100,8 +3192,8 @@ var colorScale = d3.scale.quantile()
           .attr("y", function(d, i) {k=0; if(i>3){k=1} return (rowlength) * (gridSize) + k * legendWidth + marginTop; })
           .attr("rx", 4)
           .attr("ry", 4)
-          .attr("width", legendWidth-2)
-          .attr("height", legendWidth-2)
+          .attr("width", legendWidth*0.8)
+          .attr("height", legendWidth*0.8)
           .style("fill", function(d, i) { return colors[i]; })
           .attr("class", "square");
           
@@ -3110,7 +3202,7 @@ var colorScale = d3.scale.quantile()
           .text(function(d) { return  Math.round(d)+"+"; })
  			.attr("x", function(d, i) { return  (i%4 * legendWidth + textLength) ; })
           .attr("y", function(d, i) {k=0; if(i>3){k=1} return (rowlength) * (gridSize) + k * legendWidth + marginTop+ legendWidth/2; })
-           .attr("text-anchor","start")
+           .attr("text-anchor","middle")
           .attr("class", "heatlegend")
              .style("font-family","Lato")
           .style("font-size", fontSize/1.5+"px")
