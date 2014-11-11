@@ -160,6 +160,8 @@ $(window).load(function() {
 		$container.isotope('reloadItems');
 		$container.isotope('layout');
 
+		openPanel();
+
 		items.on('click', function() {
 			console.log(this);
 			if($('#gridPanel').hasClass('ui-panel-open')) {
