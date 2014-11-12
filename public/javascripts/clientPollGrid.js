@@ -114,7 +114,7 @@ $(window).load(function() {
 				// do not use and use and use
 				//      until dependency
 				question: function( itemElem ) {
-					console.log(sortOn);
+					//console.log(sortOn);
 					if(typeof sortOn !== undefined) {
 						var classes = $('#'+itemElem.id+' .tumbchart').attr('class').split(/\s+/);
 						if(classes.indexOf('tumbchart') !== -1) {
@@ -123,7 +123,7 @@ $(window).load(function() {
 						if(classes.indexOf('c3') !== -1) {
 							classes.splice(classes.indexOf('c3'), 1);
 						}
-						console.log(classes);
+						//console.log(classes);
 						if(classes.indexOf('question-'+sortOn) !== -1) {
 							console.log('BING!');
 							return (1/classes.length);
@@ -162,33 +162,36 @@ $(window).load(function() {
 
 		items.on('click', function() {
 			console.log(this);
-			if($('#gridPanel').hasClass('ui-panel-open')) {
-				$container.width(window.innerWidth-$('#gridPanel').width()-2*parseInt($container.parent().css('padding'))-getScrollbarWidth());
-			} else {
-				$container.width(window.innerWidth-2*parseInt($container.parent().css('padding'))-getScrollbarWidth());
+			// If this element is NOT big, do work; else, ignore the click event
+			if( this !== $('.big')[0] ) {
+				if($('#gridPanel').hasClass('ui-panel-open')) {
+					$container.width(window.innerWidth-$('#gridPanel').width()-2*parseInt($container.parent().css('padding'))-getScrollbarWidth());
+				} else {
+					$container.width(window.innerWidth-2*parseInt($container.parent().css('padding'))-getScrollbarWidth());
+				}
+				$container.isotope({ packery: {columnWidth : gridSizer.width() } })
+				if($('.big:first').length > 0) {
+					$('.big:first').width(gridSizer.width());
+					$('.big:first').height(gridSizer.width());
+					transformer.removeInfo('#'+$('.big:first')[0].id);
+					$('.big').removeClass('big');
+				}
+				$('.item').width(gridSizer.width());
+				$('.item').height(gridSizer.width());
+				//$('.item').css('margin-bottom', gutterSizer.width());
+				this.classList.add('big');
+				$('.big').width(masonryBig*gridSizer.width()+(masonryBig-1)*gutterSizer.width());
+				$('.big').height(masonryBig*gridSizer.width()+(masonryBig-1)*gutterSizer.width());
+				$('.big').css('max-height', '');
+				//transformer.resize('#'+this.id);
+				console.log('HEIHEIHEI'+$('#tumb1').height());
+				transformer.addChartInfo('#'+this.id);
+				suppressPieChartInteractions();
+				$container.isotope({packery: {columnWidth: gridSizer.width()} })
+				$container.isotope({packery: {gutter: gutterSizer.width()} })
+				$container.isotope('reloadItems');
+				$container.isotope('layout');
 			}
-			$container.isotope({ packery: {columnWidth : gridSizer.width() } })
-			if($('.big:first').length > 0) {
-				$('.big:first').width(gridSizer.width());
-				$('.big:first').height(gridSizer.width());
-				transformer.removeInfo('#'+$('.big:first')[0].id);
-				$('.big').removeClass('big');
-			}
-			$('.item').width(gridSizer.width());
-			$('.item').height(gridSizer.width());
-			//$('.item').css('margin-bottom', gutterSizer.width());
-			this.classList.add('big');
-			$('.big').width(masonryBig*gridSizer.width()+(masonryBig-1)*gutterSizer.width());
-			$('.big').height(masonryBig*gridSizer.width()+(masonryBig-1)*gutterSizer.width());
-			$('.big').css('max-height', '');
-			//transformer.resize('#'+this.id);
-			console.log('HEIHEIHEI'+$('#tumb1').height());
-			transformer.addChartInfo('#'+this.id);
-			suppressPieChartInteractions();
-			$container.isotope({packery: {columnWidth: gridSizer.width()} })
-			$container.isotope({packery: {gutter: gutterSizer.width()} })
-			$container.isotope('reloadItems');
-			$container.isotope('layout');
 		});
 
 		openPanel();

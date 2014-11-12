@@ -1935,6 +1935,7 @@ var transformer = {
 		console.log("chart height: " + $("#charty"+ ind).height());
 		$("#charty" + ind ).css('max-height','none');
 		$("#charty" +ind).css("height",$(id).width());
+		$("#charty" +ind).css("width",$(id).width());
 		console.log("chart height after : " + $("#charty" + ind ).height());
 		if(optionHandler.array[index].classname == "tumbheat"){
 			d3.select("#tumbheat" + index).remove();
