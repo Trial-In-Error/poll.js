@@ -2,6 +2,13 @@ extends layout
 
 block content
 
+    style.
+        h1 {
+            font-size: 3em;
+            margin-bottom: 0px;
+            margin-top:24px;
+        }
+
     //WARN: THIS IS REALLY UNCOOL; the scripts should be declared in head, not body
     if locals.expose.exists['clientPolls.js']
         script(src='/dist/javascripts/clientPolls.js')

@@ -2110,7 +2110,7 @@ var getWordWidth = function(word){
 	console.log(word);
 	$('body').append("<div class='c3' id='textw'>"+word+"</div>");
 	var width = $('#textw').width();
-	// $('#textw').remove();
+	$('#textw').remove();
 	console.log(width);
 	return width;
 }

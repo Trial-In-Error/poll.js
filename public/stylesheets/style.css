@@ -97,3 +97,7 @@ a.heading-hyperlink:active {color: #000000 !important;}
 body *, input, select, textarea, button, .ui-button {
     font-family: 'Lato', 'sans-serif' !important;
 }
+
+.ui-listview > li h1, .ui-listview > li h2, .ui-listview > li h3, .ui-listview > li h4, .ui-listview > li h5, .ui-listview > li h6 {
+    font-size: 1.2em;
+}
