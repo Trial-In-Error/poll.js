@@ -506,7 +506,8 @@ var chartNames = {
 	"bubble" : bubble,
 	"heatmap" : heatmap2,
 	"slidebar" : slideBar,
-	"slidepie" : slidePie
+	"slidepie" : slidePie,
+	"histogram": histogram
 }
 /**
 *

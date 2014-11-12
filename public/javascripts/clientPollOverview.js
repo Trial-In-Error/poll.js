@@ -101,7 +101,7 @@ $(document).ready(function() {
 							answers.push(poll.question_list[questionCounter].type.response_list[responseCounter].body);
 							//poll.question_list[questionCounter].type.response_list[responseCounter].body
 							//$('#collapsibleGraph-'+questionCounter+' *').find('target-'stripPunctuationAndHyphenate(poll.question_list[questionCounter].type.response_list[responseCounter].body))
-							//$('#collapsibleGraph-'+questionCounter).find('.c3-chart-bar.c3-target-'+stripPunctuationAndHyphenate(poll.question_list[questionCounter].type.response_list[responseCounter].body)+'-').children().children().css('fill', '#DD0000').css('stroke', '#D0000')
+							//$('#collapsibleGraph-'+questionCounter).find('.c3-chart-bar.c3-target-'+stripPunctuationAndHyphenate(poll.question_list[questionCounter].type.response_list[responseCounter].body)+'-').children().children().css('stroke', '#EE474D')
 						}
 					}
 
@@ -121,6 +121,7 @@ $(document).ready(function() {
 							[(parseInt(questionCounter)).toString()],
 							['bar'], answers[0]);
 					}
+
 				} catch(err) {
 					console.warn(err);
 				}
