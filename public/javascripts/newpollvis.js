@@ -2124,7 +2124,7 @@ function xHeight(names,r){
 	var word = getArrayMaxElement(names,1);
 		// word +=" ";
 		if(r>10){
-			return getWordWidth(word)*2;
+			return getWordWidth(word);
 		}else{
 			return getWordHeight(word) * 2;
 		}

@@ -2,7 +2,7 @@
 .c3-event-rects {
     pointer-events: auto !important;
 }
-.c3 svg {
+.c3 svg, .c3 {
   font-family:'Lato', sans-serif;
   font-size: 15px;
 }
@@ -117,7 +117,7 @@ font-size:1vw;
 /*-- Bar --*/
 
 .c3-bar {
-  stroke-width: 0;
+  stroke-width: 0 !important;
 }
 .c3-bar._expanded_ {
   fill-opacity: 0.75;
@@ -240,15 +240,35 @@ font-size:1vw;
 body{
   background-color: '#000000';
 }
-
 /*
 * This css file is a compliment to the c3.css file
 */
 #chart1{
   text-align: center;
 }
-.heatlabel, .heatlegend, .titleText, .infoText{
+.heatlabel, .heatlegend, .titleText, .infoText, .relation{
   font-family: 'Lato', sans-serif;
+}
+.swap, .norm{
+  /*  /* Border Radius */
+/*  -webkit-border-radius: 15px;
+  -moz-border-radius: 15px;
+  border-radius: 15px;*/*/
+
+  /* Border Shadow */
+/*  -webkit-box-shadow: 1px 2px 2px rgba(0,0,0,0.6);
+  -moz-box-shadow: 1px 2px 2px rgba(0,0,0,0.6);
+  box-shadow: 1px 2px 2px rgba(0,0,0,0.6);
+*/
+  color: #ffffff;
+  background: #8FC043;
+  display: inline-block;
+  padding: 5px 15px;
+  outline: none;
+  text-decoration: none;
+
+  font-family: 'Lato', sans-serif;
+}
 }
 /*.recttext{
   font-size: 100px;
@@ -294,6 +314,9 @@ body{
   }
 
 }
+.tumbchart{
+  margin: 5%;
+}
 .item{
   text-align: center;
     margin-left: auto ;
@@ -301,4 +324,13 @@ body{
 }
 .infoText .titleText{
   font-family: 'Lato', sans-serif;
+}
+#textw
+{
+    position: absolute;
+    visibility: hidden;
+    height: auto;
+    width: auto;
+    display: inline-block;
+    white-space: nowrap; /* Thanks to Herb Caudill comment */
 }
