@@ -1296,6 +1296,8 @@ visualizeChart : function(data,question,chart,color,answer){
 		optionHandler.updateOption(optionHandler.size-1,"color",color)
 		optionHandler.updateOption(optionHandler.size-1,"id",optionHandler.size-1)
 		optionHandler.updateOption(optionHandler.size-1,"answer",answer)
+		optionHandler.updateOption(optionHandler.size-1,"xlabel","Something")
+		optionHandler.updateOption(optionHandler.size-1,"ylabel","frequency")
 		optionHandler.pointer = optionHandler.size-1;
 		var chart = chartNames[chart](optionHandler.getOption(optionHandler.size-1));
 		optionHandler.updateOption(optionHandler.size-1,"c3",chart);
@@ -1891,13 +1893,22 @@ var transformer = {
 		$("#tumb" + index).prepend("<p id='title"+index+"' class='titleText'>"+optionHandler.array[index].info+"</p>");
 		$("#tumb" + index).prepend("<h2 id='info"+index+"'	class='infoText'>"+optionHandler.array[index].title+"</h2>");
 
-			var newHeight = $("#tumb" + index).height() -  $(".titleText").height() -  $(".infoText").height() - $('#btnswap' + index).height() 
+			var newHeight = $("#tumb" + index).height() -  $(".titleText").height() -  $(".infoText").height()
 			-parseInt($('.titleText').css('margin-top'))
 			-parseInt($('.infoText').css('margin-top'))
-			-parseInt($('#btnswap' + index).css('padding-top'))
 			-parseInt($('.titleText').css('margin-bottom'))
 			-parseInt($('.infoText').css('margin-bottom'))
-			-parseInt($('#btnswap' + index).css('padding-bottom'));
+			if($('#btnswap'+index).length !== 0) {
+				newHeight -= $('#btnswap' + index).height()
+				newHeight -= parseInt($('#btnswap' + index).css('padding-top'))
+				newHeight -= parseInt($('#btnswap' + index).css('padding-bottom'))
+			}
+			if($('#relation'+index).length!==0) {
+				newHeight -= $('#relation'+index).height()
+				newHeight -= parseInt($('#relation'+index).css('padding-top'))
+				newHeight -= parseInt($('#relation'+index).css('padding-bottom'))
+			}
+			//-parseInt($('#btnswap' + index).css('padding-bottom'));
 			// var newHeight = $("#charty" + ind).parent().width() - ($("#charty" + ind).parent().width() - $("#charty" + ind).height())
 			console.log(newHeight);
 		
@@ -1908,7 +1919,7 @@ var transformer = {
 		if(optionHandler.array[index].classname == "tumbheat"){
 
 			d3.select("#tumbheat" + index).remove();
-			console.log("tumbheat" + optionHandler.array[index].container);
+			// console.log("tumbheat" + optionHandler.array[index].container);
 			
 
 					// transformer.setTransButtons(optionHandler.array[index],index);
@@ -2031,7 +2042,16 @@ var transformer = {
 					}else{
 						$(id + " svg").remove();
 						optionHandler.array[index].matrix = swapCategorical(optionHandler.array[index].matrix);
-						heatmap2(optionHandler.array[index]);
+
+			var newHeight = $("#tumb" + index).height() -  $(".titleText").height() -  $(".infoText").height() - $('#btnswap' + index).height() 
+			-parseInt($('.titleText').css('margin-top'))
+			-parseInt($('.infoText').css('margin-top'))
+			-parseInt($('#btnswap' + index).css('padding-top'))
+			-parseInt($('.titleText').css('margin-bottom'))
+			-parseInt($('.infoText').css('margin-bottom'))
+			-parseInt($('#btnswap' + index).css('padding-bottom'));
+
+						heatmap2(optionHandler.array[index], newHeight);
 					}
 
 				},
@@ -2174,7 +2194,9 @@ function bar(options){
 	}
 
 	var rot = m.length > 7; rotated : false ? rotated : true;
-	// var rot = true;
+	for (var i = 0; i < m[0].length; i++) {
+		names.push(m[0][i]);
+	};
 	options.legendMargin = xHeight(names,r);
 	console.log(options.legendMargin);
 	// options.legendMargin = textWidth(getArrayMaxElement(),)
@@ -2416,10 +2438,14 @@ function histogram(options){
 				tick : {
 					rotate : 55
 				}
+			},
+			y:{
+				label : options.ylabel
 			}
 		}
 	});
-	$(".c3-legend-item-" +options.answer+"- .c3-legend-item-tile").css("fill",this.highlightColor)
+	// $(".c3-legend-item-" +options.answer+"- .c3-legend-item-tile").css("fill","#EE474D")
+	$('#chart1 .c3-legend-item').remove();
 	return chart;
 }
 
@@ -3108,6 +3134,8 @@ function heatmap(options){
 
 	legendWidth = (gridSize/4);
 
+
+	var centerPadding = (w-(textLength + gridSize * columnlength))/2;
           //antal färger
 
           var index = options.container.split("charty").slice(-1)[0]-1;
@@ -3163,7 +3191,7 @@ var colorScale = d3.scale.quantile()
            var rec = heatMap.append("rect")
            // .attr("x", function(d) { count++; return ((count%columnlength - 1) * gridSize) + textLength*(shiftR)+gridSize; })
            // .attr("y", function(d) { count2++; return ( Math.ceil(count2/(columnlength))-1) * gridSize; })
-           .attr("x", function(d) {return (d.row * gridSize); })
+           .attr("x", function(d) {return (d.row * gridSize + centerPadding); })
            .attr("y", function(d) { return d.col * gridSize; })
            .attr("rx", 4)
            .attr("ry", 4)
@@ -3224,6 +3252,7 @@ var colorScale = d3.scale.quantile()
 
 	legendWidth = (gridSize/2);
 
+var centerPadding = (w-(textLength + gridSize * columnlength))/2;
 	var index = options.container.split("charty").slice(-1)[0]-1;
           //antal färger
           buckets = 8;
@@ -3273,7 +3302,7 @@ var colorScale = d3.scale.quantile()
           	// if(d.length>12){return d.substring(0,12)+"...";} 
           	// else {
           		return d;})
-          .attr("x", 0)
+          .attr("x", centerPadding)
           .attr("y", function (d, i) { return i * gridSize + gridSize/2 + marginTop; })
           .style("font-weight","bold")
           .style("font-size", fontSize+"px")
@@ -3288,7 +3317,7 @@ var colorScale = d3.scale.quantile()
      .enter().append("text")
 
                 // .text(function(d) { return d; })
-                // .attr("x", function(d, i) { return (i * gridSize) + 20; })
+                // .attr("x", function(d, i) { return centerPadding; })
 
                 // .attr("y", 0)
                 // .style("text-anchor", "middle")
@@ -3302,7 +3331,7 @@ var colorScale = d3.scale.quantile()
                 .attr("text-anchor","center")
 				.attr("transform", function(d,i) {    // transform all the text elements
   return "translate(" + // First translate
-  ((i * gridSize) + textLength+gridSize/2)  + ","+marginTop+") " + // Translation params same as your existing x & y 
+  ((i * gridSize) + textLength+gridSize/2 + centerPadding) + ","+marginTop+") " + // Translation params same as your existing x & y 
     "rotate(-45)"            // THEN rotate them to give a nice slope
 });
           //heatmap
@@ -3316,7 +3345,7 @@ var colorScale = d3.scale.quantile()
            var rec = heatMap.append("rect")
            // .attr("x", function(d) { console.log("x  " + d);count++; return ((count%columnlength - 1) * gridSize) + textLength +gridSize; })
            // .attr("y", function(d) { console.log("y   "+d);count2++; return ( Math.ceil(count2/(columnlength))-1) * gridSize + marginTop; })
-           .attr("x", function(d) {return (d.row * gridSize) + textLength; })
+           .attr("x", function(d) {return (d.row * gridSize) + textLength + centerPadding; })
            .attr("y", function(d) { return d.col * gridSize + marginTop; })
            .attr("rx", 4)
            .attr("ry", 4)
@@ -3334,7 +3363,7 @@ var colorScale = d3.scale.quantile()
            .text(function(d) { return  Math.round(d.value); })
            // .attr("x", function(d) { count++; return ((count%columnlength - 1) * gridSize) + textLength+ gridSize+ gridSize/2; })
            // .attr("y", function(d) { count2++; return ( Math.ceil(count2/(columnlength))-1) * gridSize + marginTop + gridSize/2; })
-           .attr("x", function(d) {return (d.row * gridSize) + textLength + gridSize/2;  })
+           .attr("x", function(d) {return (d.row * gridSize) + textLength + gridSize/2 + centerPadding;  })
            .attr("y", function(d) { ; return d.col * gridSize + marginTop + gridSize/2; })
            .attr("text-anchor","end")
            .style("font-size", gridSize/3+"px")
@@ -3354,7 +3383,7 @@ var colorScale = d3.scale.quantile()
           .attr("class", "legend");
 
           legend.append("rect")
-          .attr("x", function(d, i) { return  (i%4 * legendWidth + textLength) ; })
+          .attr("x", function(d, i) { return  (i%4 * legendWidth + textLength)+ centerPadding ; })
           .attr("y", function(d, i) {k=0; if(i>3){k=1} return (rowlength) * (gridSize) + k * legendWidth + marginTop; })
           .attr("rx", 4)
           .attr("ry", 4)
@@ -3366,7 +3395,7 @@ var colorScale = d3.scale.quantile()
           legend.append("text")
           .attr("class", "heatlegend")
           .text(function(d) { return  Math.round(d)+"+"; })
-          .attr("x", function(d, i) { return  (i%4 * legendWidth + textLength + legendWidth/2) ; })
+          .attr("x", function(d, i) { return  (i%4 * legendWidth + textLength + legendWidth/2)+ centerPadding ; })
           .attr("y", function(d, i) {k=0; if(i>3){k=1} return (rowlength) * (gridSize) + k * legendWidth + marginTop+ legendWidth/2; })
           .attr("text-anchor","middle")
           .attr("class", "heatlegend")
