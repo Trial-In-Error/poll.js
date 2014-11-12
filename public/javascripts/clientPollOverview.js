@@ -44,6 +44,7 @@ function populateTable(callback) {
 						var tempResponse = $('<li><a href="">'+data.question_list[questionCounter].type.response_list[responseCounter].body+'</a></li>');//.text("LOL");
 						//tempResponse.append($('<a href=""></a>')).text(data.question_list[questionCounter].type.response_list[responseCounter].body);
 						$('#collapsibleDiv-'+questionCounter+' ol').append(tempResponse);
+
 					} else {
 						$('#collapsibleDiv-'+questionCounter).remove();
 					}
@@ -51,7 +52,7 @@ function populateTable(callback) {
 
 				// If the question is not a slider or not_a_question
 				if(data.question_list[questionCounter].type.name === 'slider') {
-					$('#collapsibleGraph-'+questionCounter).append('<p style="text-shadow: none;">This question was a slider, and is not being visualized yet.</p>');
+					//$('#collapsibleGraph-'+questionCounter).append('<p style="text-shadow: none;">This question was a slider, and is not being visualized yet.</p>');
 				} else if (data.question_list[questionCounter].type.name === 'not_a_question') {
 					$('#collapsibleGraph-'+questionCounter).append('<p style="text-shadow: none;">This prompt could not be responded to.</p>');
 				} else {
@@ -92,23 +93,38 @@ $(document).ready(function() {
 		//$('#collapsibleSet').trigger('create');
 		$('.ui-collapsible-heading').on('click', function() {
 			var questionCounter = this.parentNode.id.split('-').pop();
-			var answers = [];
-			for (responseCounter in poll.question_list[questionCounter].type.response_list) {
-				if(poll.question_list[questionCounter].type.response_list[responseCounter].answers[0].value) {
-					answers.push(poll.question_list[questionCounter].type.response_list[responseCounter].body);
-					//poll.question_list[questionCounter].type.response_list[responseCounter].body
-					//$('#collapsibleGraph-'+questionCounter+' *').find('target-'stripPunctuationAndHyphenate(poll.question_list[questionCounter].type.response_list[responseCounter].body))
-					//$('#collapsibleGraph-'+questionCounter).find('.c3-chart-bar.c3-target-'+stripPunctuationAndHyphenate(poll.question_list[questionCounter].type.response_list[responseCounter].body)+'-').children().children().css('fill', '#DD0000').css('stroke', '#D0000')
+			if(!$('#collapsibleGraph-'+questionCounter+' svg')[0]) {
+				var answers = [];
+				try {
+					for (responseCounter in poll.question_list[questionCounter].type.response_list) {
+						if(poll.question_list[questionCounter].type.response_list[responseCounter].answers[0].value) {
+							answers.push(poll.question_list[questionCounter].type.response_list[responseCounter].body);
+							//poll.question_list[questionCounter].type.response_list[responseCounter].body
+							//$('#collapsibleGraph-'+questionCounter+' *').find('target-'stripPunctuationAndHyphenate(poll.question_list[questionCounter].type.response_list[responseCounter].body))
+							//$('#collapsibleGraph-'+questionCounter).find('.c3-chart-bar.c3-target-'+stripPunctuationAndHyphenate(poll.question_list[questionCounter].type.response_list[responseCounter].body)+'-').children().children().css('fill', '#DD0000').css('stroke', '#D0000')
+						}
+					}
+
+					console.log('ANSWERS---------------------v');
+					console.log(answers);
+					console.log('ANSWERS---------------------^');
+					if(poll.question_list[questionCounter].type.name === 'slider') {
+						maggio.visualizeChart(
+							window.location.origin+'/pollroute/exportpolljson'+window.location.pathname.split('polloverview')[1],
+							'#collapsibleGraph-'+questionCounter,
+							[(parseInt(questionCounter)).toString()],
+							['histogram'], answers[0]);
+					} else {
+						maggio.visualizeChart(
+							window.location.origin+'/pollroute/exportpolljson'+window.location.pathname.split('polloverview')[1],
+							'#collapsibleGraph-'+questionCounter,
+							[(parseInt(questionCounter)).toString()],
+							['bar'], answers[0]);
+					}
+				} catch(err) {
+					console.warn(err);
 				}
 			}
-			console.log('ANSWERS---------------------v');
-			console.log(answers);
-			console.log('ANSWERS---------------------^');
-			maggio.visualizeChart(
-				window.location.origin+'/pollroute/exportpolljson'+window.location.pathname.split('polloverview')[1],
-				'#collapsibleGraph-'+questionCounter,
-				[(parseInt(questionCounter)).toString()],
-				['bar'], answers[0]);
 		});
 	});
 });
