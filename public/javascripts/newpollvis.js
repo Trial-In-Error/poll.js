@@ -56,10 +56,10 @@ var datacolors = {
 	count : 0,
 	getColor : function(group,names,isRow){
 		var currColor = optionHandler.array[optionHandler.pointer].color;
-		console.log(" v-----------------NAMES---------------------v");
-		console.log(names);
-		console.log(" v----------------GROUPS---------------------v");
-		console.log(group);
+		// console.log(" v-----------------NAMES---------------------v");
+		// console.log(names);
+		// console.log(" v----------------GROUPS---------------------v");
+		// console.log(group);
 		index = 0;
 		datacolors.index = (datacolors.index + 1) % (datacolors.colors[0].length);
 		if($.inArray(group,names) != -1){
@@ -74,7 +74,6 @@ var datacolors = {
 
 				// var answer = optionHandler.array[optionHandler.pointer].answer.substring(0,optionHandler.array[optionHandler.pointer].answer.length-1);
 				var answer = stripPunctuationAndHyphenate(optionHandler.array[optionHandler.pointer].answer);
-				console.log(answer);
 				$(".c3-legend-item-" +answer+"- .c3-legend-item-tile").css("fill",this.highlightColor)
 				return this.highlightColor;
 			}
@@ -382,11 +381,23 @@ function matrixToArray(m){
 			array[(i*m[0].length)+j] = m[i][j];
 	};
 };
+function getArrayMaxElement(a,offset){
+	var max = 0;
+	var ret = "";
+	for (var i = offset; i < a.length; i++) {
+		if(max<a[i].length){
+			max=a[i].length
+			ret=a[i];
+		}
+	}
+	return ret;
+}
 function getArrayMax(a,offset){
 	var max = 0;
 	for (var i = 1; i < a.length; i++) {
 		if(max<a[i].length){
 			max=a[i].length;
+			console.log(max);
 		}
 	}
 	return max;
@@ -507,7 +518,7 @@ var chartNames = {
 	"heatmap" : heatmap2,
 	"slidebar" : slideBar,
 	"slidepie" : slidePie,
-	"histogram": histogram
+	"histogram" : histogram
 }
 /**
 *
@@ -653,29 +664,35 @@ function arrayToString(array){
 *param{Array} matrix - array holding the table
 */
 function disk(data){
-	console.log(data);
-	var header = [];
+	var header = new Array();
 	var bucketsize =5;
 	var head = data.splice(0,1);
 	var buckets = new Array(bucketsize);
 	var min = Math.min.apply(Math, data),
 	max = Math.max.apply(Math, data);
+	console.log(min);
+		console.log(max);
 	var diff = max - min;
-	var step = diff/bucketsize;
+	var step = max/bucketsize;
+	console.log(step);
 	for(var i = 0; i <= bucketsize; i++){
 		buckets[i]=0;
 		var minm =  (step*i).toString();
+		console.log(minm);
 		var maxm =  (step*(i+1)).toString();
 		header[i] = minm.substring(0,4) + "-" +maxm.substring(0,4);
+				console.log("min " + step*i);
+			console.log("max " + step*(i+1));
 		for(var j = 0; j < data.length; j++){
+	// console.log("data " + data[j]);
 			if(step*i<data[j] && step*(i+1) > data[j]){
-				buckets[i]++;
+				buckets[i]+=1;
 			}
 		}
+		console.log(buckets);
 	}
-		buckets.unshift("Freqency")
 	// buckets.unshift(head[0])
-
+	buckets.unshift("Freqency")
 	var ret = [];
 	ret.push(header);
 	ret.push(buckets);
@@ -1188,7 +1205,9 @@ init : function(data,question,options,callback){
 	console.log(matrixMemory);
 	console.log(performance.stopTimer());
 	new Masonry(container, { "columnWidth": ".item", "itemSelector": ".item", "gutter": ".gutter-sizer" })
+	if(callback){
 		callback();
+	}
 	},
 /**
 *Visualize one graph from a dataset
@@ -1728,6 +1747,8 @@ var defaultOptions = {
        	 width: "50vw",
          height: "50vw"
     },
+   legendMargin : 0,
+   swap: false,
 }
 /**
 * ################################ STATISTICAL METHODS ##################################################################
@@ -1858,18 +1879,17 @@ var transformer = {
 		
 		var index = id.split("tumb").slice(-1)[0];
 		console.log(id);
-
+			var newHeight = $("#tumb" + index).height() -  $(".titleText").height() -  $(".infoText").height()*4 - $(".swap").height();
+			console.log(newHeight);
+			var ind = parseInt(index)+1;
+			console.log(ind);
+			$("#charty" + ind ).css('height',newHeight);
+			$("#charty" + ind ).css('max-height','none');
 		if(optionHandler.array[index].classname == "tumbheat"){
 
 			d3.select("#tumbheat" + index).remove();
 			console.log("tumbheat" + optionHandler.array[index].container);
 			
-/*
-			var norm= $('<input type="button" value="normalize q1" id="btnnorm'+index+'" class="norm"/>');
-			$("#tumb" + index).prepend(norm);
-
-			var swap= transformer.getSwapButton(index);
-			$("#tumb" + index).prepend(swap);*/
 
 					transformer.setTransButtons(optionHandler.array[index],index);
 
@@ -1879,12 +1899,7 @@ var transformer = {
 
 			$("#tumb" + index).prepend("<p id='title"+index+"' class='infoText'>"+optionHandler.array[index].info+"</p>");
 			$("#tumb" + index).prepend("<h2 id='info"+index+"'	class='titleText'>"+optionHandler.array[index].title+"</h2>");
-			var newHeight = $("#tumb" + index).height() -  $(".titleText").height() -  $(".infoText").height()*4 - $(".swap").height();
-			console.log(newHeight);
-			var ind = parseInt(index)+1;
-			console.log(ind);
-			$("#charty" + ind ).css('height',newHeight);
-			$("#charty" + ind ).css('max-height','none');
+
 			heatmap2(optionHandler.array[index]);
 			return;
 		}
@@ -1935,7 +1950,7 @@ var transformer = {
 		console.log(ind);
 		console.log("chart height: " + $("#charty"+ ind).height());
 		$("#charty" + ind ).css('max-height','none');
-		$("#charty" +ind).css("height",$(id).width());
+		$("#charty" +ind).css("height",$(id).height());
 		$("#charty" +ind).css("width",$(id).width());
 		console.log("chart height after : " + $("#charty" + ind ).height());
 		if(optionHandler.array[index].classname == "tumbheat"){
@@ -2055,6 +2070,7 @@ var transformer = {
 			var swap = transformer.getSwapButton(index);
 			$("#tumb" + index).prepend(swap);
 			$("#btnswap"+index).on('click', function(event) {
+					optionHandler.updateOption(index,"swap", !optionHandler.array[index].swap);
 				   console.log(event);
 				console.log("****SWAP***");
 				var i = event.currentTarget.id.split("btnswap").slice(-1)[0];
@@ -2075,26 +2091,55 @@ var transformer = {
     });
 		}
 	}
-function rotateText(names,options){
-		var max = getArrayMax(names);
-		if(max > 5 || names.length > 4){
-			return 70;
+var getWordWidth = function(word){
+	console.log("THIS IS THE WORD");
+	console.log(word);
+	$('body').append("<div class='c3' id='textw'>"+word+"</div>");
+	var width = $('#textw').width();
+	// $('#textw').remove();
+	console.log(width);
+	return width;
+}
+var getWordHeight = function(word){
+	$('body').append("<div class='c3' id='textw'>"+word+"</div>");
+	var height = $('#textw').height();
+	$('#textw').remove();
+	return height;
+}
+
+function rotateText(names ,cnames){
+	/*var max = getArrayMax(names);
+	var max2 = getArrayMax(cnames);
+	console.log(names);
+	console.log("MAX  "  + max);*/
+	if(names.length > 4 || cnames.length > 4 ){
+		return 40;
+	}else{
+		return 0;
+	}
+}
+function xHeight(names,r){
+	console.log(r);
+	console.log(getArrayMaxElement(names,0));
+	var word = getArrayMaxElement(names,1);
+		// word +=" ";
+		if(r>10){
+			return getWordWidth(word)*2;
 		}else{
-			return 0;
+			return getWordHeight(word) * 2;
 		}
-}
-function xHeight(options){
-	return $(options.container).height() * 0.25;
-}
-function lineAndBar(options){
-	var chart = c3.generate({
-		bindto: "#chart1",
-		data : {
-			columns : options,
-			type : 'bar'
-		}
-	});
-}
+
+	}
+	function lineAndBar(options){
+		var chart = c3.generate({
+			bindto: "#chart1",
+			data : {
+				columns : options,
+				type : 'bar'
+			}
+		});
+	}
+
 /**
 * Plots a column/ barchart depending on size of the array
 * Column is array is smaller then 10, else bar chart.
@@ -2106,10 +2151,19 @@ function bar(options){
 	var m = options.matrix;
 	if(m[0].length>4){r = 70;}
 	var names = columnNames(m);
-	var r = rotateText(names, options);
-	var rot = m.length > 4; rotated : false ? rotated : true;
+	// var names = m[0];
+	var r;
+	if(options.swap){
+		r= rotateText(names,m[0]);
+	}else{
+		r= rotateText(m[0],names);
+	}
 
-	var xMargin = xHeight(options);
+	var rot = m.length > 7; rotated : false ? rotated : true;
+	// var rot = true;
+	options.legendMargin = xHeight(names,r);
+	console.log(options.legendMargin);
+	// options.legendMargin = textWidth(getArrayMaxElement(),)
 	var c = 0;
 	var chart = c3.generate({
 		bindto: options.container,
@@ -2139,10 +2193,10 @@ function bar(options){
     },
     axis: {
     	rotated : rot,
-
     	x: {
+    		height: options.legendMargin,
+    		// height : 65,
     		show : options.axis,
-    		height : xMargin,
     		label : options.xlabel,
     		type: 'categorized',
     		tick: {
@@ -2159,7 +2213,8 @@ function bar(options){
 
 
 });
-	if(rot){
+	// Removes side text
+	if(rot && m.length > 2){
 		$(options.container+" .c3-axis-x .tick text").remove();
 		// $("#charty2 .c3-axis-x .tick text").remove();
 	}
@@ -2293,6 +2348,7 @@ function bardouble(matrix,ylabel){
 	pollchart.data.push({chart : chart, matrix : matrix});
 }
 function histogram(options){
+
 	console.log(options.matrix);
 	var d = disk(options.matrix);
 	console.log(d);
@@ -2300,7 +2356,11 @@ function histogram(options){
 	var names = d[0].slice(0);
 	d[0].unshift("Answer");
 	var r = rotateText(names, options);
-	var xMargin = xHeight(options);
+
+	// var rot = true;
+	// console.log(r);
+	options.legendMargin = xHeight(names,70);
+	console.log(options.legendMargin);
 	var chart = c3.generate({
 		bindto: options.container,
 		interaction: { enabled:  options.interaction },
@@ -2309,16 +2369,23 @@ function histogram(options){
 			columns : d,
 			type: 'bar',
 			color: function (color, d) {
+				console.log(d);
+				if(options.answer == d || options.answer == d.id){
+					return datacolors.highlightcolor;
+				}
+				return datacolors.colors[options.color][0];
+			/*	console.log(d);
 				var id = d.index;
 				if(id != null){
 					return datacolors.getColor(names[d.index],names);
 				}
-				return datacolors.getColor(names[0],names);
+				return datacolors.getColor(names[0],names);*/
 			}
 		},
 		axis: {
 			x: {
-				height : xMargin,
+				label : options.xlabel,
+				height : options.legendMargin,
 				type: 'categorized',
 				tick : {
 					rotate : 55
@@ -2776,7 +2843,7 @@ function stackedBar(options){
 	if(rot){r = 70;}
 	var names2 = columnNames(options.matrix);
 	names = names2.slice(1,names2.length);
-		var xMargin = xHeight(options);
+	var xMargin = xHeight(options);
 	// matrix.unshift(header);
 
 	var chart = c3.generate({
@@ -3081,36 +3148,36 @@ var colorScale = d3.scale.quantile()
            .style("fill", function(d) {;return colorScale(d.value); });
            heatMap.append("title").text(function(d) {return d.value; });
        }
- function heatmap2(options){
-    $(options.container).css("margin-left",0)
-    var m = options.matrix;
-	var head =  m[0].slice(1,m[0].length);
-	m=m.slice(1,m.length);
-	var dim_1 = columnNames(m);
-	console.log(dim_1);
-	var dim_2 = head;
-		var longest = getArrayMax(dim_1);
-		var longest2 = getArrayMax(dim_2);
-	var rowlength = dim_1.length;
-	var columnlength = dim_2.length;
-	var maxSize = rowlength > columnlength ? rowlength : columnlength;
-	var array = matrixToRevArray(copyMatrix(m));
-	console.log(array);
-	var w = $(options.container).width();
-	var fontSize = 12;
+       function heatmap2(options){
+       	$(options.container).css("margin-left",0)
+       	var m = options.matrix;
+       	var head =  m[0].slice(1,m[0].length);
+       	m=m.slice(1,m.length);
+       	var dim_1 = columnNames(m);
+       	console.log(dim_1);
+       	var dim_2 = head;
+       	var longest = getArrayMax(dim_1);
+       	var longest2 = getArrayMax(dim_2);
+       	var rowlength = dim_1.length;
+       	var columnlength = dim_2.length;
+       	var maxSize = rowlength > columnlength ? rowlength : columnlength;
+       	var array = matrixToRevArray(copyMatrix(m));
+       	console.log(array);
+       	var w = $(options.container).width();
+       	var fontSize = 12;
 	// w=w*2/3;
 	
 
 
-console.log("Longest---->  " +longest);
+	console.log("Longest---->  " +longest);
 	console.log("Gridsize ---->  " + gridSize);
-console.log("Margin top ---->  " +marginTop);
+	console.log("Margin top ---->  " +marginTop);
 	var index = options.id;
 	// if($("#charty1").height() > 1){
-	console.log($(options.container).height() );
-	var h = $(options.container).parent().width() - ($(options.container).parent().width() - $(options.container).height())
+		console.log($(options.container).height() );
+		var h = $(options.container).parent().width() - ($(options.container).parent().width() - $(options.container).height())
 	// var h = marginTop + gridSize * (columnlength +2);
-		console.log("Parent HEIGHT ---> " + $(options.container).parent().height() );
+	console.log("Parent HEIGHT ---> " + $(options.container).parent().height() );
 	console.log("info HEIGHT ---> " + $(options.container).height());
 	console.log("SVG HEIGHT ---> " + h);
 	// $(".tumbchart").height();
@@ -3121,7 +3188,7 @@ console.log("Margin top ---->  " +marginTop);
 	var textLength = fontSize*longest;
 	var gridSize = Math.floor((h)/(maxSize + 3));
 	var padding = gridSize/maxSize;
-var marginTop = 1.2 * gridSize;
+	var marginTop = 1.2 * gridSize;
 	// var h = 900;
 	var shiftR = 10;
 	var margin = { top: 0, right: 0, bottom: 0, left: 0 },
@@ -3130,7 +3197,7 @@ var marginTop = 1.2 * gridSize;
 
 	legendWidth = (gridSize/2);
 
-       	var index = options.container.split("charty").slice(-1)[0]-1;
+	var index = options.container.split("charty").slice(-1)[0]-1;
           //antal färger
           buckets = 8;
           var svg = d3.select(options.container).append("svg")
@@ -3178,12 +3245,12 @@ var colorScale = d3.scale.quantile()
           .text(function (d) { 
           	// if(d.length>12){return d.substring(0,12)+"...";} 
           	// else {
-          	return d;})
+          		return d;})
           .attr("x", 0)
           .attr("y", function (d, i) { return i * gridSize + gridSize/2 + marginTop; })
           .style("font-weight","bold")
           .style("font-size", fontSize+"px")
-             .style("font-family","Lato")
+          .style("font-family","Lato")
           .style("text-anchor", "start")
           .attr("class","heatlabel");
 
@@ -3203,7 +3270,7 @@ var colorScale = d3.scale.quantile()
                 // .attr("dy", ".71em")
                 .text(function(d) {console.log(d); return d})
                 .style("font-weight","bold")
-                   .style("font-family","Lato")
+                .style("font-family","Lato")
                 .style("font-size", fontSize+"px")
                 .attr("text-anchor","center")
 				.attr("transform", function(d,i) {    // transform all the text elements
@@ -3222,7 +3289,7 @@ var colorScale = d3.scale.quantile()
            var rec = heatMap.append("rect")
            // .attr("x", function(d) { console.log("x  " + d);count++; return ((count%columnlength - 1) * gridSize) + textLength +gridSize; })
            // .attr("y", function(d) { console.log("y   "+d);count2++; return ( Math.ceil(count2/(columnlength))-1) * gridSize + marginTop; })
- 			.attr("x", function(d) {return (d.row * gridSize) + textLength; })
+           .attr("x", function(d) {return (d.row * gridSize) + textLength; })
            .attr("y", function(d) { return d.col * gridSize + marginTop; })
            .attr("rx", 4)
            .attr("ry", 4)
@@ -3243,8 +3310,8 @@ var colorScale = d3.scale.quantile()
            .attr("x", function(d) {return (d.row * gridSize) + textLength + gridSize/2;  })
            .attr("y", function(d) { ; return d.col * gridSize + marginTop + gridSize/2; })
            .attr("text-anchor","end")
-          .style("font-size", gridSize/3+"px")
-          .style("font-family","Lato")
+           .style("font-size", gridSize/3+"px")
+           .style("font-family","Lato")
           // .style("font-family", "Calibri")
           .attr("class", "rectext")
 
@@ -3272,13 +3339,13 @@ var colorScale = d3.scale.quantile()
           legend.append("text")
           .attr("class", "heatlegend")
           .text(function(d) { return  Math.round(d)+"+"; })
- 			.attr("x", function(d, i) { return  (i%4 * legendWidth + textLength) ; })
+          .attr("x", function(d, i) { return  (i%4 * legendWidth + textLength) ; })
           .attr("y", function(d, i) {k=0; if(i>3){k=1} return (rowlength) * (gridSize) + k * legendWidth + marginTop+ legendWidth/2; })
-           .attr("text-anchor","middle")
+          .attr("text-anchor","middle")
           .attr("class", "heatlegend")
-             .style("font-family","Lato")
+          .style("font-family","Lato")
           .style("font-size", fontSize/1.5+"px")
-                ;
+          ;
        /*     .attr("x", function(d, i) { return gridSize * 11 + 25; })
             .attr("y", function(d, i) { return (i * legendWidth + 20); })
             */
@@ -3287,7 +3354,7 @@ var colorScale = d3.scale.quantile()
             .attr("x", 0)
             .attr("y", rowlength * (gridSize) + marginTop + legendWidth)         
             .style("font-size", fontSize+"px")
-               .style("font-family","Lato")
+            .style("font-family","Lato")
             .text("Legend")
             .style("font-weight","bold");
         }
