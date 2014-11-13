@@ -4,21 +4,31 @@
 }
 .c3 svg, .c3 {
   font-family:'Lato', sans-serif;
-  font-size: 15px;
+  font-size: 12px;
 }
-/*@media (max-width: 5000px) {
-  .c3 { font-size: 40px; }
-}*/
-/*@media (max-width: 1000px) {
+@media (max-width: 5000px) {
+  .c3 { font-size: 30px; }
+}
+@media (max-width: 1000px) {
   .c3 { font-size: 20px; }
 }
 @media (max-width: 1000px) {
-  .c3 { font-size: large; }
+  .c3 { font-size: 15px; }
 }
 @media (max-width: 500px) {
-  .c3 { font-size: medium; }
-}*/
+  .c3 { font-size: 10px; }
+}
 .c3 path, .c3 line {
+  fill: none;
+  stroke: #000;
+  stroke-width: 2px;
+}
+/*.lineCat .c3 path {
+  fill: none;
+  stroke: #000;
+  stroke-width: 6px;
+}*/
+c3-event-rects {
   fill: none;
   stroke: #000;
   stroke-width: 2px;
@@ -157,8 +167,8 @@ font-size:1vw;
 
 .c3-legend-item {
   font-weight:bold;
-  /*font-size: 15px;*/
-  font-size: 2vw;
+  font-size: 15px;
+  font-size: 1vw;
 
 }
 
@@ -249,26 +259,18 @@ body{
 .heatlabel, .heatlegend, .titleText, .infoText, .relation{
   font-family: 'Lato', sans-serif;
 }
-.swap, .norm{
-  /*  /* Border Radius */
-/*  -webkit-border-radius: 15px;
-  -moz-border-radius: 15px;
-  border-radius: 15px;*/*/
+.swap, .norm, .share{
 
-  /* Border Shadow */
-/*  -webkit-box-shadow: 1px 2px 2px rgba(0,0,0,0.6);
-  -moz-box-shadow: 1px 2px 2px rgba(0,0,0,0.6);
-  box-shadow: 1px 2px 2px rgba(0,0,0,0.6);
-*/
+  padding: 0;
+  border: none;
   color: #ffffff;
   background: #8FC043;
   display: inline-block;
   padding: 5px 15px;
+  margin: 5px;
   outline: none;
-  text-decoration: none;
-
   font-family: 'Lato', sans-serif;
-}
+
 }
 /*.recttext{
   font-size: 100px;
@@ -291,6 +293,19 @@ body{
   .heatlabel{
      font-size: 24px;
   }
+  .swap, .norm{
+
+  padding: 0;
+  border: none;
+  color: #ffffff;
+  background: #8FC043;
+  display: inline-block;
+  padding: 10px 20px;
+  margin: 10px;
+  outline: none;
+  font-family: 'Lato', sans-serif;
+
+}
 }
 @media screen and (max-width: 320px) {
 
@@ -314,6 +329,7 @@ body{
   }
 
 }
+
 .item{
   text-align: center;
     margin-left: auto ;
@@ -325,7 +341,7 @@ body{
 #textw
 {
     position: absolute;
-    visibility: hidden;
+    /*visibility: hidden;*/
     height: auto;
     width: auto;
     display: inline-block;

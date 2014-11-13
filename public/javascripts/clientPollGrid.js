@@ -21,6 +21,16 @@ function suppressPieChartInteractions() {
 }
 
 function openPanel() {
+	$('#gridPanel #returnButton').off();
+	$('#gridPanel #returnButton').on('click', function() {
+		if(maggio.poll.language && maggio.poll.language === 'english') {
+			alert('Shareable data sets are coming soon!');
+		} else {
+			alert('Visualiseringar kan delas inom kort.');
+		}
+		//console.warn('test');
+	});
+
 	var start = new Date();
 	var panelStart = new Date();
 	gridPanel.panel('open');
