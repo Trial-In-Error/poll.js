@@ -1,5 +1,5 @@
 var poll = JSON.parse(window.localStorage['recent']);
-
+var topData;
 // Fill table with data
 // CSS for this page blatantly stolen from: http://red-team-design.com/css3-ordered-list-styles/
 function populateTable(callback) {
@@ -14,7 +14,7 @@ function populateTable(callback) {
 		} else {
 			$('#pollTitle').text(data.name);
 			$('#pollMetadata').hide();
-
+			topData = data;
 			// For each question
 			for(var questionCounter in data.question_list) {
 				console.log('question: '+questionCounter);
@@ -47,6 +47,7 @@ function populateTable(callback) {
 
 					} else {
 						$('#collapsibleDiv-'+questionCounter).remove();
+						$('#collapsibleGraph-'+questionCounter).width('100%');
 					}
 				}
 

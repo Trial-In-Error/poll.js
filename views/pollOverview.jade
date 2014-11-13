@@ -18,11 +18,15 @@ block content
 	h2(id='pollTitle')
 	p(id='pollMetadata')
 	div(id='collapsibleSet' data-role='collapsibleset' data-mini='true' data-inset='false' style='max-width: 100%; margin:0 auto;')
-	a(href='#', id='gridButton' class='ui-shadow ui-btn ui-corner-all', style='margin: 15px; padding: 15px;') Grid
+	a(href='#', id='gridButton' class='ui-shadow ui-btn ui-corner-all', style='width:85%; margin-top: 15px; margin-bottom: 15px; margin-left: auto; margin-right: auto; padding: 15px;') Grid
+	a(href='/', id='returnButton' class='ui-shadow ui-btn ui-corner-all', style='width:85%; margin-top: 15px; margin-bottom: 15px; margin-left: auto; margin-right: auto; padding: 15px;') Return to Index
 
 	script.
-		console.log('HI!');
+		//console.log('data');
 		document.getElementById('gridButton').onclick = function() {
-			console.log('fired');
-			window.location.href = window.location.origin+'/grid/'+window.location.href.split('/polloverview/').pop();
+			if(topData.language && topData.language === 'english') {
+				alert('The grid visualization is not available on this device. Please try it out on the big touchscreen!');
+			} else {
+				alert('The grid visualization is not available on this device. Please try it out on the big touchscreen!');
+			}
 		}
