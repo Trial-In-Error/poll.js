@@ -1,4 +1,9 @@
-var poll = JSON.parse(window.localStorage['recent']);
+if(window.localStorage['recent'] !== undefined && window.localStorage['recent'] !== 'undefined') {
+	var poll = JSON.parse(window.localStorage['recent']);
+} else {
+	poll = undefined;
+}
+
 var topData;
 // Fill table with data
 // CSS for this page blatantly stolen from: http://red-team-design.com/css3-ordered-list-styles/
@@ -92,7 +97,7 @@ $(document).ready(function() {
 			if(!$('#collapsibleGraph-'+questionCounter+' svg')[0]) {
 				var answers = [];
 				try {
-					if (poll.id === data.id) {
+					if (poll && (poll.id === data.id)) {
 						for (responseCounter in poll.question_list[questionCounter].type.response_list) {
 							if(poll.question_list[questionCounter].type.response_list[responseCounter].answers[0].value) {
 								answers.push(poll.question_list[questionCounter].type.response_list[responseCounter].body);
