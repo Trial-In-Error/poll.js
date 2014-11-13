@@ -1086,7 +1086,7 @@ initOne : function(data,question,chart){
 */
 init : function(data,question,options,callback){
 
-	var performance = new Timetool();
+	//var performance = new Timetool();
 	
 	var matrixMemory = buildEmptyMatrix(data.question_list.length,data.question_list.length);
 	console.log("MATRIX MEMORY");
@@ -1204,7 +1204,7 @@ init : function(data,question,options,callback){
 
 	}
 	console.log(matrixMemory);
-	console.log(performance.stopTimer());
+	//console.log(performance.stopTimer());
 	new Masonry(container, { "columnWidth": ".item", "itemSelector": ".item", "gutter": ".gutter-sizer" })
 	if(callback){
 		callback();
@@ -1858,16 +1858,16 @@ function addTotal(matrix){
 	m.push(bottom);
 	return m;
 }
-/** @constructor */
-Timetool = function(){
-	var startTime = performance.now();
-	var endTime;
-	this.stopTimer = function(){
-		var now = performance.now();
-		endTime = now - startTime;
-		return endTime;
-	}
-}
+///** @constructor */
+//Timetool = function(){
+//	var startTime = performance.now();
+//	var endTime;
+//	this.stopTimer = function(){
+//		var now = performance.now();
+//		endTime = now - startTime;
+//		return endTime;
+//	}
+//}
 var transformer = {
 
 	deleteChart : function(id){

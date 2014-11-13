@@ -51,30 +51,25 @@ function populateTable(callback) {
 				}
 
 				// If the question is not a slider or not_a_question
-				if(data.question_list[questionCounter].type.name === 'slider') {
+				if(data.question_list[questionCounter].type.name === 'slider' || data.question_list[questionCounter].type.name === 'pick_n') {
 					//$('#collapsibleGraph-'+questionCounter).append('<p style="text-shadow: none;">This question was a slider, and is not being visualized yet.</p>');
 				} else if (data.question_list[questionCounter].type.name === 'not_a_question') {
-					$('#collapsibleGraph-'+questionCounter).append('<p style="text-shadow: none;">This prompt could not be responded to.</p>');
-				} else {
-					
-					$("#collapsibleGraph-"+questionCounter).height( $("#collapsibleDiv-"+questionCounter).height() );
-					//$('#collapsibleSet').trigger('create');
-					console.log('HEIGHTHEIGHTHEIGHT:'+$('#collapsibleGraph-'+questionCounter).height())
-					console.log('WIDTHWIDTHWIDTHWID:'+$('#collapsibleGraph-'+questionCounter).width())
-					// Then render the graph
-					//(url, container, questionNumber, type of graph)
-					console.log("url: "+ window.location.origin+'/pollroute/exportpolljson'+window.location.pathname.split('polloverview')[1]);
-					console.log("container: "+'#collapsibleGraph-'+questionCounter);
-					console.log("questionNumber: "+[(parseInt(questionCounter)).toString()]);
-					console.log("type: "+['bar']);
-
-					//loadMatrixCSV(window.location.origin+"/pollroute/frequency"+window.location.pathname.split('/polloverview')[1]+"/"+questionCounter,"#collapsibleGraph-"+questionCounter);
-
-
-
-
+					$('#collapsibleDiv-'+questionCounter).remove();
+					if(data.language && data.language === 'english') {
+						$('#collapsibleGraph-'+questionCounter).append('<p style="text-shadow: none;">This question type isn\'t visualizable. Sorry!</p>');	
+					} else {
+						$('#collapsibleGraph-'+questionCounter).append('<p style="text-shadow: none;">Denna fråga kan ej visualiseras.</p>');
+					}
+					$('#collapsibleGraph-'+questionCounter).height('54px');
+				} else { //open questions
+					$('#collapsibleDiv-'+questionCounter).remove();
+					if(data.language && data.language === 'english') {
+						$('#collapsibleGraph-'+questionCounter).append('<p style="text-shadow: none;">This question type isn\'t visualizable yet. Sorry!</p>');	
+					} else {
+						$('#collapsibleGraph-'+questionCounter).append('<p style="text-shadow: none;">Denna fråga kan ej visualiseras än.</p>');
+					}
+					$('#collapsibleGraph-'+questionCounter).height('54px');
 				}
-				//
 			}
 			$('#collapsibleSet').trigger('create');
 		}
@@ -96,25 +91,27 @@ $(document).ready(function() {
 			if(!$('#collapsibleGraph-'+questionCounter+' svg')[0]) {
 				var answers = [];
 				try {
-					for (responseCounter in poll.question_list[questionCounter].type.response_list) {
-						if(poll.question_list[questionCounter].type.response_list[responseCounter].answers[0].value) {
-							answers.push(poll.question_list[questionCounter].type.response_list[responseCounter].body);
-							//poll.question_list[questionCounter].type.response_list[responseCounter].body
-							//$('#collapsibleGraph-'+questionCounter+' *').find('target-'stripPunctuationAndHyphenate(poll.question_list[questionCounter].type.response_list[responseCounter].body))
-							//$('#collapsibleGraph-'+questionCounter).find('.c3-chart-bar.c3-target-'+stripPunctuationAndHyphenate(poll.question_list[questionCounter].type.response_list[responseCounter].body)+'-').children().children().css('stroke', '#EE474D')
+					if (poll.id === data.id) {
+						for (responseCounter in poll.question_list[questionCounter].type.response_list) {
+							if(poll.question_list[questionCounter].type.response_list[responseCounter].answers[0].value) {
+								answers.push(poll.question_list[questionCounter].type.response_list[responseCounter].body);
+								//poll.question_list[questionCounter].type.response_list[responseCounter].body
+								//$('#collapsibleGraph-'+questionCounter+' *').find('target-'stripPunctuationAndHyphenate(poll.question_list[questionCounter].type.response_list[responseCounter].body))
+								//$('#collapsibleGraph-'+questionCounter).find('.c3-chart-bar.c3-target-'+stripPunctuationAndHyphenate(poll.question_list[questionCounter].type.response_list[responseCounter].body)+'-').children().children().css('stroke', '#EE474D')
+							}
 						}
 					}
 
 					console.log('ANSWERS---------------------v');
 					console.log(answers);
 					console.log('ANSWERS---------------------^');
-					if(poll.question_list[questionCounter].type.name === 'slider') {
+					if(data.question_list[questionCounter].type.name === 'slider') {
 						maggio.visualizeChart(
 							window.location.origin+'/pollroute/exportpolljson'+window.location.pathname.split('polloverview')[1],
 							'#collapsibleGraph-'+questionCounter,
 							[(parseInt(questionCounter)).toString()],
 							['histogram'], answers[0]);
-					} else {
+					} else if (data.question_list[questionCounter].type.name === 'pick_n') {
 						maggio.visualizeChart(
 							window.location.origin+'/pollroute/exportpolljson'+window.location.pathname.split('polloverview')[1],
 							'#collapsibleGraph-'+questionCounter,
