@@ -1147,42 +1147,42 @@ init : function(data,question,options,callback){
 			for (var u = 0; u < visualizationTypes[i].types.length; u++) {
 				var matrix;
 
-				if(matrixMemory[question[0]][question[0]]!=0){
-					matrix =matrixMemory[question[0]][question[1]];
-				}else{
+				// if(matrixMemory[question[0]][question[0]]!=0){
+					// matrix =matrixMemory[question[0]][question[1]];
+				// }else{
 					matrix=opine.getDoubleMatrix(data,visualizationTypes[i].ids);
-				}
+				// }
 				if(matrix==null){
 					continue;
 				}
 				addInfo(visualizationTypes[i].ids,functionName(visualizationTypes[i].types[u]));
 				var rnd = Math.floor(Math.random()*4);
-								optionHandler.addChart("#"+pollchart.chart[pollchart.nrOfCharts-1]);
+				optionHandler.addChart("#"+pollchart.chart[pollchart.nrOfCharts-1]);
 			/*	pollchart.options.colorscheme = rnd;
 				var variable = {};
 				for (var key in pollchart.options) {
 					variable[key]  = pollchart.options[key];
 				}*/
 
-					console.log("QUESTION    " + data.question_list[visualizationTypes[i].ids[0]].type.name);
-		if(data.question_list[visualizationTypes[i].ids[0]].type.name == "pick_n" && data.question_list[visualizationTypes[i].ids[1]].type.name == "pick_n" ){
-			console.log("ChiSquareTest");
-			var val = chiSquareTest(copyMatrix(matrix));
-			if(val == true){
-					optionHandler.updateOption(optionHandler.size-1,"independence","ChiSquareTest: No relation between questions");
-			}else{
-					optionHandler.updateOption(optionHandler.size-1,"independence","ChiSquareTest: Found relation between questions");
-			}
-		}
-		else if(data.question_list[visualizationTypes[i].ids[0]].type.name == "slider" && data.question_list[visualizationTypes[i].ids[1]].type.name == "slider" ){
-			console.log("Pearson correlation");
-			var prefs = new Object();
-			console.log(matrix);
-			prefs.p1 = matrix[0].slice(1);
-			prefs.p2 = matrix[1].slice(1);
-			var pearRes = pearsonCorrelation(prefs, "p1","p2");
-			optionHandler.updateOption(optionHandler.size-1,"independence","Pearson correlation: " + pearRes);
-		}
+				console.log("QUESTION    " + data.question_list[visualizationTypes[i].ids[0]].type.name);
+				if(data.question_list[visualizationTypes[i].ids[0]].type.name == "pick_n" && data.question_list[visualizationTypes[i].ids[1]].type.name == "pick_n" ){
+					console.log("ChiSquareTest");
+					var val = chiSquareTest(copyMatrix(matrix));
+					if(val == true){
+						optionHandler.updateOption(optionHandler.size-1,"independence","ChiSquareTest: No relation between questions");
+					}else{
+						optionHandler.updateOption(optionHandler.size-1,"independence","ChiSquareTest: Found relation between questions");
+					}
+				}
+				else if(data.question_list[visualizationTypes[i].ids[0]].type.name == "slider" && data.question_list[visualizationTypes[i].ids[1]].type.name == "slider" ){
+					console.log("Pearson correlation");
+					var prefs = new Object();
+					console.log(matrix);
+					prefs.p1 = matrix[0].slice(1);
+					prefs.p2 = matrix[1].slice(1);
+					var pearRes = pearsonCorrelation(prefs, "p1","p2");
+					optionHandler.updateOption(optionHandler.size-1,"independence","Pearson correlation: " + pearRes);
+				}
 
 				// pollchart.optionChart.push(variable);
 				// pollchart.currentCharts[pollchart.chart[pollchart.nrOfCharts-1]] = {chart : [i,u,], data : data, question : question};
@@ -1217,7 +1217,7 @@ init : function(data,question,options,callback){
 	if(callback){
 		callback();
 	}
-	},
+},
 /**
 *Visualize one graph from a dataset
 *param{json} data - jsonfile with the polldata
@@ -1434,7 +1434,7 @@ singleCategorical : function(data,index){
 singleContinuous : function(data,index){
 	var matrix = [];
 	data.question_list[index].type.response_list[0].answers.forEach(function(d){
-			matrix.push(parseInt(d.value));
+		matrix.push(parseInt(d.value));
 	});
 	matrix.unshift(data.question_list[index].body);
 	return matrix;
@@ -1682,15 +1682,25 @@ getMixedMatrix : function(data,visualizationTypes){
 					return ["", ""];
 			}
 		},
-				reduceQuestionArray : function(data,array){
-				var questions = [];
-				for (var i = 0; i < array.length; i++) {
-					if(data.question_list[array[i]].type.name != "not_a_question" ){
-								questions.push(array[i]);
+		reduceQuestionArray : function(data,array){
+			var questions = [];
+			if(array.length == 0){
+				for (var i = 0; i < data.question_list.length; i++) {
+					if(data.question_list[i].type.name != "not_a_question" ){
+						questions.push(i);
 					}
 				};
-				return questions;
-				}
+			}else{
+				for (var i = 0; i < array.length; i++) {
+					if(data.question_list[array[i]].type.name != "not_a_question" ){
+						questions.push(array[i]);
+					}
+				};
+			}
+			console.log("QUESTIONs");
+			console.log(questions);
+			return questions;
+		}
 	}
 /**
 * optionHandler holds all the charts data and functions for
@@ -1969,21 +1979,26 @@ var newHeight = $("#tumb" + index).height() -  $(".titleText").height() -  $(".i
 -parseInt($('.titleText').css('margin-bottom'))
 -parseInt($('.infoText').css('margin-bottom'))
 
+if($('#btnshare'+index).length!==0) {
+	console.log("REMOVING THE v");
+newHeight -= $('#share'+index).height()
+newHeight -= parseInt($('#btnshare'+index).css('padding-top'))
+newHeight -= parseInt($('#btnshare'+index).css('padding-bottom'))
+newHeight -= parseInt($('#btnshare'+index).css('margin-bottom'))
+newHeight -= parseInt($('#btnshare'+index).css('margin-top'))
+}
 if($('#btnswap'+index).length !== 0) {
 newHeight -= $('#btnswap' + index).height()
 newHeight -= parseInt($('#btnswap' + index).css('padding-top'))
 newHeight -= parseInt($('#btnswap' + index).css('padding-bottom'))
 }
-else if($('#relation'+index).length!==0) {
+if($('#relation'+index).length!==0) {
 newHeight -= $('#relation'+index).height()
 newHeight -= parseInt($('#relation'+index).css('padding-top'))
 newHeight -= parseInt($('#relation'+index).css('padding-bottom'))
 }
-else if($('#share'+index).length!==0) {
-newHeight -= $('#share'+index).height()
-newHeight -= parseInt($('#share'+index).css('padding-top'))
-newHeight -= parseInt($('#share'+index).css('padding-bottom'))
-}
+console.log(newHeight);
+
 //-parseInt($('#btnswap' + index).css('padding-bottom'));
 // var newHeight = $("#charty" + ind).parent().width() - ($("#charty" + ind).parent().width() - $("#charty" + ind).height())
 console.log(newHeight);
@@ -3465,6 +3480,12 @@ var colorScale = d3.scale.quantile()
           .text(function (d) { 
           	// if(d.length>12){return d.substring(0,12)+"...";} 
           	// else {
+          	if(d==null){
+          			if(options.norm){
+          				return 0 + " %"
+          		}
+          		return 0;
+          	}
      		if(options.norm){
           				return d + " %"
           		}
@@ -3492,7 +3513,9 @@ var colorScale = d3.scale.quantile()
                 .attr("class","heatlabel")
                 // .attr("dy", ".71em")
                 .text(function(d) {
-           
+           	if(d==null){
+           		return 0;
+           	}
                 	return d})
                 .style("font-weight","bold")
                 .style("font-family","Lato")
@@ -3523,13 +3546,21 @@ var colorScale = d3.scale.quantile()
            .attr("height", gridSize-padding)
            .attr("class", "square")
            rec.transition()
-           .style("fill", function(d) {return colorScale(d.value); });
+           .style("fill", function(d) {
+           	if(d.value==null){
+           		return colorScale(d.value);
+           	}
+           	return colorScale(d.value); });
            heatMap.append("title").text(function(d) {return d.value; });
 
            var count=0,count2=0;
            heatMap.append("text")
 
-           .text(function(d) { return  Math.round(d.value); })
+           .text(function(d) {
+           		if(d.value==null){
+           		return Math.round(d.value);
+           	}
+            return  Math.round(d.value); })
            // .attr("x", function(d) { count++; return ((count%columnlength - 1) * gridSize) + textLength+ gridSize+ gridSize/2; })
            // .attr("y", function(d) { count2++; return ( Math.ceil(count2/(columnlength))-1) * gridSize + marginTop + gridSize/2; })
            .attr("x", function(d) {return (d.row * gridSize) + textLength + gridSize/2 + centerPadding;  })
