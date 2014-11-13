@@ -125,7 +125,8 @@ $(window).load(function() {
 		var spinner = new Spinner(opts).spin(target);
 
 		var url = window.location.origin+'/pollroute/exportpolljson/'+window.location.pathname.split('grid/').pop();
-		var array = [0, 1, 2, 3, 4];
+
+		var array = [];
 		var options = {tooltip : false, legend : false, axis : false};
 		var container = '#container';
 		maggio.visualizeSet(url, container, array, options, function() {
