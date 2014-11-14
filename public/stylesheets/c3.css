@@ -258,8 +258,14 @@ body{
 }
 .heatlabel, .heatlegend, .titleText, .infoText, .relation{
   font-family: 'Lato', sans-serif;
+
 }
-.swap, .norm, .share{
+.titleText{
+    text-align: left;
+  margin-left: 5%;
+}
+
+.swap, .norm, .share, .norm2{
 
   padding: 0;
   border: none;
@@ -293,7 +299,7 @@ body{
   .heatlabel{
      font-size: 24px;
   }
-  .swap, .norm{
+  .swap, .norm, .norm2{
 
   padding: 0;
   border: none;
@@ -341,7 +347,7 @@ body{
 #textw
 {
     position: absolute;
-    /*visibility: hidden;*/
+    visibility: hidden;
     height: auto;
     width: auto;
     display: inline-block;
