@@ -7,4 +7,8 @@ router.get('/:id', function(req, res) {
 	res.render('pollGrid');
 });
 
+router.get('/', function(req, res) {
+	res.render('pollGridList');
+})
+
 module.exports = router;
