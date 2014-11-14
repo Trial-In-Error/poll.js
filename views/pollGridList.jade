@@ -1,6 +1,22 @@
 
 extends layout
 
+block head
+	style.
+		::-webkit-scrollbar {
+			width: 2em;
+			height: 2em;
+		}
+		::-webkit-scrollbar-button {
+			background: #F2F7D8;
+		}
+		::-webkit-scrollbar-track-piece {
+			background: #888;
+		}
+		::-webkit-scrollbar-thumb {
+			background: #901f2f;
+		}
+
 block content
 
 	//WARN: THIS IS REALLY UNCOOL; the scripts should be declared in head, not body
@@ -41,7 +57,7 @@ block content
 		
 		.gutter-sizer {width: 2%;}
 		
-		.container {margin: 0px;}
+		.container {margin: 0px overflow: scroll;}
 
 		.item.highlighted {background-color: #9f9f9f}
 

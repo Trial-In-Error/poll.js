@@ -247,6 +247,7 @@ function visualize() {
 		});
 
 		openPanel();
+		//$('*').addClass('noselect');
 		console.log('Visualize callback complete.');
 	});
 }

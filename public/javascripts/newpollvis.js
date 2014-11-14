@@ -3162,7 +3162,7 @@ function stackedBar(options){
 	var toggle = 1;
 	console.log(options.matrix);
 	var r = 0;
-	var rot = options.matrix.length > 3; rotated : false ? rotated : true;
+	//var rot = options.matrix.length > 3; rotated : false ? rotated : true;
 	// if(rot){r = 70;}
 	var r;
 
@@ -3207,7 +3207,7 @@ function stackedBar(options){
 			groups :  [names],
 		},
 		axis: {
-			rotated : rot,
+			rotated : false,
 			x: {
 				show : options.axis,
 				height: options.legendMargin,
@@ -3229,9 +3229,7 @@ function stackedBar(options){
 		legend : {
 			show : options.legend
 		},
-		padding : {
-			left : 100
-		}
+		
 	});
 	// if(rot){
 	// 	// $(options.container+" .c3-axis-x .tick text").css("text-anchor","start");
