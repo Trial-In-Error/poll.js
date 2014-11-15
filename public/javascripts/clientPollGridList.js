@@ -23,12 +23,13 @@ function suppressPieChartInteractions() {
 }
 
 function openPanel() {
+	//WARN: THIS ISN'T A RETURN BUTTON, IT'S A SHARE BUTTON :(
 	$('#gridPanel #returnButton').off();
 	$('#gridPanel #returnButton').on('click', function() {
 		if(maggio.poll.language && maggio.poll.language === 'english') {
 			alert('Shareable data sets are coming soon!');
 		} else {
-			alert('Visualiseringar kan delas inom kort.');
+			alert('Denna funktion är inte tillgänglig i denna utställningsversion.');
 		}
 		//console.warn('test');
 	});

@@ -9,14 +9,14 @@ var tables  ={
 	],
 
 	charts    :[
-	[[histogram],[pie,bar/*,bar2*/],[stackedBar,heatmap,lineCat,bar/*,bar2*/]],
+	[[histogram],[pie,bar/*,bar2*/],[stackedBar,heatmap,lineCat,bar2/*,bar2*/]],
 	[[scatter,line,regressionline],[/*lineCat*/stackedBar,bar/*,bar2*//*,pie*/],[bubble]],
 	[[bubble]]
 	]
 	,
 	charts2    :[
 	[[histogram],[pie,bar/*,bar2*/],[stackedBar,heatmap2,lineCat,bar/*,bar2*/]],
-	[[scatter,line,regressionline],[/*lineCat*/stackedBar,bar/*,bar2*/,pie],[bubble]],
+	[[scatter,line,regressionline],[/*lineCat*/stackedBar,bar2/*,bar2*/,pie],[bubble]],
 	[[bubble]]
 	]
 	,
@@ -106,7 +106,7 @@ return string.replace(/[\.,\\/#!$%\^&\*;:{}=_`~()]/g,"").replace(/\s{2,}/g,"-");
 }
 
 var buttons ={
-	swap : "swap",
+	swap : "växla",
 	normalize : "Q1 i %",
 	normalize2 : "Q2 i %" ,
 	share : "dela"
@@ -121,7 +121,7 @@ var titles = {
 }
 
 var errorMessages = {
-	share : "Denna funkion är inte tillgänglig än"
+	share : "Denna funktion är inte tillgänglig i denna utställningsversion."
 }
 var  eventHandler = function(){
 	
@@ -205,7 +205,7 @@ visualizeChart : function(structure,data,frequency,question,chart){
 	var matrix;
 	// createTable();
 	pollchart.nrOfCharts = 0;
-	var dt = "frequency";
+	var dt = "Frekvens";
 	if(question.length==1){
 		matrix =  flashpoll.getSingleMatrix(structure,data,question);
 		addInfo2(data.name,structure.title);
@@ -1333,7 +1333,7 @@ visualizeChart : function(data,question,chart,color,answer){
 		optionHandler.updateOption(optionHandler.size-1,"id",optionHandler.size-1)
 		optionHandler.updateOption(optionHandler.size-1,"answer",answer)
 		// optionHandler.updateOption(optionHandler.size-1,"xlabel","Something")
-		optionHandler.updateOption(optionHandler.size-1,"ylabel","frequency")
+		optionHandler.updateOption(optionHandler.size-1,"ylabel","Frekvens")
 		optionHandler.pointer = optionHandler.size-1;
 		var chart = chartNames[chart](optionHandler.getOption(optionHandler.size-1));
 		optionHandler.updateOption(optionHandler.size-1,"c3",chart);
@@ -1374,8 +1374,8 @@ calculateVisualizations : function(q,data,single){
 		{
 			ids:[q[i]],
 			types: getListOfCharts([array[q[i]].type.name],single),
-			ylabel : "Frequency",
-			xlabel : "Categories"
+			ylabel : "Frekvens",
+			xlabel : "Kategorier"
 		});
 
 
@@ -1385,8 +1385,8 @@ calculateVisualizations : function(q,data,single){
 				{
 					ids:[q[i],q[j]],
 					types: getListOfCharts([array[q[i]].type.name,array[q[j]].type.name],single),
-					ylabel : "Mean",
-					xlabel : "Categories"
+					ylabel : "Medelvarde",
+					xlabel : "Kategorier"
 
 				});
 			}else{
@@ -1450,7 +1450,7 @@ singleCategorical : function(data,index){
 		}
 
 	});
-	matrix.unshift(["title","frequency"]);
+	matrix.unshift(["title","Frekvens"]);
 	return matrix;
 },
 				/**
@@ -2526,67 +2526,89 @@ function bar(options){
 *
 *param{Array} matrix - array holding the table
 */
-function bar2(matrix){
-	var m = matrix;
-	var names = matrix[0];
-	var rot = matrix.length > 8; rotated : false ? rotated : true;
+function bar2(options){
+	optionHandler.pointer = options.id;
+	var m = options.matrix;
+	if(m[0].length>4){r = 70;}
+	var names = columnNames(m);
+	// var names = m[0];
+	var r;
+	console.log("IS SWAPED ???? "  + options.swap);
+	if(options.swap){
+		r= rotateText(names);
+			var temp = options.ylabel;
+		options.ylabel = options.xlabel;
+		options.xlabel = temp;
+
+	}else{
+			var temp = options.ylabel;
+		options.ylabel = options.xlabel;
+		options.xlabel = temp;
+		r= rotateText([""]);
+		// r= rotateText(m[0]);
+	}
+
+	var rot = m.length > 7; rotated : false ? rotated : true;
+	for (var i = 1; i < m[0].length; i++) {
+		names.push(m[0][i]);
+	};
+	options.legendMargin = xHeight(names,r);
+	console.log(options.legendMargin);
+	// options.legendMargin = textWidth(getArrayMaxElement(),)
 	var c = 0;
-
 	var chart = c3.generate({
-		bindto: "#"+pollchart.chart[pollchart.nrOfCharts-1],
-		interaction: { enabled:  options.interaction },
+		bindto: options.container,
+		interaction: { enabled:  options.interaction},
 		data: {
-
 			x : m[0][0],
-			rows : m,
+			columns : m,
 			type: 'bar',
 			color: function (color, d) {
-				console.log(d);
-				return datacolors.getColor(d,names,true);
-			}
+				return datacolors.getColor(d,names,options.color);
+			},
+			section : {enabled : false}
 		},
 		bar: {
-			width : 100,
+			width : 0.9,
 			width: {
             ratio: 0.5 // this makes bar width 50% of length between ticks
         }
     },
 
     tooltip: {
-    	show : pollchart.options.tooltip
+    	show : options.tooltip,
+    	grouped : false
     },
     legend : {
-    	show : false
+    	show : options.legend
     },
     axis: {
     	rotated : rot,
-
     	x: {
-    		show : pollchart.options.axis,
-    		height : 85,
+    		height: options.legendMargin,
+    		 //height : 65,
+    		show : options.axis,
+    		label : options.ylabel,
     		type: 'categorized',
     		tick: {
-    			// rotate : 0
-				// 	rotate: function(){
-				// 		if(matrix.length>3){return 70;}
-				// 		else {return 1;}},
-			},
-		},
-		y : {
-			show : pollchart.options.axis,
-			label : matrix[0][1]
-		},
-
-		width: {
-			ratio: 100
-		},
-	},
-	scroll : {enabled : true},
-	zoom : {enabled : false},
+    			rotate : r
+    		},
+    	},
+    	y : {
+    		show : options.axis,
+    		//label : options.xlabel
+    	},
+    },
 
 
 });
-	pollchart.data.push({chart : chart, matrix : matrix});
+	// Removes side text
+	if(rot && m.length > 2){
+		$(options.container+" .c3-axis-x .tick text").remove();
+		// $("#charty2 .c3-axis-x .tick text").remove();
+	}
+	return chart;
+	// pollchart.data.push({chart : chart, matrix : matrix});
 }
 function bardouble(matrix,ylabel){
 	var m = matrix;

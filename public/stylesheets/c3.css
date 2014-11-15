@@ -260,7 +260,7 @@ body{
   font-family: 'Lato', sans-serif;
 
 }
-.titleText{
+.titleText, .infoText{
     text-align: left;
   margin-left: 5%;
 }

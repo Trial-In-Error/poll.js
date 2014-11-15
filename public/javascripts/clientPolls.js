@@ -62,14 +62,14 @@ function populateTable() {
 				}
 			});
 
-			tableContent += '<li data-theme="b" data-role="collapsible" data-collapsed="false" data-iconpos="right" data-inset="false"> <h2>Open Polls</h2>';
+			tableContent += '<li data-theme="b" data-role="collapsible" data-collapsed="false" data-iconpos="right" data-inset="false"> <h2>Pågående undersökningar</h2>';
 			tableContent += '<ul data-theme="a" data-role="listview">';
 			for (var openIndex in openPolls) {
 				tableContent = constructRow(tableContent, openPolls[openIndex], data);
 			}
 			tableContent += '</ul></li>';
 
-			tableContent += '<li data-theme="b" data-role="collapsible" data-collapsed="false" data-iconpos="right" data-inset="false"> <h2>Closed Polls</h2>';
+			tableContent += '<li data-theme="b" data-role="collapsible" data-collapsed="false" data-iconpos="right" data-inset="false"> <h2>Avslutade undersökningar</h2>';
 			tableContent += '<ul data-theme="a" data-role="listview">';
 			for (var closedIndex in closedPolls) {
 				tableContent = constructRow(tableContent, closedPolls[closedIndex], data);
