@@ -940,18 +940,18 @@ function pageShowHelper() {
 	if(window.location.pathname.toLowerCase() === '/polls') {
 		//nothing
 	} else {
-		if (pollIsStored()) {
-				console.log('poll loaded');
+		//if (pollIsStored()) {
+		//		console.log('poll loaded');
 				//current_question = 0;
-				loadPoll();
-			} else {
+		//		loadPoll();
+		//	} else {
 				if(firstRun) {
-					console.log('poll stored');
+		//			console.log('poll stored');
 					eval($('#data')[0].innerHTML); // jshint ignore:line
 					current_question = 0;
-					storePoll();
+		//			storePoll();
 				}
-			}
+		//	}
 			renderCurrentQuestion();
 			renderBottomButtons();
 
