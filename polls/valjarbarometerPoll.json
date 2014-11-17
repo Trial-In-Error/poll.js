@@ -1,13 +1,13 @@
 {
-	"name": "Väl",
+	"name": "Väljarbarometer",
 	"id": "10",
 	"open": true,
-	"owner": "#swedish_summer_sucks",
+	"owner": "Aftonbladet och United Minds",
 	"allow_skipping": false,
 	"question_list":
 	[
 		{
-			"body": "I samband med utställning Forsking pågår och Opiner vill vi ställa några frågor kring ditt besök på Tekniska Museet.",
+			"body": "Aftonbladet och United Minds öppna Väljarbarometer September 2010 till Mars 2013.",
 			"type":
 			{
 				"name": "not_a_question"
@@ -15,7 +15,7 @@
 			"opening_slide": true
 		},
 		{
-			"body": "Motsvarar utställning \"Forsking Pågår\" dina förväntningar?",
+			"body": "Vilken är din huvudsakliga sysselsättning?",
 			"type":
 			{
 				"name": "pick_n",
@@ -23,25 +23,28 @@
 				"response_list":
 				[
 					{
-						"body": "Absolut"
+						"body": "Pensionär"
 					},
 					{
-						"body": "Ja"
+						"body": "Arbetslös"
 					},
 					{
-						"body": "Delvis"
+						"body": "Förvärvsarbetande"
 					},
 					{
-						"body": "Lite"
+						"body": "Studerande"
 					},
 					{
-						"body": "Inte alls"
+						"body": "Hemarbetande"
+					},
+					{
+						"body": "Vet ej"
 					}
 				]
 			}
 		},
 		{
-			"body": "Vad skulle du vilja veta mera om?",
+			"body": "Vilken är din högsta avslutade utbildning?",
 			"type":
 			{
 				"name": "pick_n",
@@ -49,25 +52,25 @@
 				"response_list":
 				[
 					{
-						"body": "Energi"
+						"body": "Folkskola, grundskola"
 					},
 					{
-						"body": "Informations- och kommunikationsteknologi"
+						"body": "Gymnasieutbildning kortare än tre år"
 					},
 					{
-						"body": "Material"
+						"body": "Gymnasieutbildning tre år eller längre"
 					},
 					{
-						"body": "Life Science"
+						"body": "Eftergymnasial utbildning upp till tre år"
 					},
 					{
-						"body": "Transport"
+						"body": "Eftergymnasial utbildning längre än tre år"
 					}
 				]
 			}
 		},
 		{
-			"body": "Skull du oftare gå på museum ifall det var gratis?",
+			"body": "Har du några barn?",
 			"type":
 			{
 				"name": "pick_n",
@@ -75,22 +78,19 @@
 				"response_list":
 				[
 					{
-						"body": "Mycket mera"
+						"body": "Ja, hemmavarande"
 					},
 					{
-						"body": "Något oftare"
+						"body": "Ja, utflyttade"
 					},
 					{
-						"body": "Ett par ganger"
-					},
-					{
-						"body": "Troligen Inte"
+						"body": "Nej"
 					}
 				]
 			}
 		},
 		{
-			"body": "Vad är en rimlig kostnad för ett museum besök?",
+			"body": "Hur skulle du rösta om det vore val till riksdagen i dag?",
 			"type":
 			{
 				"name": "pick_n",
@@ -98,31 +98,49 @@
 				"response_list":
 				[
 					{
-						"body": "Mindre än 25"
+						"body": "Moderaterna"
 					},
 					{
-						"body": "25-50"
+						"body": "Folkpartiet"
 					},
 					{
-						"body": "51-75"
+						"body": "Centerpartiet"
 					},
 					{
-						"body": "76-100"
+						"body": "Kristdemokraterna"
 					},
 					{
-						"body": "101-150"
+						"body": "Socialdemokraterna"
 					},
 					{
-						"body": "151-250"
+						"body": "Vänsterpartiet"
 					},
 					{
-						"body": "Större än 25"
+						"body": "Miljöpartiet"
+					},
+					{
+						"body": "Sverigedemokraterna"
+					},
+					{
+						"body": "Annat"
+					},
+					{
+						"body": "Tänker rösta blankt"
+					},
+					{
+						"body": "Skulle inte rösta"
+					},
+					{
+						"body": "Vill ej uppge"
+					},
+					{
+						"body": "Tveksam, vet ej"
 					}
 				]
 			}
 		},
 		{
-			"body": "Vilket är ditt främsta intresse?",
+			"body": "Om du ser tillbaka till det senaste riksdagsvalet 2010 - röstade du i det valet och i så fall på vilket parti?",
 			"type":
 			{
 				"name": "pick_n",
@@ -130,25 +148,49 @@
 				"response_list":
 				[
 					{
-						"body": "Teknik"
+						"body": "Moderaterna"
 					},
 					{
-						"body": "Samhällsfrågor"
+						"body": "Folkpartiet"
 					},
 					{
-						"body": "Humaniora"
+						"body": "Centerpartiet"
 					},
 					{
-						"body": "Konst"
+						"body": "Kristdemokraterna"
 					},
 					{
-						"body": "Litteratur"
+						"body": "Socialdemokraterna"
 					},
 					{
-						"body": "Sport"
+						"body": "Vänsterpartiet"
 					},
 					{
-						"body": "Fritid"
+						"body": "Miljöpartiet"
+					},
+					{
+						"body": "Sverigedemokraterna"
+					},
+					{
+						"body": "Annat"
+					},
+					{
+						"body": "Varför ung då"
+					},
+					{
+						"body": "Utländsk medborgare då"
+					},
+					{
+						"body": "Röstade inte"
+					},
+					{
+						"body": "Röstade blankt"
+					},
+					{
+						"body": "Minns ej"
+					},
+					{
+						"body": "Vill ej uppge"
 					}
 				]
 			}

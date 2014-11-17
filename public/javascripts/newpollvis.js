@@ -9,13 +9,13 @@ var tables  ={
 	],
 
 	charts    :[
-	[[histogram],[pie,bar/*,bar2*/],[stackedBar,heatmap,lineCat,bar2/*,bar2*/]],
+	[[/*histogram*/],[pie,bar/*,bar2*/],[stackedBar,heatmap,lineCat,bar2/*,bar2*/]],
 	[[scatter,line,regressionline],[/*lineCat*/stackedBar,bar/*,bar2*//*,pie*/],[bubble]],
 	[[bubble]]
 	]
 	,
 	charts2    :[
-	[[histogram],[pie,bar/*,bar2*/],[stackedBar,heatmap2,lineCat,bar/*,bar2*/]],
+	[[/*histogram*/],[pie,bar/*,bar2*/],[stackedBar,heatmap2,lineCat,bar/*,bar2*/]],
 	[[scatter,line,regressionline],[/*lineCat*/stackedBar,bar2/*,bar2*/,pie],[bubble]],
 	[[bubble]]
 	]
@@ -530,7 +530,7 @@ var matrixArray = [];
 */
 var chartFunctions = [bar,line,scatter,regressionline,regressionline,normalLine,pie,stackedArea,stackedBar,bubble,slideBar,slidePie,line,heatmap,histogram];
 var chartNames = {
-	"bar" : bar,
+	"bar" : tempbar,
 	"line" : line,
 	"scatter" : scatter,
 	"regressionline" : regressionline,
@@ -945,6 +945,9 @@ function swapCategorical(matrix){
 	return retMatrix;
 }
 function copyMatrix(matrix){
+	if(matrix==null){
+		return null;
+	}
 	var newArray = [];
 
 for (var i = 0; i < matrix.length; i++){
@@ -1130,7 +1133,7 @@ init : function(data,question,options,callback){
 
 	var visualizationTypes = opine.calculateVisualizations(opine.reduceQuestionArray(data,question),data,false);
 	console.log(visualizationTypes);
-	for (var i = 0; i < visualizationTypes.length; i++) {
+	for (var i = 0; i <visualizationTypes.length; i++) {
 		if(visualizationTypes[i].ids.length==1){
 			var matrix;
 			
@@ -1192,25 +1195,25 @@ init : function(data,question,options,callback){
 					variable[key]  = pollchart.options[key];
 				}*/
 
-				console.log("QUESTION    " + data.question_list[visualizationTypes[i].ids[0]].type.name);
-				if(data.question_list[visualizationTypes[i].ids[0]].type.name == "pick_n" && data.question_list[visualizationTypes[i].ids[1]].type.name == "pick_n" ){
-					console.log("ChiSquareTest");
-					var val = chiSquareTest(copyMatrix(matrix));
-					if(val == true){
-						optionHandler.updateOption(optionHandler.size-1,"independence","ChiSquareTest: No relation between questions");
-					}else{
-						optionHandler.updateOption(optionHandler.size-1,"independence","ChiSquareTest: Found relation between questions");
-					}
-				}
-				else if(data.question_list[visualizationTypes[i].ids[0]].type.name == "slider" && data.question_list[visualizationTypes[i].ids[1]].type.name == "slider" ){
-					console.log("Pearson correlation");
-					var prefs = new Object();
-					console.log(matrix);
-					prefs.p1 = matrix[0].slice(1);
-					prefs.p2 = matrix[1].slice(1);
-					var pearRes = pearsonCorrelation(prefs, "p1","p2");
-					optionHandler.updateOption(optionHandler.size-1,"independence","Pearson correlation: " + pearRes);
-				}
+			//	console.log("QUESTION    " + data.question_list[visualizationTypes[i].ids[0]].type.name);
+			//	if(data.question_list[visualizationTypes[i].ids[0]].type.name == "pick_n" && data.question_list[visualizationTypes[i].ids[1]].type.name == "pick_n" ){
+			//		console.log("ChiSquareTest");
+			//		var val = chiSquareTest(copyMatrix(matrix));
+			//		if(val == true){
+			//			optionHandler.updateOption(optionHandler.size-1,"independence","ChiSquareTest: No relation between questions");
+			//		}else{
+			//			optionHandler.updateOption(optionHandler.size-1,"independence","ChiSquareTest: Found relation between questions");
+			//		}
+			//	}
+			//	else if(data.question_list[visualizationTypes[i].ids[0]].type.name == "slider" && data.question_list[visualizationTypes[i].ids[1]].type.name == "slider" ){
+			//		console.log("Pearson correlation");
+			//		var prefs = new Object();
+			//		console.log(matrix);
+			//		prefs.p1 = matrix[0].slice(1);
+			//		prefs.p2 = matrix[1].slice(1);
+			//		var pearRes = pearsonCorrelation(prefs, "p1","p2");
+			//		optionHandler.updateOption(optionHandler.size-1,"independence","Pearson correlation: " + pearRes);
+			//	}
 
 				// pollchart.optionChart.push(variable);
 				// pollchart.currentCharts[pollchart.chart[pollchart.nrOfCharts-1]] = {chart : [i,u,], data : data, question : question};
@@ -2039,7 +2042,6 @@ var transformer = {
 //-parseInt($('#btnswap' + index).css('padding-bottom'));
 // var newHeight = $("#charty" + ind).parent().width() - ($("#charty" + ind).parent().width() - $("#charty" + ind).height())
 console.log(newHeight);
-
 console.log(ind);
 $("#charty" + ind ).css('height',newHeight);
 $("#charty" + ind ).css('max-height','none');
@@ -2502,6 +2504,178 @@ function bar(options){
     			rotate : r
 
 
+    		},
+    	},
+    	y : {
+    		show : options.axis,
+    		label : options.ylabel
+    	},
+    },
+
+
+});
+	// Removes side text
+	if(rot && m.length > 2){
+		$(options.container+" .c3-axis-x .tick text").remove();
+		// $("#charty2 .c3-axis-x .tick text").remove();
+	}
+	return chart;
+	// pollchart.data.push({chart : chart, matrix : matrix});
+}
+/**
+* Plots a column/ barchart depending on size of the array
+* Column is array is smaller then 10, else bar chart.
+*
+*param{Array} matrix - array holding the table
+*/
+function bar2(options){
+	optionHandler.pointer = options.id;
+	var m = options.matrix;
+	if(m[0].length>4){r = 70;}
+	var names = columnNames(m);
+	// var names = m[0];
+	var r;
+	console.log("IS SWAPED ???? "  + options.swap);
+	if(options.swap){
+		r= rotateText(names);
+			var temp = options.ylabel;
+		options.ylabel = options.xlabel;
+		options.xlabel = temp;
+
+	}else{
+			var temp = options.ylabel;
+		options.ylabel = options.xlabel;
+		options.xlabel = temp;
+		r= rotateText([""]);
+		// r= rotateText(m[0]);
+	}
+
+	var rot = m.length > 7; rotated : false ? rotated : true;
+	for (var i = 1; i < m[0].length; i++) {
+		names.push(m[0][i]);
+	};
+	options.legendMargin = xHeight(names,r);
+	console.log(options.legendMargin);
+	// options.legendMargin = textWidth(getArrayMaxElement(),)
+	var c = 0;
+	var chart = c3.generate({
+		bindto: options.container,
+		interaction: { enabled:  options.interaction},
+		data: {
+			x : m[0][0],
+			columns : m,
+			type: 'bar',
+			color: function (color, d) {
+				return datacolors.getColor(d,names,options.color);
+			},
+			section : {enabled : false}
+		},
+		bar: {
+			width : 0.9,
+			width: {
+            ratio: 0.5 // this makes bar width 50% of length between ticks
+        }
+    },
+
+    tooltip: {
+    	show : options.tooltip,
+    	grouped : false
+    },
+    legend : {
+    	show : options.legend
+    },
+    axis: {
+    	rotated : rot,
+    	x: {
+    		height: options.legendMargin,
+    		 //height : 65,
+    		show : options.axis,
+    		label : options.ylabel,
+    		type: 'categorized',
+    		tick: {
+    			rotate : r
+    		},
+    	},
+    	y : {
+    		show : options.axis,
+    		//label : options.xlabel
+    	},
+    },
+
+
+});
+	// Removes side text
+	if(rot && m.length > 2){
+		$(options.container+" .c3-axis-x .tick text").remove();
+		// $("#charty2 .c3-axis-x .tick text").remove();
+	}
+	return chart;
+	// pollchart.data.push({chart : chart, matrix : matrix});
+}
+function tempbar(options){
+	optionHandler.pointer = options.id;
+	var m = options.matrix;
+	if(m[0].length>4){r = 70;}
+	var names = columnNames(m);
+	// var names = m[0];
+	var r;
+	console.log("IS SWAPED ???? "  + options.swap);
+	if(options.swap){
+		r= rotateText(names);
+	}else{
+		r= rotateText([""]);
+		// r= rotateText(m[0]);
+	}
+
+	var rot = m.length > 7; rotated : false ? rotated : true;
+	for (var i = 1; i < m[0].length; i++) {
+		names.push(m[0][i]);
+	};
+	options.legendMargin = xHeight(names,r);
+	console.log(options.legendMargin);
+	// options.legendMargin = textWidth(getArrayMaxElement(),)
+	var c = 0;
+	var chart = c3.generate({
+		bindto: options.container,
+		interaction: { enabled:  options.interaction},
+		data: {
+			x : m[0][0],
+			columns : m,
+			type: 'bar',
+			color: function (color, d) {
+				return datacolors.getColor(d,names,options.color);
+			},
+			section : {enabled : false}
+		},
+		bar: {
+			width : 0.9,
+			width: {
+            ratio: 0.5 // this makes bar width 50% of length between ticks
+        }
+    },
+
+    tooltip: {
+    	show : options.tooltip,
+    	grouped : false
+    },
+    legend : {
+    	show : options.legend,
+    	item : {
+    		onclick : function(){
+    			return;
+    		}
+    	}
+    },
+    axis: {
+    	rotated : rot,
+    	x: {
+    		height: options.legendMargin,
+    		// height : 65,
+    		show : options.axis,
+    		label : options.xlabel,
+    		type: 'categorized',
+    		tick: {
+    			rotate : r
     		},
     	},
     	y : {
@@ -3507,6 +3681,11 @@ var colorScale = d3.scale.quantile()
        function heatmap2(options,nHeight){
        	$(options.container).css("margin-left",0)
        	var m = options.matrix;
+       	if(m==null){
+       		return;
+       	}
+       	console.log('-------------FEL HAR');
+       	console.log(m);
        	var head =  m[0].slice(1,m[0].length);
        	m=m.slice(1,m.length);
        	var dim_1 = columnNames(m);
