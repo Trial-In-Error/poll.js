@@ -249,6 +249,7 @@ function visualize() {
 
 		openPanel();
 		$('*').addClass('noselect');
+		$('*').css('cursor', 'none');
 
 		//$('*').addClass('noselect');
 		console.log('Visualize callback complete.');
