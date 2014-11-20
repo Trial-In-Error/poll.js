@@ -248,6 +248,8 @@ function visualize() {
 		});
 
 		openPanel();
+		$('*').addClass('noselect');
+
 		//$('*').addClass('noselect');
 		console.log('Visualize callback complete.');
 	});
