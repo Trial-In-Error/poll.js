@@ -1,5 +1,3 @@
-//http://themeroller.jquerymobile.com/?ver=1.4.3&style_id=20140909-41
-
 poll.js
 ================================
 To install:
