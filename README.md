@@ -22,6 +22,7 @@ Building this library requires node and grunt. To build it, navigate to the proj
 
 Testing
 -------
+The example page, chooser.html, can be viewed by hosting it on a server. An easy way to set it up is to install node's simple-server with `npm simple-server`. Then, run it with `simple-server` and view it by opening up a browser, navigating to `http:localhost:3000`, and locating chooser.html. By default, it's found at `http://localhost:3000/v11n/chooser.html`. 
 
 Contact
 -------
