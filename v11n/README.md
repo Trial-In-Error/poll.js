@@ -1,4 +1,15 @@
 vistool
 =======
+A small javascript library for visualizing, graphing, and charting!
 
-data visualization
+Example Use
+-------
+
+API
+-------
+
+Building
+-------
+
+Testing
+-------
