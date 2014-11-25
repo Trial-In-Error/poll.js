@@ -3048,6 +3048,7 @@ var colorScale = d3.scale.quantile()
 		var textLength = getWordWidth2(longestElement);
 		// var gridSize = Math.floor((h-marginTop)/(maxSize+2));
 		var gridSize = Math.floor((w-textLength)/(columnlength+2));
+		var gridSize2 = Math.floor((h-textLength)/(columnlength+2));
 		var padding = gridSize/maxSize;
 		var titleHight = getWordWidth2("T") * 3;
 		var shiftR = 10;
