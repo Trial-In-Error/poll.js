@@ -90,7 +90,7 @@ function bar(options){
 	console.log(options.legendMargin);
 	// options.legendMargin = textWidth(getArrayMaxElement(),)
 	var c = 0;
-	var chart = c3.generate({
+	var settings = {
 		bindto: options.container,
 		interaction: { enabled:  options.interaction},
 		data: {
@@ -134,7 +134,12 @@ function bar(options){
     },
 
 
-});
+};
+
+if(options.chartOptions != null){
+	settings = visGenerator.addOptions(settings,options.chartOptions);
+}
+	var chart = c3.generate(settings);
 	// Removes side text
 	if(rot && m.length > 2){
 		$(options.container+" .c3-axis-x .tick text").remove();
@@ -1307,7 +1312,7 @@ var colorScale = d3.scale.quantile()
             .attr("y", titleHight)         
             .style("font-size", fontSize+"px")
             .style("font-family","Lato")
-            .style("text-anchor","middle")
+            .style("text-anchor","start")
             .style("fill","#FF0000")
             .text(options.ylabel)
             .style("font-weight","bold");

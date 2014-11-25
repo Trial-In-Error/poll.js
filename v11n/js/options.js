@@ -4,6 +4,7 @@
 */
 var optionHandler = function(){
 this.myDefault = null;
+this.chartOptions = null;
 this.chartID = "charty";
 this.array = [];
 this.size = 0;
@@ -48,6 +49,7 @@ var defaultOptions = {
 	classname : null,
 	chart : null,
 	id: null,
+	chartOptions : null,
 	container: null,
 	orgmatrix : null,
 	matrix: null,

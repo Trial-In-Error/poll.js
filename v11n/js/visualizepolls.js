@@ -52,14 +52,14 @@ var visualizepolls = function(){
 		}
 
 	}
-	this.flashChart = function(url,question,container,chart){
+	this.flashChart = function(url,question,container,chart,options){
 	var self = this;
 	d3.json(url+".json", function(structure) {
 		d3.json(url+"results.json", function(data) {
 			d3.json(url+"result.json", function(frequency) {
 						console.log(data);
 				console.log(frequency);
-				flashpoll.visualizeChart(self,structure,data,frequency,question,chart,container);
+				flashpoll.visualizeChart(self,structure,data,frequency,question,chart,container,options);
 			});
 		});
 	});

@@ -262,13 +262,16 @@ var flashpoll = {
 *param{array} question - array containing the positions of the qustions in the poll
 *param{int} nr - nr of what chart to use
 */
-visualizeChart : function(ref,structure,data,frequency,question,chart,container){
+visualizeChart : function(ref,structure,data,frequency,question,chart,container,options){
 	var matrix;
 
 	var dt = "frequency";
+	ref.optionsdata.addChart(container);
 	if(question.length==1){
 		matrix =  flashpoll.getSingleMatrix(structure,frequency,question[0]);
 		console.log(matrix);
+		// ref.optionsdata.updateOption(ref.optionsdata.size-1,"xlabel","")
+		ref.optionsdata.updateOption(ref.optionsdata.size-1,"ylabel","score")
 	}
 	else{
 			var matrix=flashpoll.getDoubleMatrix(structure,data,question);
@@ -281,20 +284,22 @@ visualizeChart : function(ref,structure,data,frequency,question,chart,container)
 				subtitle += structure.questions[question[i]].questionText;
 				subtitle += "<br/>"
 			}
+			ref.optionsdata.updateOption(ref.optionsdata.size-1,"xlabel",(structure.questions[question[0]].questionText).trunc(20))
+			ref.optionsdata.updateOption(ref.optionsdata.size-1,"ylabel",(structure.questions[question[1]].questionText).trunc(20))
 		}
-
 		
-		ref.optionsdata.addChart(container);
 		ref.optionsdata.updateOption(ref.optionsdata.size-1,"matrix",matrix);
 		ref.optionsdata.updateOption(ref.optionsdata.size-1,"chart",chartNames[chart]);
 		ref.optionsdata.updateOption(ref.optionsdata.size-1,"color",1)
 		ref.optionsdata.updateOption(ref.optionsdata.size-1,"id",optionHandler.size-1)
 		// ref.optionsdata.updateOption(ref.optionsdata.size-1,"answer",answer)
-		ref.optionsdata.updateOption(ref.optionsdata.size-1,"xlabel","Something")
-		ref.optionsdata.updateOption(ref.optionsdata.size-1,"ylabel","frequency")
+	
 		ref.optionsdata.pointer = ref.optionsdata.size-1;
+		ref.optionsdata.array[ref.optionsdata.size-1] = visGenerator.addOptions(ref.optionsdata.array[ref.optionsdata.size-1],options);
 		var chart = chartNames[chart](ref.optionsdata.getOption(ref.optionsdata.size-1));
 		ref.optionsdata.updateOption(ref.optionsdata.size-1,"c3",chart);
+
+
 	},
 
 	calculateVisualizations : function(structure,data,q,single){
@@ -392,7 +397,7 @@ visualizeChart : function(ref,structure,data,frequency,question,chart,container)
 							var answerOrder = d.pollResQuestions[i].pollResultAnswers[j].answerOrderId;
 						var score = d.pollResQuestions[i].pollResultAnswers[j].answerScore;
 						for (var u = 0; u < matrix[0].length; u++){
-							matrix[u][answerOrder] = matrix[u][answerOrder] * score;
+							matrix[u][answerOrder] = flashpoll.merge(matrix[u][answerOrder],score);
 						};
 					}
 
@@ -402,8 +407,13 @@ visualizeChart : function(ref,structure,data,frequency,question,chart,container)
 	addSideNames(matrix,side);
 	matrix.unshift(header);
 	return matrix;
-	}
+	},
+	merge : function(q1,q2){
+	return q1 + q2;
 }
+}
+
+
 /**
 * Returns the position of the value in the array
 *param{Array} array - array to be searched
@@ -1711,6 +1721,7 @@ getMixedMatrix : function(data,visualizationTypes){
 */
 var optionHandler = function(){
 this.myDefault = null;
+this.chartOptions = null;
 this.chartID = "charty";
 this.array = [];
 this.size = 0;
@@ -1755,6 +1766,7 @@ var defaultOptions = {
 	classname : null,
 	chart : null,
 	id: null,
+	chartOptions : null,
 	container: null,
 	orgmatrix : null,
 	matrix: null,
@@ -1800,12 +1812,18 @@ var visframes = {
 	}
 }
 
-var visGenerator = function(options){
-	
-}
+var visGenerator = {
+
+	addOptions : function(base,options){
+		for(key in options){
+			base[key] = options[key];
+		}
+		return base;
+	}
+
+};
 
 var visualizations = {
-
 
 }
 /**
@@ -1900,7 +1918,7 @@ function bar(options){
 	console.log(options.legendMargin);
 	// options.legendMargin = textWidth(getArrayMaxElement(),)
 	var c = 0;
-	var chart = c3.generate({
+	var settings = {
 		bindto: options.container,
 		interaction: { enabled:  options.interaction},
 		data: {
@@ -1944,7 +1962,12 @@ function bar(options){
     },
 
 
-});
+};
+
+if(options.chartOptions != null){
+	settings = visGenerator.addOptions(settings,options.chartOptions);
+}
+	var chart = c3.generate(settings);
 	// Removes side text
 	if(rot && m.length > 2){
 		$(options.container+" .c3-axis-x .tick text").remove();
@@ -3117,7 +3140,7 @@ var colorScale = d3.scale.quantile()
             .attr("y", titleHight)         
             .style("font-size", fontSize+"px")
             .style("font-family","Lato")
-            .style("text-anchor","middle")
+            .style("text-anchor","start")
             .style("fill","#FF0000")
             .text(options.ylabel)
             .style("font-weight","bold");
@@ -3345,14 +3368,14 @@ var visualizepolls = function(){
 		}
 
 	}
-	this.flashChart = function(url,question,container,chart){
+	this.flashChart = function(url,question,container,chart,options){
 	var self = this;
 	d3.json(url+".json", function(structure) {
 		d3.json(url+"results.json", function(data) {
 			d3.json(url+"result.json", function(frequency) {
 						console.log(data);
 				console.log(frequency);
-				flashpoll.visualizeChart(self,structure,data,frequency,question,chart,container);
+				flashpoll.visualizeChart(self,structure,data,frequency,question,chart,container,options);
 			});
 		});
 	});
