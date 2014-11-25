@@ -321,7 +321,7 @@ visualizeChart : function(data,question,chart,color,answer){
 		optionHandler.updateOption(optionHandler.size-1,"color",color)
 		optionHandler.updateOption(optionHandler.size-1,"id",optionHandler.size-1)
 		optionHandler.updateOption(optionHandler.size-1,"answer",answer)
-		// optionHandler.updateOption(optionHandler.size-1,"xlabel","Something")
+		optionHandler.updateOption(optionHandler.size-1,"xlabel","Something")
 		optionHandler.updateOption(optionHandler.size-1,"ylabel","frequency")
 		optionHandler.pointer = optionHandler.size-1;
 		var chart = chartNames[chart](optionHandler.getOption(optionHandler.size-1));

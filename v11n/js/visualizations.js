@@ -7,7 +7,7 @@ var getWordWidth = function(word){
 	$('body').append("<div class='c3' id='textw'>"+word+"</div>");
 	var width = $('#textw').width();
 	console.log(width);
-		$('#textw').remove();
+	$('#textw').remove();
 	return width;
 }
 var getWordWidth2 = function(word){
@@ -167,7 +167,7 @@ function tempBar(options){
 	console.log(options.legendMargin);
 	// options.legendMargin = textWidth(getArrayMaxElement(),)
 	var c = 0;
-    	
+
 	var chart = c3.generate({
 		bindto: options.container,
 		interaction: { enabled:  options.interaction},
@@ -196,8 +196,8 @@ function tempBar(options){
     	item : {
     		onclick : function(d){ 
     			return
-    		 }
     		}
+    	}
     	
     },
     axis: {
@@ -398,7 +398,7 @@ function histogram(options){
 				return datacolors.getColor(names[0],names);*/
 			}
 		},
-				tooltip: {
+		tooltip: {
 			show : options.tooltip
 		},
 		legend : {
@@ -440,7 +440,7 @@ function lineCat(options){
 			x : options.matrix[0][0],
 			columns : options.matrix,
 			type: 'line',
-		color: function (color, d) {
+			color: function (color, d) {
 				return datacolors.getColor(d,names,options);
 			},
 
@@ -906,7 +906,7 @@ function stackedBar(options){
 
 			},
 			type: 'bar',
-				color: function (color, d) {
+			color: function (color, d) {
 				return datacolors.getColor(d,names2,options);
 			},
 			groups :  [names],
@@ -1188,81 +1188,84 @@ var colorScale = d3.scale.quantile()
            .style("fill", function(d) {;return colorScale(d.value); });
            heatMap.append("title").text(function(d) {return d.value; });
        }
+
+       var MAXWORDLENGHT = 7;
+
        function heatmap2(options,nHeight){
        	$(options.container).css("margin-left",0)
        	var m = options.matrix;
-       	//Put datanames in head
-       	var head =  m[0].slice(1,m[0].length);
-       	
+       	//store datanames in dim_2
+       	var dim_2 = m[0].slice(1,m[0].length);
+       	console.log(dim_2);
        	m=m.slice(1,m.length);
+       	//store datanames in dim_1
        	var dim_1 = columnNames(m);
-       	console.log(dim_1);
-       	var dim_2 = head;
+
+       	// Lenght of the longest word of the datanames
        	var longest = getArrayMax(dim_1);
        	var longest2 = getArrayMax(dim_2);
+
+       	//Set length to maxlenght
+       	if(longest > MAXWORDLENGHT){
+       		longest = MAXWORDLENGHT;
+       	}
+       	if(longest2 > MAXWORDLENGHT){
+       		longest2 = MAXWORDLENGHT;
+       	}
+
        	var rowlength = dim_1.length;
        	var columnlength = dim_2.length;
        	var maxSize = rowlength > columnlength ? rowlength : columnlength;
        	var array = matrixToRevArray(copyMatrix(m));
-       	console.log(array);
+
+
        	var w = $(options.container).width();
-       	var fontSize = parseInt($('.c3-axis').css('font-size'));
-      
-	// w=w*2/3;
-	
 
+       	var fontSize = parseInt($('.heatlabel').css('font-size'));
+       	       	console.log($('.heatlabel').css('font-size'));
 
-	console.log("Longest---->  " +longest);
-	console.log("Gridsize ---->  " + gridSize);
-	console.log("Margin top ---->  " +marginTop);
-	var index = options.id;
-	// if($("#charty1").height() > 1){
-		console.log($(options.container).height() );
+       	// fontSize = 25;
+       	       	console.log(fontSize);
+       	var index = options.id;
+
 		// var h = $(options.container).parent().width() - ($(options.container).parent().width() - $(options.container).height())
 		// var h =nHeight;
-		// if(h==null){
 		var	h = $(options.container).parent().height();
-		// };
-		console.log("Parent HEIGHT ---> " + $(options.container).parent().height() );
-		console.log("info HEIGHT ---> " + $(options.container).height());
-		console.log("SVG HEIGHT ---> " + h);
-	// $(".tumbchart").height();
-	// }else{
-		// var h =  w;
-	// }
-		var topWord = getArrayMaxElement(dim_2,0);
-	var marginTop = getWordWidth2(topWord);
-	// var textLength = fontSize*longest;
-	var gridSize = Math.floor((h-marginTop)/(maxSize+2));
-	var padding = gridSize/maxSize;
 
-	// var h = 900;
-	var shiftR = 10;
-	var margin = { top: 0, right: 0, bottom: 0, left: 0 },
-	width =  w- margin.left - margin.right,
-	height = h - margin.top - margin.bottom,
+		var topWord = getArrayMaxElement(dim_2,0).trunc(MAXWORDLENGHT);
+		var marginTop = getWordWidth2(topWord);
+		var longestElement = getArrayMaxElement(dim_1,0).trunc(MAXWORDLENGHT)+"  %";
+		var textLength = getWordWidth2(longestElement);
+		// var gridSize = Math.floor((h-marginTop)/(maxSize+2));
+		var gridSize = Math.floor((w-textLength)/(columnlength+2));
+		var gridSize2 = Math.floor((h-textLength)/(columnlength+2));
+		var padding = gridSize/maxSize;
+		var titleHight = getWordWidth2("T") * 3;
+		var shiftR = 10;
+		var margin = { top: 0, right: 0, bottom: 0, left: 0 },
+		width =  w- margin.left - margin.right,
+		height = h - margin.top - margin.bottom,
 
-	legendWidth = (gridSize/2);
+	legendWidth = (gridSize/1.5);
 	var cc;
-	var longestElement = getArrayMaxElement(dim_1,0)+"  %";
-	var textLength = getWordWidth2(longestElement);
+
+
 	if(!options.swap){
 		cc = rowlength;
 	}else{
 		cc = columnlength;
 	}
 
-	console.log("columnlength---->  " +columnlength);
-	console.log("rowlength---->  " +rowlength);
-	console.log("CC---->  " +cc);
-	console.log("textLength ---->  " + textLength);
-	console.log("width ---->  " +w);
 
-
-	var centerPadding = ($(options.container).width()-(textLength + (gridSize * cc)))/2;
+	// var centerPadding = ($(options.container).width()-(textLength + (gridSize * cc)))/2;
+	var centerPadding = 0;
 	var index = options.container.split("charty").slice(-1)[0]-1;
-          //antal färger
-        var  buckets = getMatrixMax(options.matrix);
+          //LEGEND RANGE
+          var  buckets = getMatrixMax(options.matrix);
+          var numberForm = textformat.numberShorten(buckets);
+          var reduceNum = numberForm[0];
+          var valueLabel = numberForm[1];
+          console.log(numberForm);
           var svg = d3.select(options.container).append("svg")
           .attr("class","heat")
           .attr("id","tumbheat" + index)
@@ -1294,6 +1297,31 @@ for(var i = 0; i < n; i++) {
 var colorScale = d3.scale.quantile()
 .domain([0, buckets - 1, maxNum])
 .range(colors);
+	
+     var question2Title = svg.append("text")
+            .attr("class", "heatquestiontitle")
+            .attr("x", w/2)
+            .attr("y", titleHight)         
+            .style("font-size", fontSize+"px")
+            .style("font-family","Lato")
+            .style("text-anchor","middle")
+            .style("fill","#FF0000")
+            .text(options.ylabel)
+            .style("font-weight","bold");
+
+    	var question1Title = svg.append("text")
+            .attr("class", "heatquestiontitle")
+            .style("font-size", fontSize+"px")
+            .style("fill","#FF0000")
+            .style("font-family","Lato")
+            .style("text-anchor","middle")
+            .text(options.xlabel)
+            .style("font-weight","bold")
+           .attr("transform", function(d,i) {    // transform all the text elements
+  return "translate(" + // First translate
+  (titleHight/2) + ","+((h/2)-marginTop)+") " + // Translation params same as your existing x & y 
+    "rotate(-90)"            // THEN rotate them to give a nice slope
+});
 
           //Header
           var dim1Labels = svg.selectAll(".dim1Label")
@@ -1302,18 +1330,18 @@ var colorScale = d3.scale.quantile()
           .text(function (d) { 
           	// if(d.length>12){return d.substring(0,12)+"...";} 
           	// else {
-          	if(d==null){
+          		if(d==null){
           			if(options.norm){
           				return 0 + " %"
+          			}
+          			return 0;
           		}
-          		return 0;
-          	}
-     		if(options.norm){
-          				return d + " %"
+          		if(options.norm){
+          			return d.trunc(MAXWORDLENGHT) + " %"
           		}
-          		return d;})
-          .attr("x", centerPadding)
-          .attr("y", function (d, i) { return i * gridSize + gridSize/2 + marginTop; })
+          		return d.trunc(MAXWORDLENGHT); })
+          .attr("x", centerPadding + titleHight)
+          .attr("y", function (d, i) { return i * gridSize + gridSize/2 + marginTop + titleHight;})
           .style("font-weight","bold")
           .style("font-size", fontSize+"px")
           .style("font-family","Lato")
@@ -1336,24 +1364,24 @@ var colorScale = d3.scale.quantile()
                 // .attr("dy", ".71em")
                 .text(function(d) {
 
-           	if(d==null){
-           		if(options.norm2){
-           			return 0 + " %";
-           		}
-           		return 0;
-           	}
+                	if(d==null){
+                		if(options.norm2){
+                			return 0 + " %";
+                		}
+                		return 0;
+                	}
 
-           		if(options.norm2){
-           			return d + " %";
-           		}
-              	return d})
+                	if(options.norm2){
+                		return d + " %";
+                	}
+                	return d.trunc(MAXWORDLENGHT);})
                 .style("font-weight","bold")
                 .style("font-family","Lato")
                 .style("font-size", fontSize+"px")
                 .attr("text-anchor","center")
 				.attr("transform", function(d,i) {    // transform all the text elements
   return "translate(" + // First translate
-  ((i * gridSize) + textLength+gridSize/2 + centerPadding) + ","+marginTop+") " + // Translation params same as your existing x & y 
+  ((i * gridSize) + textLength+gridSize/2 + centerPadding+ titleHight) + ","+(marginTop+titleHight)+") " + // Translation params same as your existing x & y 
     "rotate(-45)"            // THEN rotate them to give a nice slope
 });
           //heatmap
@@ -1367,8 +1395,8 @@ var colorScale = d3.scale.quantile()
            var rec = heatMap.append("rect")
            // .attr("x", function(d) { console.log("x  " + d);count++; return ((count%columnlength - 1) * gridSize) + textLength +gridSize; })
            // .attr("y", function(d) { console.log("y   "+d);count2++; return ( Math.ceil(count2/(columnlength))-1) * gridSize + marginTop; })
-           .attr("x", function(d) {return (d.row * gridSize) + textLength + centerPadding; })
-           .attr("y", function(d) { return d.col * gridSize + marginTop; })
+           .attr("x", function(d) {return (d.row * gridSize) + textLength + centerPadding+ titleHight; })
+           .attr("y", function(d) { return d.col * gridSize + marginTop+titleHight; })
            .attr("rx", 4)
            .attr("ry", 4)
            .attr("class", "dim2 bordered")
@@ -1384,25 +1412,32 @@ var colorScale = d3.scale.quantile()
            heatMap.append("title").text(function(d) {return d.value; });
 
            var count=0,count2=0;
-        /*   heatMap.append("text")
+           heatMap.append("text")
 
            .text(function(d) {
            		if(d.value==null){
-           		return Math.round(d.value);
+           		return (d.value/reduceNum).toFixed(1);
            	}
-            return  Math.round(d.value); })
-           .attr("x", function(d) {return (d.row * gridSize) + textLength + gridSize/2 + centerPadding;  })
-           .attr("y", function(d) { ; return d.col * gridSize + marginTop + gridSize/2; })
+            return  (d.value/reduceNum).toFixed(1); })
+           .attr("x", function(d) {return (d.row * gridSize) + textLength + gridSize/2 + centerPadding+ titleHight;  })
+           .attr("y", function(d) { ; return d.col * gridSize + marginTop + gridSize/2 + titleHight; })
            .attr("text-anchor","middle")
-           .style("font-size", gridSize/2+"px")
+           .style("font-size", gridSize/3+"px")
            .style("font-family","Lato")
           // .style("font-family", "Calibri")
           .attr("class", "rectext")
 
           .style("stroke-width","0px")
-          .style("text-shadow","none");*/
+          .style("text-shadow","none");
 
-
+           var numberlabel = svg.append("text")
+            .attr("class", "heatnumberform")
+            .attr("x", 0 + centerPadding+ titleHight)
+            .attr("y", (rowlength) * (gridSize) + legendWidth + marginTop +titleHight )         
+            .style("font-size", fontSize+"px")
+            .style("font-family","Lato")
+            .text("Enhet " + valueLabel)
+            .style("font-weight","bold");
 
           var ledc=0;
           var legend = svg.selectAll(".legend")
@@ -1411,8 +1446,8 @@ var colorScale = d3.scale.quantile()
           .attr("class", "legend");
           console.log(legend);
           legend.append("rect")
-          .attr("x", function(d, i) { return  (i%4 * legendWidth + textLength)+ centerPadding ; })
-          .attr("y", function(d, i) {k=0; if(i>3){k=1} return (rowlength) * (gridSize) + k * legendWidth + marginTop; })
+          .attr("x", function(d, i) { return  (i%4 * legendWidth + textLength)+ centerPadding+ titleHight ; })
+          .attr("y", function(d, i) {k=1; if(i>3){k=2} return (rowlength) * (gridSize) + k * legendWidth + marginTop + legendWidth + titleHight; })
           .attr("rx", 4)
           .attr("ry", 4)
           .attr("width", legendWidth*0.8)
@@ -1423,22 +1458,23 @@ var colorScale = d3.scale.quantile()
           legend.append("text")
           .attr("class", "heatlegend")
           .text(function(d) { return  Math.round(d )+"+"; })
-          .attr("x", function(d, i) { return  (i%4 * legendWidth + textLength + legendWidth/2)+ centerPadding ; })
-          .attr("y", function(d, i) {k=0; if(i>3){k=1} return (rowlength) * (gridSize) + k * legendWidth + marginTop+ legendWidth/2; })
+          .attr("x", function(d, i) { return  (i%4 * legendWidth + textLength + legendWidth/2)+ centerPadding+ titleHight ; })
+          .attr("y", function(d, i) {k=1; if(i>3){k=2} return (rowlength) * (gridSize) + k * legendWidth+ marginTop+ legendWidth/2 + legendWidth + titleHight; })
           .attr("text-anchor","middle")
           .attr("class", "heatlegend")
           .style("font-family","Lato")
-          .style("font-size", fontSize/1.5+"px")
-          ;
+          .style("font-size", fontSize/1.5+"px");
        /*     .attr("x", function(d, i) { return gridSize * 11 + 25; })
             .attr("y", function(d, i) { return (i * legendWidth + 20); })
             */
             var title = svg.append("text")
             .attr("class", "legendtitle")
-            .attr("x", 0 + centerPadding)
-            .attr("y", rowlength * (gridSize) + marginTop + legendWidth )         
+            .attr("x", 0 + centerPadding+ titleHight)
+            .attr("y", rowlength * (gridSize) + marginTop + legendWidth *2 + legendWidth +titleHight)         
             .style("font-size", fontSize+"px")
             .style("font-family","Lato")
             .text("Legend")
             .style("font-weight","bold");
+
+     
         }

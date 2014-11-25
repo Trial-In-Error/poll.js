@@ -61,7 +61,7 @@ var defaultOptions = {
 	legendOffset : 80,
 	visualization: null,
 	color:0,
-	interaction : false,
+	interaction : true,
 	answer : null,
 	questions : [],
 	title:  "no title",
@@ -72,10 +72,6 @@ var defaultOptions = {
 	norm2 : false,
 	correlation : null,
 	independence: null,
-	size: {
-       	 width: "50vw",
-         height: "50vw"
-    },
-   legendMargin : 0,
-   swap: false,
+  	legendMargin : 0,
+   	swap: false,
 }

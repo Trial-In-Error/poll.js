@@ -192,6 +192,219 @@ var errorMessages = {
 	share : "Denna funkion är inte tillgänglig än"
 }
 /**
+*	flashpoll handles fetching and parsing data from flashpoll
+*/
+var flashpoll = {
+	visualizeSet : function (structure,data,frequency,questions,options){
+		//functions + questions
+		var visualizationTypes = flashpoll.calculateVisualizations(structure,data,questions,false);
+		// pollchart.nrOfCharts = 0;
+		for (var i = 0; i < visualizationTypes.length; i++) {
+			if(visualizationTypes[i].ids.length==1){
+				var matrix = flashpoll.getSingeMatrix(structure,frequency,visualizationTypes[i].ids[0]);
+				// console.log(matrix);
+				if(matrix[1][0]!=null){
+					for (var u = 0; u < visualizationTypes[i].types.length; u++) {
+						addInfo();
+						var rnd = Math.floor(Math.random()*4);
+						pollchart.options.colorscheme = rnd;
+						var variable = {};
+						for (var key in pollchart.options) {
+							variable[key]  = pollchart.options[key];
+						}
+						pollchart.optionChart.push(variable);
+						pollchart.chartVis.push(functionName(visualizationTypes[i].types[u]));
+						pollchart.currentCharts[pollchart.chart[pollchart.nrOfCharts-1]] = {chart : [i,u], data : data, question : questions};
+						var cont = "#"+pollchart.chart[pollchart.nrOfCharts-1];	
+						var op = options;
+						op.matrix = matrix;
+						op.container = cont;
+						visualizationTypes[i].types[u](op);
+					};
+				}
+			}
+			else{
+				for (var u = 0; u < visualizationTypes[i].types.length; u++) {
+					var matrix=flashpoll.getDoubleMatrix(structure,data,visualizationTypes[i].ids);
+					if(matrix==null){
+						continue;
+					}
+					addInfo();
+					var rnd = Math.floor(Math.random()*4);
+					pollchart.options.colorscheme = rnd;
+					var variable = {};
+					for (var key in pollchart.options) {
+						variable[key]  = pollchart.options[key];
+					}
+					pollchart.optionChart.push(variable);
+					pollchart.chartVis.push( functionName(visualizationTypes[i].types[u]));
+				
+					pollchart.currentCharts[pollchart.chart[pollchart.nrOfCharts-1]] = {chart : [i,u], data : data, question : questions};
+						var cont = "#"+pollchart.chart[pollchart.nrOfCharts-1];	
+						var op = options;
+						op.matrix = matrix;
+						op.container = cont;
+					visualizationTypes[i].types[u](op);
+					// addInfo();					
+					// pollchart.currentCharts[pollchart.chart[pollchart.nrOfCharts-1]] = {chart : [i,u,], data : data, question : question};
+					// chartDataModel(visualizationTypes[i].types[u],matrix);
+				};
+			}
+
+		}
+			console.log(pollchart.chartVis);
+		// console.log(pollchart.optionChart);
+		new Masonry(container, { "columnWidth": ".tumbchart", "itemSelector": ".tumbchart", "gutter": ".gutter-sizer" })
+	},
+	/*
+	*Visualize one graph from a dataset
+*param{json} data - jsonfile with the polldata
+*param{array} question - array containing the positions of the qustions in the poll
+*param{int} nr - nr of what chart to use
+*/
+visualizeChart : function(ref,structure,data,frequency,question,chart,container){
+	var matrix;
+
+	var dt = "frequency";
+	if(question.length==1){
+		matrix =  flashpoll.getSingleMatrix(structure,frequency,question[0]);
+		console.log(matrix);
+	}
+	else{
+			var matrix=flashpoll.getDoubleMatrix(structure,data,question);
+					if(matrix==null){
+						return;
+					}
+			var subtitle = "";
+			for(i=0; i<question.length; i++){
+				subtitle += "-";
+				subtitle += structure.questions[question[i]].questionText;
+				subtitle += "<br/>"
+			}
+		}
+
+		
+		ref.optionsdata.addChart(container);
+		ref.optionsdata.updateOption(ref.optionsdata.size-1,"matrix",matrix);
+		ref.optionsdata.updateOption(ref.optionsdata.size-1,"chart",chartNames[chart]);
+		ref.optionsdata.updateOption(ref.optionsdata.size-1,"color",1)
+		ref.optionsdata.updateOption(ref.optionsdata.size-1,"id",optionHandler.size-1)
+		// ref.optionsdata.updateOption(ref.optionsdata.size-1,"answer",answer)
+		ref.optionsdata.updateOption(ref.optionsdata.size-1,"xlabel","Something")
+		ref.optionsdata.updateOption(ref.optionsdata.size-1,"ylabel","frequency")
+		ref.optionsdata.pointer = ref.optionsdata.size-1;
+		var chart = chartNames[chart](ref.optionsdata.getOption(ref.optionsdata.size-1));
+		ref.optionsdata.updateOption(ref.optionsdata.size-1,"c3",chart);
+	},
+
+	calculateVisualizations : function(structure,data,q,single){
+		var array = structure.questions;
+		console.log(structure.questions);
+		var combinations =[];
+		for (var i = 0; i < q.length; i++) {
+			if(array[q[i]].questionType=="FREETEXT"){
+				continue;
+			}
+			combinations.push(
+			{
+				ids:[q[i]],
+				types: getListOfCharts([array[q[i]].questionType],single)
+			}
+			);
+
+			for (var j = i+1; j < q.length; j++) {
+				if(array[q[i]].questionType=="FREETEXT"){
+					continue;
+				}
+				combinations.push(
+				{
+					ids:[q[i],q[j]],
+					types: getListOfCharts([array[q[i]].questionType,array[q[j]].questionType],single),
+
+				});
+			}
+		}
+		return combinations;
+	},
+	getSingleMatrix : function(structure,frequency,id){
+		var matrix;
+		for (var i = 0; i < frequency.pollResQuestions.length; i++) {
+			if(frequency.pollResQuestions[i].questionOrderId == id){
+				structure.questions.forEach(function(d){
+					if(id==d.orderId){
+						matrix = flashpoll.generateSingleMatrix(d,frequency.pollResQuestions[i].pollResultAnswers);
+						console.log(matrix);
+					}
+				});
+
+			}
+		};
+		return matrix;
+	},
+	generateSingleMatrix : function(answers,data){
+		var matrix = [];
+		for (var i = 0; i < answers.answers.length; i++) {
+			matrix.push([answers.answers[i].answerText,data[answers.answers[i].orderId].answerScore]);
+		};
+		matrix.unshift(["Answer","Score"]);
+		return matrix;
+	},
+	getDoubleMatrix : function(structure,data,ids){
+		var rows,columns;
+		var header = [];
+		header.push(structure.title);
+		var side = [];
+		for (var i = 0; i < structure.questions.length; i++) {
+
+			if(structure.questions[i].orderId==ids[0]){
+				console.log(structure.questions[i]);
+				rows = structure.questions[i].answers.length;
+				for (var y = 0; y < structure.questions[i].answers.length; y++) {
+					header.push(structure.questions[i].answers[y].answerText);
+				};
+			}
+			if(structure.questions[i].orderId==ids[1]){
+				columns = structure.questions[i].answers.length;
+				for (var y = 0; y < structure.questions[i].answers.length; y++) {
+					side.push(structure.questions[i].answers[y].answerText);
+				};
+			}
+		};
+		var matrix = buildEmptyMatrix(rows,columns);
+		//For each user
+		data.forEach(function(d){
+			//For each question the user have answered
+			for (var i = 0; i < d.pollResQuestions.length; i++) {
+				//If the question is the first one in the searchlist
+				if(d.pollResQuestions[i].questionOrderId==ids[0]){
+					console.log(d);
+					for (var j = 0; j< d.pollResQuestions[i].pollResultAnswers.length; j++) {
+						var answerOrder = d.pollResQuestions[i].pollResultAnswers[j].answerOrderId;
+						var score = d.pollResQuestions[i].pollResultAnswers[j].answerScore;
+						
+						for (var u = 0; u < columns; u++){
+							matrix[answerOrder][u] = score;
+						};
+					};
+				};
+				if(d.pollResQuestions[i].questionOrderId==ids[1]){
+					for (var j = 0; j< d.pollResQuestions[j].pollResultAnswers.length; j++) {
+							var answerOrder = d.pollResQuestions[i].pollResultAnswers[j].answerOrderId;
+						var score = d.pollResQuestions[i].pollResultAnswers[j].answerScore;
+						for (var u = 0; u < matrix[0].length; u++){
+							matrix[u][answerOrder] = matrix[u][answerOrder] * score;
+						};
+					}
+
+				};
+			}
+		});
+	addSideNames(matrix,side);
+	matrix.unshift(header);
+	return matrix;
+	}
+}
+/**
 * Returns the position of the value in the array
 *param{Array} array - array to be searched
 *param{var} value - value of the object whoms position is searched
@@ -1086,7 +1299,7 @@ visualizeChart : function(data,question,chart,color,answer){
 		optionHandler.updateOption(optionHandler.size-1,"color",color)
 		optionHandler.updateOption(optionHandler.size-1,"id",optionHandler.size-1)
 		optionHandler.updateOption(optionHandler.size-1,"answer",answer)
-		// optionHandler.updateOption(optionHandler.size-1,"xlabel","Something")
+		optionHandler.updateOption(optionHandler.size-1,"xlabel","Something")
 		optionHandler.updateOption(optionHandler.size-1,"ylabel","frequency")
 		optionHandler.pointer = optionHandler.size-1;
 		var chart = chartNames[chart](optionHandler.getOption(optionHandler.size-1));
@@ -1555,7 +1768,7 @@ var defaultOptions = {
 	legendOffset : 80,
 	visualization: null,
 	color:0,
-	interaction : false,
+	interaction : true,
 	answer : null,
 	questions : [],
 	title:  "no title",
@@ -1566,12 +1779,8 @@ var defaultOptions = {
 	norm2 : false,
 	correlation : null,
 	independence: null,
-	size: {
-       	 width: "50vw",
-         height: "50vw"
-    },
-   legendMargin : 0,
-   swap: false,
+  	legendMargin : 0,
+   	swap: false,
 }
 
 var mytest = "my_testfile";
@@ -1608,7 +1817,7 @@ var getWordWidth = function(word){
 	$('body').append("<div class='c3' id='textw'>"+word+"</div>");
 	var width = $('#textw').width();
 	console.log(width);
-		$('#textw').remove();
+	$('#textw').remove();
 	return width;
 }
 var getWordWidth2 = function(word){
@@ -1768,7 +1977,7 @@ function tempBar(options){
 	console.log(options.legendMargin);
 	// options.legendMargin = textWidth(getArrayMaxElement(),)
 	var c = 0;
-    	
+
 	var chart = c3.generate({
 		bindto: options.container,
 		interaction: { enabled:  options.interaction},
@@ -1797,8 +2006,8 @@ function tempBar(options){
     	item : {
     		onclick : function(d){ 
     			return
-    		 }
     		}
+    	}
     	
     },
     axis: {
@@ -1999,7 +2208,7 @@ function histogram(options){
 				return datacolors.getColor(names[0],names);*/
 			}
 		},
-				tooltip: {
+		tooltip: {
 			show : options.tooltip
 		},
 		legend : {
@@ -2041,7 +2250,7 @@ function lineCat(options){
 			x : options.matrix[0][0],
 			columns : options.matrix,
 			type: 'line',
-		color: function (color, d) {
+			color: function (color, d) {
 				return datacolors.getColor(d,names,options);
 			},
 
@@ -2507,7 +2716,7 @@ function stackedBar(options){
 
 			},
 			type: 'bar',
-				color: function (color, d) {
+			color: function (color, d) {
 				return datacolors.getColor(d,names2,options);
 			},
 			groups :  [names],
@@ -2789,79 +2998,83 @@ var colorScale = d3.scale.quantile()
            .style("fill", function(d) {;return colorScale(d.value); });
            heatMap.append("title").text(function(d) {return d.value; });
        }
+
+       var MAXWORDLENGHT = 7;
+
        function heatmap2(options,nHeight){
        	$(options.container).css("margin-left",0)
        	var m = options.matrix;
-       	var head =  m[0].slice(1,m[0].length);
+       	//store datanames in dim_2
+       	var dim_2 = m[0].slice(1,m[0].length);
+       	console.log(dim_2);
        	m=m.slice(1,m.length);
+       	//store datanames in dim_1
        	var dim_1 = columnNames(m);
-       	console.log(dim_1);
-       	var dim_2 = head;
+
+       	// Lenght of the longest word of the datanames
        	var longest = getArrayMax(dim_1);
        	var longest2 = getArrayMax(dim_2);
+
+       	//Set length to maxlenght
+       	if(longest > MAXWORDLENGHT){
+       		longest = MAXWORDLENGHT;
+       	}
+       	if(longest2 > MAXWORDLENGHT){
+       		longest2 = MAXWORDLENGHT;
+       	}
+
        	var rowlength = dim_1.length;
        	var columnlength = dim_2.length;
        	var maxSize = rowlength > columnlength ? rowlength : columnlength;
        	var array = matrixToRevArray(copyMatrix(m));
-       	console.log(array);
+
+
        	var w = $(options.container).width();
-       	var fontSize = parseInt($('.c3-axis').css('font-size'));
-      
-	// w=w*2/3;
-	
 
+       	var fontSize = parseInt($('.heatlabel').css('font-size'));
+       	       	console.log($('.heatlabel').css('font-size'));
 
-	console.log("Longest---->  " +longest);
-	console.log("Gridsize ---->  " + gridSize);
-	console.log("Margin top ---->  " +marginTop);
-	var index = options.id;
-	// if($("#charty1").height() > 1){
-		console.log($(options.container).height() );
+       	// fontSize = 25;
+       	       	console.log(fontSize);
+       	var index = options.id;
+
 		// var h = $(options.container).parent().width() - ($(options.container).parent().width() - $(options.container).height())
 		// var h =nHeight;
-		// if(h==null){
 		var	h = $(options.container).parent().height();
-		// };
-		console.log("Parent HEIGHT ---> " + $(options.container).parent().height() );
-		console.log("info HEIGHT ---> " + $(options.container).height());
-		console.log("SVG HEIGHT ---> " + h);
-	// $(".tumbchart").height();
-	// }else{
-		// var h =  w;
-	// }
-		var topWord = getArrayMaxElement(dim_2,0);
-	var marginTop = getWordWidth2(topWord);
-	// var textLength = fontSize*longest;
-	var gridSize = Math.floor((h-marginTop)/(maxSize+2));
-	var padding = gridSize/maxSize;
 
-	// var h = 900;
-	var shiftR = 10;
-	var margin = { top: 0, right: 0, bottom: 0, left: 0 },
-	width =  w- margin.left - margin.right,
-	height = h - margin.top - margin.bottom,
+		var topWord = getArrayMaxElement(dim_2,0).trunc(MAXWORDLENGHT);
+		var marginTop = getWordWidth2(topWord);
+		var longestElement = getArrayMaxElement(dim_1,0).trunc(MAXWORDLENGHT)+"  %";
+		var textLength = getWordWidth2(longestElement);
+		// var gridSize = Math.floor((h-marginTop)/(maxSize+2));
+		var gridSize = Math.floor((w-textLength)/(columnlength+2));
+		var padding = gridSize/maxSize;
+		var titleHight = getWordWidth2("T") * 3;
+		var shiftR = 10;
+		var margin = { top: 0, right: 0, bottom: 0, left: 0 },
+		width =  w- margin.left - margin.right,
+		height = h - margin.top - margin.bottom,
 
-	legendWidth = (gridSize/2);
+	legendWidth = (gridSize/1.5);
 	var cc;
-	var longestElement = getArrayMaxElement(dim_1,0)+"  %";
-	var textLength = getWordWidth2(longestElement);
+
+
 	if(!options.swap){
 		cc = rowlength;
 	}else{
 		cc = columnlength;
 	}
 
-	console.log("columnlength---->  " +columnlength);
-	console.log("rowlength---->  " +rowlength);
-	console.log("CC---->  " +cc);
-	console.log("textLength ---->  " + textLength);
-	console.log("width ---->  " +w);
 
-
-	var centerPadding = ($(options.container).width()-(textLength + (gridSize * cc)))/2;
+	// var centerPadding = ($(options.container).width()-(textLength + (gridSize * cc)))/2;
+	var centerPadding = 0;
 	var index = options.container.split("charty").slice(-1)[0]-1;
-          //antal färger
-        var  buckets = getMatrixMax(options.matrix);
+          //LEGEND RANGE
+          var  buckets = getMatrixMax(options.matrix);
+          var numberForm = textformat.numberShorten(buckets);
+          var reduceNum = numberForm[0];
+          var valueLabel = numberForm[1];
+          console.log(numberForm);
           var svg = d3.select(options.container).append("svg")
           .attr("class","heat")
           .attr("id","tumbheat" + index)
@@ -2893,6 +3106,31 @@ for(var i = 0; i < n; i++) {
 var colorScale = d3.scale.quantile()
 .domain([0, buckets - 1, maxNum])
 .range(colors);
+	
+     var question2Title = svg.append("text")
+            .attr("class", "heatquestiontitle")
+            .attr("x", w/2)
+            .attr("y", titleHight)         
+            .style("font-size", fontSize+"px")
+            .style("font-family","Lato")
+            .style("text-anchor","middle")
+            .style("fill","#FF0000")
+            .text(options.ylabel)
+            .style("font-weight","bold");
+
+    	var question1Title = svg.append("text")
+            .attr("class", "heatquestiontitle")
+            .style("font-size", fontSize+"px")
+            .style("fill","#FF0000")
+            .style("font-family","Lato")
+            .style("text-anchor","middle")
+            .text(options.xlabel)
+            .style("font-weight","bold")
+           .attr("transform", function(d,i) {    // transform all the text elements
+  return "translate(" + // First translate
+  (titleHight/2) + ","+((h/2)-marginTop)+") " + // Translation params same as your existing x & y 
+    "rotate(-90)"            // THEN rotate them to give a nice slope
+});
 
           //Header
           var dim1Labels = svg.selectAll(".dim1Label")
@@ -2901,18 +3139,18 @@ var colorScale = d3.scale.quantile()
           .text(function (d) { 
           	// if(d.length>12){return d.substring(0,12)+"...";} 
           	// else {
-          	if(d==null){
+          		if(d==null){
           			if(options.norm){
           				return 0 + " %"
+          			}
+          			return 0;
           		}
-          		return 0;
-          	}
-     		if(options.norm){
-          				return d + " %"
+          		if(options.norm){
+          			return d.trunc(MAXWORDLENGHT) + " %"
           		}
-          		return d;})
-          .attr("x", centerPadding)
-          .attr("y", function (d, i) { return i * gridSize + gridSize/2 + marginTop; })
+          		return d.trunc(MAXWORDLENGHT); })
+          .attr("x", centerPadding + titleHight)
+          .attr("y", function (d, i) { return i * gridSize + gridSize/2 + marginTop + titleHight;})
           .style("font-weight","bold")
           .style("font-size", fontSize+"px")
           .style("font-family","Lato")
@@ -2935,24 +3173,24 @@ var colorScale = d3.scale.quantile()
                 // .attr("dy", ".71em")
                 .text(function(d) {
 
-           	if(d==null){
-           		if(options.norm2){
-           			return 0 + " %";
-           		}
-           		return 0;
-           	}
+                	if(d==null){
+                		if(options.norm2){
+                			return 0 + " %";
+                		}
+                		return 0;
+                	}
 
-           		if(options.norm2){
-           			return d + " %";
-           		}
-              	return d})
+                	if(options.norm2){
+                		return d + " %";
+                	}
+                	return d.trunc(MAXWORDLENGHT);})
                 .style("font-weight","bold")
                 .style("font-family","Lato")
                 .style("font-size", fontSize+"px")
                 .attr("text-anchor","center")
 				.attr("transform", function(d,i) {    // transform all the text elements
   return "translate(" + // First translate
-  ((i * gridSize) + textLength+gridSize/2 + centerPadding) + ","+marginTop+") " + // Translation params same as your existing x & y 
+  ((i * gridSize) + textLength+gridSize/2 + centerPadding+ titleHight) + ","+(marginTop+titleHight)+") " + // Translation params same as your existing x & y 
     "rotate(-45)"            // THEN rotate them to give a nice slope
 });
           //heatmap
@@ -2966,8 +3204,8 @@ var colorScale = d3.scale.quantile()
            var rec = heatMap.append("rect")
            // .attr("x", function(d) { console.log("x  " + d);count++; return ((count%columnlength - 1) * gridSize) + textLength +gridSize; })
            // .attr("y", function(d) { console.log("y   "+d);count2++; return ( Math.ceil(count2/(columnlength))-1) * gridSize + marginTop; })
-           .attr("x", function(d) {return (d.row * gridSize) + textLength + centerPadding; })
-           .attr("y", function(d) { return d.col * gridSize + marginTop; })
+           .attr("x", function(d) {return (d.row * gridSize) + textLength + centerPadding+ titleHight; })
+           .attr("y", function(d) { return d.col * gridSize + marginTop+titleHight; })
            .attr("rx", 4)
            .attr("ry", 4)
            .attr("class", "dim2 bordered")
@@ -2983,25 +3221,32 @@ var colorScale = d3.scale.quantile()
            heatMap.append("title").text(function(d) {return d.value; });
 
            var count=0,count2=0;
-        /*   heatMap.append("text")
+           heatMap.append("text")
 
            .text(function(d) {
            		if(d.value==null){
-           		return Math.round(d.value);
+           		return (d.value/reduceNum).toFixed(1);
            	}
-            return  Math.round(d.value); })
-           .attr("x", function(d) {return (d.row * gridSize) + textLength + gridSize/2 + centerPadding;  })
-           .attr("y", function(d) { ; return d.col * gridSize + marginTop + gridSize/2; })
+            return  (d.value/reduceNum).toFixed(1); })
+           .attr("x", function(d) {return (d.row * gridSize) + textLength + gridSize/2 + centerPadding+ titleHight;  })
+           .attr("y", function(d) { ; return d.col * gridSize + marginTop + gridSize/2 + titleHight; })
            .attr("text-anchor","middle")
-           .style("font-size", gridSize/2+"px")
+           .style("font-size", gridSize/3+"px")
            .style("font-family","Lato")
           // .style("font-family", "Calibri")
           .attr("class", "rectext")
 
           .style("stroke-width","0px")
-          .style("text-shadow","none");*/
+          .style("text-shadow","none");
 
-
+           var numberlabel = svg.append("text")
+            .attr("class", "heatnumberform")
+            .attr("x", 0 + centerPadding+ titleHight)
+            .attr("y", (rowlength) * (gridSize) + legendWidth + marginTop +titleHight )         
+            .style("font-size", fontSize+"px")
+            .style("font-family","Lato")
+            .text("Enhet " + valueLabel)
+            .style("font-weight","bold");
 
           var ledc=0;
           var legend = svg.selectAll(".legend")
@@ -3010,8 +3255,8 @@ var colorScale = d3.scale.quantile()
           .attr("class", "legend");
           console.log(legend);
           legend.append("rect")
-          .attr("x", function(d, i) { return  (i%4 * legendWidth + textLength)+ centerPadding ; })
-          .attr("y", function(d, i) {k=0; if(i>3){k=1} return (rowlength) * (gridSize) + k * legendWidth + marginTop; })
+          .attr("x", function(d, i) { return  (i%4 * legendWidth + textLength)+ centerPadding+ titleHight ; })
+          .attr("y", function(d, i) {k=1; if(i>3){k=2} return (rowlength) * (gridSize) + k * legendWidth + marginTop + legendWidth + titleHight; })
           .attr("rx", 4)
           .attr("ry", 4)
           .attr("width", legendWidth*0.8)
@@ -3022,24 +3267,25 @@ var colorScale = d3.scale.quantile()
           legend.append("text")
           .attr("class", "heatlegend")
           .text(function(d) { return  Math.round(d )+"+"; })
-          .attr("x", function(d, i) { return  (i%4 * legendWidth + textLength + legendWidth/2)+ centerPadding ; })
-          .attr("y", function(d, i) {k=0; if(i>3){k=1} return (rowlength) * (gridSize) + k * legendWidth + marginTop+ legendWidth/2; })
+          .attr("x", function(d, i) { return  (i%4 * legendWidth + textLength + legendWidth/2)+ centerPadding+ titleHight ; })
+          .attr("y", function(d, i) {k=1; if(i>3){k=2} return (rowlength) * (gridSize) + k * legendWidth+ marginTop+ legendWidth/2 + legendWidth + titleHight; })
           .attr("text-anchor","middle")
           .attr("class", "heatlegend")
           .style("font-family","Lato")
-          .style("font-size", fontSize/1.5+"px")
-          ;
+          .style("font-size", fontSize/1.5+"px");
        /*     .attr("x", function(d, i) { return gridSize * 11 + 25; })
             .attr("y", function(d, i) { return (i * legendWidth + 20); })
             */
             var title = svg.append("text")
             .attr("class", "legendtitle")
-            .attr("x", 0 + centerPadding)
-            .attr("y", rowlength * (gridSize) + marginTop + legendWidth )         
+            .attr("x", 0 + centerPadding+ titleHight)
+            .attr("y", rowlength * (gridSize) + marginTop + legendWidth *2 + legendWidth +titleHight)         
             .style("font-size", fontSize+"px")
             .style("font-family","Lato")
             .text("Legend")
             .style("font-weight","bold");
+
+     
         }
 var visualizepolls = function(){
 	this.dataHandler = new dataHandler();
@@ -3072,26 +3318,65 @@ var visualizepolls = function(){
 	}
 	this.visualizeChart = function(ref,questions,vis,options,container){
 		var id = ref.optionsdata.addChart(container);
-
+		console.log(ref.dataHandler.polldata);
 		if(questions.length == 0 ){
 			alert("No data");
 		}
 		else if(questions.length > 1){
 			ref.optionsdata.updateOption(id,"matrix",opine.getDoubleMatrix(ref.dataHandler.polldata,questions));
-			chartNames[vis](ref.optionsdata.getOption(id));
+			ref.optionsdata.updateOption(id,"chart",chartNames[vis]);
+			ref.optionsdata.updateOption(id,"color",1)
+			ref.optionsdata.updateOption(id,"id",optionHandler.size-1)
+			// ref.optionsdata.updateOption(ref.optionsdata.size-1,"answer",answer)
+			ref.optionsdata.updateOption(id,"xlabel","Something")
+			ref.optionsdata.updateOption(id,"ylabel","frequency")
+			ref.optionsdata.pointer = id;
+			var chart = chartNames[vis](ref.optionsdata.getOption(id));
+			ref.optionsdata.updateOption(id,"c3",chart);
 
 		}else{
 			ref.optionsdata.updateOption(id,"matrix",opine.getSingleMatrix(ref.dataHandler.polldata,questions));
+
 			chartNames[vis](ref.optionsdata.getOption(id));
 		}
 
 	}
+	this.flashChart = function(url,question,container,chart){
+	var self = this;
+	d3.json(url+".json", function(structure) {
+		d3.json(url+"results.json", function(data) {
+			d3.json(url+"result.json", function(frequency) {
+						console.log(data);
+				console.log(frequency);
+				flashpoll.visualizeChart(self,structure,data,frequency,question,chart,container);
+			});
+		});
+	});
+	}
 }
-var wordHandler = {
-	
-		shortenString : function(string, length){
+var numberText = {
+	hundred : "Hundra",
+	thousand : "K",
+	tenthousand : "10K",
+	hundredthousand : "100K"
+}
 
+var textformat = {
+		numberShorten : function(value){
+			var length = value.toString().length;
+			if(value < 100){
+				return [1,numberText.hundred];
+			}else if(value < 1000){
+				return [100,numberText.hundred];
+			}else if (value < 10000){
+				return [1000,numberText.thousand];
+			}else if (value < 100000){
+				return [10000,numberText.tenthousand];
+			}else if (value < 100000){
+				return [100000,numberText.hundredthousand];
+			}
 		}
+		
 }
 
 String.prototype.trunc = String.prototype.trunc ||
