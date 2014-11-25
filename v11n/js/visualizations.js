@@ -1221,26 +1221,29 @@ var colorScale = d3.scale.quantile()
 
        	var w = $(options.container).width();
 
-       	var fontSize = parseInt($('.heatlabel').css('font-size'));
+       	var fontSize = $('.heatlabel').css('font-size');
        	       	console.log($('.heatlabel').css('font-size'));
 
-       	// fontSize = 25;
-       	       	console.log(fontSize);
+/*       	fontSize = 12;
+       	       	console.log(fontSize);*/
        	var index = options.id;
 
 		// var h = $(options.container).parent().width() - ($(options.container).parent().width() - $(options.container).height())
 		// var h =nHeight;
 		var	h = $(options.container).parent().height();
-
+		var titleHight = getWordWidth2("T") * 3;
 		var topWord = getArrayMaxElement(dim_2,0).trunc(MAXWORDLENGHT);
 		var marginTop = getWordWidth2(topWord);
 		var longestElement = getArrayMaxElement(dim_1,0).trunc(MAXWORDLENGHT)+"  %";
 		var textLength = getWordWidth2(longestElement);
 		// var gridSize = Math.floor((h-marginTop)/(maxSize+2));
-		var gridSize = Math.floor((w-textLength)/(columnlength+2));
-		var gridSize2 = Math.floor((h-textLength)/(columnlength+2));
+		var gridSize = Math.floor((w-textLength)/(maxSize+2));
+		var gridSize2 = Math.floor((h-marginTop-gridSize-titleHight)/(maxSize));
+		if(gridSize2<gridSize){
+			gridSize = gridSize2;
+		}
 		var padding = gridSize/maxSize;
-		var titleHight = getWordWidth2("T") * 3;
+	
 		var shiftR = 10;
 		var margin = { top: 0, right: 0, bottom: 0, left: 0 },
 		width =  w- margin.left - margin.right,
@@ -1257,8 +1260,8 @@ var colorScale = d3.scale.quantile()
 	}
 
 
-	// var centerPadding = ($(options.container).width()-(textLength + (gridSize * cc)))/2;
-	var centerPadding = 0;
+	var centerPadding = ($(options.container).width()-(textLength + (gridSize * cc)))/2;
+	// var centerPadding = 0;
 	var index = options.container.split("charty").slice(-1)[0]-1;
           //LEGEND RANGE
           var  buckets = getMatrixMax(options.matrix);
@@ -1300,7 +1303,7 @@ var colorScale = d3.scale.quantile()
 	
      var question2Title = svg.append("text")
             .attr("class", "heatquestiontitle")
-            .attr("x", w/2)
+            .attr("x", centerPadding + textLength*2)
             .attr("y", titleHight)         
             .style("font-size", fontSize+"px")
             .style("font-family","Lato")
@@ -1319,7 +1322,7 @@ var colorScale = d3.scale.quantile()
             .style("font-weight","bold")
            .attr("transform", function(d,i) {    // transform all the text elements
   return "translate(" + // First translate
-  (titleHight/2) + ","+((h/2)-marginTop)+") " + // Translation params same as your existing x & y 
+  (titleHight/2+ centerPadding) + ","+((h/2)-marginTop)+") " + // Translation params same as your existing x & y 
     "rotate(-90)"            // THEN rotate them to give a nice slope
 });
 
