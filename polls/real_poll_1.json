@@ -1,0 +1,203 @@
+{
+	"name": "Poll 1",
+	"id": "1",
+	"open": true,
+	"owner": "Konrad",
+	"allow_skipping": false,
+	"question_list":
+	[
+		{
+			"body": "Är du tjej eller kille?",
+			"type":
+			{
+				"name": "pick_n",
+				"n": 1,
+				"response_list":
+				[
+					{
+						"body": "Tjej"
+					},
+					{
+						"body": "Kille"
+					},
+					{
+						"body": "Ville inte svara"
+					}
+				]
+			},
+			"opening_slide": true
+		},
+		{
+			"body": "Hur gammal är du?",
+			"type":
+			{
+				"name": "open",
+				"response_list":
+				[
+					{
+						"explanation": {
+							"always_explainable": true,
+							"required": true
+						} 
+					}
+				]
+			}
+		},
+		{
+			"body": "Jag ser fram mot jullovet",
+			"type":
+			{
+				"name": "pick_n",
+				"n": 1,
+				"require": 1,
+				"response_list":
+				[
+					{
+						"body": "Stämmer mycket dåligt"
+					},
+					{
+						"body": "Stämmer dåligt"
+					},
+					{
+						"body": "Stämmer varken bra eller dåligt"
+					},
+					{
+						"body": "Stämmer bra"
+					},
+					{
+						"body": "Stämmer mycket bra"
+					}
+				]
+			}
+		},
+		{
+			"body": "Det ska bli roligt att komma tillbaka till skolan i januari",
+			"type":
+			{
+				"name": "pick_n",
+				"n": 1,
+				"require": 1,
+				"response_list":
+				[
+					{
+						"body": "Stämmer mycket dåligt"
+					},
+					{
+						"body": "Stämmer dåligt"
+					},
+					{
+						"body": "Stämmer varken bra eller dåligt"
+					},
+					{
+						"body": "Stämmer bra"
+					},
+					{
+						"body": "Stämmer mycket bra"
+					}
+				]
+			}
+		},
+		{
+			"body": "Jag tycker att skolan har varit rolig den här terminen",
+			"type":
+			{
+				"name": "pick_n",
+				"n": 1,
+				"require": 1,
+				"response_list":
+				[
+					{
+						"body": "Stämmer mycket dåligt"
+					},
+					{
+						"body": "Stämmer dåligt"
+					},
+					{
+						"body": "Stämmer varken bra eller dåligt"
+					},
+					{
+						"body": "Stämmer bra"
+					},
+					{
+						"body": "Stämmer mycket bra"
+					}
+				]
+			}
+		},
+		{
+			"body": "Jag är nöjd med hur jag klarat av skolan den här terminen",
+			"type":
+			{
+				"name": "pick_n",
+				"n": 1,
+				"require": 1,
+				"response_list":
+				[
+					{
+						"body": "Stämmer mycket dåligt"
+					},
+					{
+						"body": "Stämmer dåligt"
+					},
+					{
+						"body": "Stämmer varken bra eller dåligt"
+					},
+					{
+						"body": "Stämmer bra"
+					},
+					{
+						"body": "Stämmer mycket bra"
+					}
+				]
+			}
+		},
+		{
+			"body": " Jag tycker att denna FlashPoll funkar bra",
+			"closing_slide": true,
+			"type":
+			{
+				"name": "pick_n",
+				"n": 1,
+				"require": 1,
+				"response_list":
+				[
+					{
+						"body": "Stämmer mycket dåligt",
+						"explanation": {
+							"always_explainable": false,
+							"required": false
+						}
+					},
+					{
+						"body": "Stämmer dåligt",
+						"explanation": {
+							"always_explainable": false,
+							"required": false
+						}
+					},
+					{
+						"body": "Stämmer varken bra eller dåligt",
+						"explanation": {
+							"always_explainable": false,
+							"required": false
+						}
+					},
+					{
+						"body": "Stämmer bra",
+						"explanation": {
+							"always_explainable": false,
+							"required": false
+						}
+					},
+					{
+						"body": "Stämmer mycket bra",
+						"explanation": {
+							"always_explainable": false,
+							"required": false
+						}
+					}
+				]
+			}
+		}
+	]
+}

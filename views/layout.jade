@@ -1,0 +1,48 @@
+doctype html
+html
+	head
+		title= title
+
+		// JQUERY MUST BE INCLUDED BEFORE JQUERY MOBILE
+		if locals.expose.exists['jquery_2_1_1.js']
+			script(src='/dist/javascripts/jquery_2_1_1.js')
+		else
+			script(src='/javascripts/jquery_2_1_1.js')
+
+		if locals.expose.exists['combined_style.css']
+			link(rel='stylesheet', href='/dist/stylesheets/combined_style.css')
+		else 
+			link(rel='stylesheet', href='/stylesheets/jquery.mobile-1.4.3.css')
+			link(rel='stylesheet', href='/stylesheets/style.css')
+
+		link(href='http://fonts.googleapis.com/css?family=Lato&subset=latin,latin-ext' rel='stylesheet' type='text/css')
+
+
+		if locals.expose.exists['jquery_mobile_1_4_3.js']
+			script(src='/dist/javascripts/jquery_mobile_1_4_3.js')
+		else
+			script(src='/javascripts/jquery_mobile_1_4_3.js')
+
+		script.
+			$(document).bind('mobileinit', function(){
+				$.mobile.ignoreContentEnabled = true;
+			});
+
+		<meta name='viewport' content='width=device-width, initial-scale=1, minimal-ui'>
+
+		block head
+
+
+	body(class='ui-mobile-viewport ui-overlay-c' style='overflow-y: scroll;')
+		div(data-role='page' id='frontpage')
+			div(class='ui-header ui-bar-b', style='background-color: #fff !important;')
+				a(href='/', id='headerAnchor', style='display: block;margin-left: auto !important;margin-right: auto !important;margin-top: 16px !important;margin-bottom: 16px !important; text-align:center; border: none;max-width: 405px; max-height: 94px', data-role= 'none', data-ajax='false', data-enhance='false')
+					img(src='/images/Opiner_Logo.png', style='max-width: 405px; max-height: 94px;' data-role='none')
+
+			div(data-role='content', class='ui-content', style="margin-bottom:42px;")
+				block content
+			div(data-role='panel' data-dismissible='false' data-animate='true' data-position='left' data-position-fixed='true' data-display='push' id='gridPanel')
+				block panel
+			div(data-role='footer', data-visible-on-page-show="false", data-tap-toggle="false", class='ui-header ui-bar-b', style="height: 42px; position: absolute !important; bottom:0; width:100%")
+				h4= 'Forskning Pågår @ Tekniska Museet'
+				div(class='ui-btn-left')

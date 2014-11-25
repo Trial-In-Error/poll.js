@@ -1,48 +1,55 @@
-# Windows image file caches
-Thumbs.db
-ehthumbs.db
+# Note: Underscores in directory names seem to make in-traversable?
 
-# Folder config file
-Desktop.ini
+# Ignore top-level logs (typically npm-debug.log)
+*.log
 
-# Recycle Bin used on file shares
-$RECYCLE.BIN/
+# Ignore the database (it'll make one on first run)
+/data/*
 
-# Windows Installer files
-*.cab
-*.msi
-*.msm
-*.msp
+# Ignore the server logs
+/log/*
 
-# Grunt modules
-node_modules/
-chooser.html
+# Ignore minified .js files
+/public/dist/javascripts/*
 
-# =========================
-# Operating System Files
-# =========================
+# Ignore minified .css files
+/public/dist/stylesheets/*
 
-# OSX
-# =========================
+# Ignore 'unknown use' files saved locally only in case of 404's
+/public/stylesheets/unknown/*
 
-.DS_Store
-.AppleDouble
-.LSOverride
+# Ignore node.js runtime data
+pids
+*.pid
+*.seed
 
-# Icon must end with two \r
-Icon
+# Ignore Grunt intermediate storage (http://gruntjs.com/creating-plugins#storing-task-files)
+.grunt
 
+# Ignore module (dependency) directory (https://npmjs.org/doc/faq.html#Should-I-check-my-node_modules-folder-into-git)
+/node_modules/*
 
-# Thumbnails
-._*
+# Users Environment Variables
+.lock-wscript
 
-# Files that might appear on external disk
-.Spotlight-V100
-.Trashes
+# Ignore SSL certificate, certificate request, and private key
+# To generate your own, do:
+# openssl genrsa -out polljs-key.pem 1024
+# openssl req -new -key polljs-key.pem -out certrequest.csr
+# openssl x509 -req -in certrequest.csr -signkey polljs-key.pem -out polljs-cert.pem
+# polljs-key.pem
+# polljs-cert.pem
+# certrequest.csr
 
-# Directories potentially created on remote AFP share
-.AppleDB
-.AppleDesktop
-Network Trash Folder
-Temporary Items
-.apdisk
+# Ignore 'progress of the project' document
+status.md
+
+# Ignore Istanbul coverage reports
+/test/coverage/*
+/coverage/*
+
+# Ignore temporary, bespoke stuff
+/polls/temp/*
+
+# This is some deep, dark voodoo, man.
+!.gitignore

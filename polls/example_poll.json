@@ -1,0 +1,74 @@
+{
+	"name": "First trial poll",
+	"id": "5",
+	"open": true,
+	"owner": "adminefarious",
+	"allow_skipping": true,
+	"question_list":
+	[
+		{
+			"body": "Is this a good question?",
+			"type":
+			{
+				"name": "pick_n",
+				"n": 1,
+				"response_list":
+				[
+					{
+						"body": "Yes."
+					},
+					{
+						"body": "No.",
+						"explanation":
+						{
+							"always_explainable": false,
+							"text": "Why not?"
+						}
+					}
+				]
+			},
+			"opening_slide": true
+		},
+		{
+			"body": "Pick all of the answers that are awesome.",
+			"type":
+			{
+				"name": "pick_n",
+				"n": 4,
+				"require": 0,
+				"response_list":
+				[
+					{
+						"body": "Coffee."
+					},
+					{
+						"body": "Video-games."
+					},
+					{
+						"body": "Cats."
+					},
+					{
+						"body": "Beer."
+					}
+				]
+			}
+		},
+		{
+			"body": "How good is this poll, on a scale of 1 to 10?",
+			"type":
+			{
+				"name": "slider",
+				"min": 1,
+				"max": 10,
+				"step": 1,
+				"up_and_up": true,
+				"response_list":
+				[
+					{
+					}
+				]
+			},
+			"closing_slide": true
+		}
+	]
+}

@@ -1,0 +1,18 @@
+extends layout
+
+block content
+	h1= title
+
+	if locals.expose.exists['clientImportPoll.js']
+		script(src='/dist/javascripts/clientImportPoll.js')
+	else
+		script(src='/javascripts/clientImportPoll.js')
+
+
+	div(style='max-width: 80%; margin:0 auto')
+		div(class='ui-corner-all')
+			div(id='pollname' class='ui-bar ui-bar-a')
+				h3 Import a poll.
+			div(id='polljson' class='ui-body ui-body-a' style='height: 600px;')
+				textarea(id='json' style='height: 550px !important; max-height: 550px !important; overflow: auto !important;')
+		a(href='#', id='submit', class='ui-shadow ui-btn ui-corner-all', style='margin: 15px; padding: 15px;') Save

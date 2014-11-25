@@ -1,0 +1,154 @@
+{
+	"name": "Client-side stress test",
+	"id": "10",
+	"open": true,
+	"owner": "#swedish_summer_sucks",
+	"allow_skipping": false,
+	"question_list":
+	[
+		{
+			"body": "Welcome to this poll!",
+			"type":
+			{
+				"name": "not_a_question"
+			},
+			"opening_slide": true
+		},
+		{
+			"body": "When are these questions explainable?",
+			"type":
+			{
+				"name": "pick_n",
+				"n": 1,
+				"response_list":
+				[
+					{
+						"body": "Never."
+					},
+					{
+						"body": "When selected and required.",
+						"explanation": {
+							"always_explainable": false,
+							"explain_text": "Please enter some stuff to continue.",
+							"required": true
+						}
+					},
+					{
+						"body": "Always but not required.",
+						"explanation": {
+							"always_explainable": true,
+							"explain_text": "Optionally explain.",
+							"required": false
+						}
+					}
+				]
+			}
+		},
+		{
+			"body": "This page is the only one that's skippable.",
+			"type":
+			{
+				"name": "not_a_question"
+			},
+			"allow_skipping": true
+		},
+		{
+			"body": "Please select between 2 and 5 words.",
+			"type":
+			{
+				"name": "pick_n",
+				"n": 5,
+				"require": 2,
+				"response_list":
+				[
+					{
+						"body": "Zero."
+					},
+					{
+						"body": "Lilt."
+					},
+					{
+						"body": "Wiser."
+					},
+					{
+						"body": "Orange."
+					},
+					{
+						"body": "Agrarian."
+					},
+					{
+						"body": "Silly."
+					},
+					{
+						"body": "Obelisk."
+					},
+					{
+						"body": "Quaff."
+					}
+				]
+			}
+		},
+		{
+			"body": "Pick your two favorite.",
+			"type":
+			{
+				"name": "pick_n",
+				"n": 2,
+				"require": 2,
+				"response_list":
+				[
+					{
+						"body": "Coffee."
+					},
+					{
+						"body": "Video-games."
+					},
+					{
+						"body": "Cats."
+					},
+					{
+						"body": "Beer."
+					}
+				]
+			},
+			"next": "slider"
+		},
+		{
+			"body": "This question should have been passed over by 'next'.",
+			"type":
+			{
+				"name": "not_a_question"
+			}
+		},
+		{
+			"body": "Explain what you think of this slider.",
+			"type":
+			{
+				"name": "slider",
+				"min": -5,
+				"max": 5,
+				"step": 1.5,
+				"up_and_up": true,
+				"response_list":
+				[
+					{
+						"explanation":
+						{
+							"always_explainable": true,
+							"required": true
+						}
+					}
+				]
+			},
+			"id": "slider"
+		},
+		{
+			"body": "Thank you for taking the time to answer this poll!",
+			"type":
+			{
+				"name": "not_a_question"
+			},
+			"closing_slide": true
+		}
+	]
+}
