@@ -1,0 +1,1855 @@
+{
+    "_id": "53e10f4ee4b0e84d2b7a6481", 
+    "allow_skipping": false, 
+    "id": "10", 
+    "name": "Winter is Here", 
+    "open": true, 
+    "owner": "#swedish_summer_sucks", 
+    "question_list": [
+        {
+            "body": "Welcome to this poll!", 
+            "opening_slide": true, 
+            "type": {
+                "name": "not_a_question"
+            }
+        }, 
+        {
+            "body": "When are these questions explainable?", 
+            "type": {
+                "n": 1, 
+                "name": "pick_n", 
+                "response_list": [
+                    {
+                        "answers": [
+                            {
+                                "timestamp": "1411049016212", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1412326016732", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1413366879934", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1413381960837", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1413382101606", 
+                                "user": {
+                                    "anonymous": true, 
+                                    "token": "00806367"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1413381960837", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1413381960837", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1413382255727", 
+                                "user": {
+                                    "anonymous": true, 
+                                    "token": "00650948"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1413381960837", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1413884449886", 
+                                "user": {
+                                    "anonymous": true, 
+                                    "token": "00770698"
+                                }, 
+                                "value": "true"
+                            }
+                        ], 
+                        "body": "Never."
+                    }, 
+                    {
+                        "answers": [
+                            {
+                                "explanation": "adasf", 
+                                "timestamp": "1411555576511", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "explanation": "ghcc", 
+                                "timestamp": "1411555959237", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "explanation": "sdfs", 
+                                "timestamp": "1413364400669", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "explanation": "asfd", 
+                                "timestamp": "1413364418947", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "explanation": "asfd", 
+                                "timestamp": "1413364418947", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "explanation": "sdfs", 
+                                "timestamp": "1413364400669", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "explanation": "sdfs", 
+                                "timestamp": "1413364400669", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "explanation": "sdfs", 
+                                "timestamp": "1413364400669", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "explanation": "sdfs", 
+                                "timestamp": "1413364400669", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "explanation": "sdfs", 
+                                "timestamp": "1413364400669", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "explanation": "txt", 
+                                "timestamp": "1413884299344", 
+                                "user": {
+                                    "anonymous": true, 
+                                    "token": "00613734"
+                                }, 
+                                "value": "true"
+                            }
+                        ], 
+                        "body": "When selected and required.", 
+                        "explanation": {
+                            "always_explainable": false, 
+                            "explain_text": "Enter some stuff.", 
+                            "required": true
+                        }
+                    }, 
+                    {
+                        "answers": [
+                            {
+                                "explanation": "", 
+                                "timestamp": "1413380704242", 
+                                "user": {
+                                    "anonymous": true, 
+                                    "token": "00636944"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "explanation": "", 
+                                "timestamp": "1413380704242", 
+                                "user": {
+                                    "anonymous": true, 
+                                    "token": "00636944"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "explanation": "", 
+                                "timestamp": "1413380704242", 
+                                "user": {
+                                    "anonymous": true, 
+                                    "token": "00636944"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "explanation": "", 
+                                "timestamp": "1413380704242", 
+                                "user": {
+                                    "anonymous": true, 
+                                    "token": "00636944"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "explanation": "", 
+                                "timestamp": "1413380704242", 
+                                "user": {
+                                    "anonymous": true, 
+                                    "token": "00636944"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "explanation": "", 
+                                "timestamp": "1413380704242", 
+                                "user": {
+                                    "anonymous": true, 
+                                    "token": "00636944"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "explanation": "", 
+                                "timestamp": "1413380704242", 
+                                "user": {
+                                    "anonymous": true, 
+                                    "token": "00636944"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "explanation": "", 
+                                "timestamp": "1413380704242", 
+                                "user": {
+                                    "anonymous": true, 
+                                    "token": "00636944"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "explanation": "", 
+                                "timestamp": "1413380704242", 
+                                "user": {
+                                    "anonymous": true, 
+                                    "token": "00636944"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "explanation": "", 
+                                "timestamp": "1413380704242", 
+                                "user": {
+                                    "anonymous": true, 
+                                    "token": "00636944"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "explanation": "", 
+                                "timestamp": "1413380704242", 
+                                "user": {
+                                    "anonymous": true, 
+                                    "token": "00636944"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "explanation": "", 
+                                "timestamp": "1413383005635", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "true"
+                            }
+                        ], 
+                        "body": "Always but not required.", 
+                        "explanation": {
+                            "always_explainable": true, 
+                            "explain_text": "Enter more stuff.", 
+                            "required": false
+                        }
+                    }
+                ]
+            }
+        }, 
+        {
+            "allow_skipping": true, 
+            "body": "This page is the only one that's skippable.", 
+            "type": {
+                "name": "not_a_question"
+            }
+        }, 
+        {
+            "body": "Please select between 2 and 5 words.", 
+            "type": {
+                "n": 5, 
+                "name": "pick_n", 
+                "require": 2, 
+                "response_list": [
+                    {
+                        "answers": [
+                            {
+                                "timestamp": "1411555525780", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1412326022946", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "true"
+                            }
+                        ], 
+                        "body": "Zero."
+                    }, 
+                    {
+                        "answers": [
+                            {
+                                "timestamp": "1411555525780", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1412326022946", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "true"
+                            }
+                        ], 
+                        "body": "Lilt."
+                    }, 
+                    {
+                        "answers": [
+                            {
+                                "timestamp": "1413364406256", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1413364423989", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1413364423989", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1413366883614", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1413364406256", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1413364406256", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1413364406256", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1413364406256", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1413380707962", 
+                                "user": {
+                                    "anonymous": true, 
+                                    "token": "00636944"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1413380707962", 
+                                "user": {
+                                    "anonymous": true, 
+                                    "token": "00636944"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1413380707962", 
+                                "user": {
+                                    "anonymous": true, 
+                                    "token": "00636944"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1413380707962", 
+                                "user": {
+                                    "anonymous": true, 
+                                    "token": "00636944"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1413380707962", 
+                                "user": {
+                                    "anonymous": true, 
+                                    "token": "00636944"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1413380707962", 
+                                "user": {
+                                    "anonymous": true, 
+                                    "token": "00636944"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1413380707962", 
+                                "user": {
+                                    "anonymous": true, 
+                                    "token": "00636944"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1413380707962", 
+                                "user": {
+                                    "anonymous": true, 
+                                    "token": "00636944"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1413380707962", 
+                                "user": {
+                                    "anonymous": true, 
+                                    "token": "00636944"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1413364406256", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1413380707962", 
+                                "user": {
+                                    "anonymous": true, 
+                                    "token": "00636944"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1413380707962", 
+                                "user": {
+                                    "anonymous": true, 
+                                    "token": "00636944"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1413382259371", 
+                                "user": {
+                                    "anonymous": true, 
+                                    "token": "00650948"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1413383009401", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1413884303624", 
+                                "user": {
+                                    "anonymous": true, 
+                                    "token": "00613734"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1413884453180", 
+                                "user": {
+                                    "anonymous": true, 
+                                    "token": "00770698"
+                                }, 
+                                "value": "true"
+                            }
+                        ], 
+                        "body": "Wiser."
+                    }, 
+                    {
+                        "answers": [
+                            {
+                                "timestamp": "1412326022946", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1411555968435", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1413364406256", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1413364406256", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1413364406256", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1413364406256", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1413364406256", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1413364406256", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1413381968052", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1413382105251", 
+                                "user": {
+                                    "anonymous": true, 
+                                    "token": "00806367"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1413381968052", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1413381968052", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1413381968052", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "true"
+                            }
+                        ], 
+                        "body": "Orange."
+                    }, 
+                    {
+                        "answers": [
+                            {
+                                "timestamp": "1411555584022", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1411555968435", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1413364406256", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1413366883614", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1413364406256", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1413364406256", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1413364406256", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1413364406256", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1413380707962", 
+                                "user": {
+                                    "anonymous": true, 
+                                    "token": "00636944"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1413380707962", 
+                                "user": {
+                                    "anonymous": true, 
+                                    "token": "00636944"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1413380707962", 
+                                "user": {
+                                    "anonymous": true, 
+                                    "token": "00636944"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1413380707962", 
+                                "user": {
+                                    "anonymous": true, 
+                                    "token": "00636944"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1413380707962", 
+                                "user": {
+                                    "anonymous": true, 
+                                    "token": "00636944"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1413380707962", 
+                                "user": {
+                                    "anonymous": true, 
+                                    "token": "00636944"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1413380707962", 
+                                "user": {
+                                    "anonymous": true, 
+                                    "token": "00636944"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1413380707962", 
+                                "user": {
+                                    "anonymous": true, 
+                                    "token": "00636944"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1413380707962", 
+                                "user": {
+                                    "anonymous": true, 
+                                    "token": "00636944"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1413364406256", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1413380707962", 
+                                "user": {
+                                    "anonymous": true, 
+                                    "token": "00636944"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1413380707962", 
+                                "user": {
+                                    "anonymous": true, 
+                                    "token": "00636944"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1413382105251", 
+                                "user": {
+                                    "anonymous": true, 
+                                    "token": "00806367"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1413383009401", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "true"
+                            }
+                        ], 
+                        "body": "Agrarian."
+                    }, 
+                    {
+                        "answers": [
+                            {
+                                "timestamp": "1411555584022", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1413364423989", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1413364423989", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1413381968052", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1413381968052", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1413381968052", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1413381968052", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1413884303624", 
+                                "user": {
+                                    "anonymous": true, 
+                                    "token": "00613734"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1413884453180", 
+                                "user": {
+                                    "anonymous": true, 
+                                    "token": "00770698"
+                                }, 
+                                "value": "true"
+                            }
+                        ], 
+                        "body": "Silly."
+                    }, 
+                    {
+                        "answers": [
+                            {
+                                "timestamp": "1411555584022", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1413364423989", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1413364423989", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1413366883614", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1413382259371", 
+                                "user": {
+                                    "anonymous": true, 
+                                    "token": "00650948"
+                                }, 
+                                "value": "true"
+                            }
+                        ], 
+                        "body": "Obelisk."
+                    }, 
+                    {
+                        "answers": [
+                            {
+                                "timestamp": "1413884303624", 
+                                "user": {
+                                    "anonymous": true, 
+                                    "token": "00613734"
+                                }, 
+                                "value": "true"
+                            }
+                        ], 
+                        "body": "Quaff."
+                    }
+                ]
+            }
+        }, 
+        {
+            "body": "Pick your two favorite.", 
+            "next": "slider", 
+            "type": {
+                "n": 2, 
+                "name": "pick_n", 
+                "require": 2, 
+                "response_list": [
+                    {
+                        "answers": [
+                            {
+                                "timestamp": "1411555532378", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1411555587404", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1411556001275", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1413364426154", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1413364426154", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1413366886154", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1413382107493", 
+                                "user": {
+                                    "anonymous": true, 
+                                    "token": "00806367"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1413884455769", 
+                                "user": {
+                                    "anonymous": true, 
+                                    "token": "00770698"
+                                }, 
+                                "value": "true"
+                            }
+                        ], 
+                        "body": "Coffee."
+                    }, 
+                    {
+                        "answers": [
+                            {
+                                "timestamp": "1411555532379", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1411555587404", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1412326030536", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1411556001275", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1413364426154", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1413364426154", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1413380709848", 
+                                "user": {
+                                    "anonymous": true, 
+                                    "token": "00636944"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1413380709848", 
+                                "user": {
+                                    "anonymous": true, 
+                                    "token": "00636944"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1413380709848", 
+                                "user": {
+                                    "anonymous": true, 
+                                    "token": "00636944"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1413380709848", 
+                                "user": {
+                                    "anonymous": true, 
+                                    "token": "00636944"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1413380709848", 
+                                "user": {
+                                    "anonymous": true, 
+                                    "token": "00636944"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1413380709848", 
+                                "user": {
+                                    "anonymous": true, 
+                                    "token": "00636944"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1413380709848", 
+                                "user": {
+                                    "anonymous": true, 
+                                    "token": "00636944"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1413380709848", 
+                                "user": {
+                                    "anonymous": true, 
+                                    "token": "00636944"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1413380709848", 
+                                "user": {
+                                    "anonymous": true, 
+                                    "token": "00636944"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1413380709848", 
+                                "user": {
+                                    "anonymous": true, 
+                                    "token": "00636944"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1413380709848", 
+                                "user": {
+                                    "anonymous": true, 
+                                    "token": "00636944"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1413382261243", 
+                                "user": {
+                                    "anonymous": true, 
+                                    "token": "00650948"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1413383011865", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1413884306125", 
+                                "user": {
+                                    "anonymous": true, 
+                                    "token": "00613734"
+                                }, 
+                                "value": "true"
+                            }
+                        ], 
+                        "body": "Video-games."
+                    }, 
+                    {
+                        "answers": [
+                            {
+                                "timestamp": "1412326030536", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1413364412943", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1413366886154", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1413364412943", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1413364412943", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1413364412943", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1413364412943", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1413380709848", 
+                                "user": {
+                                    "anonymous": true, 
+                                    "token": "00636944"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1413380709848", 
+                                "user": {
+                                    "anonymous": true, 
+                                    "token": "00636944"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1413380709848", 
+                                "user": {
+                                    "anonymous": true, 
+                                    "token": "00636944"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1413380709848", 
+                                "user": {
+                                    "anonymous": true, 
+                                    "token": "00636944"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1413380709848", 
+                                "user": {
+                                    "anonymous": true, 
+                                    "token": "00636944"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1413380709848", 
+                                "user": {
+                                    "anonymous": true, 
+                                    "token": "00636944"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1413380709848", 
+                                "user": {
+                                    "anonymous": true, 
+                                    "token": "00636944"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1413380709848", 
+                                "user": {
+                                    "anonymous": true, 
+                                    "token": "00636944"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1413380709848", 
+                                "user": {
+                                    "anonymous": true, 
+                                    "token": "00636944"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1413364412943", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1413381975139", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1413380709848", 
+                                "user": {
+                                    "anonymous": true, 
+                                    "token": "00636944"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1413380709848", 
+                                "user": {
+                                    "anonymous": true, 
+                                    "token": "00636944"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1413382107493", 
+                                "user": {
+                                    "anonymous": true, 
+                                    "token": "00806367"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1413381975139", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1413381975139", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1413382261243", 
+                                "user": {
+                                    "anonymous": true, 
+                                    "token": "00650948"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1413381975139", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1413383011865", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1413884306125", 
+                                "user": {
+                                    "anonymous": true, 
+                                    "token": "00613734"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1413884455769", 
+                                "user": {
+                                    "anonymous": true, 
+                                    "token": "00770698"
+                                }, 
+                                "value": "true"
+                            }
+                        ], 
+                        "body": "Cats."
+                    }, 
+                    {
+                        "answers": [
+                            {
+                                "timestamp": "1413364412943", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1413364412943", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1413364412943", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1413364412943", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1413364412943", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1413364412943", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1413381975139", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1413381975139", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1413381975139", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1413381975139", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "true"
+                            }
+                        ], 
+                        "body": "Beer."
+                    }
+                ]
+            }
+        }, 
+        {
+            "body": "This question should have been passed over by 'next'.", 
+            "type": {
+                "name": "not_a_question"
+            }
+        }, 
+        {
+            "body": "Explain what you think of this slider.", 
+            "closing_slide": true, 
+            "id": "slider", 
+            "type": {
+                "max": 5, 
+                "min": -5, 
+                "name": "slider", 
+                "response_list": [
+                    {
+                        "answers": [
+                            {
+                                "explanation": "", 
+                                "timestamp": "1413381913034", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "-0.5"
+                            }, 
+                            {
+                                "explanation": "", 
+                                "timestamp": "1413381978468", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "2.5"
+                            }, 
+                            {
+                                "explanation": "", 
+                                "timestamp": "1413382037737", 
+                                "user": {
+                                    "anonymous": true, 
+                                    "token": "00668638"
+                                }, 
+                                "value": "-2"
+                            }, 
+                            {
+                                "explanation": "", 
+                                "timestamp": "1413382084821", 
+                                "user": {
+                                    "anonymous": true, 
+                                    "token": "00258376"
+                                }, 
+                                "value": "5.5"
+                            }, 
+                            {
+                                "explanation": "", 
+                                "timestamp": "1413382110598", 
+                                "user": {
+                                    "anonymous": true, 
+                                    "token": "00806367"
+                                }, 
+                                "value": "-3.5"
+                            }, 
+                            {
+                                "explanation": "", 
+                                "timestamp": "1413382137464", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "5.5"
+                            }, 
+                            {
+                                "explanation": "", 
+                                "timestamp": "1413382145471", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "5.5"
+                            }, 
+                            {
+                                "explanation": "", 
+                                "timestamp": "1413382264013", 
+                                "user": {
+                                    "anonymous": true, 
+                                    "token": "00650948"
+                                }, 
+                                "value": "-0.5"
+                            }, 
+                            {
+                                "explanation": "", 
+                                "timestamp": "1413382997346", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "5.5"
+                            }, 
+                            {
+                                "explanation": "", 
+                                "timestamp": "1413383014528", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "-0.5"
+                            }, 
+                            {
+                                "explanation": "", 
+                                "timestamp": "1413884307446", 
+                                "user": {
+                                    "anonymous": true, 
+                                    "token": "00613734"
+                                }, 
+                                "value": "5.5"
+                            }, 
+                            {
+                                "explanation": "", 
+                                "timestamp": "1413884457320", 
+                                "user": {
+                                    "anonymous": true, 
+                                    "token": "00770698"
+                                }, 
+                                "value": "5.5"
+                            }
+                        ], 
+                        "explanation": {
+                            "always_explainable": true, 
+                            "required": true
+                        }
+                    }
+                ], 
+                "step": 1.5, 
+                "up_and_up": true
+            }
+        },
+          {
+            "body": "Age", 
+            "closing_slide": true, 
+            "id": "slider", 
+            "type": {
+                "max": 100, 
+                "min": 0, 
+                "name": "slider", 
+                "response_list": [
+                    {
+                        "answers": [
+                            {
+                                "explanation": "", 
+                                "timestamp": "1413381913034", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "34"
+                            }, 
+                            {
+                                "explanation": "", 
+                                "timestamp": "1413381978468", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "64"
+                            }, 
+                            {
+                                "explanation": "", 
+                                "timestamp": "1413382037737", 
+                                "user": {
+                                    "anonymous": true, 
+                                    "token": "00668638"
+                                }, 
+                                "value": "21"
+                            }, 
+                            {
+                                "explanation": "", 
+                                "timestamp": "1413382084821", 
+                                "user": {
+                                    "anonymous": true, 
+                                    "token": "00258376"
+                                }, 
+                                "value": "77"
+                            }, 
+                            {
+                                "explanation": "", 
+                                "timestamp": "1413382110598", 
+                                "user": {
+                                    "anonymous": true, 
+                                    "token": "00806367"
+                                }, 
+                                "value": "34"
+                            }, 
+                            {
+                                "explanation": "", 
+                                "timestamp": "1413382137464", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "22"
+                            }, 
+                            {
+                                "explanation": "", 
+                                "timestamp": "1413382145471", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "43"
+                            }, 
+                            {
+                                "explanation": "", 
+                                "timestamp": "1413382264013", 
+                                "user": {
+                                    "anonymous": true, 
+                                    "token": "00650948"
+                                }, 
+                                "value": "36"
+                            }, 
+                            {
+                                "explanation": "", 
+                                "timestamp": "1413382997346", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "64"
+                            }, 
+                            {
+                                "explanation": "", 
+                                "timestamp": "1413383014528", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "84"
+                            }, 
+                            {
+                                "explanation": "", 
+                                "timestamp": "1413884307446", 
+                                "user": {
+                                    "anonymous": true, 
+                                    "token": "00613734"
+                                }, 
+                                "value": "11"
+                            }, 
+                            {
+                                "explanation": "", 
+                                "timestamp": "1413884457320", 
+                                "user": {
+                                    "anonymous": true, 
+                                    "token": "00770698"
+                                }, 
+                                "value": "15"
+                            }
+                        ], 
+                        "explanation": {
+                            "always_explainable": true, 
+                            "required": true
+                        }
+                    }
+                ], 
+                "step": 1.5, 
+                "up_and_up": true
+            }
+        },
+          {
+            "body": "Enter your height in cm", 
+            "closing_slide": true, 
+            "id": "slider", 
+            "type": {
+                "max": 240, 
+                "min": 120, 
+                "name": "slider", 
+                "response_list": [
+                    {
+                        "answers": [
+                            {
+                                "explanation": "", 
+                                "timestamp": "1413381913034", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "123"
+                            }, 
+                            {
+                                "explanation": "", 
+                                "timestamp": "1413381978468", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "146"
+                            }, 
+                            {
+                                "explanation": "", 
+                                "timestamp": "1413382037737", 
+                                "user": {
+                                    "anonymous": true, 
+                                    "token": "00668638"
+                                }, 
+                                "value": "232"
+                            }, 
+                            {
+                                "explanation": "", 
+                                "timestamp": "1413382084821", 
+                                "user": {
+                                    "anonymous": true, 
+                                    "token": "00258376"
+                                }, 
+                                "value": "170"
+                            }, 
+                            {
+                                "explanation": "", 
+                                "timestamp": "1413382110598", 
+                                "user": {
+                                    "anonymous": true, 
+                                    "token": "00806367"
+                                }, 
+                                "value": "170"
+                            }, 
+                            {
+                                "explanation": "", 
+                                "timestamp": "1413382137464", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "170"
+                            }, 
+                            {
+                                "explanation": "", 
+                                "timestamp": "1413382145471", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "170"
+                            }, 
+                            {
+                                "explanation": "", 
+                                "timestamp": "1413382264013", 
+                                "user": {
+                                    "anonymous": true, 
+                                    "token": "00650948"
+                                }, 
+                                "value": "170"
+                            }, 
+                            {
+                                "explanation": "", 
+                                "timestamp": "1413382997346", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "170"
+                            }, 
+                            {
+                                "explanation": "", 
+                                "timestamp": "1413383014528", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "170"
+                            }, 
+                            {
+                                "explanation": "", 
+                                "timestamp": "1413884307446", 
+                                "user": {
+                                    "anonymous": true, 
+                                    "token": "00613734"
+                                }, 
+                                "value": "170"
+                            }, 
+                            {
+                                "explanation": "", 
+                                "timestamp": "1413884457320", 
+                                "user": {
+                                    "anonymous": true, 
+                                    "token": "00770698"
+                                }, 
+                                "value": "170"
+                            }
+                        ], 
+                        "explanation": {
+                            "always_explainable": true, 
+                            "required": true
+                        }
+                    }
+                ], 
+                "step": 1.5, 
+                "up_and_up": true
+            }
+        }
+    ]
+}
