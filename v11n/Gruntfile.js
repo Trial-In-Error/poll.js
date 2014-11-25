@@ -8,12 +8,12 @@ module.exports = function(grunt) {
                                 //separator: ''
                         },
                         dist: {
-                                src: ['./dist/*.min.js'],
-                                dest: './dist/newpollvisD.js'
+                                src: ['js/lib/d3.min.js', 'js/lib/c3.js',  'js/*.js'],
+                                dest: 'v11n.js'
                         },
                         human: {
-                                src: ['js/*.js'],
-                                dest: './dist/newpollvis.js'
+                                src: ['js/lib/d3.min.js', 'js/lib/c3.js',  'js/*.js'],
+                                dest: 'v11n.js'
                         }
                 },
                 uglify: {
@@ -27,7 +27,7 @@ module.exports = function(grunt) {
                         },
                         dist: {
                                 files: {
-                                        'dist/out.min.js' : ['js/*']
+                                        'v11n.min.js' : ['v11n.js']
                                 }
                         }
                 },
@@ -91,6 +91,6 @@ module.exports = function(grunt) {
  
         grunt.registerTask('default', ['clean:dist','concat:human']);
         grunt.registerTask('human', ['clean:dist','concat:human']);
-        grunt.registerTask('dist', ['clean:dist','uglify:dist', 'concat:dist']);
+        grunt.registerTask('dist', ['clean:dist', 'concat:dist', 'uglify:dist']);
         grunt.registerTask('lint', ['jshint:dist', 'lintspaces:dist', 'lineending:dist']);
 };
