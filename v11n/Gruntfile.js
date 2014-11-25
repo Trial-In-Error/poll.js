@@ -8,26 +8,29 @@ module.exports = function(grunt) {
 				//separator: ''
 			},
 			dist: {
-				src: ['./dist/*.min.js'],
-				dest: './dist/newpollvisD.js'
+				src: ['js/*.js', 'js/lib/c3.js', 'js/lib/d3.js'],
+				dest: 'v11n.js'
 			},
 			human: {
+				src: ['js/*.js', 'js/lib/c3.js', 'js/lib/d3.js'],
+				dest: 'v11n.js'
+			},
+			humanSmall: {
 				src: ['js/*.js'],
-				dest: './dist/newpollvis.js'
+				dest: 'v11n_small.js'
 			}
 		},
 		uglify: {
 			options: {
 				banner: '/*! <%= pkg.name %> <%= grunt.template.today("dd-mm-yyyy") %> */\n',
-				mangle: {except : ['maggio']}, //see mangle: except: {} once you know more!
+				mangle: {except : ['maggio']},
 				compress : {
 					drop_console : true
 				}
-				//report: 'min'
 			},
 			dist: {
 				files: {
-					'dist/out.min.js' : ['js/*']
+					'v11n.min.js' : ['v11n.js']
 				}
 			}
 		},
@@ -91,6 +94,6 @@ module.exports = function(grunt) {
 
 	grunt.registerTask('default', ['clean:dist','concat:human']);
 	grunt.registerTask('human', ['clean:dist','concat:human']);
-	grunt.registerTask('dist', ['clean:dist','uglify:dist', 'concat:dist']);
+	grunt.registerTask('dist', ['clean:dist', 'concat:dist', 'uglify:dist']);
 	grunt.registerTask('lint', ['jshint:dist', 'lintspaces:dist', 'lineending:dist']);
 };
