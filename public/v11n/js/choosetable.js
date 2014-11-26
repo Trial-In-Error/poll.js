@@ -9,7 +9,7 @@ var tables  ={
 	],
 
 	charts    :[
-	[[histogram],[pie,bar/*,bar2*/],[stackedBar,heatmap2,lineCat,bar/*,bar2*/]],
+	[[histogram],[pie,bar/*,bar2*/],[stackedBar,heatmap,lineCat,bar/*,bar2*/]],
 	[[scatter,line,regressionline],[/*lineCat*/stackedBar,bar/*,bar2*//*,pie*/],[bubble]],
 	[[bubble]]
 	]

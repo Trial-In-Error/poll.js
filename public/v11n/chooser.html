@@ -27,11 +27,12 @@
     $( document ).ready(function() {
 
      v = new visualizepolls();
-     v.setURL("data/winter.json");
+     v.setURL("http://opine-r.herokuapp.com/pollroute/exportpolljson/54623beddb392c02007e1e55");
      v.start(function(ref){
-        // ref.visualizeChart(ref,[7,8],"scatter",defaultOptions,"#chart1");
-        ref.createGrid(ref,"#chart1",[1,3],null);
-        new Masonry(container, { "columnWidth": ".item", "itemSelector": ".item", "gutter": ".gutter-sizer" })
+      var options = {interaction: false, axis:false, legend : false, tooltip:false};
+        // ref.visualizeChart(ref,[1],"pie",options,"#chart1");
+        ref.createGrid(ref,"#chart1",[],options);
+        // new Masonry("#chart1", { "columnWidth": ".item", "itemSelector": ".item", "gutter": ".gutter-sizer" })
      });
      // v.flashChart("data/flashpoll",[1,0],"#chart2","heatmap",{title : "HEAT"});
     //   var options = {chartOptions : {  legend: {
