@@ -11,6 +11,7 @@ var masonryBig = 5;
 var sortOn;
 var pollList = [];
 var pollIndex = 1;
+var maggio = new visualizepolls();
 
 function redrawAll() {
 	parent.height(grandparent.height()).width(grandparent.width());
@@ -143,8 +144,9 @@ function visualize() {
 	if($container) {
 		closePanel();
 	}
-	
-	maggio.visualizeSet(url, container, array, options, function() {
+	maggio.setURL(url);
+	maggio.start(function(ref) {
+		maggio.createGrid(ref, container, array, options);
 		populateTable();
 		// initialize Isotope with Packery packing
 		$container = $('#container').isotope({

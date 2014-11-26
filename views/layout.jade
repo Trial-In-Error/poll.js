@@ -6,9 +6,9 @@ html
 		//- Mixin for cleaner javascript serving
 		mixin serveJS(filename)
 			if(locals.expose.exists[filename])
-				script(src='dist/javascripts/'+filename)
+				script(src='/dist/javascripts/'+filename)
 			else
-				script(src='javascripts/'+filename)
+				script(src='/javascripts/'+filename)
 
 		//- JAVASCRIPTS
 		//- Note that jQuery must be included before jQuery Mobile
