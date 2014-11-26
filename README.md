@@ -113,7 +113,6 @@ subtree workflow
 ================
 creating the subtree
 	http://blogs.atlassian.com/2013/05/alternatives-to-git-submodule-git-subtree/
-
 do work
 	git add .
 	git commit
