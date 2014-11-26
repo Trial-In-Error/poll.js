@@ -1,0 +1,170 @@
+{
+    "concludeMessage": "Thank you for participating.", 
+    "descriptionMediaURLs": [], 
+    "endValidity": 1449608400, 
+    "keywords": [
+        "campus", 
+        "charlottenburg", 
+        "tu", 
+        "berlin"
+    ], 
+    "longDescription": "This poll contains questions about your experiences and impressions of the cafeterias on Campus Charlottenburg. ", 
+    "questions": [
+        {
+            "answers": [
+                {
+                    "answerText": "Please write your feedback here", 
+                    "freetextAnswer": false, 
+                    "mediaURL": "", 
+                    "orderId": 0
+                }
+            ], 
+            "mediaURLs": [], 
+            "orderId": 3, 
+            "questionText": "Please give us feedback on how to improve our cafeterias.", 
+            "questionType": "FREETEXT"
+        }, 
+        {
+            "answers": [
+                {
+                    "answerText": "TU-Mensa", 
+                    "freetextAnswer": false, 
+                    "mediaURL": "", 
+                    "orderId": 4
+                }, 
+                {
+                    "answerText": "March-Cafeteria", 
+                    "freetextAnswer": false, 
+                    "mediaURL": "", 
+                    "orderId": 3
+                }, 
+                {
+                    "answerText": "EN-Cafeteria", 
+                    "freetextAnswer": false, 
+                    "mediaURL": "", 
+                    "orderId": 1
+                }, 
+                {
+                    "answerText": "MA-Cafeteria", 
+                    "freetextAnswer": false, 
+                    "mediaURL": "", 
+                    "orderId": 6
+                }, 
+                {
+                    "answerText": "Wetterleuchten", 
+                    "freetextAnswer": false, 
+                    "mediaURL": "", 
+                    "orderId": 2
+                }, 
+                {
+                    "answerText": "Personal-Kantine", 
+                    "freetextAnswer": false, 
+                    "mediaURL": "", 
+                    "orderId": 5
+                }, 
+                {
+                    "answerText": "Skyline", 
+                    "freetextAnswer": false, 
+                    "mediaURL": "", 
+                    "orderId": 0
+                }
+            ], 
+            "mediaURLs": [], 
+            "orderId": 2, 
+            "questionText": "Please bring the cafeterias in order of the frequency of your visits. (The most visited should be on top).", 
+            "questionType": "ORDER"
+        }, 
+        {
+            "answers": [
+                {
+                    "answerText": "Very much", 
+                    "freetextAnswer": false, 
+                    "mediaURL": "", 
+                    "orderId": 0
+                }, 
+                {
+                    "answerText": "Okay", 
+                    "freetextAnswer": false, 
+                    "mediaURL": "", 
+                    "orderId": 2
+                }, 
+                {
+                    "answerText": "Good", 
+                    "freetextAnswer": false, 
+                    "mediaURL": "", 
+                    "orderId": 1
+                }, 
+                {
+                    "answerText": "Not okay", 
+                    "freetextAnswer": false, 
+                    "mediaURL": "", 
+                    "orderId": 3
+                }, 
+                {
+                    "answerText": "Awful", 
+                    "freetextAnswer": false, 
+                    "mediaURL": "", 
+                    "orderId": 4
+                }
+            ], 
+            "mediaURLs": [], 
+            "orderId": 0, 
+            "questionText": "How much do you like the visual impression of the campus?", 
+            "questionType": "RADIO"
+        }, 
+        {
+            "answers": [
+                {
+                    "answerText": "Skyline", 
+                    "freetextAnswer": false, 
+                    "mediaURL": "", 
+                    "orderId": 0
+                }, 
+                {
+                    "answerText": "March-Cafeteria", 
+                    "freetextAnswer": false, 
+                    "mediaURL": "", 
+                    "orderId": 3
+                }, 
+                {
+                    "answerText": "TU-Mensa", 
+                    "freetextAnswer": false, 
+                    "mediaURL": "", 
+                    "orderId": 4
+                }, 
+                {
+                    "answerText": "MA-Cafeteria", 
+                    "freetextAnswer": false, 
+                    "mediaURL": "", 
+                    "orderId": 6
+                }, 
+                {
+                    "answerText": "Wetterleuchten", 
+                    "freetextAnswer": false, 
+                    "mediaURL": "", 
+                    "orderId": 2
+                }, 
+                {
+                    "answerText": "EN-Cafeteria", 
+                    "freetextAnswer": false, 
+                    "mediaURL": "", 
+                    "orderId": 1
+                }, 
+                {
+                    "answerText": "Personal-Kantine", 
+                    "freetextAnswer": false, 
+                    "mediaURL": "", 
+                    "orderId": 5
+                }
+            ], 
+            "mediaURLs": [], 
+            "orderId": 1, 
+            "questionText": "Which of these cafeterias do you visit regulary? (At least twice per month)", 
+            "questionType": "CHECKBOX"
+        }
+    ], 
+    "shortDescription": "Questions about cafeterias on Campus Charlottenburg.", 
+    "startValidity": 1412740800, 
+    "timeframePerUser": 36867600, 
+    "title": "Cafeterias on Campus Charlottenburg"
+}

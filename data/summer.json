@@ -1,0 +1,534 @@
+{
+    "_id": "53e10f4ee4b0e84d2b7a6481", 
+    "allow_skipping": false, 
+    "id": "10", 
+    "name": "Winter is Here", 
+    "open": true, 
+    "owner": "#swedish_summer_sucks", 
+    "question_list": [
+        {
+            "body": "Welcome to this poll!", 
+            "opening_slide": true, 
+            "type": {
+                "name": "not_a_question"
+            }
+        }, 
+        {
+            "body": "When are these questions explainable?", 
+            "type": {
+                "n": 1, 
+                "name": "pick_n", 
+                "response_list": [
+                    {
+                        "answers": [
+                            {
+                                "timestamp": "1411049016212", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1412326016732", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1413366879934", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "true"
+                            }
+                        ], 
+                        "body": "Never."
+                    }, 
+                    {
+                        "answers": [
+                            {
+                                "explanation": "adasf", 
+                                "timestamp": "1411555576511", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "explanation": "ghcc", 
+                                "timestamp": "1411555959237", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "explanation": "sdfs", 
+                                "timestamp": "1413364400669", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "explanation": "asfd", 
+                                "timestamp": "1413364418947", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "explanation": "asfd", 
+                                "timestamp": "1413364418947", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "explanation": "sdfs", 
+                                "timestamp": "1413364400669", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "true"
+                            }
+                        ], 
+                        "body": "When selected and required.", 
+                        "explanation": {
+                            "always_explainable": false, 
+                            "explain_text": "Enter some stuff.", 
+                            "required": true
+                        }
+                    }, 
+                    {
+                        "answers": [], 
+                        "body": "Always but not required.", 
+                        "explanation": {
+                            "always_explainable": true, 
+                            "explain_text": "Enter more stuff.", 
+                            "required": false
+                        }
+                    }
+                ]
+            }
+        }, 
+        {
+            "allow_skipping": true, 
+            "body": "This page is the only one that's skippable.", 
+            "type": {
+                "name": "not_a_question"
+            }
+        }, 
+        {
+            "body": "Please select between 2 and 5 words.", 
+            "type": {
+                "n": 5, 
+                "name": "pick_n", 
+                "require": 2, 
+                "response_list": [
+                    {
+                        "answers": [
+                            {
+                                "timestamp": "1411555525780", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1412326022946", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "true"
+                            }
+                        ], 
+                        "body": "Zero."
+                    }, 
+                    {
+                        "answers": [
+                            {
+                                "timestamp": "1411555525780", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1412326022946", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "true"
+                            }
+                        ], 
+                        "body": "Lilt."
+                    }, 
+                    {
+                        "answers": [
+                            {
+                                "timestamp": "1413364406256", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1413364423989", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1413364423989", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1413366883614", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1413364406256", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "true"
+                            }
+                        ], 
+                        "body": "Wiser."
+                    }, 
+                    {
+                        "answers": [
+                            {
+                                "timestamp": "1412326022946", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1411555968435", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1413364406256", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1413364406256", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "true"
+                            }
+                        ], 
+                        "body": "Orange."
+                    }, 
+                    {
+                        "answers": [
+                            {
+                                "timestamp": "1411555584022", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1411555968435", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1413364406256", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1413366883614", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1413364406256", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "true"
+                            }
+                        ], 
+                        "body": "Agrarian."
+                    }, 
+                    {
+                        "answers": [
+                            {
+                                "timestamp": "1411555584022", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1413364423989", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1413364423989", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "true"
+                            }
+                        ], 
+                        "body": "Silly."
+                    }, 
+                    {
+                        "answers": [
+                            {
+                                "timestamp": "1411555584022", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1413364423989", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1413364423989", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1413366883614", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "true"
+                            }
+                        ], 
+                        "body": "Obelisk."
+                    }, 
+                    {
+                        "answers": [], 
+                        "body": "Quaff."
+                    }
+                ]
+            }
+        }, 
+        {
+            "body": "Pick your two favorite.", 
+            "next": "slider", 
+            "type": {
+                "n": 2, 
+                "name": "pick_n", 
+                "require": 2, 
+                "response_list": [
+                    {
+                        "answers": [
+                            {
+                                "timestamp": "1411555532378", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1411555587404", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1411556001275", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1413364426154", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1413364426154", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1413366886154", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "true"
+                            }
+                        ], 
+                        "body": "Coffee."
+                    }, 
+                    {
+                        "answers": [
+                            {
+                                "timestamp": "1411555532379", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1411555587404", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1412326030536", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1411556001275", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1413364426154", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1413364426154", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "true"
+                            }
+                        ], 
+                        "body": "Video-games."
+                    }, 
+                    {
+                        "answers": [
+                            {
+                                "timestamp": "1412326030536", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1413364412943", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1413366886154", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1413364412943", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "true"
+                            }
+                        ], 
+                        "body": "Cats."
+                    }, 
+                    {
+                        "answers": [
+                            {
+                                "timestamp": "1413364412943", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "true"
+                            }, 
+                            {
+                                "timestamp": "1413364412943", 
+                                "user": {
+                                    "username": "admin"
+                                }, 
+                                "value": "true"
+                            }
+                        ], 
+                        "body": "Beer."
+                    }
+                ]
+            }
+        }, 
+        {
+            "body": "This question should have been passed over by 'next'.", 
+            "type": {
+                "name": "not_a_question"
+            }
+        }, 
+        {
+            "body": "Explain what you think of this slider.", 
+            "closing_slide": true, 
+            "id": "slider", 
+            "type": {
+                "max": 5, 
+                "min": -5, 
+                "name": "slider", 
+                "response_list": [
+                    {
+                        "answers": [], 
+                        "explanation": {
+                            "always_explainable": true, 
+                            "required": true
+                        }
+                    }
+                ], 
+                "step": 1.5, 
+                "up_and_up": true
+            }
+        }
+    ]
+}
