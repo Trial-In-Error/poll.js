@@ -233,6 +233,7 @@ module.exports = function(grunt) {
 
 	grunt.registerTask('default', ['clean', 'uglify:dist', 'cssmin:dist', 'concat:distcss', 'concat:v11ndist', 'uglify:v11ndist']);
 	grunt.registerTask('linter', ['jshint:dist', 'lintspaces:all']);
+	grunt.registerTask('v11n', ['clean', 'concat:v11ndist'])
 	grunt.registerTask('dist', ['clean', 'stripJsonComments:packagejson', 'replace:json', 'lineending:dist', 'jshint:dist'/*, 'qunit'*/, 'uglify:dist', 'cssmin:dist', 'concat:distcss', 'concat:v11ndist', 'uglify:v11ndist']);
 
 	// https://github.com/gruntjs/grunt-contrib-clean/issues/32
