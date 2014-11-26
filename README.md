@@ -109,6 +109,21 @@ The Future
 * http://stackoverflow.com/questions/1058880/can-iphone-web-apps-get-gps-position
 * http://ionicframework.com/getting-started/
 
+subtree workflow
+================
+creating the subtree
+	http://blogs.atlassian.com/2013/05/alternatives-to-git-submodule-git-subtree/
+
+do work
+	git add .
+	git commit
+update the subtree
+	git subtree pull --prefix=v11n v11n master
+use split to create a new subtree history
+	git subtree split --prefix=v11n --annotate="(split) " --rejoin
+push that subtree history
+	git subtree push --prefix=v11n v11n master --squash
+
 Known Issues
 ---------------------------------
 * `server_stdout.log` contains color escape codes and other garbage.
