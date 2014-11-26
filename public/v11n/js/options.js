@@ -20,6 +20,13 @@ this.addChart = function(container){
 	this.size++;
 	return this.array.length-1;
 },
+this.addGridChart = function(container){
+	var c = JSON.parse(JSON.stringify(defaultOptions));
+	c.container = container;
+	this.array.push(c);
+	this.size++;
+	return this.array.length-1;
+},
 this.updateOption = function(index, opt, value ){
 	this.array[index][opt] = value;
 },

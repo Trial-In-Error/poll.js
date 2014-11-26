@@ -45,7 +45,6 @@ var flashpoll = {
 					}
 					pollchart.optionChart.push(variable);
 					pollchart.chartVis.push( functionName(visualizationTypes[i].types[u]));
-				
 					pollchart.currentCharts[pollchart.chart[pollchart.nrOfCharts-1]] = {chart : [i,u], data : data, question : questions};
 						var cont = "#"+pollchart.chart[pollchart.nrOfCharts-1];	
 						var op = options;
@@ -168,8 +167,9 @@ visualizeChart : function(ref,structure,data,frequency,question,chart,container,
 	getDoubleMatrix : function(structure,data,ids){
 		var rows,columns;
 		var header = [];
-		header.push(structure.title);
+		// header.push();
 		var side = [];
+		side.push(structure.title);
 		var first,second;
 
 		for (var i = 0; i < structure.questions.length; i++) {

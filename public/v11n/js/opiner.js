@@ -170,11 +170,11 @@ init : function(ref,container,question,options){
 
 				for (var u = 0; u < visualizationTypes[i].types.length; u++) {
 					var rnd = Math.floor(Math.random()*4);
-					optionHandler.addChart("#charty"+(optionHandler.size));
+					optionHandler.addGridChart("#charty"+(optionHandler.size));
 					var chartyID = optionHandler.chartID + (optionHandler.size-1);
 					console.log(optionHandler.chartID);
 					console.log(optionHandler.size-1);
-					visframes.addBasic("item","topid","tumbchart", chartyID);
+					visframes.addBasic(container,"item","topid","tumbchart", chartyID);
 
 					optionHandler.updateOption(optionHandler.size-1,"matrix", matrix.slice(0));
 					optionHandler.updateOption(optionHandler.size-1,"orgmatrix",matrix.slice(0));
@@ -200,9 +200,9 @@ init : function(ref,container,question,options){
 				var matrix;
 					matrix=opine.getDoubleMatrix(data,visualizationTypes[i].ids);
 				var rnd = Math.floor(Math.random()*4);
-				optionHandler.addChart("#charty"+(optionHandler.size));
+				optionHandler.addGridChart("#charty"+(optionHandler.size));
 				var chartyID = optionHandler.chartID + (optionHandler.size-1);
-					visframes.addBasic("item","topid","tumbchart", chartyID);
+					visframes.addBasic(container,"item","topid","tumbchart", chartyID);
 
 				optionHandler.updateOption(optionHandler.size-1,"matrix",copyMatrix(matrix));
 				optionHandler.updateOption(optionHandler.size-1,"orgmatrix",copyMatrix(matrix));
@@ -230,7 +230,7 @@ init : function(ref,container,question,options){
 	}
 	// console.log(matrixMemory);
 	// console.log(performance.stopTimer());
-	new Masonry(container, { "columnWidth": ".item", "itemSelector": ".item", "gutter": ".gutter-sizer" })
+	
 	// if(callback){
 	// 	callback();
 	// }
