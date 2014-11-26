@@ -6363,7 +6363,6 @@ var flashpoll = {
 					}
 					pollchart.optionChart.push(variable);
 					pollchart.chartVis.push( functionName(visualizationTypes[i].types[u]));
-				
 					pollchart.currentCharts[pollchart.chart[pollchart.nrOfCharts-1]] = {chart : [i,u], data : data, question : questions};
 						var cont = "#"+pollchart.chart[pollchart.nrOfCharts-1];	
 						var op = options;
@@ -6486,8 +6485,9 @@ visualizeChart : function(ref,structure,data,frequency,question,chart,container,
 	getDoubleMatrix : function(structure,data,ids){
 		var rows,columns;
 		var header = [];
-		header.push(structure.title);
+		// header.push();
 		var side = [];
+		side.push(structure.title);
 		var first,second;
 
 		for (var i = 0; i < structure.questions.length; i++) {
@@ -7317,11 +7317,11 @@ init : function(ref,container,question,options){
 
 				for (var u = 0; u < visualizationTypes[i].types.length; u++) {
 					var rnd = Math.floor(Math.random()*4);
-					optionHandler.addChart("#charty"+(optionHandler.size));
+					optionHandler.addGridChart("#charty"+(optionHandler.size));
 					var chartyID = optionHandler.chartID + (optionHandler.size-1);
 					console.log(optionHandler.chartID);
 					console.log(optionHandler.size-1);
-					visframes.addBasic("item","topid","tumbchart", chartyID);
+					visframes.addBasic(container,"item","topid","tumbchart", chartyID);
 
 					optionHandler.updateOption(optionHandler.size-1,"matrix", matrix.slice(0));
 					optionHandler.updateOption(optionHandler.size-1,"orgmatrix",matrix.slice(0));
@@ -7347,9 +7347,9 @@ init : function(ref,container,question,options){
 				var matrix;
 					matrix=opine.getDoubleMatrix(data,visualizationTypes[i].ids);
 				var rnd = Math.floor(Math.random()*4);
-				optionHandler.addChart("#charty"+(optionHandler.size));
+				optionHandler.addGridChart("#charty"+(optionHandler.size));
 				var chartyID = optionHandler.chartID + (optionHandler.size-1);
-					visframes.addBasic("item","topid","tumbchart", chartyID);
+					visframes.addBasic(container,"item","topid","tumbchart", chartyID);
 
 				optionHandler.updateOption(optionHandler.size-1,"matrix",copyMatrix(matrix));
 				optionHandler.updateOption(optionHandler.size-1,"orgmatrix",copyMatrix(matrix));
@@ -7377,7 +7377,7 @@ init : function(ref,container,question,options){
 	}
 	// console.log(matrixMemory);
 	// console.log(performance.stopTimer());
-	new Masonry(container, { "columnWidth": ".item", "itemSelector": ".item", "gutter": ".gutter-sizer" })
+	
 	// if(callback){
 	// 	callback();
 	// }
@@ -7893,6 +7893,13 @@ this.addChart = function(container){
 	var chartyID = this.chartID + (this.size);
 	visframes.addBasic(container,"item","topid","tumbchart", chartyID);
 	this.array[this.size].container = "#"+chartyID;
+	this.size++;
+	return this.array.length-1;
+},
+this.addGridChart = function(container){
+	var c = JSON.parse(JSON.stringify(defaultOptions));
+	c.container = container;
+	this.array.push(c);
 	this.size++;
 	return this.array.length-1;
 },
