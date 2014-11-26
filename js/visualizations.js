@@ -743,7 +743,7 @@ function normalLine(array){
 */
 
 function pie(options){
-	optionHandler.pointer = options.id;
+	console.log(options);
 	var m = options.matrix.slice(1,options.matrix.length);
 	var names = columnNames(options.matrix);
 	var chart = c3.generate({
@@ -1231,7 +1231,6 @@ var colorScale = d3.scale.quantile()
 /*       	fontSize = 12;
        	       	console.log(fontSize);*/
        	var index = options.id;
-
 		// var h = $(options.container).parent().width() - ($(options.container).parent().width() - $(options.container).height())
 		// var h =nHeight;
 		var	h = $(options.container).parent().parent().height();

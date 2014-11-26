@@ -30,13 +30,13 @@ this.addGridChart = function(container){
 this.updateOption = function(index, opt, value ){
 	this.array[index][opt] = value;
 },
-this.addOptions = function(options){
-	if(this.myDefault ==null){
+this.addOptions = function(id,options){
+/*	if(this.myDefault ==null){
 		this.myDefault = defaultOptions;
-	}
+	}*/
 
 	for(key in options){
-		this.myDefault[key] = options[key];
+		this.array[id][key]= options[key];
 	}
 },
 this.isMobile = function(){

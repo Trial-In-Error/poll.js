@@ -174,7 +174,7 @@ init : function(ref,container,question,options){
 					var chartyID = optionHandler.chartID + (optionHandler.size-1);
 					console.log(optionHandler.chartID);
 					console.log(optionHandler.size-1);
-					visframes.addBasic(container,"item","topid","tumbchart", chartyID);
+					visframes.addBasic(container,"item","tumb"+optionHandler.size-1,"tumbchart", chartyID);
 
 					optionHandler.updateOption(optionHandler.size-1,"matrix", matrix.slice(0));
 					optionHandler.updateOption(optionHandler.size-1,"orgmatrix",matrix.slice(0));
@@ -187,6 +187,7 @@ init : function(ref,container,question,options){
 					optionHandler.updateOption(optionHandler.size-1,"title", data.question_list[visualizationTypes[i].ids[0]].body);
 					var chartTitle = getTitle(visualizationTypes[i].types[u]);
 					optionHandler.updateOption(optionHandler.size-1,"info", chartTitle);
+					optionHandler.addOptions(optionHandler.size-1,options);
 					console.log(optionHandler.array[optionHandler.size-1].xlabel);
 					var chart = visualizationTypes[i].types[u](optionHandler.getOption(optionHandler.size-1));
 					console.log(chart);
@@ -202,7 +203,7 @@ init : function(ref,container,question,options){
 				var rnd = Math.floor(Math.random()*4);
 				optionHandler.addGridChart("#charty"+(optionHandler.size));
 				var chartyID = optionHandler.chartID + (optionHandler.size-1);
-					visframes.addBasic(container,"item","topid","tumbchart", chartyID);
+					visframes.addBasic(container,"item","tumb"+optionHandler.size-1,"tumbchart", chartyID);
 
 				optionHandler.updateOption(optionHandler.size-1,"matrix",copyMatrix(matrix));
 				optionHandler.updateOption(optionHandler.size-1,"orgmatrix",copyMatrix(matrix));
@@ -220,7 +221,7 @@ init : function(ref,container,question,options){
 					);
 				optionHandler.array[optionHandler.size-1].questions.push(data.question_list[visualizationTypes[i].ids[0]].type.name);
 				optionHandler.array[optionHandler.size-1].questions.push(data.question_list[visualizationTypes[i].ids[1]].type.name);
-
+				optionHandler.addOptions(optionHandler.size-1,options);
 				var chart = visualizationTypes[i].types[u](optionHandler.getOption(optionHandler.size-1));
 				optionHandler.updateOption(optionHandler.size-1,"c3",chart);
 
@@ -318,11 +319,12 @@ visualizeChart : function(data,question,chart,color,answer){
 		optionHandler.addChart(container);
 		optionHandler.updateOption(optionHandler.size-1,"matrix",matrix);
 		optionHandler.updateOption(optionHandler.size-1,"chart",chartNames[chart]);
-		optionHandler.updateOption(optionHandler.size-1,"color",color)
-		optionHandler.updateOption(optionHandler.size-1,"id",optionHandler.size-1)
-		optionHandler.updateOption(optionHandler.size-1,"answer",answer)
-		optionHandler.updateOption(optionHandler.size-1,"xlabel","Something")
-		optionHandler.updateOption(optionHandler.size-1,"ylabel","frequency")
+		optionHandler.updateOption(optionHandler.size-1,"color",color);
+		optionHandler.updateOption(optionHandler.size-1,"id",optionHandler.size-1);
+		optionHandler.updateOption(optionHandler.size-1,"answer",answer);
+		optionHandler.updateOption(optionHandler.size-1,"xlabel","Something");
+		optionHandler.updateOption(optionHandler.size-1,"ylabel","frequency");
+		optionHandler.addOptions(optionHandler.size-1,options);
 		optionHandler.pointer = optionHandler.size-1;
 		var chart = chartNames[chart](optionHandler.getOption(optionHandler.size-1));
 		optionHandler.updateOption(optionHandler.size-1,"c3",chart);
