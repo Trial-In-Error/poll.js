@@ -10,7 +10,11 @@ module.exports = function(grunt) {
 			distcss: {
 				src: ['./public/dist/stylesheets/*.css'],
 				dest: './public/dist/stylesheets/combined_style.css'
-			}
+			},
+			v11ndist: {
+				src: ['./public/v11n/js/lib/d3.min.js', './public/v11n/js/lib/c3.js',  './public/v11n/js/*.js'],
+				dest: './public/javascripts/v11n.js'
+			},
 		},
 		clean: {
 			dist: {
@@ -38,6 +42,11 @@ module.exports = function(grunt) {
 					dest: './public/dist/javascripts'
 					//ext: '.min.js'
 				}]
+			},
+			v11ndist: {
+				files: {
+					'./public/dist/javascripts/v11n.js' : ['./public/javascripts/v11n.js']
+				}
 			}
 		},
 		lintspaces: {
@@ -222,9 +231,9 @@ module.exports = function(grunt) {
 		}
 	});
 
-	grunt.registerTask('default', ['clean', 'uglify:dist', 'cssmin:dist', 'concat:distcss']);
+	grunt.registerTask('default', ['clean', 'uglify:dist', 'cssmin:dist', 'concat:distcss', 'concat:v11ndist', 'uglify:v11ndist']);
 	grunt.registerTask('linter', ['jshint:dist', 'lintspaces:all']);
-	grunt.registerTask('dist', ['clean', 'stripJsonComments:packagejson', 'replace:json', 'lineending:dist', 'jshint:dist'/*, 'qunit'*/, 'uglify:dist', 'cssmin:dist', 'concat:distcss']);
+	grunt.registerTask('dist', ['clean', 'stripJsonComments:packagejson', 'replace:json', 'lineending:dist', 'jshint:dist'/*, 'qunit'*/, 'uglify:dist', 'cssmin:dist', 'concat:distcss', 'concat:v11ndist', 'uglify:v11ndist']);
 
 	// https://github.com/gruntjs/grunt-contrib-clean/issues/32
 	grunt.registerTask('cleaner', ['clean']);

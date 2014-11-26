@@ -34,7 +34,8 @@ module.exports = {
 			//'masonry.pkgd.min.js', // not included in min_list because it's already minified
 			//'packery-mode.pkgd.min.js', // not included in min_list because it's already minified
 			'prettyprint.js',
-			'spin.js'
+			'spin.js',
+			'v11n.js',
 
 			// CSS files
 			'combined_style.css'
