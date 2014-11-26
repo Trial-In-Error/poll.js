@@ -113,6 +113,8 @@ Subtree Workflow
 ---------------------------------
 creating the subtree
 	http://blogs.atlassian.com/2013/05/alternatives-to-git-submodule-git-subtree/
+	git remote add -f v11n https://github.com/whey86/vistool.git
+	git subtree add --prefix public/v11n v11n master --squash
 do work
 	git add .
 	git commit

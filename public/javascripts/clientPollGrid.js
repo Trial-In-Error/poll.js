@@ -23,7 +23,7 @@ function suppressPieChartInteractions() {
 function openPanel() {
 	$('#gridPanel #returnButton').off();
 	$('#gridPanel #returnButton').on('click', function() {
-		if(maggio.poll.language && maggio.poll.language === 'english') {
+		if(visualizepolls.poll.language && visualizepolls.poll.language === 'english') {
 			alert('Shareable data sets are coming soon!');
 		} else {
 			alert('Visualiseringar kan delas inom kort.');
@@ -129,7 +129,7 @@ $(window).load(function() {
 		var array = [];
 		var options = {tooltip : false, legend : false, axis : false};
 		var container = '#container';
-		maggio.visualizeSet(url, container, array, options, function() {
+		visualizepolls.visualizeSet(url, container, array, options, function() {
 
 			// initialize Isotope with Packery packing
 			$container = $('#container').isotope({

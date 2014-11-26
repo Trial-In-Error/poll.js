@@ -6,9 +6,6 @@ firstLoad = true;
 poll = {};
 
 function checkNumeric(string) {
-	//var alphabet = 'abcdefghijklmnopqrstuvwxyzåäö';
-	//var numbers = '0123456789';
-	//var legalCharacters = (alphabet).split('').concat(alphabet.toUpperCase().split('')).concat(numbers.split(''));
 	var legalCharacters = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
 	for (var character in string) {
 		if(legalCharacters.indexOf(string[character]) === -1) {
@@ -35,8 +32,6 @@ function submitPoll() {
 		dataType: 'json'
 	})
 	.done(function (result) {
-		//console.log('Done!');
-		//window.location.replace(result.redirect);
 		console.log(result);
 		if(result.success) {
 			window.location.replace(result.redirect);
