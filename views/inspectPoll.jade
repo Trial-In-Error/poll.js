@@ -2,16 +2,8 @@ extends layout
 
 block content
 	h1= title
-
-	if locals.expose.exists['clientViewPoll.js']
-		script(src='/dist/javascripts/clientViewPoll.js')
-	else
-		script(src='/javascripts/clientViewPoll.js')
-	if locals.expose.exists['prettyprint.js']
-		script(src='/dist/javascripts/prettyprint.js')
-	else
-		script(src='/javascripts/prettyprint.js')
-
+	+serveJS('clientViewPoll.js')
+	+serveJS('prettyprint.js')
 
 	div(style='max-width: 80%; margin:0 auto;')
 		p(style='text-align: left' id='pollname')

@@ -109,8 +109,8 @@ The Future
 * http://stackoverflow.com/questions/1058880/can-iphone-web-apps-get-gps-position
 * http://ionicframework.com/getting-started/
 
-subtree workflow
-================
+Subtree Workflow
+---------------------------------
 creating the subtree
 	http://blogs.atlassian.com/2013/05/alternatives-to-git-submodule-git-subtree/
 do work
@@ -122,6 +122,13 @@ use split to create a new subtree history
 	git subtree split --prefix=v11n --annotate="(split) " --rejoin
 push that subtree history
 	git subtree push --prefix=v11n v11n master --squash
+deleting subtrees
+	git rm -r v11n
+
+Jade syntax highlighting
+---------------------------------
+If you use sublime, see this conversation: https://raw.githubusercontent.com/miksago/jade-tmbundle/master/Syntaxes/Jade.tmLanguage
+and this file: https://raw.githubusercontent.com/miksago/jade-tmbundle/master/Syntaxes/Jade.tmLanguage
 
 Known Issues
 ---------------------------------

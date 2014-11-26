@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 var helper = require('../bin/helper');
 
-/* */
+/* All of these routes are stubs. */
 router.get('/:id', helper.reqGetAnswersRight, helper.ensureAuth, function(req, res) {
 	res.render('editPoll');
 	// then, serve .js to do AJAX request to pre-populate correctly

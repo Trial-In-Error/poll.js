@@ -2,17 +2,7 @@ extends layout
 
 block content
 	h1= title
-
-
-	if locals.expose.exists['clientExportPoll.js']
-		script(src='/dist/javascripts/clientExportPoll.js')
-	else
-		script(src='/javascripts/clientExportPoll.js')
-	if locals.expose.exists['prettyPrint.js']
-		script(src='/dist/javascripts/prettyPrint.js')
-	else
-		script(src='/javascripts/prettyPrint.js')
-
+	+serveJS('clientExportPoll.js')
 
 	div(style='max-width: 80%; margin:0 auto')
 		p(style='text-align: left' id='pollname')

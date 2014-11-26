@@ -3,26 +3,28 @@ html
 	head
 		title= title
 
-		// JQUERY MUST BE INCLUDED BEFORE JQUERY MOBILE
-		if locals.expose.exists['jquery_2_1_1.js']
-			script(src='/dist/javascripts/jquery_2_1_1.js')
-		else
-			script(src='/javascripts/jquery_2_1_1.js')
+		//- Mixin for cleaner javascript serving
+		mixin serveJS(filename)
+			if(locals.expose.exists[filename])
+				script(src='dist/javascripts/'+filename)
+			else
+				script(src='javascripts/'+filename)
 
+		//- JAVASCRIPTS
+		//- Note that jQuery must be included before jQuery Mobile
+		+serveJS('jquery_2_1_1.js')
+		+serveJS('jquery_mobile_1_4_3.js')
+
+		//- CSS
 		if locals.expose.exists['combined_style.css']
 			link(rel='stylesheet', href='/dist/stylesheets/combined_style.css')
 		else 
 			link(rel='stylesheet', href='/stylesheets/jquery.mobile-1.4.3.css')
 			link(rel='stylesheet', href='/stylesheets/style.css')
-
 		link(href='http://fonts.googleapis.com/css?family=Lato&subset=latin,latin-ext' rel='stylesheet' type='text/css')
 
-
-		if locals.expose.exists['jquery_mobile_1_4_3.js']
-			script(src='/dist/javascripts/jquery_mobile_1_4_3.js')
-		else
-			script(src='/javascripts/jquery_mobile_1_4_3.js')
-
+		//- This is a (non-performant!!!) way to allow data-enhance=false to work
+		//- In short, it allows elements to not be styled by jQuery Mobile at the cost of initialization time
 		script.
 			$(document).bind('mobileinit', function(){
 				$.mobile.ignoreContentEnabled = true;

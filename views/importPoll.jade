@@ -2,12 +2,7 @@ extends layout
 
 block content
 	h1= title
-
-	if locals.expose.exists['clientImportPoll.js']
-		script(src='/dist/javascripts/clientImportPoll.js')
-	else
-		script(src='/javascripts/clientImportPoll.js')
-
+	+serveJS('clientImportPoll.js')
 
 	div(style='max-width: 80%; margin:0 auto')
 		div(class='ui-corner-all')

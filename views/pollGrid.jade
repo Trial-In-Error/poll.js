@@ -1,29 +1,14 @@
-
 extends layout
-
 block content
-
-	//WARN: THIS IS REALLY UNCOOL; the scripts should be declared in head, not body
-	if locals.expose.exists['newpollvis.js']
-		script(src='/dist/javascripts/newpollvis.js')
-	else
-		script(src='/javascripts/newpollvis.js')
-
-	if locals.expose.exists['clientPollGrid.js']
-		script(src='/dist/javascripts/clientPollGrid.js')
-	else
-		script(src='/javascripts/clientPollGrid.js')
-
-
-	script(src='/javascripts/spin.js')
-	script(src='/javascripts/simple_statistics.js')
-	script(src='/javascripts/d3.min.js')
-	script(src='/javascripts/c3.min.js')
-	script(src='/javascripts/clientGridPanel.js')
+	script(src='/v11n/v11n.js')
+	+serveJS('clientPollGrid.js')
+	+serveJS('clientPollGrid.js')
+	+serveJS('clientPollGrid.js')
 	script(src='/javascripts/isotope.min.js')
 	script(src='/javascripts/packery-mode.pkgd.min.js')
 
-	link(rel='stylesheet', href='/stylesheets/c3.css')
+	link(rel='stylesheet', href='/v11n/css/c3.css')
+	link(rel='stylesheet', href='/v11n/css/chart.css')
 	link(rel='stylesheet', href='/stylesheets/roundList.css')
 
 	style.

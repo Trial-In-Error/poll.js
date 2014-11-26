@@ -1,24 +1,44 @@
 var fs = require('fs');
 var path = require('path');
 
+/***
+* This function builds a list of files that might be minified,
+* and then stores whether or not the minified version exists.
+* This is used by the server to determine where to serve files
+* from. When you add a new javascript file, please add it to
+* files_needed.
+***/
 module.exports = {
 	build: function build_min_list(exists_list) {
-		var files_needed = ['clientPolls.js',
-							'clientPoll.js',
-							'clientPollGrid.js',
-							'clientCreatePoll.js',
-							'jquery_mobile_1_4_3.js',
-							'jquery_2_1_1.js',
-							'combined_style.css',
-							'clientLogin.js',
-							'prettyprint.js',
-							'detector.js',
-							'clientExportPoll.js',
-							'clientViewPoll.js',
-							'clientMetaLogin.js',
-							'clientImportPoll.js',
-							'newpollvis.js',
-							'clientRegister.js'];
+		// Files are found in /public/javascripts/ and are listed here alphabetically
+		var files_needed = [
+			// Javascript files
+			'clientCreatePoll.js',
+			'clientExportPoll.js',
+			'clientGridPanel.js',
+			'clientGridListPanel.js',
+			'clientImportPoll.js',
+			'clientLogin.js',
+			'clientMetaLogin.js',
+			'clientPoll.js',
+			'clientPollGrid.js',
+			'clientPollGridList.js',
+			'clientPollOverview.js',
+			'clientPolls.js',
+			'clientRegister.js',
+			'clientViewPoll.js',
+			//'detector.js', // not included in min_list because it's currently not used anywhere
+			//'isotope.min.js', // not included in min_list because it's already minified
+			'jquery_2_1_1.js',
+			'jquery_mobile_1_4_3.js',
+			//'masonry.pkgd.min.js', // not included in min_list because it's already minified
+			//'packery-mode.pkgd.min.js', // not included in min_list because it's already minified
+			'prettyprint.js',
+			'spin.js'
+
+			// CSS files
+			'combined_style.css'
+		];
 
 		console.log('Looking from: '+String(__dirname));
 

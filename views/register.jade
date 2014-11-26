@@ -1,11 +1,7 @@
 extends layout
 
 block content
-	if locals.expose.exists['clientRegister.js']
-		script(src='/dist/javascripts/clientRegister.js')
-	else
-		script(src='/javascripts/clientRegister.js')
-
+	+serveJS('clientRegister.js')
 
 	div(style='max-width: 300px; margin:0 auto')
 		p(style='text-align: left') Please register to continue.

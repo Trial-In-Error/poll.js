@@ -54,6 +54,7 @@ var poll = require('./routes/poll');
 var register = require('./routes/register');
 var exportPoll = require('./routes/exportPoll');
 var inspectPoll = require('./routes/inspectPoll');
+// STUB: editPoll does not work.
 var editPoll = require('./routes/editPoll');
 var importPoll = require('./routes/importPoll');
 var clonePoll = require('./routes/clonePoll');
