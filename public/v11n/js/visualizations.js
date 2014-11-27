@@ -78,7 +78,7 @@ function bar(options){
 	if(options.swap){
 		r= rotateText(names);
 	}else{
-		r= rotateText([""]);
+		r= rotateText(m[0]);
 		// r= rotateText(m[0]);
 	}
 
@@ -90,6 +90,7 @@ function bar(options){
 	console.log(options.legendMargin);
 	// options.legendMargin = textWidth(getArrayMaxElement(),)
 	var c = 0;
+
 	var settings = {
 		bindto: options.container,
 		interaction: { enabled:  options.interaction},
@@ -872,7 +873,7 @@ function stackedBar(options){
 	// optionHandler.pointer = options.id;
 	var toggle = 1;
 	console.log(options.matrix);
-	var r = 0;
+	var r;
 	var rot = options.matrix.length > 3; rotated : false ? rotated : true;
 	// var rot = true;
 	// if(rot){r = 70;}
@@ -886,7 +887,7 @@ function stackedBar(options){
 		r= rotateText(options.matrix[0],names);
 	}
 	// var xMargin = xHeight(options);
-	options.legendMargin = xHeight(names,r);
+	options.legendMargin = xHeight(names2,r);
 	// matrix.unshift(header);
 
 	var chart = c3.generate({
@@ -1472,7 +1473,7 @@ var colorScale = d3.scale.quantile()
           .attr("text-anchor","middle")
           .attr("class", "heatlegend")
           .style("font-family","Lato")
-          .style("font-size", fontSize/1.5+"px");
+          .style("font-size", (legendWidth/3)+"px");
        /*     .attr("x", function(d, i) { return gridSize * 11 + 25; })
             .attr("y", function(d, i) { return (i * legendWidth + 20); })
             */

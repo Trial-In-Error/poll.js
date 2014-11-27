@@ -142,3 +142,9 @@ function functionName(fun) {
   ret = ret.substr(0, ret.indexOf('('));
   return ret;
 }
+
+function transformation(matrix,trans){
+	if(trans == "swap"){
+		
+	}
+}

@@ -299,3 +299,21 @@ function addToSideHeader(matrix,add){
 	} 
 		return matrix;
 }
+
+function transformation(matrix,trans){
+
+	if(trans == null){
+		return matrix;
+	}
+
+	var m = copyMatrix(matrix);
+
+	if(trans == "swap"){
+		m = swapCategorical(m);
+	}else if(trans == "p1"){
+		m = normalizeColumns(m);
+	}else if(trans == "p2"){
+		m = normalizeByRow(m);
+	}
+	return m;
+}
