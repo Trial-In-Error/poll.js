@@ -5,12 +5,12 @@ A small javascript library for visualizing, graphing, and charting!
 Example Use
 -------
 1. Serve the visualization library with the page:
-       <script src="/some/path/to/v11n.min.js" charset="utf-8"></script>
+    `<script src="/some/path/to/v11n.min.js" charset="utf-8"></script>`
 2. Serve the CSS required by the library with the page:
-       <link href="css/c3.css" rel="stylesheet">
-       <link href="css/chart.css" rel="stylesheet">
+    `<link href="css/c3.css" rel="stylesheet">`
+    `<link href="css/chart.css" rel="stylesheet">`
 3. Have a div somewhere in the page with an id to load the visualization into. The visualization will be created scaled to the div's size when the library is called.
-       <div id='someUniqueID' style ='height:350px; width:350px;'></div>
+    `<div id='someUniqueID' style ='height:350px; width:350px;'></div>`
 The height and width styles are only required for heatmap visualizations.
 4. Create a new object of type `visualizepoll`, then call its `flashChart` method. The generic form is:
        visualizepollinstance.flashChart(urlString, questionIDsArray, divIDString, nameOfChartString, optionsObject)
@@ -72,7 +72,7 @@ Building this library requires node and grunt. To build it, navigate to the proj
 
 Testing
 -------
-The example page, chooser.html, can be viewed by hosting it on a server. An easy way to set it up is to install node's simple-server with `npm simple-server`. Then, run it with `simple-server` and view it by opening up a browser, navigating to `http:localhost:3000`, and locating chooser.html. By default, it's found at `http://localhost:3000/v11n/chooser.html`. Any other simple server solution (WAMP, etc) will work as well.
+The example page, chooser.html, can be viewed by hosting it on a server. An easy way to set it up is to install node's simple-server with `npm simple-server`. Then, run it with `simple-server` and view it by opening up a browser, navigating to `http:localhost:3000`, and locating chooser.html. By default, it's found at `http://localhost:3000/v11n/chooser.html`. Any other simple server solution (WAMP, etc) will work as well. Note that any server listening on port 3000 will cause simple server to crash with an exception!
 
 How are questions combined?
 -------
