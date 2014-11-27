@@ -5,15 +5,15 @@ A small javascript library for visualizing, graphing, and charting!
 Example Use
 -------
 1. Serve the visualization library with the page:
-        <script src="/some/path/to/v11n.min.js" charset="utf-8"></script>
+       <script src="/some/path/to/v11n.min.js" charset="utf-8"></script>
 2. Serve the CSS required by the library with the page:
-        <link href="css/c3.css" rel="stylesheet">
-        <link href="css/chart.css" rel="stylesheet">
+       <link href="css/c3.css" rel="stylesheet">
+       <link href="css/chart.css" rel="stylesheet">
 3. Have a div somewhere in the page with an id to load the visualization into. The visualization will be created scaled to the div's size when the library is called.
-        <div id='someUniqueID' style ='height:350px; width:350px;'></div>
+       <div id='someUniqueID' style ='height:350px; width:350px;'></div>
 The height and width styles are only required for heatmap visualizations.
 4. Create a new object of type `visualizepoll`, then call its `flashChart` method. The generic form is:
-        visualizepollinstance.flashChart(urlString, questionIDsArray, divIDString, nameOfChartString, optionsObject)
+       visualizepollinstance.flashChart(urlString, questionIDsArray, divIDString, nameOfChartString, optionsObject)
 
 Example of execution:
 
