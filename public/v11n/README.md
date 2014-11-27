@@ -31,6 +31,8 @@ API
 -------
 ###visualizepoll functions
 
+Note that the API is subject to lots of change. Be careful when pulling new versions of the library if you need to maintain backwards compatibility (i.e., in production)!
+
 ####flashChart(URL, questionIndexArray, containerID, chartFunctionName)
 
 Parameters
