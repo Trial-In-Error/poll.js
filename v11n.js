@@ -6413,6 +6413,7 @@ visualizeChart : function(ref,structure,data,frequency,question,chart,container,
 			ref.optionsdata.updateOption(ref.optionsdata.size-1,"ylabel",(structure.questions[question[1]].questionText).trunc(20))
 		}
 		
+		matrix = transformation(matrix, options.transformation);
 		ref.optionsdata.updateOption(ref.optionsdata.size-1,"matrix",matrix);
 		ref.optionsdata.updateOption(ref.optionsdata.size-1,"chart",chartNames[chart]);
 		ref.optionsdata.updateOption(ref.optionsdata.size-1,"color",1)
@@ -6533,15 +6534,15 @@ visualizeChart : function(ref,structure,data,frequency,question,chart,container,
 					for (var j = 0; j< d.pollResQuestions[j].pollResultAnswers.length; j++) {
 						var answerOrder = d.pollResQuestions[i].pollResultAnswers[j].answerOrderId;		
 						var score = d.pollResQuestions[i].pollResultAnswers[j].answerScore;
-						for (var u = 0; u < matrix.length; u++){
+						for (var u = 0; u < rows; u++){
 							//If not out of bounds
 							if(u<rows && j<columns){
 								if(isOrdnial == 1){
-									matrix[answerOrder][u] += flashpoll.merge(matrix[answerOrder][u],score);
+									matrix[u][answerOrder] += flashpoll.merge(matrix[u][answerOrder],score);
 								}else if(isOrdnial == 2){
-									matrix[answerOrder][u] += matrix[answerOrder][u] * score;
-								}else if(isOrdnial == -1 && matrix[answerOrder][u] * score > 0){
-									matrix[answerOrder][u] ++;
+									matrix[u][answerOrder] += matrix[u][answerOrder] * score;
+								}else if(isOrdnial == -1 && matrix[u][answerOrder] * score > 0){
+									matrix[u][answerOrder] ++;
 								}
 									
 							}
@@ -6716,6 +6717,12 @@ function functionName(fun) {
   ret = ret.substr('function '.length);
   ret = ret.substr(0, ret.indexOf('('));
   return ret;
+}
+
+function transformation(matrix,trans){
+	if(trans == "swap"){
+		
+	}
 }
 function matrixToRevArray(matrix){
 	var ret = [];
@@ -7017,6 +7024,24 @@ function addToSideHeader(matrix,add){
 		matrix[i][0]+=add;
 	} 
 		return matrix;
+}
+
+function transformation(matrix,trans){
+
+	if(trans == null){
+		return matrix;
+	}
+
+	var m = copyMatrix(matrix);
+
+	if(trans == "swap"){
+		m = swapCategorical(m);
+	}else if(trans == "p1"){
+		m = normalizeColumns(m);
+	}else if(trans == "p2"){
+		m = normalizeByRow(m);
+	}
+	return m;
 }
 function createSlider(){
 	var slider = "<div><input id='sliderb' type='range' min='1' max='"+ matrix.length + "' value='1'/></div>";
@@ -7959,6 +7984,7 @@ var defaultOptions = {
 	visualization: null,
 	color:0,
 	interaction : true,
+	transformation : null,
 	answer : null,
 	questions : [],
 	title:  null,
@@ -8524,7 +8550,7 @@ function bar(options){
 	if(options.swap){
 		r= rotateText(names);
 	}else{
-		r= rotateText([""]);
+		r= rotateText(m[0]);
 		// r= rotateText(m[0]);
 	}
 
@@ -8536,6 +8562,7 @@ function bar(options){
 	console.log(options.legendMargin);
 	// options.legendMargin = textWidth(getArrayMaxElement(),)
 	var c = 0;
+
 	var settings = {
 		bindto: options.container,
 		interaction: { enabled:  options.interaction},
@@ -9318,7 +9345,7 @@ function stackedBar(options){
 	// optionHandler.pointer = options.id;
 	var toggle = 1;
 	console.log(options.matrix);
-	var r = 0;
+	var r;
 	var rot = options.matrix.length > 3; rotated : false ? rotated : true;
 	// var rot = true;
 	// if(rot){r = 70;}
@@ -9332,7 +9359,7 @@ function stackedBar(options){
 		r= rotateText(options.matrix[0],names);
 	}
 	// var xMargin = xHeight(options);
-	options.legendMargin = xHeight(names,r);
+	options.legendMargin = xHeight(names2,r);
 	// matrix.unshift(header);
 
 	var chart = c3.generate({
@@ -9918,7 +9945,7 @@ var colorScale = d3.scale.quantile()
           .attr("text-anchor","middle")
           .attr("class", "heatlegend")
           .style("font-family","Lato")
-          .style("font-size", fontSize/1.5+"px");
+          .style("font-size", (legendWidth/3)+"px");
        /*     .attr("x", function(d, i) { return gridSize * 11 + 25; })
             .attr("y", function(d, i) { return (i * legendWidth + 20); })
             */

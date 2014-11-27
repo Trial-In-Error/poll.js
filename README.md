@@ -29,11 +29,12 @@ Notes
 	Choose a,b or c -> a
 	Order d,e or f -> 2,1,3
 
-	dataoutput
-	  a b c
-	d 2 0 0 
+dataoutput
+
+    X a b c
+    d 2 0 0 
 	e 1 0 0
-	f 3 0 0
+    f 3 0 0
 
 API
 -------
@@ -69,6 +70,10 @@ Parameters
         * ylabel : label for y-axis
         * interaction :true/false
         * title : String, title of chart
+        * transformation : 
+        	- "swap" switch place of datasets
+        	- "p1" normalize question 1
+        	- "p2" normalize question 2
 
 Building
 -------

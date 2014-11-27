@@ -81,6 +81,7 @@ var defaultOptions = {
 	visualization: null,
 	color:0,
 	interaction : true,
+	transformation : null,
 	answer : null,
 	questions : [],
 	title:  null,
