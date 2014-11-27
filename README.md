@@ -99,16 +99,6 @@ Testing the API Endpoints with Postman
 ---------------------------------
 API testing has been done with the [Chrome extension Postman](https://chrome.google.com/webstore/detail/postman-rest-client/fdmmgilgnpjigdojojpjoooidkmcomcm?hl=en). `Basic Auth` should be used, and for many of the POST verb endpoints, you will need to add the header `Content-Type application/json`. Data should be POSTed in `raw` form. Note that this means that the keys in the object will need to be quoted. For example, to test posting to /register/, send the raw data: `{"username": "1234567", "password": "123412341234123412341234123412341"}`.
 
-The Future
----------------------------------
-* http://www.w3schools.com/html/html5_geolocation.asp
-* http://stackoverflow.com/questions/15051712/how-to-do-authentication-with-a-rest-api-right-browser-native-clients
-* http://stackoverflow.com/questions/176264/whats-the-difference-between-a-uri-and-a-url/1984225#1984225
-* http://stackoverflow.com/questions/630453/put-vs-post-in-rest/630475#630475
-* http://stackoverflow.com/questions/107390/whats-the-difference-between-a-post-and-a-put-http-request
-* http://stackoverflow.com/questions/1058880/can-iphone-web-apps-get-gps-position
-* http://ionicframework.com/getting-started/
-
 Subtree Workflow
 ---------------------------------
 creating the subtree
@@ -119,11 +109,11 @@ do work
 	git add .
 	git commit
 update the subtree
-	git subtree pull --prefix=v11n v11n master
+	git subtree pull --prefix=public/v11n v11n master --squash
 use split to create a new subtree history
-	git subtree split --prefix=v11n --annotate="(split) " --rejoin
+	git subtree split --prefix=public/v11n --annotate="(split) " --rejoin
 push that subtree history
-	git subtree push --prefix=v11n v11n master --squash
+	git subtree push --prefix=public/v11n v11n master --squash
 deleting subtrees
 	git rm -r v11n
 
@@ -131,6 +121,10 @@ Jade syntax highlighting
 ---------------------------------
 If you use sublime, see this conversation: https://raw.githubusercontent.com/miksago/jade-tmbundle/master/Syntaxes/Jade.tmLanguage
 and this file: https://raw.githubusercontent.com/miksago/jade-tmbundle/master/Syntaxes/Jade.tmLanguage
+
+Performance and compliance barometers
+---------------------------------
+
 
 Known Issues
 ---------------------------------
