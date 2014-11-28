@@ -30,23 +30,7 @@ var helper = require('./bin/helper');
 // Database
 var mongo = require('mongoskin');
 // Use the remote mongo database if available (i.e., app is heroku hosted), else use the local one named 'polljs'
-if(typeof process.env.MONGOLAB_URI !== 'undefined') {
-	console.log(process.env.MONGOLAB_URI);
-}
 var db = mongo.db(process.env.MONGOLAB_URI || 'mongodb://localhost:27017/polljs', {native_parse:true});
-
-// WARN: The code below causes crashes (I think it executes before the async mongo.db call above!)
-
-//db.open(function(err, db) {
-//	if(err) { throw err; }
-//	db.collection('polldb').ensureIndex({'id':1}, function(err, res) {
-//		if(err) { throw err; }
-//	});
-//	db.collection('userdb').ensureIndex({'type.login.username':1}, function(err, res) {
-//		if(err) { throw err; }
-//	});
-//});
-//
 
 var pollIndex = require('./routes/pollIndex');
 var pollRoute = require('./routes/pollRoute');
@@ -60,8 +44,14 @@ var importPoll = require('./routes/importPoll');
 var clonePoll = require('./routes/clonePoll');
 var pollOverview = require('./routes/pollOverview');
 var pollGrid = require('./routes/pollGrid');
+var login = require('./routes/login');
+var metaLogin = require('./routes/metaLogin');
+var nicknameLogin = require('./routes/nicknameLogin');
+var logout = require('./routes/logout');
+var createPoll = require('./routes/createPoll');
+var anonymousLogin = require('./routes/anonymousLogin');
 
-// In prior versions of Express, this was a call express.createServer();
+// In prior versions of Express, this was a call to express.createServer();
 // To support https, this will have to change.
 //WARN: Support HTTPS by changing this as per:
 //https://github.com/strongloop/express/wiki/Migrating-from-2.x-to-3.x
@@ -156,9 +146,6 @@ passport.use('local', new LocalStrategy(
 				console.log(user);
 				if (err) {return done(err);}
 				if (!user) {
-					//console.log('We\'ve failed!');
-					//console.log(user);
-					//console.log(!user);
 					return done(null, false, {message: 'Unknown user '+username+'.'});
 				}
 				bcrypt.compare(password, user.type.login.passhash, function(err, res) {
@@ -168,9 +155,6 @@ passport.use('local', new LocalStrategy(
 						return done(null, false, {message: 'Incorrect password.'});
 					}
 				});
-				//if (user.type.login.password !== password ) {
-				//	return done(null, false, {message: 'Incorrect password.'});
-				//}
 			});
 		});
 	}
@@ -250,12 +234,6 @@ app.use(function(req, res, next) {
 			var creds = plain_auth.split(':');
 			req.body.username = creds[0];
 			req.body.password = creds[1];
-
-
-
-
-
-
 		} catch (err) {
 			console.log(err);
 		}
@@ -302,113 +280,15 @@ app.use('/importpoll', importPoll);
 app.use('/clonepoll', clonePoll);
 app.use('/pollOverview', pollOverview);
 app.use('/grid', pollGrid);
-
-//STUB: MOVE TO ANOTHER FILE LATER
-app.get('/meta-login', function(req, res) {
-	res.render('meta-login');
-});
-
-app.get('/nickname-login', function(req, res) {
-	res.render('nickname-login', {nickname: req.session.lastNickname});
-});
+app.use('/login', login);
+app.use('/meta-login', metaLogin);
+app.use('/nickname-login', nicknameLogin);
+app.use('/createpoll', createPoll);
+app.use('/logout', logout);
+app.use('/anonymous-login', anonymousLogin);
 
 app.get('/', function(req, res) {
 	res.render('index', { user: req.user});
-});
-
-app.get('/account', /*ensureAuthenticated,*/ function(req, res) {
-	res.render('account', { user: req.user });
-});
-
-app.get('/login', function(req, res) {
-	res.render('login', { user: req.user});
-});
-
-app.get('/createpoll', function(req, res) {
-	res.render('createPoll');
-});
-
-// POST /login
-//   Use passport.authenticate() as route middleware to authenticate the
-//   request.  If authentication fails, the user will be redirected back to the
-//   login page.  Otherwise, the primary route function function will be called,
-//   which, in this example, will redirect the user to the home page.
-app.post('/login', function(req, res, next) {
-	// THIS NEEDS TO BE SESSION-IZED
-	var redirect_to = req.session.redirect_to || '/';
-	console.log('By the way, redirect is set to:'+ req.session.redirect_to+' .');
-	console.log('If this ever looks like it\'ll go to /login, please set to / instead.');
-	//delete req.session.redirect_to;
-
-	console.log('login matched with username '+req.body.username+' and password '+req.body.password+'.');
-	passport.authenticate('local', function(err, user, info) {
-		//console.log('Start login attempt.');
-		if (err) { return next(err); }
-		if (!user) {
-			//console.log('User login failed.');
-			return res.send({ success: false, message: info});
-		}
-		req.login(user, function(err) {
-			if (err) { return next(err); }
-			console.log('User login successful.');
-			return res.send({success: true, redirect: String(redirect_to)});
-		});
-	})(req, res, next);
-});
-
-app.post('/nickname-login', function(req, res, next) {
-	// THIS NEEDS TO BE SESSION-IZED
-	//console.log('By the way, redirect is set to:'+ req.session.redirect_to+' .');
-	//console.log('If this ever looks like it\'ll go to /login, please set to / instead.');
-	console.log('TODAYTODAYTODAYTODAY');
-	console.log(JSON.stringify(req.session));
-	var redirect_to = req.session.redirect_to || '/';
-	//delete req.session.redirect_to;
-	req.session.lastNickname = req.body.nickname||req.body.username;
-	console.log('login matched with usernickname '+req.body.nickname||req.body.username+'.');
-	passport.authenticate('nickname', function(err, user, info) {
-		console.log('Start login attempt.');
-		if (err) { return next(err); }
-		if (!user) {
-			console.log('User login failed.');
-			return res.send({ success: false, message: info});
-		}
-		req.logIn(user, function(err) {
-			if (err) { return next(err); }
-			console.log('User login successful.');
-			return res.redirect(String(redirect_to) || '/');
-		});
-	})(req, res, next);
-});
-
-app.post('/anonymous-login', function(req, res, next) {
-	// THIS NEEDS TO BE SESSION-IZED
-	var redirect_to = req.session.redirect_to || '/';
-	console.log('By the way, redirect is set to:'+ req.session.redirect_to+' .');
-	console.log('If this ever looks like it\'ll go to /login, please set to / instead.');
-	//delete req.session.redirect_to;
-	console.log('POST to anonymous-login.');
-	passport.authenticate('anonymous', function(err, user, info) {
-		//console.log('Start login attempt.');
-		if (err) { return next(err); }
-		if (!user) {
-			//console.log('User login failed.');
-			return res.send({ success: false, message: info});
-		}
-		req.logIn(user, function(err) {
-			if (err) { return next(err); }
-			//console.log('User login successful.');
-			return res.send({success: true, redirect: String(redirect_to)});
-		});
-		console.log(JSON.stringify(req.session.passport.user));
-		console.log(JSON.stringify(res.locals.session.passport.user));
-	})(req, res, next);
-});
-
-app.get('/logout', function(req, res){
-	req.logout();
-	// Delete local storage of results
-	res.redirect('/');
 });
 
 /// catch 404 and forward to error handler
