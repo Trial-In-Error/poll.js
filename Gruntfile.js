@@ -59,6 +59,8 @@ module.exports = function(grunt) {
 							'routes/*.js',
 							'test/*.js',
 							'!logs/*',
+							'!public/javascripts/v11n.js',
+							'!public/javascripts/spin.js',
 							'!public/javascripts/jquery_2_1_1.js',
 							'!public/javascripts/jquery_mobile_1_4_3.js',
 							'!public/javascripts/prettyprint.js',
@@ -88,6 +90,7 @@ module.exports = function(grunt) {
 				// Environments
 				'jquery': true,
 				'node': true,
+				//reporterOutput: './logs/jshint.log',
 
 				// Custom globals
 				globals: {
@@ -103,15 +106,22 @@ module.exports = function(grunt) {
 					'app.js',
 					'bin/*.js',
 					'public/javascripts/*.js',
-					'!public/javascripts/detector.js',
-					'routes/*.js', '!test/**/*.js', 'bin/*.js',
+					'routes/*.js',
 					'!public/dist/javascripts/*.js',
+					'!test/**/*.js',
+					'!public/v11n/**/*.js',
+					'!public/javascripts/detector.js',
+					'!public/javascripts/isotope.min.js',
+					'!public/javascripts/spin.js',
+					'!public/javascripts/masonry.pkgd.min.js',
+					'!public/javascripts/packery-mode.pkgd.min.js',
 					'!public/javascripts/jquery_2_1_1.js',
 					'!public/javascripts/jquery_mobile_1_4_3.js',
 					'!public/javascripts/prettyprint.js',
 					'!public/javascripts/newpollvis.js',
 					'!public/javascripts/c3.min.js',
-					'!public/javascripts/d3.min.js'
+					'!public/javascripts/d3.min.js',
+					'!public/javascripts/v11n.js'
 				],
 			},
 			clientsrc: {
@@ -180,7 +190,25 @@ module.exports = function(grunt) {
 					overwrite: true
 				},
 				files: {
-					'': ['**/.js', '**/.json', '**/.md', '**/*.gitignore', 'bin/*', 'public/javascripts/*.js', 'public/dist/javascripts/*.js', 'public/stylesheets/*.css', 'routes/*', 'views/*', '!*.png', '!*.svg', '!*.jpg', '!*.jpeg', '!*.log', '!/logs/*']
+					'': [
+						'**/.js',
+						'**/.json',
+						'**/.md',
+						'**/*.gitignore',
+						'bin/*',
+						'public/javascripts/*.js',
+						'public/dist/javascripts/*.js',
+						'public/stylesheets/*.css',
+						'routes/*',
+						'views/*',
+						'!*.png',
+						'!*.svg',
+						'!*.jpg',
+						'!*.jpeg',
+						'!*.log',
+						'!/logs/*',
+						'!public/v11n/**',
+						'!public/javascripts/v11n.js']
 				}
 			},
 			gruntfile: {
@@ -233,7 +261,7 @@ module.exports = function(grunt) {
 
 	grunt.registerTask('default', ['clean', 'uglify:dist', 'cssmin:dist', 'concat:distcss', 'concat:v11ndist', 'uglify:v11ndist']);
 	grunt.registerTask('linter', ['jshint:dist', 'lintspaces:all']);
-	grunt.registerTask('v11n', ['clean', 'concat:v11ndist'])
+	grunt.registerTask('v11n', ['clean', 'concat:v11ndist']);
 	grunt.registerTask('dist', ['clean', 'stripJsonComments:packagejson', 'replace:json', 'lineending:dist', 'jshint:dist'/*, 'qunit'*/, 'uglify:dist', 'cssmin:dist', 'concat:distcss', 'concat:v11ndist', 'uglify:v11ndist']);
 
 	// https://github.com/gruntjs/grunt-contrib-clean/issues/32

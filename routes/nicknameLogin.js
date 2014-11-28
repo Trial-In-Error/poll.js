@@ -4,7 +4,7 @@ var passport = require('passport');
 
 router.get('/', function(req, res, next) {
 	res.render('nicknameLogin', { user: req.user });
-})
+});
 
 router.post('/', function(req, res, next) {
 	// THIS NEEDS TO BE SESSION-IZED

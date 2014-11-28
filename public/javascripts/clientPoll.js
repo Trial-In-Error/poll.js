@@ -445,8 +445,8 @@ function submitPoll() {
 				console.log('Response: '+JSON.stringify(response));
 				if ( response.msg === '' ) {
 					(function(callback) {
-						window.localStorage['recent'] = JSON.stringify(poll);
-						console.log('Stored: '+window.localStorage['recent']);
+						window.localStorage.recent = JSON.stringify(poll);
+						console.log('Stored: '+window.localStorage.recent);
 						console.log('!!!');
 						console.log('!!!');
 						console.log('!!!');
@@ -459,11 +459,11 @@ function submitPoll() {
 						current_question = 0;
 						callback();
 					})(function() {
-						window.location.replace('/polloverview/'+tempID);	
+						window.location.replace('/polloverview/'+tempID);
 					});
 					//window.localStorage['poll'+tempID] = JSON.stringify(batchSanitize([poll])[0]);
 					//window.localStorage['current'+tempID] = 0;
-					
+
 					//console.log('SUBMITPOLL CURRENT QUESTION'+current_question);
 					//clearStorage();
 					//poll = batchSanitize([poll])[0];
@@ -900,7 +900,7 @@ function lastQuestion() {
 		//updateTextField();
 		renderCurrentQuestion();
 		updateTextField();
-		$.mobile.changePage($('#frontpage'), {allowSamePageTransition: true, transition: 'slide', reverse: true});		
+		$.mobile.changePage($('#frontpage'), {allowSamePageTransition: true, transition: 'slide', reverse: true});
 	}
 
 }
@@ -931,7 +931,7 @@ function skipQuestion() {
  */
 $(document).ready(function() {
 	//$(blockOverscroll);
-})
+});
 
 function pageShowHelper() {
 	// WARN: If problems with page transitions occur, this line is likely to blame
@@ -1004,7 +1004,7 @@ $(window).bind('pageshow', pageShowHelper);
 // on swipe left
 $( document ).on( 'swipeleft', '.ui-page', function( event ) {
 	// if we are NOT on a slider
-	if(!$(event.target).closest(".ui-slider, ui-slider-track").length) {
+	if(!$(event.target).closest('.ui-slider, ui-slider-track').length) {
 		// then either submit or advance
 		if(typeof poll.question_list[current_question].closing_slide !== 'undefined'
 			&& poll.question_list[current_question].closing_slide) {
@@ -1013,7 +1013,7 @@ $( document ).on( 'swipeleft', '.ui-page', function( event ) {
 		} else {
 			console.log('swiped to advance');
 			nextQuestion();
-		}		
+		}
 	}
 });
 
@@ -1021,7 +1021,7 @@ $( document ).on( 'swipeleft', '.ui-page', function( event ) {
 $( document ).on( 'swiperight', '.ui-page', function( event ) {
 	console.log('right');
 	// if we are NOT on a slider
-	if(!$(event.target).closest(".ui-slider, ui-slider-track").length) {
+	if(!$(event.target).closest('.ui-slider, ui-slider-track').length) {
 		// then retreat
 		lastQuestion();
 		console.log('swiped to retreat');
@@ -1031,20 +1031,20 @@ $( document ).on( 'swiperight', '.ui-page', function( event ) {
 function blockOverscroll ( ) {
 	console.log('Overscroll is now being blocked.');
 
-    var pageDirectionX;
+	var pageDirectionX;
 
-    function pX(e){
-        return e.originalEvent.changedTouches[0].pageX;
-    }
+	function pX(e){
+		return e.originalEvent.changedTouches[0].pageX;
+	}
 
-    $(document).on('touchstart', function(e){
-        pageDirectionX = pX(e);
-    });
+	$(document).on('touchstart', function(e){
+		pageDirectionX = pX(e);
+	});
 
-    $(document).on('touchmove', function(e){
-        if ( pageDirectionX !== pX(e) ) {
-            e.preventDefault();
-            console.log('Stopping overscroll effect');
-        }
-    });
+	$(document).on('touchmove', function(e){
+		if ( pageDirectionX !== pX(e) ) {
+			e.preventDefault();
+			console.log('Stopping overscroll effect');
+		}
+	});
 }

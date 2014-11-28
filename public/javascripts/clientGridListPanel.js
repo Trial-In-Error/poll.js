@@ -11,7 +11,7 @@ function populateTable() {
 			alert('Network error!');
 		} else {
 			if($('#collapsibleSet').children().length > 0) {
-				$('#collapsibleSet').children().remove()
+				$('#collapsibleSet').children().remove();
 			}
 			$('#pollTitle').text(data.name);
 			$('#pollMetadata').hide();
@@ -77,7 +77,7 @@ function populateTable() {
 			});
 			$('#nextButton').off();
 			$('#nextButton').on('click', function() {
-				console.warn('Moving from '+pollIndex+' to '+(pollIndex + 1) % (pollList.length)+' when the list is '+pollList.length+' elements long.')
+				console.warn('Moving from '+pollIndex+' to '+(pollIndex + 1) % (pollList.length)+' when the list is '+pollList.length+' elements long.');
 				pollIndex = (pollIndex + 1) % (pollList.length);
 				$('.item').remove();
 				visualize();

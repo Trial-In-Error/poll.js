@@ -79,35 +79,35 @@ function closePanel() {
 }
 
 function getScrollbarWidth() {
-    var outer = document.createElement("div");
-    outer.style.visibility = "hidden";
-    outer.style.width = "100px";
-    outer.style.msOverflowStyle = "scrollbar"; // needed for WinJS apps
+	var outer = document.createElement('div');
+	outer.style.visibility = 'hidden';
+	outer.style.width = '100px';
+	outer.style.msOverflowStyle = 'scrollbar'; // needed for WinJS apps
 
-    document.body.appendChild(outer);
+	document.body.appendChild(outer);
 
-    var widthNoScroll = outer.offsetWidth;
-    // force scrollbars
-    outer.style.overflow = "scroll";
+	var widthNoScroll = outer.offsetWidth;
+	// force scrollbars
+	outer.style.overflow = 'scroll';
 
-    // add innerdiv
-    var inner = document.createElement("div");
-    inner.style.width = "100%";
-    outer.appendChild(inner);
+	// add innerdiv
+	var inner = document.createElement('div');
+	inner.style.width = '100%';
+	outer.appendChild(inner);
 
-    var widthWithScroll = inner.offsetWidth;
+	var widthWithScroll = inner.offsetWidth;
 
-    // remove divs
-    outer.parentNode.removeChild(outer);
+	// remove divs
+	outer.parentNode.removeChild(outer);
 
-    return widthNoScroll - widthWithScroll;
+	return widthNoScroll - widthWithScroll;
 }
 
 function buildList(callback) {
 	$.getJSON( window.location.origin+'/pollroute/listpolls', function( data ) {
 		var temp = JSON.parse(data.polls);
 		for(var index in temp) {
-			pollList.push(temp[index])
+			pollList.push(temp[index]);
 		}
 		callback();
 	});
@@ -197,16 +197,16 @@ function visualize() {
 		items.width(gridSizer.width());
 		items.height(gridSizer.width());
 		//svg.parent().wrapInner('<div style="position:relative; margin:0 auto;"></div>');
-		svg/*.css('position', 'absolute')*/.each(function () { $(this)[0].setAttribute('viewBox', '0 0 '+gridSizer.width()+' '+gridSizer.width() ) });
+		svg/*.css('position', 'absolute')*/.each(function () { $(this)[0].setAttribute('viewBox', '0 0 '+gridSizer.width()+' '+gridSizer.width() ); });
 		parent = svg.parent();
 		grandparent = parent.parent();
 		//parent.height(grandparent.height());
 
 		$container.width(window.innerWidth-2*parseInt($container.parent().css('padding'))-scrollbarWidth);
-		$container.isotope({packery: {columnWidth: gridSizer.width()} })
-		$container.isotope({packery: {gutter: gutterSizer.width()} })
+		$container.isotope({packery: {columnWidth: gridSizer.width()} });
+		$container.isotope({packery: {gutter: gutterSizer.width()} });
 		$('.big').removeClass('big');
-	
+
 		$container.css('padding', '0px');
 
 		suppressPieChartInteractions();
@@ -224,7 +224,7 @@ function visualize() {
 				} else {
 					$container.width(window.innerWidth-2*parseInt($container.parent().css('padding'))-getScrollbarWidth());
 				}
-				$container.isotope({ packery: {columnWidth : gridSizer.width() } })
+				$container.isotope({ packery: {columnWidth : gridSizer.width() } });
 				if($('.big:first').length > 0) {
 					$('.big:first').width(gridSizer.width());
 					$('.big:first').height(gridSizer.width());
@@ -242,8 +242,8 @@ function visualize() {
 				console.log('HEIHEIHEI'+$('#tumb1').height());
 				transformer.addChartInfo('#'+this.id);
 				suppressPieChartInteractions();
-				$container.isotope({packery: {columnWidth: gridSizer.width()} })
-				$container.isotope({packery: {gutter: gutterSizer.width()} })
+				$container.isotope({packery: {columnWidth: gridSizer.width()} });
+				$container.isotope({packery: {gutter: gutterSizer.width()} });
 				$container.isotope('reloadItems');
 				$container.isotope('layout');
 			}
@@ -260,7 +260,7 @@ function visualize() {
 
 
 $(window).load(function() {
-	try { 
+	try {
 		$('.ui-footer').hide();
 		$('.ui-header').hide();
 
@@ -270,6 +270,6 @@ $(window).load(function() {
 	} catch (err) {
 		console.warn(err);
 		spinner.stop();
-		alert('Oops! Something broke! :(')
+		alert('Oops! Something broke! :(');
 	}
 });

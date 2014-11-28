@@ -1,5 +1,5 @@
-if(window.localStorage['recent'] !== undefined && window.localStorage['recent'] !== 'undefined') {
-	var poll = JSON.parse(window.localStorage['recent']);
+if(window.localStorage.recent !== undefined && window.localStorage.recent !== 'undefined') {
+	var poll = JSON.parse(window.localStorage.recent);
 } else {
 	poll = undefined;
 }
@@ -62,7 +62,7 @@ function populateTable(callback) {
 				} else if (data.question_list[questionCounter].type.name === 'not_a_question') {
 					$('#collapsibleDiv-'+questionCounter).remove();
 					if(data.language && data.language === 'english') {
-						$('#collapsibleGraph-'+questionCounter).append('<p style="text-shadow: none;">This question type isn\'t visualizable. Sorry!</p>');	
+						$('#collapsibleGraph-'+questionCounter).append('<p style="text-shadow: none;">This question type isn\'t visualizable. Sorry!</p>');
 					} else {
 						$('#collapsibleGraph-'+questionCounter).append('<p style="text-shadow: none;">Denna fråga kan ej visualiseras.</p>');
 					}
@@ -70,7 +70,7 @@ function populateTable(callback) {
 				} else { //open questions
 					$('#collapsibleDiv-'+questionCounter).remove();
 					if(data.language && data.language === 'english') {
-						$('#collapsibleGraph-'+questionCounter).append('<p style="text-shadow: none;">This question type isn\'t visualizable yet. Sorry!</p>');	
+						$('#collapsibleGraph-'+questionCounter).append('<p style="text-shadow: none;">This question type isn\'t visualizable yet. Sorry!</p>');
 					} else {
 						$('#collapsibleGraph-'+questionCounter).append('<p style="text-shadow: none;">Denna fråga kan ej visualiseras än.</p>');
 					}
@@ -84,7 +84,7 @@ function populateTable(callback) {
 }
 
 function stripPunctuationAndHyphenate(string) {
-	return string.replace(/[\.,\\/#!$%\^&\*;:{}=_`~()]/g,"").replace(/\s{2,}/g,"-");
+	return string.replace(/[\.,\\/#!$%\^&\*;:{}=_`~()]/g,'').replace(/\s{2,}/g,'-');
 }
 
 // DOM Ready =============================================================
@@ -98,7 +98,7 @@ $(document).ready(function() {
 				var answers = [];
 				try {
 					if (poll && (poll.id === data.id)) {
-						for (responseCounter in poll.question_list[questionCounter].type.response_list) {
+						for (var responseCounter in poll.question_list[questionCounter].type.response_list) {
 							if(poll.question_list[questionCounter].type.response_list[responseCounter].answers[0].value) {
 								answers.push(poll.question_list[questionCounter].type.response_list[responseCounter].body);
 								//poll.question_list[questionCounter].type.response_list[responseCounter].body

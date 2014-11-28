@@ -78,7 +78,7 @@ $(document).ready(function() {
 		console.log('Clicked on question '+index+'.');
 		if(!$('#collapsible-'+index).hasClass('ui-collapsible-collapsed')) {
 			$('.question-'+this.parentNode.id.split('-').pop()).addClass('highlighted');
-		}	
+		}
 	});
 });
 
