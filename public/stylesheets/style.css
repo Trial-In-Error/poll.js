@@ -101,3 +101,11 @@ body *, input, select, textarea, button, .ui-button {
 .ui-listview > li h1, .ui-listview > li h2, .ui-listview > li h3, .ui-listview > li h4, .ui-listview > li h5, .ui-listview > li h6 {
     font-size: 1.2em;
 }
+
+
+.valign {
+    top: 50% !important;
+    -webkit-transform: translateY(-50%);
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);
+}

@@ -15,14 +15,6 @@ html
 		+serveJS('jquery_2_1_1.js')
 		+serveJS('jquery_mobile_1_4_3.js')
 
-		style.
-			.valign {
-				position: relative;
-				top: 50%;
-				-webkit-transform: translateY(-50%);
-				-ms-transform: translateY(-50%);
-				transform: translateY(-50%);
-			}
 		//- CSS
 		if locals.expose.exists['combined_style.css']
 			link(rel='stylesheet', href='/dist/stylesheets/combined_style.css')
