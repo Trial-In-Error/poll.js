@@ -1,7 +1,8 @@
 var express = require('express');
 var router = express.Router();
+var passport = require('passport');
 
-router.post('/anonymous-login', function(req, res, next) {
+router.post('/', function(req, res, next) {
 	// THIS NEEDS TO BE SESSION-IZED
 	var redirect_to = req.session.redirect_to || '/';
 	console.log('By the way, redirect is set to:'+ req.session.redirect_to+' .');
