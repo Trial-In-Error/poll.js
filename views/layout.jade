@@ -15,6 +15,14 @@ html
 		+serveJS('jquery_2_1_1.js')
 		+serveJS('jquery_mobile_1_4_3.js')
 
+		style.
+			.valign {
+				position: relative;
+				top: 50%;
+				-webkit-transform: translateY(-50%);
+				-ms-transform: translateY(-50%);
+				transform: translateY(-50%);
+			}
 		//- CSS
 		if locals.expose.exists['combined_style.css']
 			link(rel='stylesheet', href='/dist/stylesheets/combined_style.css')
@@ -40,6 +48,9 @@ html
 			div(class='ui-header ui-bar-b', style='background-color: #fff !important;')
 				a(href='/', id='headerAnchor', style='display: block;margin-left: auto !important;margin-right: auto !important;margin-top: 16px !important;margin-bottom: 16px !important; text-align:center; border: none;max-width: 405px; max-height: 94px', data-role= 'none', data-ajax='false', data-enhance='false')
 					img(src='/images/Opiner_Logo.png', style='max-width: 405px; max-height: 94px;' data-role='none')
+				div(class='ui-btn-right valign')
+					if locals.expose.auth
+						a(href='/logout' class='ui-btn' data-role='button' data-inline='true' id='logout') Logout
 
 			div(data-role='content', class='ui-content', style="margin-bottom:42px;")
 				block content
