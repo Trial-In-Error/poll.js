@@ -133,7 +133,7 @@ Known Issues
 * Skype defaults to listening on port 443, blocking server.js from starting the HTTPS server.
 * MongoDB under Mac OSX will not get as many file descriptors as it would like.
 	* See: http://docs.mongodb.org/manual/reference/ulimit/
-* None of the HTTPS keys are packaged with the app. Generate them like so:
+* None of the HTTPS keys are packaged with the app. You can generate self-signed certificates like so:
 
 	`openssl genrsa -out polljs-key.pem 1024`
 
