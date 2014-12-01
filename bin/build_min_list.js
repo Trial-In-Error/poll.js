@@ -18,6 +18,7 @@ module.exports = {
 			'clientGridPanel.js',
 			'clientGridListPanel.js',
 			'clientImportPoll.js',
+			'clientInspectPoll.js',
 			'clientLogin.js',
 			'clientMetaLogin.js',
 			'clientPoll.js',
@@ -26,7 +27,6 @@ module.exports = {
 			'clientPollOverview.js',
 			'clientPolls.js',
 			'clientRegister.js',
-			'clientViewPoll.js',
 			//'detector.js', // not included in min_list because it's currently not used anywhere
 			//'isotope.min.js', // not included in min_list because it's already minified
 			'jquery_2_1_1.js',
