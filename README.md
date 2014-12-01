@@ -125,6 +125,9 @@ and this file: https://raw.githubusercontent.com/miksago/jade-tmbundle/master/Sy
 Performance and compliance barometers
 ---------------------------------
 
+License Information
+---------------------------------
+Everything included in this repository is permissively (e.g., MIT) licensed except for Isotope and Packery.
 
 Known Issues
 ---------------------------------
