@@ -5,10 +5,11 @@ To install:
 1. Clone repository.
 2. Install [mongoDB](http://www.mongodb.org/downloads). Add mongodb/bin to the system path.
 3. Install [node.js](http://nodejs.org/download/). Add node.js/ to the system path.
-4. From the repository's directory, `npm install`.
-5. Get a coffee while `npm` does all the hard work.
-6. Start the app from the repository's directory with `npm start`.
-7. Point a web browser at `localhost:3000` and enjoy!
+4. Install redis-server [for linux](https://github.com/antirez/redis) or [for windows](https://github.com/dmajkic/redis). Add redis-server/ to the system path. Note that this step is optional but **highly** recommended.
+5. From the repository's directory, `npm install`.
+6. Get a coffee while `npm` does all the hard work.
+7. Start the app from the repository's directory with `npm start`.
+8. Point a web browser at `localhost:3000` and enjoy!
 
 Note that `npm run godbless` will start the server but not the database. This is useful for debugging changes without having to deal with `mongodb` and `forever`.
 
@@ -51,7 +52,8 @@ Deploying to Heroku
 7. Start one dyno (worker process) with `heroku ps:scale web=1`.
 8. REALLY MESSY MONGODB SETUP OH SHIT DOCUMENT THIS CRAP
 9. EVEN MESSIER SSL / HTTPS SETUP FIGURE THIS OUTTTTT
-10. Visit your app with `heroku open`!
+10. THEN FIGURE OUT HOW TO DO REDIS GODDAMN MAN
+11. Visit your app with `heroku open`!
 
 Heroku Cheatsheet
 ---------------------------------
@@ -72,6 +74,10 @@ Files Related to Heroku
 ---------------------------------
 * `Procfile` defines process types run by `heroku ps:scale `type=number`
 * `package.json` is used to build the app on heroku's servers. It must list *every* package used in the app; no packages can be used from global scope.
+
+About Redis
+---------------------------------
+If the server can find a running redis-server, it will use that as the session memory store (redis behaves much like memcached). Testing can be done without redis-server running (as the server will fall back on memory store), but production environments should *absolutely* use redis! Memory store cannot sync memory between multiple processes (so Heroku cannot scale past 1 dyno and still use sessions!) and has an inherent memory leak (sessions are **never** released from memory). So please use redis, even though it's listed as optional above. 
 
 Unit Testing
 ---------------------------------

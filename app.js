@@ -13,19 +13,80 @@ var Chance = require('chance');
 var alea = new Chance();
 var bcrypt = require('bcryptjs');
 var helper = require('./bin/helper');
+var redis = require('redis');
+var redisClient = redis.createClient();
+var redisStore;
 
+// This function retries the connection to Redis every 5 minutes.
+function redisRetry() {
+	setTimeout(function() {
+		redisClient = redis.createClient();
+		redisSetup(redisClient);
+	}, 300000);
+}
 
-//if (process.env.NODE_ENV === ‘production’) {
-//var nullfun = function () {};
-//console.log = nullfun;
-//console.info = nullfun;
-//console.error = nullfun;
-//console.warn = nullfun;
-//}
+// This function takes a redisClient object in and sets up its error & connect
+// handlers. It then see-saws: every error causes it to end that object and
+// make a new one 5 minutes later, calling this same function to reconfigure the
+// new instance's error and connect handlers.
+function redisSetup(redisClient) {
+	redisClient.on('error', function(err) {
+		console.log('REDIS: Connection failed.');
+		redisClient.end();
+		// This is a dirty, filthy hack.
+		// It searches the app's router for the 'session' route;
+		// it then replaces the session handler with one that uses memoryStore
+		// because the redisStore is not reachable.
+		for(element in app._router.stack) {
+			if(app._router.stack[element].handle.name === 'session') {
+				console.log('REDIS: Express no longer using Redis session store.');
+				app._router.stack[element].handle = session({
+					resave: true, //don't save session if unmodified
+					saveUninitialized: true, //don't create session until something stored
+					secret: "THISMUSTNOTCHANGE",
+					cookie: {
+						maxAge: 604800 //one week
+					}
+				});
+				redisRetry();
+			}
+		}
+	});
+	redisClient.on('connect', function(err) {
+		console.log('REDIS: Connected.');
+		// This is also the same dirty, filthy hack except that it replaces
+		// the session handler with one that uses the redisStore.
+		for(element in app._router.stack) {
+			//console.log(app._router.stack[element]);
+			if(app._router.stack[element].handle.name === 'session') {
+				console.log('REDIS: Express now using Redis session store.');
+				app._router.stack[element].handle = session({
+					resave: true, //don't save session if unmodified
+					saveUninitialized: true, //don't create session until something stored
+					store: new RedisStore({
+						client: redisClient
+					}),
+					secret: "THISMUSTNOTCHANGE",
+					cookie: {
+						maxAge: 604800 //one week
+					}
+				});
+				RedisStore = require('connect-redis')(session);	
+			}
+		}
+	});
+}
 
-//process.env.NODE_ENV = 'development'
-//
-//console.log(process.env.NODE_ENV);
+// Set the first redisClient object up with the proper event handlers from above
+redisSetup(redisClient);
+
+// Then set it up for use with the session handler.
+try {
+	RedisStore = require('connect-redis')(session);		
+} catch (err) {
+
+}
+
 
 // Database
 var mongo = require('mongoskin');
@@ -204,13 +265,27 @@ app.use(logger('dev'));
 app.use(bodyParser({limit: '5mb'}));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded());
+// what does bodyParser.text do? i had it commented out earlier!
+// it crashes the server, that's what
 //app.use(bodyParser.text());
 app.use(cookieParser());
 //app.use(express.methodOverride()); // what does this do? tutorial for passport.js used it
 
 // session() must be called before passport.session()!
-app.use(session({secret: alea.string({length:20}), resave: true, saveUninitialized: true}));
-app.use(flash());
+app.use(session({
+	resave: true, //don't save session if unmodified
+	saveUninitialized: true, //don't create session until something stored
+	store: new RedisStore({
+		client: redisClient
+	}),
+	secret: "THISMUSTNOTCHANGE",
+	cookie: {
+		maxAge: 604800 //one week
+	}
+}));
+
+
+//app.use(flash());
 
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -314,21 +389,21 @@ app.use(function(req, res, next) {
 if (app.get('env') === 'development') {
 	app.use(function(err, req, res, next) {
 		res.status(err.status || 500);
-		if(req.api) {
+		//if(req.api) {
 			console.log('Normal development error.');
 			res.render('error', {
 				message: err.message,
 				//WARN CHANGE BACK TO {}
 				error: {}
 			});
-		} else {
-			console.log('API development error.');
-			res.status(err.status || 500).send({
-				message: '',//'error: '+err.message,
-				// WARN CHANGE BACK TO {}
-				error: err
-			});
-		}
+		//} else {
+		//	console.log('API development error.');
+		//	res.status(err.status || 500).send({
+		//		message: '',//'error: '+err.message,
+		//		// WARN CHANGE BACK TO {}
+		//		error: err
+		//	});
+		//}
 	});
 }
 

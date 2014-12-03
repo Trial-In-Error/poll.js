@@ -40,6 +40,7 @@
 		"passport-local": "*",
 		"passport-http-bearer": "*",
 		"connect-redis": "*",
+		"redis": "*",
 		"nodetime": "*",
 		"superagent": "*",
 		"connect-flash": "*", //required for passport auth 'flashes'
