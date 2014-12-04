@@ -32,9 +32,9 @@ try {
 	console.log('Could not find '+err.path);
 } finally {
 	http.createServer(app).listen(port);
-	if(typeof options !== 'undefined' && typeof options.key !== 'undefined' && typeof options.key === 'object' && typeof options.cert !== 'undefined' && typeof options.cert === 'object') {
-		https.createServer(options, app).listen(secure_port);
-	} else {
-		console.log('HTTPS server did not start because it could not find the certificate and key.');
-	}
+	//if(typeof options !== 'undefined' && typeof options.key !== 'undefined' && typeof options.key === 'object' && typeof options.cert !== 'undefined' && typeof options.cert === 'object') {
+	//	https.createServer(options, app).listen(secure_port);
+	//} else {
+	//	console.log('HTTPS server did not start because it could not find the certificate and key.');
+	//}
 }
