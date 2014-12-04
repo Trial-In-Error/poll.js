@@ -14,13 +14,23 @@ var alea = new Chance();
 var bcrypt = require('bcryptjs');
 var helper = require('./bin/helper');
 var redis = require('redis');
-var redisClient = redis.createClient();
+var url = require('url');
+var redisURL;
+if(process.env.REDISCLOUD_URL) {
+	redisURL = url.parse(process.env.REDISCLOUD_URL);
+	redisURL.auth = redisURL.auth.split(":")[1]
+} else {
+	redisURL = { port: 6379, hostname: '127.0.0.1', auth: null };
+};
+var redisClient = redis.createClient(redisURL.port, redisURL.hostname, {no_ready_check: true});
+redisClient.auth(redisURL.auth);
 var redisStore;
 
 // This function retries the connection to Redis every 5 minutes.
 function redisRetry() {
 	setTimeout(function() {
-		redisClient = redis.createClient();
+		redis.createClient(redisURL.port, redisURL.hostname, {no_ready_check: true});
+		redisClient.auth(redisURL.auth);
 		redisSetup(redisClient);
 	}, 300000);
 }
