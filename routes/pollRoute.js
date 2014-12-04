@@ -4,11 +4,15 @@ var mongo = require('mongoskin');
 var helper = require('../bin/helper');
 var sys = require('sys');
 
-function batchSanitize(items) {
+function batchSanitize(items, db) {
 	for(var tr in items) {
 		if(!items[tr]) {
 			console.log(JSON.stringify(items));
 			return false;
+		}
+		if(items[tr].clean) {
+			console.log('Used cached poll.');
+			continue;
 		}
 		for(var question in items[tr].question_list) {
 			for(var response in items[tr].question_list[question].type.response_list) {
@@ -19,7 +23,19 @@ function batchSanitize(items) {
 				//console.log('Now it\s '+ items[tr].question_list[question].type.response_list[response].answers);
 			}
 		}
+		if(!items[tr].clean) {
+			db.collection('polldb').update({"_id": items[tr]._id}, {$set: {clean: items[tr]}}, function(err, result) {
+				if(err) {console.log(err)}
+				console.log('Cached poll '+items[tr]._id);
+			});			
+		}
 	}
+	if(items.length === 1) {
+		db.collection('polldb').update({"_id": items[0]._id}, {$set: {clean: items[0]}}, function(err, result) {
+			if(err) {console.log(err)}
+			console.log('Cached poll '+items[0]._id);
+		});
+	} 
 	return items;
 }
 
@@ -37,9 +53,9 @@ router.get('/listpolls', function(req, res) {
 	// STUB: Paginate
 	db.collection('polldb').find().toArray(function(err, items) {
 		if(typeof res.locals !== 'undefined' && typeof res.locals.session.passport.user !== 'undefined') {
-			res.send({auth: req.isAuthenticated(), rights: res.locals.session.passport.user.rights, polls:JSON.stringify(batchSanitize(items))});
+			res.send({auth: req.isAuthenticated(), rights: res.locals.session.passport.user.rights, polls:JSON.stringify(batchSanitize(items, req.db))});
 		} else {
-			res.send({auth: false, rights: undefined, polls:JSON.stringify(batchSanitize(items))});
+			res.send({auth: false, rights: undefined, polls:JSON.stringify(batchSanitize(items, req.db))});
 		}
 	});
 });
@@ -87,8 +103,9 @@ router.get('/exportpolljsonclean/:id', function(req, res) {
 		//console.log(err);
 		if(!result) {
 			res.send(404, {error: 'Poll not found.'});
-		}
-		res.send((err === null) ? batchSanitize([result])[0] : { msg:'Database error: ' + err });
+		} else {
+			res.send((err === null) ? batchSanitize([result], req.db)[0] : { msg:'Database error: ' + err });	
+		}	
 	});
 });
 
