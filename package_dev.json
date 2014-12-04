@@ -11,10 +11,13 @@
 	"scripts": {
 		// NOTE: -l logging is not done because of path conflicts; try to find a work-around?
 		// Consider working `nohup` in conditionally?
-		"prestart": "forever start --minUptime 1000 --spinSleepTime 1000 -e ./logs/database_errors.log -o ./logs/database_stdout.log -c node ./bin/database_init_helper.js",
 		// minUptime and spinSleepTime set to defaults to prevent warnings
-		// Not fully sure what the two parameters do (!!!)
-		"start": "forever --minUptime 1000 --spinSleepTime 1000 -e ./logs/server_errors.log -l ./logs/forever.log -o ./logs/server_stdout.log -c node ./bin/server.js",
+		// Start the database
+		"prestart": "forever start --minUptime 1000 --spinSleepTime 1000 -e ./logs/database_errors.log -o ./logs/database_stdout.log -c node ./bin/database_init_helper.js",
+		// Start redis
+		"start": "forever start --minUptime 1 --spinSleepTime 1000 -e ./logs/redis_errors.log -o ./logs/redis_stdout.log -c node ./bin/redis_init_helper.js",
+		// Start the server
+		"poststart": "forever --minUptime 1000 --spinSleepTime 1000 -e ./logs/server_errors.log -l ./logs/forever.log -o ./logs/server_stdout.log -c node ./bin/server.js",
 		// Starts the server without the database
 		"godbless": "forever --minUptime 1000 --spinSleepTime 1000 -e ./logs/server_errors.log -l ./logs/forever.log -o ./logs/server_stdout.log -c node ./bin/server.js",
 		// Runs the grunt dist task after being deployed to heroku
@@ -39,8 +42,10 @@
 		"passport": "*",
 		"passport-local": "*",
 		"passport-http-bearer": "*",
-		"connect-redis": "*",
 		"redis": "*",
+		// strictly optional c implementation of redis client; marginally faster
+		//"hiredis": "*", //does not work on windows, don't want to troubleshoot it now
+		"connect-redis": "*",
 		"nodetime": "*",
 		"superagent": "*",
 		"connect-flash": "*", //required for passport auth 'flashes'
