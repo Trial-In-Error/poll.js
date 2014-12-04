@@ -9,6 +9,9 @@
 # Ignore the server logs
 /log/*
 
+# Ignore redis dumps
+*.rdb
+
 # Ignore minified .js files
 /public/dist/javascripts/*
 
