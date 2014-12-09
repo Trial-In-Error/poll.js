@@ -11,7 +11,10 @@ router.get('/:id', function(req, res) {
 	var pollToDisplay = req.params.id;
 
 	var temp = db.collection('polldb').findOne({_id:mongo.helper.toObjectID(pollToDisplay)}, function (err, result) {
-		if(err) return err;
+		if(err) {
+			res.render('error', {title: strings('english', 'errorTitle'), error: {status: strings('english', 'databaseError')} });
+			return;
+		}
 		tr = result;
 
 		// In the edge case where you request a nonexistant poll through a client-side redirect

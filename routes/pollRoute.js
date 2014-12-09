@@ -5,38 +5,43 @@ var helper = require('../bin/helper');
 var sys = require('sys');
 
 function batchSanitize(items, db) {
-	for(var tr in items) {
-		if(!items[tr]) {
-			console.log(JSON.stringify(items));
-			return false;
-		}
-		if(items[tr].clean) {
-			console.log('Used cached poll.');
-			continue;
-		}
-		for(var question in items[tr].question_list) {
-			for(var response in items[tr].question_list[question].type.response_list) {
-				//console.log('Deleted '+items[tr].question_list[question].type.response_list[response].answers);
-				if(items[tr] !== null && typeof items[tr].question_list[question].type.response_list[response].answers !== 'undefined') {
-					delete items[tr].question_list[question].type.response_list[response].answers;
+	try {
+		for(var tr in items) {
+			if(!items[tr]) {
+				console.log(JSON.stringify(items));
+				return false;
+			}
+			if(items[tr].clean) {
+				console.log('Used cached poll.');
+				continue;
+			}
+			for(var question in items[tr].question_list) {
+				for(var response in items[tr].question_list[question].type.response_list) {
+					//console.log('Deleted '+items[tr].question_list[question].type.response_list[response].answers);
+					if(items[tr] !== null && typeof items[tr].question_list[question].type.response_list[response].answers !== 'undefined') {
+						delete items[tr].question_list[question].type.response_list[response].answers;
+					}
+					//console.log('Now it\s '+ items[tr].question_list[question].type.response_list[response].answers);
 				}
-				//console.log('Now it\s '+ items[tr].question_list[question].type.response_list[response].answers);
+			}
+			if(!items[tr].clean) {
+				db.collection('polldb').update({"_id": items[tr]._id}, {$set: {clean: items[tr]}}, function(err, result) {
+					if(err) {console.log(err)}
+					console.log('Cached poll '+items[tr]._id);
+				});			
 			}
 		}
-		if(!items[tr].clean) {
-			db.collection('polldb').update({"_id": items[tr]._id}, {$set: {clean: items[tr]}}, function(err, result) {
+		if(items.length === 1) {
+			db.collection('polldb').update({"_id": items[0]._id}, {$set: {clean: items[0]}}, function(err, result) {
 				if(err) {console.log(err)}
-				console.log('Cached poll '+items[tr]._id);
-			});			
-		}
+				console.log('Cached poll '+items[0]._id);
+			});
+		} 
+		return items;
+	} catch (err) {
+		console.log('Error finding database!');
+		return null;
 	}
-	if(items.length === 1) {
-		db.collection('polldb').update({"_id": items[0]._id}, {$set: {clean: items[0]}}, function(err, result) {
-			if(err) {console.log(err)}
-			console.log('Cached poll '+items[0]._id);
-		});
-	} 
-	return items;
 }
 
 router.get('/', function(req, res, next) {

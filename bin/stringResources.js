@@ -29,6 +29,7 @@ var stringResources = function(language, string) {
 			'pollIndexTitle': 'opiner',
 			'registerTitle': 'Register',
 			'loginTitle': 'Login',
+			'databaseError': 'Poll not found.',
 			'suffix': '{0} - opiner'
 		},
 		'swedish':
