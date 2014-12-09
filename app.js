@@ -102,6 +102,13 @@ try {
 var mongo = require('mongoskin');
 // Use the remote mongo database if available (i.e., app is heroku hosted), else use the local one named 'polljs'
 var db = mongo.db(process.env.MONGOLAB_URI || 'mongodb://localhost:27017/polljs', {native_parse:true});
+// Mongo's GridFS allows for reading/writing larger files and streaming them
+// Read more:
+// http://mongodb.github.io/node-mongodb-native/api-articles/nodekoarticle2.html
+// http://mongodb.github.io/node-mongodb-native/api-generated/grid.html
+// http://blog.james-carr.org/2012/01/09/streaming-files-from-mongodb-gridfs/
+var Grid = mongo.Grid;
+var grid = new Grid(db, 'fs');
 
 var pollIndex = require('./routes/pollIndex');
 var pollRoute = require('./routes/pollRoute');
@@ -334,6 +341,7 @@ app.use(function(req, res, next){
 	res.locals.session = req.session;
 	res.locals.user = req.user;
 	req.db = db;
+	req.grid = grid;
 
 	next();
 });
