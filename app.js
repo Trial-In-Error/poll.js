@@ -8,6 +8,7 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var util = require('util');
+var strings = require('./bin/stringResources');
 var LocalStrategy = require('passport-local').Strategy;
 var Chance = require('chance');
 var alea = new Chance();
@@ -67,7 +68,6 @@ function redisSetup(redisClient) {
 		// This is also the same dirty, filthy hack except that it replaces
 		// the session handler with one that uses the redisStore.
 		for(element in app._router.stack) {
-			//console.log(app._router.stack[element]);
 			if(app._router.stack[element].handle.name === 'session') {
 				console.log('REDIS: Express now using Redis session store.');
 				app._router.stack[element].handle = session({
@@ -103,12 +103,15 @@ var mongo = require('mongoskin');
 // Use the remote mongo database if available (i.e., app is heroku hosted), else use the local one named 'polljs'
 var db = mongo.db(process.env.MONGOLAB_URI || 'mongodb://localhost:27017/polljs', {native_parse:true});
 // Mongo's GridFS allows for reading/writing larger files and streaming them
+// The verdict? Will not implement. 
 // Read more:
+// http://stackoverflow.com/questions/4667597/understanding-mongodb-bson-document-size-limit
 // http://mongodb.github.io/node-mongodb-native/api-articles/nodekoarticle2.html
 // http://mongodb.github.io/node-mongodb-native/api-generated/grid.html
 // http://blog.james-carr.org/2012/01/09/streaming-files-from-mongodb-gridfs/
-var Grid = mongo.Grid;
-var grid = new Grid(db, 'fs');
+// https://blog.compose.io/gridfs-and-mongodb-pros-and-cons/
+//var Grid = mongo.Grid;
+//var grid = new Grid(db, 'fs');
 
 var pollIndex = require('./routes/pollIndex');
 var pollRoute = require('./routes/pollRoute');
@@ -131,12 +134,12 @@ var anonymousLogin = require('./routes/anonymousLogin');
 
 // In prior versions of Express, this was a call to express.createServer();
 // To support https, this will have to change.
-//WARN: Support HTTPS by changing this as per:
-//https://github.com/strongloop/express/wiki/Migrating-from-2.x-to-3.x
-//http://www.hacksparrow.com/express-js-https.html
-//http://stackoverflow.com/questions/5998694/how-to-create-an-https-server-in-node-js
-//http://docs.nodejitsu.com/articles/HTTP/servers/how-to-create-a-HTTPS-server
-//http://stackoverflow.com/questions/11744975/enabling-https-on-express-js
+// WARN: Support HTTPS by changing this as per:
+// https://github.com/strongloop/express/wiki/Migrating-from-2.x-to-3.x
+// http://www.hacksparrow.com/express-js-https.html
+// http://stackoverflow.com/questions/5998694/how-to-create-an-https-server-in-node-js
+// http://docs.nodejitsu.com/articles/HTTP/servers/how-to-create-a-HTTPS-server
+// http://stackoverflow.com/questions/11744975/enabling-https-on-express-js
 var app = express();
 
 app.use(favicon(__dirname + '/public/images/favicon.ico'));
@@ -170,49 +173,37 @@ passport.deserializeUser(function(user, done) {
 });
 
 function findByUsername(username, fn) {
-	// STUB: Change to find().limit(1) instead of findOne!
-	// see: https://blog.serverdensity.com/checking-if-a-document-exists-mongodb-slow-findone-vs-find/
 	db.collection('userdb').findOne({'type.login.username': String(username)}, function (err, user) {
 		if(err) return err;
 		if(user) {
-			//console.log('User found in database.');
 			return fn(null, user);
 		} else {
-			//console.log('User not found in database.');
 			return fn(null, null);
 		}
 	});
 }
 
 function findByNickname(nickname, fn) {
-	// STUB: Change to find().limit(1) instead of findOne!
-	// see: https://blog.serverdensity.com/checking-if-a-document-exists-mongodb-slow-findone-vs-find/
-	console.log('FINDBYNICKNAME');
-	console.log('------------------------------');
 	db.collection('userdb').findOne({'type.nickname.nickname': String(nickname)}, function (err, user) {
 		if(err) return err;
 		if(user) {
-			console.log('User found in database.');
 			return fn(null, user);
 		} else {
-			console.log('User not found in database.');
 			return fn(null, null);
 		}
 	});
 }
 
 function newNicknameUser(name, pass) {
-	// Store user, with username and hash in user DB.
+	// Creates a nickname user object
 	user = {type: {nickname: {nickname: name}}, rights:{answer: true}};
-	//console.log('User: '+user);
 	return user;
 }
 
 // Use the LocalStrategy within Passport.
 //   Strategies in passport require a `verify` function, which accept
 //   credentials (in this case, a username and password), and invoke a callback
-//   with a user object.  In the real world, this would query a database;
-//   however, in this example we are using a baked-in set of users.
+//   with a user object.
 passport.use('local', new LocalStrategy(
 	function(username, password, done) {
 		console.log('Authenticating user.');
@@ -224,13 +215,13 @@ passport.use('local', new LocalStrategy(
 				console.log(user);
 				if (err) {return done(err);}
 				if (!user) {
-					return done(null, false, {message: 'Unknown user '+username+'.'});
+					return done(null, false, {message: strings('english', 'usernameNotFound', username)});
 				}
 				bcrypt.compare(password, user.type.login.passhash, function(err, res) {
 					if(res) {
 						return done(null, user);
 					} else {
-						return done(null, false, {message: 'Incorrect password.'});
+						return done(null, false, {message: strings('english', 'badPassword')});
 					}
 				});
 			});
@@ -240,21 +231,14 @@ passport.use('local', new LocalStrategy(
 
 passport.use('nickname', new LocalStrategy(
 	function(username, password, done) {
-		console.log('Logging in nickname user '+username+'.');
 		// asynchronous verification, for effect...
 		process.nextTick(function () {
-			console.log('Tick.');
 			findByNickname(username, function(err, user) {
-				console.log('localStrategy found: '+JSON.stringify(user));
-				console.log(user);
 				if (err) {return done(err);}
 				if (!user) {
 					user = newNicknameUser(username);
 					db.collection('userdb').insert(user, function(err, result) {
-						//res.send( (err === null) ? {msg: '' } : { msg: err } );
-						if(err === null) {
-							console.log('Nickname user '+username+' added.');
-						}
+						if(err) { console.log(err); }
 					});
 				}
 				return done(null, user);
@@ -282,11 +266,7 @@ app.use(logger('dev'));
 app.use(bodyParser({limit: '5mb'}));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded());
-// what does bodyParser.text do? i had it commented out earlier!
-// it crashes the server, that's what
-//app.use(bodyParser.text());
 app.use(cookieParser());
-//app.use(express.methodOverride()); // what does this do? tutorial for passport.js used it
 
 // session() must be called before passport.session()!
 app.use(session({
@@ -300,9 +280,6 @@ app.use(session({
 		maxAge: 604800 //one week
 	}
 }));
-
-
-//app.use(flash());
 
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -341,8 +318,6 @@ app.use(function(req, res, next){
 	res.locals.session = req.session;
 	res.locals.user = req.user;
 	req.db = db;
-	req.grid = grid;
-
 	next();
 });
 
