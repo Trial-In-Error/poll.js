@@ -5,6 +5,7 @@ var router = express.Router();
 var bcrypt = require('bcryptjs');
 var passport = require('passport');
 var helper = require('../bin/helper');
+var strings = require('../bin/stringResources');
 //var db = req.db;
 
 //WARN: THIS IS COMPLETELY REDUNDANT FROM APP.JS!!! DON'T BE LAZY!
@@ -28,7 +29,7 @@ function findByUsername(req, fn) {
 
 /* GET registration page. */
 router.get('/', function(req, res) {
-	res.render('register', { title: 'Login', globalExists: global });
+	res.render('register', { title: strings('english', 'registerTitle'), globalExists: global });
 });
 
 function newUser(name, pass, fn) {

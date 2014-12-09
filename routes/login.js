@@ -1,9 +1,10 @@
 var express = require('express');
 var router = express.Router();
 var passport = require('passport');
+var strings = require('../bin/stringResources');
 
 router.get('/', function(req, res) {
-	res.render('login', { user: req.user });
+	res.render('login', { title: strings('english', 'loginTitle') });
 });
 
 // POST /login

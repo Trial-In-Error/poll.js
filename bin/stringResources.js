@@ -16,7 +16,20 @@ var stringResources = function(language, string) {
 		{
 			'usernameNotFound': 'Username `{0}` not found.',
 			'badPassword': 'Incorrect password.',
-			'pollTitle': 'Poll'
+			'pollTitle': 'Poll: {0}',
+			'metaLoginTitle': 'Login',
+			'createPollTitle': 'Create',
+			'errorTitle': 'Error',
+			'exportPollTitle': 'Export',
+			'importPollTitle': 'Import',
+			'inspectPollTitle': 'Inspect',
+			'nicknameLoginTitle': 'Login',
+			'pollGridTitle': 'Grid',
+			'pollNotFound': 'Poll not found.',
+			'pollIndexTitle': 'opiner',
+			'registerTitle': 'Register',
+			'loginTitle': 'Login',
+			'suffix': '{0} - opiner'
 		},
 		'swedish':
 		{

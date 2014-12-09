@@ -1,5 +1,6 @@
 var express = require('express');
 var router = express.Router();
+var strings = require('../bin/stringResources');
 
 /* GET poll overview page. */
 router.get('/', function(req, res) {
@@ -11,7 +12,7 @@ router.get('/', function(req, res) {
 		user = false;
 	}
 	console.log('User is: '+user);
-	res.render('pollIndex', { title: 'Express', exists: res.locals.expose.exists, user: user});
+	res.render('pollIndex', { title: strings('english', 'pollIndexTitle') });
 });
 
 module.exports = router;

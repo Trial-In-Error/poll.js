@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 var mongo = require('mongoskin');
 var helper = require('../bin/helper');
+var strings = require('../bin/stringResources');
 
 /* GET a specific poll. */
 router.get('/:id', function(req, res) {
@@ -14,12 +15,9 @@ router.get('/:id', function(req, res) {
 		tr = result;
 
 		// In the edge case where you request a nonexistant poll through a client-side redirect
-		// This safeguards the server from crashing & seamlessly redirects to root
+		// This safeguards the server from crashing & seamlessly redirects to error page
 		if(tr === null) {
-			//console.log('redirect error');
-			//res.send(404, {error: 'Poll not found.'});
-			res.render('error', {error: {status: 'Poll not found.'}});
-			//res.redirect('/');
+			res.render('error', {title: string('english', 'errorTitle'), error: {status: strings('english', 'pollNotFound')} });
 			return;
 		}
 
@@ -40,7 +38,7 @@ router.get('/:id', function(req, res) {
 
 		res.locals.expose.result = tr;
 		//res.expose(result, 'temp_poll');
-		res.render('poll', {title: 'Poll', poll: tr, exists: res.locals.expose.exists});
+		res.render('poll', {title: strings('english', 'pollTitle', tr.name), poll: tr, exists: res.locals.expose.exists});
 	});
 });
 
