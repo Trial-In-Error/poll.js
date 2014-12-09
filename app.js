@@ -169,17 +169,6 @@ passport.deserializeUser(function(user, done) {
 	//});
 });
 
-function findByUsername(username, fn) {
-	db.collection('userdb').findOne({'type.login.username': String(username)}, function (err, user) {
-		if(err) return err;
-		if(user) {
-			return fn(null, user);
-		} else {
-			return fn(null, null);
-		}
-	});
-}
-
 function findByNickname(nickname, fn) {
 	db.collection('userdb').findOne({'type.nickname.nickname': String(nickname)}, function (err, user) {
 		if(err) return err;
@@ -207,7 +196,7 @@ passport.use('local', new LocalStrategy(
 		// asynchronous verification, for effect...
 		process.nextTick(function () {
 			console.log('Tick.');
-			findByUsername(username, function(err, user) {
+			helper.findByUsername(username, db, function(err, user) {
 				console.log('localStrategy found: '+user);
 				console.log(user);
 				if (err) {return done(err);}

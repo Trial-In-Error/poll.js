@@ -15,6 +15,19 @@ exports.checkAlphanumeric = function(username) {
 	return true;
 };
 
+exports.findByUsername = function(username, db, fn) {
+	db.collection('userdb').findOne({'type.login.username': String(username)}, function (err, user) {
+		if(err) {
+			return fn(err, null);
+		}
+		else if(user) {
+			return fn(null, user);
+		} else {
+			return fn(null, null);
+		}
+	});
+}
+
 exports.ensureAuth = function(req, res, next) {
 	var passport = require('passport');
 

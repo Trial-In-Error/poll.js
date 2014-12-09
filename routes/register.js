@@ -8,25 +8,6 @@ var helper = require('../bin/helper');
 var strings = require('../bin/stringResources');
 //var db = req.db;
 
-//WARN: THIS IS COMPLETELY REDUNDANT FROM APP.JS!!! DON'T BE LAZY!
-function findByUsername(req, fn) {
-	var db = req.db;
-	// find().limit(1) SERVING AS findOne()
-	// see: https://blog.serverdensity.com/checking-if-a-document-exists-mongodb-slow-findone-vs-find/
-	// also see: http://stackoverflow.com/questions/22364858/pagination-in-mongoskin-skip-limit
-	//console.log('findByUsername req.username: '+req.body.username);
-	db.collection('userdb').findOne({'type.login.username': String(req.body.username)}, function (err, user) {
-		if(err) return err;
-		if(user) {
-			//console.log('User found in database.');
-			return fn(null, user);
-		} else {
-			//console.log('User not found in database.');
-			return fn(null, null);
-		}
-	});
-}
-
 /* GET registration page. */
 router.get('/', function(req, res) {
 	res.render('register', { title: strings('english', 'registerTitle'), globalExists: global });
@@ -83,7 +64,7 @@ router.post('/', function(req, res) {
 		console.log('Error error!');
 		return res.send(400, {msg: validateError});
 	}
-	findByUsername(req, function(err, user) {
+	helper.findByUsername(req.body.username, req.db, function(err, user) {
 		console.log(user);
 		if(user) {
 			console.log('Shit, that user already exists.');
