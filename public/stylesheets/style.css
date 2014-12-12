@@ -22,7 +22,22 @@
 
 .ui-panel-wrapper {
     line-height: normal !important;
-    
+}
+
+.ui-state-hover {
+    background:none;
+    border:none;
+}
+/* Button hover */
+.ui-page-theme-a .ui-btn:hover,
+html .ui-bar-a .ui-btn:hover,
+html .ui-body-a .ui-btn:hover,
+html body .ui-group-theme-a .ui-btn:hover,
+html head + body .ui-btn.ui-btn-a:hover {
+    background-color:           #f6f6f6 /*{a-bup-background-color}*/;
+    border-color:           #ddd /*{a-bhover-border}*/;
+    color:                  #333 /*{a-bhover-color}*/;
+    text-shadow: none;
 }
 
 a.heading-hyperlink {
