@@ -4,6 +4,7 @@ var path = require('path');
 var passport = require('passport');
 var flash = require('connect-flash');
 var favicon = require('serve-favicon');
+var compression = require('compression');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
