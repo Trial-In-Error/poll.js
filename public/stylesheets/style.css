@@ -20,6 +20,11 @@
     margin-left: 15px;
 }
 
+.ui-panel-wrapper {
+    line-height: normal !important;
+    
+}
+
 a.heading-hyperlink {
 	text-decoration: none;
 	data-role: "nojs";
