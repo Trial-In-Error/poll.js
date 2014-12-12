@@ -28,3 +28,24 @@ String.prototype.trunc = String.prototype.trunc ||
       function(n){
           return this.length>n ? this.substr(0,n-1)+'...' : this.toString();
       };
+/**
+* 
+*/
+var getWordWidth = function(word){
+	$('body').append("<div class='c3' id='textw'>"+word+"</div>");
+	var width = $('#textw').width();
+	$('#textw').remove();
+	return width;
+}
+var getWordWidth2 = function(word){
+	$('body').append("<div class='c3-axis' id='textw'>"+word+"</div>");
+	var width = $('#textw').width();
+	$('#textw').remove();
+	return width;
+}
+var getWordHeight = function(word){
+	$('body').append("<div class='c3' id='textw'>"+word+"</div>");
+	var height = $('#textw').height();
+	$('#textw').remove();
+	return height;
+}

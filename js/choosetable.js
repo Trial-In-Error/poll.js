@@ -30,10 +30,10 @@ var chartNames = {
 	"stackedbar"  : stackedBar,
 	"bubble" : bubble,
 	"heatmap" : heatmap2,
-	"slidebar" : slideBar,
-	"slidepie" : slidePie,
 	"histogram" : histogram,
-	"lineCat" : lineCat
+	"lineCat" : lineCat,
+	"donut" : donut,
+	"sliderdonut" : sliderDonut,
 }
 function getvistypes(cat,con,single){
 	var r = tables.questions[con][cat];

@@ -1,11 +1,14 @@
-function createSlider(){
-	var slider = "<div><input id='sliderb' type='range' min='1' max='"+ matrix.length + "' value='1'/></div>";
-	var label = "<label id='sliderLabel' for='male'>"+ "Current plot: " + getMytitle() + "</label>";
-	$('#slideholder').append(label);
-	$('#slideholder').append(slider);
-	$("#slideholder").trigger("create");
-	$("#sliderb").on("slidestop", function(e){
-		setBarSet($("#sliderb").val(),matrix);
+function createSlider(container,id,length){
+	var label = '<label for="sliderdonu'+id+'">Input slider:</label>'
+	var slider = '<input type="range" name="slider" id="sliderdonu'+id+'" value="1" min="1" max="'+ length +'" data-highlight="true" />'
+	// var slider = "<div><input id='sliderdonut"+id+"' type='range' min='1' max='"+ length +"' value='1'/></div>";
+	// var label = "<label id='sliderLabel' for='male'>"+ "Current plot: " + getMytitle() + "</label>";
+	$(container).parent().append(label);
+	$(container).parent().append(slider);
+	$(container).trigger("create");
+	$("#sliderdonut" + id).on("slidestop", function(e){
+		console.log("SLIDE");
+		// setBarSet($("#sliderb").val(),matrix);
 	});
 }
 /**

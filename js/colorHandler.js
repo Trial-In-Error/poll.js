@@ -18,8 +18,6 @@ var datacolors = {
 		index = 0;
 		datacolors.index = (datacolors.index + 1) % (datacolors.colors[0].length);
 		if($.inArray(group,names) != -1){
-			console.log("COLOR");
-			console.log(datacolors.colors[currColor][getIndex2(names,group)]);
 			return datacolors.colors[currColor][getIndex2(names,group)];
 		}else {
 			//if users choice
@@ -31,8 +29,6 @@ var datacolors = {
 				return this.highlightColor;
 			}
 		}*/
-			console.log("COLOR");
-			console.log(datacolors.colors[currColor][getIndex2(names,group)]);
 				return datacolors.colors[currColor][getIndex2(names,group.id)];
 
 					// }
