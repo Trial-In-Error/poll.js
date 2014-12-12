@@ -18,7 +18,7 @@ Adding a Poll
 1. Write a poll as a valid `.json` file, corresponding to the data model in `datamodel.md`.
 2. From the terminal, `mongoimport --db polljs --collection polldb --jsonArray < example_poll.json`.
 
-Note that 2 example polls are included at poll.js's root directory.
+Note that many example polls are provided in /polls.
 
 Adding an Admin User
 ---------------------------------
@@ -101,26 +101,102 @@ Load / Stress Testing
 ---------------------------------
 Stress testing can be done with `loadtest`, which provides an apache benchmark-esque CLI. To use it, try `loadtest -c numberOfSimultaneousConnections --rpm requestsPerMinute protocol://url/`. For instance, a common stress test for a local dev deployment might be `loadtest -c 10 --rpm 200 http://localhost:3000/pollroute/listpolls`.
 
+API Documentation
+---------------------------------
+/pollroute/listpolls
+
+	Returns a list of all polls. Currently used by the index (/) page.
+	Does not support CORS.
+	No security.
+	
+/pollroute/exportpolljson/:pollid
+
+	Returns a poll in-full as a JSON object, as specified in `datamodel.md`.
+	Supports CORS.
+	No security.
+	
+/pollroute/exportpolljsonclean/:pollid
+	
+	Returns a "clean" or "sparse" poll as a JSON object. A "clean" poll contains no user answers, only the questions and the possible responses to them. Used by /poll/:id.
+	Does not support CORS.
+	No security.
+	
+/pollroute/closepoll/:pollid
+
+	Closes a poll.
+	Does not support CORS.
+	Secured by `reqOpenCloseRight` permission.
+	
+/pollroute/openpoll/:pollid
+
+	Opens a poll.
+	Does not support CORS.
+	Secured by `reqOpenCloseRight` permission.
+	
+/pollroute/answerpoll
+
+	Updates an existing poll object with answers provided by a user. Used by /poll/:id when submitting the answers.
+	Does not support CORS.
+	Secured by `reqAnswerRight` permission.
+	
+/pollroute/frequency/:pollid/:questionid
+
+	Returns a CSV file with the frequency of each response to a given question. Not used by any client.
+	Does not support CORS.
+	No security.
+	
+/pollroute/bucketfrequency/:pollid/:questionid
+
+	Complex, half-implemented, untested, and not used by any client. On the chopping board.
+	Does not support CORS.
+	No security.
+	
+/pollroute/deletepoll/:pollid
+
+	Deletes a poll. Used by admin index (/) page.
+	Does not support CORS.
+	Secured by `reqDeleteRight` permission.
+	
+/pollroute/importpoll
+
+	Imports structed JSON (as per `datamodel.md`) into the database. Used by /importpoll.
+	Does not support CORS.
+	Secured by `reqCreateRight` permission.
+	NOTE: This route has a nasty habit of stringifying things; `{a: true}` is likely to become `{a: "true"}`. Be careful of this when reading/parsing polls, because they were likely imported this way.
+	
+
 Testing the API Endpoints with Postman
 ---------------------------------
 API testing has been done with the [Chrome extension Postman](https://chrome.google.com/webstore/detail/postman-rest-client/fdmmgilgnpjigdojojpjoooidkmcomcm?hl=en). `Basic Auth` should be used, and for many of the POST verb endpoints, you will need to add the header `Content-Type application/json`. Data should be POSTed in `raw` form. Note that this means that the keys in the object will need to be quoted. For example, to test posting to /register/, send the raw data: `{"username": "1234567", "password": "123412341234123412341234123412341"}`.
 
 Subtree Workflow
 ---------------------------------
-creating the subtree
-	http://blogs.atlassian.com/2013/05/alternatives-to-git-submodule-git-subtree/
+[creating the subtree](http://blogs.atlassian.com/2013/05/alternatives-to-git-submodule-git-subtree/)
+
 	git remote add -f v11n https://github.com/whey86/vistool.git
+	
 	git subtree add --prefix public/v11n v11n master --squash
+	
 do work
+
 	git add .
+	
 	git commit
+	
 update the subtree
+
 	git subtree pull --prefix=public/v11n v11n master --squash
+	
 use split to create a new subtree history
+
 	git subtree split --prefix=public/v11n --annotate="(split) " --rejoin
+	
 push that subtree history
+
 	git subtree push --prefix=public/v11n v11n master --squash
+	
 deleting subtrees
+
 	git rm -r v11n
 
 Jade syntax highlighting
