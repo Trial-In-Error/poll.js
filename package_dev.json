@@ -34,6 +34,7 @@
 		"look": "*",
 		"cookie-parser": "~1.0.1",
 		"body-parser": "~1.0.0",
+		"compression": "*",
 		"debug": "~0.7.4",
 		"jade": "~1.3.0",
 		"mongodb": "*",
@@ -56,6 +57,7 @@
 
 
 		// These need to be in dependencies so that heroku installs them!
+		// Otherwise, they'd be in devDependencies.
 		"grunt": "*",
 		"grunt-cli": "*",
 		"load-grunt-tasks": "*",

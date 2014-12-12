@@ -140,6 +140,9 @@ var anonymousLogin = require('./routes/anonymousLogin');
 var app = express();
 
 app.use(favicon(__dirname + '/public/images/favicon.ico'));
+app.use(compression({
+  threshold: 512
+}));
 
 var exists_list = {};
 var build_min_list = require('./bin/build_min_list.js');
