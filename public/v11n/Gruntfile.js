@@ -14,6 +14,14 @@ module.exports = function(grunt) {
                         human: {
                                 src: ['js/lib/d3.min.js', 'js/lib/c3.js',  'js/*.js'],
                                 dest: 'v11n.js'
+                        },
+                        password : {
+                                  src: ['v11n.js', 'config/config.js'],
+                                dest: 'v11n.js'
+                        },
+                        passdist : {
+                                src : ['v11n.min.js','config/config.js'],
+                                dest : 'v11n.min.js'
                         }
                 },
                 uglify: {
@@ -93,4 +101,5 @@ module.exports = function(grunt) {
         grunt.registerTask('human', ['clean:dist','concat:human']);
         grunt.registerTask('dist', ['clean:dist', 'concat:dist', 'uglify:dist']);
         grunt.registerTask('lint', ['jshint:dist', 'lintspaces:dist', 'lineending:dist']);
+        grunt.registerTask('pass', ['concat:password','concat:passdist'])
 };

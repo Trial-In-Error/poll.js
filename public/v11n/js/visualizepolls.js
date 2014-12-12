@@ -1,67 +1,86 @@
-var visualizepolls = function(){
-	this.dataHandler = new dataHandler();
+var visualizeFlashPoll = function(){
+	this.flashdata;
 	this.pollsetOptions;
 	this.supercontainer;
 	this.optionsdata = new optionHandler();
-	console.log(this.optionsdata);
-	this.getDataHandler = function(){
-		return this.dataHandler;
-	}
-	this.setURL = function(url){
-		this.dataHandler.setPollurl(url);
-	}
-	this.start = function(callback){
+
+	this.init = function(url,callback){
+		this.flashdata = new flashdata();
 		var self = this;
-		this.dataHandler.getPoll(
-			function(data){
-				callback(self);
-			});
-	}
-	this.createGrid = function(ref,container,questions,options){
-		opine.init(ref,container,questions,options);
-	}
-	this.createVis = function(questions,options,container){
-		opine.preparePoll(data,questions,container, self.optionsdata);
-	}
-	this.visualizePoll = function(self,questions){
-		console.log(self.dataHandler);
-		opine.visAll(self.dataHandler.polldata,self.optionsdata,questions);
-	}
-	this.visualizeChart = function(ref,questions,vis,options,container){
-		var id = ref.optionsdata.addChart(container);
-		console.log(ref.dataHandler.polldata);
-		if(questions.length == 0 ){
-			alert("No data");
-		}
-		else if(questions.length > 1){
-			ref.optionsdata.updateOption(id,"matrix",opine.getDoubleMatrix(ref.dataHandler.polldata,questions));
-			ref.optionsdata.updateOption(id,"chart",chartNames[vis]);
-			ref.optionsdata.updateOption(id,"color",1)
-			ref.optionsdata.updateOption(id,"id",optionHandler.size-1)
-			// ref.optionsdata.updateOption(ref.optionsdata.size-1,"answer",answer)
-			ref.optionsdata.updateOption(id,"xlabel","Something")
-			ref.optionsdata.updateOption(id,"ylabel","frequency")
-			ref.optionsdata.pointer = id;
-			var chart = chartNames[vis](ref.optionsdata.getOption(id));
-			ref.optionsdata.updateOption(id,"c3",chart);
-
-		}else{
-			ref.optionsdata.updateOption(id,"matrix",opine.getSingleMatrix(ref.dataHandler.polldata,questions));
-
-			chartNames[vis](ref.optionsdata.getOption(id));
-		}
-
-	}
-	this.flashChart = function(url,question,container,chart,options){
-	var self = this;
-	d3.json(url+".json", function(structure) {
-		d3.json(url+"results.json", function(data) {
-			d3.json(url+"result.json", function(frequency) {
-						console.log(data);
-				console.log(frequency);
-				flashpoll.visualizeChart(self,structure,data,frequency,question,chart,container,options);
+		var username = config.user;
+		var password = config.password;
+		console.log(btoa(username + ":" + password));
+		d3.json(url).header("Authorization", "Basic "+btoa(username + ":" + password))
+		.get(function(error,structure) {
+			d3.json(url+"/results").header("Authorization", "Basic " + btoa(username + ":" + password))
+			.get(function(error,data) {
+				d3.json(url+"/result").header("Authorization", "Basic " + btoa(username + ":" + password))
+				.get(function(error,frequency) {
+					self.flashdata.structure = structure;
+					self.flashdata.frequency = frequency;
+					self.flashdata.data = data;
+					callback();
+				});
 			});
 		});
-	});
+	}
+	this.initlocal = function(url,callback){
+		this.flashdata = new flashdata();
+		this.flashdata.seturl(url);
+		var self = this;
+		this.flashdata.getDataLocal(function(){
+			flashpoll.setDataArray(self.flashdata.structure,self.flashdata.frequency,self.optionsdata);
+			callback();
+
+		});
+	}
+	this.flashChart = function(url,question,container,chart,options){
+		this.flashdata = new flashdata();
+		var self = this;
+		var username = config.user;
+		var password = config.password;
+		d3.json(url, function(structure) {
+			d3.json(url+"/results", function(data) {
+				d3.json(url+"/result", function(frequency) {
+					flashpoll.setDataArray(self,structure,frequency,options);
+					flashpoll.visualizeChart(self,structure,data,frequency,question,chart,container,options);
+				});
+			});
+		});
+	}
+	this.chart = function(question,container,chart,options){
+		console.log(this.flashdata);
+		flashpoll.visualizeChart(this,this.flashdata.structure,this.flashdata.data,this.flashdata.frequency,question,chart,container,options);
+	}
+	this.flashChartLocal = function(url,question,container,chart,options){
+		this.flashdata = new flashdata();
+		this.flashdata.seturl(url);
+		var self = this;
+		this.flashdata.getDataLocal(function(){
+			flashpoll.setDataArray(self,structure,frequency,options);
+			flashpoll.visualizeChart(self,structure,data,frequency,question,chart,container,options);
+		});
+	}
+	this.quickOverview = function(container,options){
+		var q = 0;
+		while(this.flashdata.structure.questions[q].questionType == "FREETEXT"){
+			q = (q+1)%this.flashdata.structure.questions.length;
+		}
+		options.xlabel = "question " + this.flashdata.structure.questions[q].orderId;
+		var link = this;
+		flashpoll.visualizeChart(this,this.flashdata.structure,this.flashdata.data,this.flashdata.frequency,[this.flashdata.structure.questions[q].orderId],"sliderdonut",container,options);
+		setInterval(function () {
+			$(container).empty();
+
+			q = (q+1)%link.flashdata.structure.questions.length;
+			while(link.flashdata.structure.questions[q].questionType == "FREETEXT"){
+				q = (q+1)%link.flashdata.structure.questions.length;
+			}
+			console.log("THIS IS THE QUESTIONTYPE");
+			console.log(link.flashdata.structure.questions[q].questionType);
+
+			options.xlabel = "question " + link.flashdata.structure.questions[q].orderId;
+			flashpoll.visualizeChart(link,link.flashdata.structure,link.flashdata.data,link.flashdata.frequency,[link.flashdata.structure.questions[q].orderId],"sliderdonut",container,options);
+		}, 3000);
 	}
 }

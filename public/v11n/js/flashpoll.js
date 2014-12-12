@@ -2,6 +2,16 @@
 *	flashpoll handles fetching and parsing data from flashpoll
 */
 var flashpoll = {
+	setDataArray : function(structure,frequency,options){
+		console.log(structure.questions[0].orderId);
+		for(var i = 0; i < structure.questions.length; i++){
+			if(structure.questions[i].questionType != "FREETEXT"){
+				options.questionsMatrix.push(
+					flashpoll.getSingleMatrix(structure,frequency,structure.questions[i].orderId)
+					);
+			}
+		}
+	},
 	visualizeSet : function (structure,data,frequency,questions,options){
 		//functions + questions
 		var visualizationTypes = flashpoll.calculateVisualizations(structure,data,questions,false);
@@ -46,10 +56,10 @@ var flashpoll = {
 					pollchart.optionChart.push(variable);
 					pollchart.chartVis.push( functionName(visualizationTypes[i].types[u]));
 					pollchart.currentCharts[pollchart.chart[pollchart.nrOfCharts-1]] = {chart : [i,u], data : data, question : questions};
-						var cont = "#"+pollchart.chart[pollchart.nrOfCharts-1];	
-						var op = options;
-						op.matrix = matrix;
-						op.container = cont;
+					var cont = "#"+pollchart.chart[pollchart.nrOfCharts-1];	
+					var op = options;
+					op.matrix = matrix;
+					op.container = cont;
 					visualizationTypes[i].types[u](op);
 					// addInfo();					
 					// pollchart.currentCharts[pollchart.chart[pollchart.nrOfCharts-1]] = {chart : [i,u,], data : data, question : question};
@@ -58,7 +68,7 @@ var flashpoll = {
 			}
 
 		}
-			console.log(pollchart.chartVis);
+		console.log(pollchart.chartVis);
 		// console.log(pollchart.optionChart);
 		new Masonry(container, { "columnWidth": ".tumbchart", "itemSelector": ".tumbchart", "gutter": ".gutter-sizer" })
 	},
@@ -69,44 +79,47 @@ var flashpoll = {
 *param{int} nr - nr of what chart to use
 */
 visualizeChart : function(ref,structure,data,frequency,question,chart,container,options){
+	console.log(data);
 	var matrix;
-
 	var dt = "frequency";
-
 	ref.optionsdata.addChart(container);
+
 	if(question.length==1){
 		matrix =  flashpoll.getSingleMatrix(structure,frequency,question[0]);
-		console.log(matrix);
 		ref.optionsdata.updateOption(ref.optionsdata.size-1,"title",structure.questions[question[0]].questionText)
 		ref.optionsdata.updateOption(ref.optionsdata.size-1,"ylabel","score")
 	}
 	else{
-			var matrix=flashpoll.getDoubleMatrix(structure,data,question);
-					if(matrix==null){
-						return;
-					}
-			var subtitle = "";
-			for(i=0; i<question.length; i++){
-				subtitle += "-";
-				subtitle += structure.questions[question[i]].questionText;
-				subtitle += "<br/>"
-			}
-			ref.optionsdata.updateOption(ref.optionsdata.size-1,"xlabel",(structure.questions[question[0]].questionText).trunc(20))
-			ref.optionsdata.updateOption(ref.optionsdata.size-1,"ylabel",(structure.questions[question[1]].questionText).trunc(20))
+		 matrix=flashpoll.getDoubleMatrix(structure,data,question);
+		if(matrix==null){
+			return;
 		}
-		
-		matrix = transformation(matrix, options.transformation);
-		ref.optionsdata.updateOption(ref.optionsdata.size-1,"matrix",matrix);
-		ref.optionsdata.updateOption(ref.optionsdata.size-1,"chart",chartNames[chart]);
-		ref.optionsdata.updateOption(ref.optionsdata.size-1,"color",1)
-		ref.optionsdata.updateOption(ref.optionsdata.size-1,"id",optionHandler.size-1)
+		var subtitle = "";
+		for(i=0; i<question.length; i++){
+			subtitle += "-";
+			subtitle += structure.questions[question[i]].questionText;
+			subtitle += "<br/>"
+		}
+		ref.optionsdata.updateOption(ref.optionsdata.size-1,"xlabel",(structure.questions[question[0]].questionText).trunc(25))
+		ref.optionsdata.updateOption(ref.optionsdata.size-1,"ylabel",(structure.questions[question[1]].questionText).trunc(25))
+	}
+	matrix = transformation(matrix, options.transformation);
+	ref.optionsdata.updateOption(ref.optionsdata.size-1,"matrix",matrix);
+
+
+	ref.optionsdata.updateOption(ref.optionsdata.size-1,"chart",chartNames[chart]);
+	ref.optionsdata.updateOption(ref.optionsdata.size-1,"color",1);
+	ref.optionsdata.updateOption(ref.optionsdata.size-1,"id",ref.optionsdata.size-1);
 		// ref.optionsdata.updateOption(ref.optionsdata.size-1,"answer",answer)
-	
+
 		ref.optionsdata.pointer = ref.optionsdata.size-1;
 		ref.optionsdata.array[ref.optionsdata.size-1] = visGenerator.addOptions(ref.optionsdata.array[ref.optionsdata.size-1],options);
+		
+
+		// ref.optionsdata.array[ref.optionsdata.size-1].chartOptions =  options.chartOptions;
+		ref.optionsdata.setSize(ref.optionsdata.size-1);
 		ref.optionsdata.checkTitle(ref.optionsdata.size-1);
-		console.log("MATRIX");
-		console.log(matrix);
+		console.log(ref.optionsdata.array)
 		var chart = chartNames[chart](ref.optionsdata.getOption(ref.optionsdata.size-1));
 		ref.optionsdata.updateOption(ref.optionsdata.size-1,"c3",chart);
 
@@ -115,7 +128,6 @@ visualizeChart : function(ref,structure,data,frequency,question,chart,container,
 
 	calculateVisualizations : function(structure,data,q,single){
 		var array = structure.questions;
-		console.log(structure.questions);
 		var combinations =[];
 		for (var i = 0; i < q.length; i++) {
 			if(array[q[i]].questionType=="FREETEXT"){
@@ -198,60 +210,67 @@ visualizeChart : function(ref,structure,data,frequency,question,chart,container,
 		var matrix = buildEmptyMatrix(rows,columns);
 		//For each user
 		data.forEach(function(d){
+			var tempmatrix = buildEmptyMatrix(rows,columns);
 			//For each question the user have answered
 			for (var i = 0; i < d.pollResQuestions.length; i++) {
 				//If the question is the first one in the searchlist
 				if(d.pollResQuestions[i].questionOrderId==ids[0]){
-					console.log(d);
+					//for each answer choice
 					for (var j = 0; j< d.pollResQuestions[i].pollResultAnswers.length; j++) {
 						var answerOrder = d.pollResQuestions[i].pollResultAnswers[j].answerOrderId;
 						var score = d.pollResQuestions[i].pollResultAnswers[j].answerScore;
-						console.log(d.pollResQuestions[i].pollResultAnswers[j]);
 						for (var u = 0; u < columns; u++){
-							matrix[answerOrder][u] = score;
+							tempmatrix[answerOrder][u] = score;
 						};
 					};
 				};
 				if(d.pollResQuestions[i].questionOrderId==ids[1]){
-					for (var j = 0; j< d.pollResQuestions[j].pollResultAnswers.length; j++) {
+					// for each answer in q 2
+					for (var j = 0; j< d.pollResQuestions[i].pollResultAnswers.length; j++) {
 						var answerOrder = d.pollResQuestions[i].pollResultAnswers[j].answerOrderId;		
 						var score = d.pollResQuestions[i].pollResultAnswers[j].answerScore;
 						for (var u = 0; u < rows; u++){
 							//If not out of bounds
 							if(u<rows && j<columns){
 								if(isOrdnial == 1){
-									matrix[u][answerOrder] += flashpoll.merge(matrix[u][answerOrder],score);
+									matrix[u][answerOrder] += flashpoll.mergeOrder(tempmatrix[u][answerOrder],score);
 								}else if(isOrdnial == 2){
-									matrix[u][answerOrder] += matrix[u][answerOrder] * score;
-								}else if(isOrdnial == -1 && matrix[u][answerOrder] * score > 0){
-									matrix[u][answerOrder] ++;
+									matrix[u][answerOrder] += flashpoll.mergeOneOrder(tempmatrix[u][answerOrder],score);
+								}else if(isOrdnial == -1 && tempmatrix[u][answerOrder] * score > 0){
+									matrix[u][answerOrder] += flashpoll.mergeNominal(tempmatrix[u][answerOrder],score);
 								}
-									
+
 							}
-						
+
 						};
 					}
 
 				};
 			}
 		});
-	addSideNames(matrix,header);
-	matrix.unshift(side);
-	return matrix;
-	},
-	merge : function(q1,q2){
+addSideNames(matrix,header);
+matrix.unshift(side);
+return matrix;
+},
+mergeOrder : function(q1,q2){
 	return q1 + q2;
 },
-	checkOrdinal : function(type1, type2){
-		if(type1 == "FREETEXT" || type2 == "FREETEXT"){
-			return 0;
-		}else if(type1 == "ORDER" && type2 == "ORDER"){
-			return 1;
-		}else if(type1 == "ORDER" || type2 == "ORDER"){
-			return 2;
-		}else{
-			return -1;
-		}
+mergeOneOrder : function(q1,q2){
+	return q1 * q2;
+},
+mergeNominal : function(q1,q2){
+	return 1;
+},
+checkOrdinal : function(type1, type2){
+	if(type1 == "FREETEXT" || type2 == "FREETEXT"){
+		return 0;
+	}else if(type1 == "ORDER" && type2 == "ORDER"){
+		return 1;
+	}else if(type1 == "ORDER" || type2 == "ORDER"){
+		return 2;
+	}else{
+		return -1;
 	}
+}
 }
 

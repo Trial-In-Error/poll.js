@@ -1,36 +1,4 @@
-/**
-* 
-*/
-var getWordWidth = function(word){
-	console.log("THIS IS THE WORD");
-	console.log(word);
-	$('body').append("<div class='c3' id='textw'>"+word+"</div>");
-	var width = $('#textw').width();
-	console.log(width);
-	$('#textw').remove();
-	return width;
-}
-var getWordWidth2 = function(word){
-	console.log("THIS IS THE WORD");
-	console.log(word);
-	$('body').append("<div class='c3-axis' id='textw'>"+word+"</div>");
-	var width = $('#textw').width();
-	$('#textw').remove();
-	console.log(width);
-	return width;
-}
-var getWordHeight = function(word){
-	$('body').append("<div class='c3' id='textw'>"+word+"</div>");
-	var height = $('#textw').height();
-	$('#textw').remove();
-	return height;
-}
-
 function rotateText(names){
-	/*var max = getArrayMax(names);
-	var max2 = getArrayMax(cnames);
-	console.log(names);
-	console.log("MAX  "  + max);*/
 	if(names.length > 4 ){
 		return 40;
 	}else{
@@ -38,11 +6,8 @@ function rotateText(names){
 	}
 }
 function xHeight(names,r){
-	console.log(r);
-	// console.log(getArrayMaxElement(names,1));
 	var word = getArrayMaxElement(names,1);
-	console.log("MY WORD");
-	console.log(word);
+
 		// word +=" ";
 		if(r>10){
 			return getWordWidth2(word);
@@ -50,15 +15,6 @@ function xHeight(names,r){
 			return getWordHeight(word) * 2;
 		}
 
-	}
-	function lineAndBar(options){
-		var chart = c3.generate({
-			bindto: "#chart1",
-			data : {
-				columns : options,
-				type : 'bar'
-			}
-		});
 	}
 
 /**
@@ -68,29 +24,24 @@ function xHeight(names,r){
 *param{Array} matrix - array holding the table
 */
 function bar(options){
-	optionHandler.pointer = options.id;
 	var m = options.matrix;
-	if(m[0].length>4){r = 70;}
+	//Answers 
 	var names = columnNames(m);
-	// var names = m[0];
 	var r;
-	console.log("IS SWAPED ???? "  + options.swap);
 	if(options.swap){
 		r= rotateText(names);
 	}else{
 		r= rotateText(m[0]);
-		// r= rotateText(m[0]);
 	}
-
 	var rot = m.length > 7; rotated : false ? rotated : true;
 	for (var i = 1; i < m[0].length; i++) {
 		names.push(m[0][i]);
 	};
+	//Space between legend and chart depentent on length of axistext and rotation
 	options.legendMargin = xHeight(names,r);
-	console.log(options.legendMargin);
 	// options.legendMargin = textWidth(getArrayMaxElement(),)
-	var c = 0;
 
+	//Specifications for the chart
 	var settings = {
 		bindto: options.container,
 		interaction: { enabled:  options.interaction},
@@ -104,7 +55,6 @@ function bar(options){
 			section : {enabled : false}
 		},
 		bar: {
-			width : 0.9,
 			width: {
             ratio: 0.5 // this makes bar width 50% of length between ticks
         }
@@ -133,103 +83,19 @@ function bar(options){
     		label : options.ylabel
     	},
     },
-
-
 };
-
+//Check additional settings
 if(options.chartOptions != null){
 	settings = visGenerator.addOptions(settings,options.chartOptions);
 }
+	//render chart
 	var chart = c3.generate(settings);
+
 	// Removes side text
-	if(rot && m.length > 2){
+/*	if(rot && m.length > 2){
 		$(options.container+" .c3-axis-x .tick text").remove();
 		// $("#charty2 .c3-axis-x .tick text").remove();
-	}
-	return chart;
-	// pollchart.data.push({chart : chart, matrix : matrix});
-}
-
-function tempBar(options){
-	optionHandler.pointer = options.id;
-	var m = options.matrix;
-	if(m[0].length>4){r = 70;}
-	var names = columnNames(m);
-	// var names = m[0];
-	var r;
-	console.log("IS SWAPED ???? "  + options.swap);
-	if(options.swap){
-		r= rotateText(names);
-	}else{
-		r= rotateText([""]);
-		// r= rotateText(m[0]);
-	}
-
-	var rot = m.length > 7; rotated : false ? rotated : true;
-	for (var i = 1; i < m[0].length; i++) {
-		names.push(m[0][i]);
-	};
-	options.legendMargin = xHeight(names,r);
-	console.log(options.legendMargin);
-	// options.legendMargin = textWidth(getArrayMaxElement(),)
-	var c = 0;
-
-	var chart = c3.generate({
-		bindto: options.container,
-		interaction: { enabled:  options.interaction},
-		data: {
-			x : m[0][0],
-			columns : m,
-			type: 'bar',
-			color: function (color, d) {
-				return datacolors.getColor(d,names,options.color);
-			},
-			section : {enabled : false}
-		},
-		bar: {
-			width : 0.9,
-			width: {
-            ratio: 0.5 // this makes bar width 50% of length between ticks
-        }
-    },
-
-    tooltip: {
-    	show : options.tooltip,
-    	grouped : false
-    },
-    legend : {
-    	show : options.legend,
-    	item : {
-    		onclick : function(d){ 
-    			return
-    		}
-    	}
-    	
-    },
-    axis: {
-    	rotated : rot,
-    	x: {
-    		height: options.legendMargin,
-    		show : options.axis,
-    		label : options.xlabel,
-    		type: 'categorized',
-    		tick: {
-    			rotate : r
-    		},
-    	},
-    	y : {
-    		show : options.axis,
-    		label : options.ylabel
-    	},
-    },
-
-
-});
-	// Removes side text
-	if(rot && m.length > 2){
-		$(options.container+" .c3-axis-x .tick text").remove();
-		// $("#charty2 .c3-axis-x .tick text").remove();
-	}
+	}*/
 	return chart;
 	// pollchart.data.push({chart : chart, matrix : matrix});
 }
@@ -239,142 +105,18 @@ function tempBar(options){
 *
 *param{Array} matrix - array holding the table
 */
-function bar2(matrix){
-	var m = matrix;
-	var names = matrix[0];
-	var rot = matrix.length > 8; rotated : false ? rotated : true;
-	var c = 0;
 
-	var chart = c3.generate({
-		bindto: "#"+pollchart.chart[pollchart.nrOfCharts-1],
-		interaction: { enabled:  options.interaction },
-		data: {
-
-			x : m[0][0],
-			rows : m,
-			type: 'bar',
-			color: function (color, d) {
-				console.log(d);
-				return datacolors.getColor(d,names,true);
-			}
-		},
-		bar: {
-			width : 100,
-			width: {
-            ratio: 0.5 // this makes bar width 50% of length between ticks
-        }
-    },
-
-    tooltip: {
-    	show : pollchart.options.tooltip
-    },
-    legend : {
-    	show : false
-    },
-    axis: {
-    	rotated : rot,
-
-    	x: {
-    		show : pollchart.options.axis,
-    		height : 85,
-    		type: 'categorized',
-    		tick: {
-    			// rotate : 0
-				// 	rotate: function(){
-				// 		if(matrix.length>3){return 70;}
-				// 		else {return 1;}},
-			},
-		},
-		y : {
-			show : pollchart.options.axis,
-			label : matrix[0][1]
-		},
-
-		width: {
-			ratio: 100
-		},
-	},
-	scroll : {enabled : true},
-	zoom : {enabled : false},
-
-
-});
-	pollchart.data.push({chart : chart, matrix : matrix});
-}
-function bardouble(matrix,ylabel){
-	var m = matrix;
-	var barmax = getRowMax(m,0,1);
-	console.log(m);
-	var rot = matrix.length > 8; rotated : false ? rotated : true;
-	var c = 0;
-
-
-	// var index = addChart();
-	var chart = c3.generate({
-		bindto: "#"+pollchart.chart[pollchart.nrOfCharts-1],
-
-		data: {
-
-			x : m[0][0],
-			columns : m,
-			type: 'bar',
-			color: function (color, d) {
-				return datacolors.getColor(d,names);
-			}
-		},
-		tooltip: {
-			show : pollchart.options.tooltip
-		},
-		legend : {
-			show : pollchart.options.legend
-		},
-		bar: {
-			width : 100,
-			width: {
-            ratio: 0.5 // this makes bar width 50% of length between ticks
-        }
-    },
-    axis: {
-    	rotated : rot,
-    	x: {
-    		height : 85,
-    		type: 'categorized',
-    		tick: {
-    			rotate : 70
-					// rotate: function(d){
-					// 	if(barmax>5){return 70;}
-					// 	else {return 0;}},
-				},
-			},
-			y : {
-				label : ylabel
-			},
-
-			width: {
-				ratio: 100
-			},
-		},
-		scroll : {enabled : true},
-		zoom : {enabled : false}
-	});
-	pollchart.data.push({chart : chart, matrix : matrix});
-}
 function histogram(options){
-
-	console.log(options.matrix);
+	//discrete data
 	var ma = disk(options.matrix);
 	var d=ma[0];
-	console.log(d);
-	optionHandler.pointer = options.id;
 	var names = d[0].slice(0);
-	d[0].unshift("Answer");
+	//
+	d[0].unshift(options.xlabel);
 	var r = rotateText(names, options);
 
-	// var rot = true;
-	// console.log(r);
 	options.legendMargin = xHeight(names,70);
-	console.log(options.legendMargin);
-	var chart = c3.generate({
+	var settings = {
 		bindto: options.container,
 		interaction: { enabled:  options.interaction },
 		data: {
@@ -386,22 +128,12 @@ function histogram(options){
 
 				console.log(ma[1]);
 				var myInt = parseInt(options.answer);
-				console.log(options.answer);
 				if(d.index != null){
 					if(myInt >= ma[1]*d.index && myInt < ma[1]*(d.index+1)){
-						// console.log("INSIDE");
 						return "#EE474D";
 					}
 				}
-
 				return "#1F4557"
-				// return datacolors.colors[options.color][0];
-			/*	console.log(d);
-				var id = d.index;
-				if(id != null){
-					return datacolors.getColor(names[d.index],names);
-				}
-				return datacolors.getColor(names[0],names);*/
 			}
 		},
 		tooltip: {
@@ -425,8 +157,14 @@ function histogram(options){
 				label : options.ylabel
 			}
 		}
-	});
-	// $(".c3-legend-item-" +options.answer+"- .c3-legend-item-tile").css("fill","#EE474D")
+	};
+
+	//Check additional settings
+	if(options.chartOptions != null){
+		settings = visGenerator.addOptions(settings,options.chartOptions);
+	}
+	var chart = c3.generate(settings);
+	// 
 	$('#chart1 .c3-legend-item').remove();
 	return chart;
 }
@@ -439,7 +177,7 @@ function lineCat(options){
 	optionHandler.pointer = options.id;
 	// matrix.unshift(header);
 	var names = columnNames(options.matrix);
-	var chart = c3.generate({
+	var settings = {
 		bindto: options.container,
 		interaction: { enabled:  options.interaction },
 		data: {
@@ -472,7 +210,14 @@ function lineCat(options){
 				show : options.axis,
 			}
 		}
-	});
+	};
+
+	//Check additional settings
+	if(options.chartOptions != null){
+		settings = visGenerator.addOptions(settings,options.chartOptions);
+	}
+
+	var chart = c3.generate(settings);
 	return chart;
 }
 
@@ -486,7 +231,8 @@ function line(options){
 	var t = new Object();
 	var names=columnNames(options.matrix);
 	t[options.matrix[1][0]] = options.matrix[0][0];
-	var chart = c3.generate({
+
+	var settings = {
 		bindto: options.container,
 		interaction: { enabled:  options.interaction },
 		data: {
@@ -524,9 +270,13 @@ function line(options){
     point : {
     	show: false
     },
-});
+};
+if(options.chartOptions != null){
+	settings = visGenerator.addOptions(settings,options.chartOptions);
+}
+var chart = c3.generate(settings);
 
-	return chart;
+return chart;
 }
 /**
 * Plots a scatter plot comparing two values
@@ -545,6 +295,10 @@ function scatter(options){
 	var names = columnNames(options.matrix);
 	t[options.matrix[1][0]]=options.matrix[0][0];
 	title["label"] = options.matrix[1][0];
+
+	if(options.chartOptions != null){
+		settings = visGenerator.addOptions(settings,options.chartOptions);
+	}
 	var chart = c3.generate({
 		bindto: options.container,
 		interaction: { enabled:  options.interaction },
@@ -613,6 +367,10 @@ function regressionline(options){
 	var y = options.matrix[1][0];
 	var x = options.matrix[0][0];
 	title["label"] = options.matrix[1][0];
+
+	if(options.chartOptions != null){
+		settings = visGenerator.addOptions(settings,options.chartOptions);
+	}
 	var chart = c3.generate({
 		bindto: options.container,
 		interaction: { enabled:  options.interaction },
@@ -705,7 +463,7 @@ return chart;
 */
 function normalLine(array){
 	var buckets = disk(array);
-	var chart = c3.generate({
+	var settings = {
 		bindto: "#"+pollchart.chart[pollchart.nrOfCharts-1],
 		interaction: { enabled:  options.interaction },
 		data: {
@@ -731,7 +489,11 @@ function normalLine(array){
 				show : pollchart.options.axis,
 			}
 		}
-	});
+	};
+	if(options.chartOptions != null){
+		settings = visGenerator.addOptions(settings,options.chartOptions);
+	}
+	var chart = c3.generate(settings);
 	return chart;
 }
 
@@ -747,12 +509,53 @@ function pie(options){
 	console.log(options);
 	var m = options.matrix.slice(1,options.matrix.length);
 	var names = columnNames(options.matrix);
-	var chart = c3.generate({
+	var settings = {
 		bindto: options.container,
 		interaction: { enabled:  options.interaction },
 		data: {
 			columns: m,
 			type : 'pie',
+			color: function (color, d) {
+				return datacolors.getColor(d,names,options);
+			}
+		},
+		tooltip: {
+			show : options.tooltip
+		},
+		legend : {
+			show : options.legend
+		},
+		pie :{
+			label :{
+				show : options.axis,
+			}
+		}
+		
+	};
+	if(options.chartOptions != null){
+		settings = visGenerator.addOptions(settings,options.chartOptions);
+	}
+	var chart = c3.generate(settings);
+	return chart;
+}
+/**
+* Plots composition in a piechart
+*param{Array} array - array with numeric values in percent
+*
+* Data convention:
+* [name,value1, value2, ... ,value-n]
+*/
+
+function donut(options){
+	console.log(options);
+	var m = options.matrix.slice(1,options.matrix.length);
+	var names = columnNames(options.matrix);
+	var settings = {
+		bindto: options.container,
+		interaction: { enabled:  options.interaction },
+		data: {
+			columns: m,
+			type : 'donut',
 			color: function (color, d) {
 				console.log(options.color);
 				return datacolors.getColor(d,names,options);
@@ -770,7 +573,11 @@ function pie(options){
 			}
 		}
 		
-	});
+	};
+	if(options.chartOptions != null){
+		settings = visGenerator.addOptions(settings,options.chartOptions);
+	}
+	var chart = c3.generate(settings);
 	return chart;
 }
 /**
@@ -782,7 +589,7 @@ function pie(options){
 function regLine(options){
 	optionHandler.pointer = options.id;
 	var data = matrixToPoints(options.matrix);
-	var chart = c3.generate({
+	var settings = {
 		interaction: { enabled:  options.interaction },
 		bindto: options.container,
 		data: {
@@ -809,7 +616,11 @@ function regLine(options){
 		legend : {
 			show : options.legend
 		},
-	});
+	};
+	if(options.chartOptions != null){
+		settings = visGenerator.addOptions(settings,options.chartOptions);
+	}
+	var chart = c3.generate(settings);
 	return chart;
 }
 
@@ -821,7 +632,7 @@ function stackedArea(matrix){
 	obj[matrix[0][0]] = '#ff0000';
 
 	matrix.shift();
-	chart = c3.generate({
+	var settings = {
 		bindto: "#"+pollchart.chart[pollchart.nrOfCharts-1],
 		interaction: { enabled:  options.interaction },
 		data: {
@@ -858,7 +669,11 @@ y : {
 }
 },
 
-});
+};
+	if(options.chartOptions != null){
+		settings = visGenerator.addOptions(settings,options.chartOptions);
+	}
+	chart = c3.generate(settings);
 	return chart;
 }
 
@@ -889,8 +704,7 @@ function stackedBar(options){
 	// var xMargin = xHeight(options);
 	options.legendMargin = xHeight(names2,r);
 	// matrix.unshift(header);
-
-	var chart = c3.generate({
+	var settings = {
 		bindto: options.container,
 		interaction: { enabled: options.interaction },
 		data: {
@@ -930,7 +744,7 @@ function stackedBar(options){
 			y : {
 
 				show : options.axis,
-				 label: options.ylabel,
+				label: options.ylabel,
 			}
 		},
 		tooltip: {
@@ -942,7 +756,12 @@ function stackedBar(options){
 		padding : {
 			left : 100
 		}
-	});
+	};
+	if(options.chartOptions != null){
+		settings = visGenerator.addOptions(settings,options.chartOptions);
+	}
+
+	var chart = c3.generate(settings);
 	// if(rot){
 	// 	// $(options.container+" .c3-axis-x .tick text").css("text-anchor","start");
 	// }
@@ -960,8 +779,8 @@ function bubble(options){
 	var my = values.shift();
 	var max = ss.max(values);
 	max = max/100;
-	// var sum = getArrayMax(values);
-	var chart = c3.generate({
+
+	var settings = {
 		bindto: options.container,
 		interaction: { enabled:  options.interaction },
 		data: {
@@ -1032,15 +851,19 @@ function bubble(options){
   	r: function(d){ return values[d.index + 1] / max;}
   }
 
-});
+};
+	if(options.chartOptions != null){
+		settings = visGenerator.addOptions(settings,options.chartOptions);
+	}
+	// var sum = getArrayMax(values);
+	var chart = c3.generate(settings);
 return chart;
 }
 
-function slideBar(matrix){
+function slideBar(options){
 	createSlider();
-	// matrix.unshift(header);
-	var chart = c3.generate({
-		bindto: "#"+pollchart.chart[pollchart.nrOfCharts-1],
+	var settings = {
+		bindto: options.container,
 		interaction: { enabled:  options.interaction },
 		data: {
 			x : header[0],
@@ -1063,36 +886,37 @@ function slideBar(matrix){
 				show : pollchart.options.axis,
 			}
 		}
-	});
+	};
+	if(options.chartOptions != null){
+		settings = visGenerator.addOptions(settings,options.chartOptions);
+	}
+	var chart = c3.generate(settings);
 	return chart;
 }
-function slidePie(matrix){
-	createSlider();
-	// matrix.unshift(header);
-	var chart = c3.generate({
-		bindto: "#"+pollchart.chart[pollchart.nrOfCharts-1],
+function sliderDonut(options){
+	// createSlider(options.container,options.id,4);
+	var settings = {
+		bindto: options.container,
 		interaction: { enabled:  options.interaction },
 		data: {
-			x : header[0],
-			rows : [header,matrix[0]],
-			type: 'pie',
+			x: options.matrix[0][0],
+			columns : options.matrix,
+			type: 'donut',
 
 		},
-		tooltip: {
-			show : pollchart.options.tooltip
-		},
-		legend : {
-			show : pollchart.options.legend
-		},
 		donut: {
-			title: function(){return matrix[1][0];}
+			title: function(){return options.xlabel}
 		},
 		axis: {
 			x: {
 				type: 'categorized'
 			}
 		}
-	});
+	};
+	if(options.chartOptions != null){
+		settings = visGenerator.addOptions(settings,options.chartOptions);
+	}
+	var chart = c3.generate(settings);
 	return chart;
 	
 }
@@ -1227,11 +1051,11 @@ var colorScale = d3.scale.quantile()
        	var w = $(options.container).width();
 
        	var fontSize = $('.heatlabel').css('font-size');
-       	       	console.log($('.heatlabel').css('font-size'));
+       	console.log($('.heatlabel').css('font-size'));
 
 /*       	fontSize = 12;
-       	       	console.log(fontSize);*/
-       	var index = options.id;
+console.log(fontSize);*/
+var index = options.id;
 		// var h = $(options.container).parent().width() - ($(options.container).parent().width() - $(options.container).height())
 		// var h =nHeight;
 		var	h = $(options.container).parent().parent().height();
@@ -1247,24 +1071,24 @@ var colorScale = d3.scale.quantile()
 			gridSize = gridSize2;
 		}
 		var padding = gridSize/maxSize;
-	
+
 		var shiftR = 10;
 		var margin = { top: 0, right: 0, bottom: 0, left: 0 },
 		width =  w- margin.left - margin.right,
 		height = h - margin.top - margin.bottom,
 
-	legendWidth = (gridSize/1.5);
-	var cc;
+		legendWidth = (gridSize/1.5);
+		var cc;
 
 
-	if(!options.swap){
-		cc = rowlength;
-	}else{
-		cc = columnlength;
-	}
+		if(!options.swap){
+			cc = rowlength;
+		}else{
+			cc = columnlength;
+		}
 
 
-	var centerPadding = ($(options.container).width()-(textLength + (gridSize * cc)))/2;
+		var centerPadding = ($(options.container).width()-(textLength + (gridSize * cc)))/2;
 	// var centerPadding = 0;
 	var index = options.container.split("charty").slice(-1)[0]-1;
           //LEGEND RANGE
@@ -1304,26 +1128,26 @@ for(var i = 0; i < n; i++) {
 var colorScale = d3.scale.quantile()
 .domain([0, buckets - 1, maxNum])
 .range(colors);
-	
-     var question2Title = svg.append("text")
-            .attr("class", "heatquestiontitle")
-            .attr("x", centerPadding + textLength*2)
-            .attr("y", titleHight)         
-            .style("font-size", fontSize+"px")
-            .style("font-family","Lato")
-            .style("text-anchor","start")
-            .style("fill","#FF0000")
-            .text(options.ylabel)
-            .style("font-weight","bold");
 
-    	var question1Title = svg.append("text")
-            .attr("class", "heatquestiontitle")
-            .style("font-size", fontSize+"px")
-            .style("fill","#FF0000")
-            .style("font-family","Lato")
-            .style("text-anchor","end")
-            .text(options.xlabel)
-            .style("font-weight","bold")
+var question2Title = svg.append("text")
+.attr("class", "heatquestiontitle")
+.attr("x", centerPadding + textLength*2)
+.attr("y", titleHight)         
+.style("font-size", fontSize+"px")
+.style("font-family","Lato")
+.style("text-anchor","start")
+.style("fill","#FF0000")
+.text(options.ylabel)
+.style("font-weight","bold");
+
+var question1Title = svg.append("text")
+.attr("class", "heatquestiontitle")
+.style("font-size", fontSize+"px")
+.style("fill","#FF0000")
+.style("font-family","Lato")
+.style("text-anchor","end")
+.text(options.xlabel)
+.style("font-weight","bold")
            .attr("transform", function(d,i) {    // transform all the text elements
   return "translate(" + // First translate
   (titleHight/2+ centerPadding) + ","+(marginTop)+") " + // Translation params same as your existing x & y 
@@ -1398,10 +1222,7 @@ var colorScale = d3.scale.quantile()
           .enter().append("g")
            // .style("fill", colors[0])
            .attr("class", "dim2");
-           console.log(heatMap);
            var rec = heatMap.append("rect")
-           // .attr("x", function(d) { console.log("x  " + d);count++; return ((count%columnlength - 1) * gridSize) + textLength +gridSize; })
-           // .attr("y", function(d) { console.log("y   "+d);count2++; return ( Math.ceil(count2/(columnlength))-1) * gridSize + marginTop; })
            .attr("x", function(d) {return (d.row * gridSize) + textLength + centerPadding+ titleHight; })
            .attr("y", function(d) { return d.col * gridSize + marginTop+titleHight; })
            .attr("rx", 4)
@@ -1422,13 +1243,13 @@ var colorScale = d3.scale.quantile()
            heatMap.append("text")
 
            .text(function(d) {
-           		if(d.value==null){
+           	if(d.value==null){
            		return (d.value/reduceNum).toFixed(1);
            	}
-            if(reduceNum!=1){ return (d.value/reduceNum).toFixed(1);}
-            	else{
-            		return d.value;
-            	} })
+           	if(reduceNum!=1){ return (d.value/reduceNum).toFixed(1);}
+           	else{
+           		return d.value;
+           	} })
            .attr("x", function(d) {return (d.row * gridSize) + textLength + gridSize/2 + centerPadding+ titleHight;  })
            .attr("y", function(d) { ; return d.col * gridSize + marginTop + gridSize/2 + titleHight; })
            .attr("text-anchor","middle")
@@ -1440,21 +1261,20 @@ var colorScale = d3.scale.quantile()
           .style("stroke-width","0px")
           .style("text-shadow","none");
 
-           var numberlabel = svg.append("text")
-            .attr("class", "heatnumberform")
-            .attr("x", 0 + centerPadding+ titleHight)
-            .attr("y", (rowlength) * (gridSize) + legendWidth + marginTop +titleHight )         
-            .style("font-size", fontSize+"px")
-            .style("font-family","Lato")
-            .text(valueLabel)
-            .style("font-weight","bold");
+          var numberlabel = svg.append("text")
+          .attr("class", "heatnumberform")
+          .attr("x", 0 + centerPadding+ titleHight)
+          .attr("y", (rowlength) * (gridSize) + legendWidth + marginTop +titleHight )         
+          .style("font-size", fontSize+"px")
+          .style("font-family","Lato")
+          .text(valueLabel)
+          .style("font-weight","bold");
 
           var ledc=0;
           var legend = svg.selectAll(".legend")
           .data([0].concat(colorScale.quantiles()), function(d) {return d; })
           .enter().append("g")
           .attr("class", "legend");
-          console.log(legend);
           legend.append("rect")
           .attr("x", function(d, i) { return  (i%4 * legendWidth + textLength)+ centerPadding+ titleHight ; })
           .attr("y", function(d, i) {k=1; if(i>3){k=2} return (rowlength) * (gridSize) + k * legendWidth + marginTop + legendWidth + titleHight; })
@@ -1486,5 +1306,5 @@ var colorScale = d3.scale.quantile()
             .text("Legend")
             .style("font-weight","bold");
 
-     
+
         }
