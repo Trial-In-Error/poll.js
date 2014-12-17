@@ -145,6 +145,14 @@ app.use(compression({
   threshold: 512
 }));
 
+if(app.get('env') === 'production') {
+	// in production, serve static resources with a one-month expiry
+	app.use(express.static(path.join(__dirname, 'public'), {maxAge: 2592000000}));
+} else {
+	// in development, serve static resources with no expiry (thus, they don't cache)
+	app.use(express.static(path.join(__dirname, 'public')));
+}
+
 var exists_list = {};
 var build_min_list = require('./bin/build_min_list.js');
 var printList = helper.buildPrintList;
@@ -246,15 +254,6 @@ passport.use('anonymous', new LocalStrategy(
 		});
 	}
 ));
-
-if(app.get('env') === 'production') {
-	// in production, serve static resources with a one-month expiry
-	app.use(express.static(path.join(__dirname, 'public'), {maxAge: 2592000000}));
-} else {
-	// in development, serve static resources with no expiry (thus, they don't cache)
-	app.use(express.static(path.join(__dirname, 'public')));
-}
-
 
 
 // view engine setup
