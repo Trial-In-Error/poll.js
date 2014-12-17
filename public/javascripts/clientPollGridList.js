@@ -144,9 +144,8 @@ function visualize() {
 	if($container) {
 		closePanel();
 	}
-	maggio.setURL(url);
-	maggio.start(function(ref) {
-		maggio.createGrid(ref, container, array, options);
+	maggio.init(url,function() {
+		maggio.createGrid(maggio, container, array, options);
 		populateTable();
 		// initialize Isotope with Packery packing
 		$container = $('#container').isotope({

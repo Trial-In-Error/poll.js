@@ -9,6 +9,7 @@ var gutterSizer;
 var gridPanel;
 var masonryBig = 5;
 var sortOn;
+var visualizepolls = new visualizeOpinerPoll();
 
 function redrawAll() {
 	parent.height(grandparent.height()).width(grandparent.width());
@@ -127,8 +128,8 @@ $(window).load(function() {
 		var array = [];
 		var options = {tooltip : false, legend : false, axis : false};
 		var container = '#container';
-		visualizepolls.visualizeSet(url, container, array, options, function() {
-
+		visualizepolls.init(url, function() {
+			visualizepolls.createGrid(visualizepolls,container, array, options);
 			// initialize Isotope with Packery packing
 			$container = $('#container').isotope({
 				itemSelector: '.item',
@@ -225,10 +226,10 @@ $(window).load(function() {
 					$container.isotope({packery: {gutter: gutterSizer.width()} });
 					$container.isotope('reloadItems');
 					$container.isotope('layout');
+
 				}
 			});
-
-			openPanel();
+			closePanel();
 			console.log('Visualize callback complete.');
 		});
 	} catch (err) {
