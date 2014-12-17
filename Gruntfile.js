@@ -29,10 +29,6 @@ module.exports = function(grunt) {
 		uglify: {
 			options: {
 				banner: '/*! <%= pkg.name %> <%= grunt.template.today("dd-mm-yyyy") %> */\n',
-				mangle: true, //see mangle: except: {} once you know more!
-				compress: {
-					drop_console: true
-				}
 			},
 			dist: {
 				files: [{
@@ -41,11 +37,48 @@ module.exports = function(grunt) {
 					src: '**/*.js',
 					dest: './public/dist/javascripts'
 					//ext: '.min.js'
-				}]
+				}],
+				options: {
+					mangle: true, //see mangle: except: {} once you know more!
+					compress: {
+						drop_console: true
+					}
+				}
 			},
 			v11ndist: {
 				files: {
 					'./public/dist/javascripts/v11n.js' : ['./public/javascripts/v11n.js']
+				},
+				options: {
+					mangle: true, //see mangle: except: {} once you know more!
+					compress: {
+						drop_console: true
+					}
+				}
+			},
+			herokuApp: {
+				files: {
+					'app.js' : ['app.js']
+				},
+				options: {
+					mangle: false, //see mangle: except: {} once you know more!
+					compress: {
+						drop_console: true
+					}
+				}
+			},
+			herokuServer: {
+				files: [{
+					expand: true,
+					cwd: '.',
+					src: './routes/*.js',
+					dest: '.'
+				}],
+				options: {
+					mangle: false, //see mangle: except: {} once you know more!
+					compress: {
+						drop_console: true
+					}
 				}
 			}
 		},
@@ -279,6 +312,6 @@ module.exports = function(grunt) {
 
 	// this task is linked to the npm postinstall script. don't run it locally.
 	// it does the same thing as 'default', except that it also deletes ALL console.log statements from app.js and ALL routes.
-	grunt.registerTask('herokuDefault', ['clean', 'removelogging:dist', 'removelogging:routes', 'uglify:dist', 'cssmin:dist', 'concat:distcss', 'concat:v11ndist', 'uglify:v11ndist']);
+	grunt.registerTask('herokuDefault', ['clean', 'uglify:herokuApp', 'uglify:herokuServer', 'uglify:dist', 'cssmin:dist', 'concat:distcss', 'concat:v11ndist', 'uglify:v11ndist']);
 
 };
