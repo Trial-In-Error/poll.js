@@ -7,7 +7,7 @@
 		"start": "forever start --minUptime 1 --spinSleepTime 1000 -e ./logs/redis_errors.log -o ./logs/redis_stdout.log -c node ./bin/redis_init_helper.js",
 		"poststart": "forever --minUptime 1000 --spinSleepTime 1000 -e ./logs/server_errors.log -l ./logs/forever.log -o ./logs/server_stdout.log -c node ./bin/server.js",
 		"godbless": "forever --minUptime 1000 --spinSleepTime 1000 -e ./logs/server_errors.log -l ./logs/forever.log -o ./logs/server_stdout.log -c node ./bin/server.js",
-		"postinstall": "echo postinstall time; ./node_modules/grunt-cli/bin/grunt default"
+		"postinstall": "echo postinstall time; ./node_modules/grunt-cli/bin/grunt heroku"
 	},
 	"dependencies": {
 		"express": "~4.2.0",

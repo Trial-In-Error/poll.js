@@ -49,6 +49,14 @@ module.exports = function(grunt) {
 				}
 			}
 		},
+		removelogging: {
+			dist: {
+				src: 'app.js'
+			},
+			routes: {
+				src: './routes/*.js'
+			}
+		},
 		lintspaces: {
 			all: {
 					src: [
@@ -268,5 +276,9 @@ module.exports = function(grunt) {
 	grunt.registerTask('cleaner', ['clean']);
 	grunt.registerTask('packager', ['stripJsonComments:packagejson', 'replace:json']);
 	grunt.registerTask('ender', ['lintspaces:all', 'lineending:dist']);
+
+	// this task is linked to the npm postinstall script. don't run it locally.
+	// it does the same thing as 'default', except that it also deletes ALL console.log statements from app.js and ALL routes.
+	grunt.registerTask('heroku', ['clean', 'removelogging:dist', 'removelogging:routes', 'uglify:dist', 'cssmin:dist', 'concat:distcss', 'concat:v11ndist', 'uglify:v11ndist']);
 
 };
