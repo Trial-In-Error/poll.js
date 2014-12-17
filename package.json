@@ -50,7 +50,8 @@
 		"grunt-strip-json-comments": "*",
 		"grunt-jsbeautifier": "^0.2.7",
 		"grunt-lineending": "^0.2.2",
-		"grunt-text-replace": "*"
+		"grunt-text-replace": "*",
+		"grunt-remove-logging": "*"
 	},
 	"devDependencies": {
 		"should": "*",
