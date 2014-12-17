@@ -16,11 +16,7 @@ var optionHandler = function(){
 	// c.container = container;
 	this.array.push(c);
 	var chartyID = this.chartID + (this.size);
-<<<<<<< HEAD
 	visframes.addBasic(container,"item",chartyID,"tumbchart", chartyID);
-=======
-	visframes.addBasic(container,"item","topid","tumbchart", chartyID);
->>>>>>> 0c089e8e7c6b18191eebf5cc58645a944976895f
 	this.array[this.size].container = "#"+chartyID;
 	this.size++;
 	return this.array.length-1;

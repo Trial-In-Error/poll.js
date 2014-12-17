@@ -172,16 +172,10 @@ init : function(ref,container,question,options){
 					var rnd = Math.floor(Math.random()*4);
 					optionHandler.addGridChart("#charty"+(optionHandler.size));
 					var chartyID = optionHandler.chartID + (optionHandler.size-1);
-<<<<<<< HEAD
+
 					var tumbID = "tumb" + (optionHandler.size-1);
 				
 					visframes.addBasic(container,"item",tumbID,"tumbchart", chartyID);
-=======
-					console.log(optionHandler.chartID);
-					console.log(optionHandler.size-1);
-					visframes.addBasic(container,"item","tumb"+optionHandler.size-1,"tumbchart", chartyID);
->>>>>>> 0c089e8e7c6b18191eebf5cc58645a944976895f
-
 					optionHandler.updateOption(optionHandler.size-1,"matrix", matrix.slice(0));
 					optionHandler.updateOption(optionHandler.size-1,"orgmatrix",matrix.slice(0));
 					optionHandler.updateOption(optionHandler.size-1,"chart",visualizationTypes[i].types[u]);
@@ -209,12 +203,8 @@ init : function(ref,container,question,options){
 				var rnd = Math.floor(Math.random()*4);
 				optionHandler.addGridChart("#charty"+(optionHandler.size));
 				var chartyID = optionHandler.chartID + (optionHandler.size-1);
-<<<<<<< HEAD
 					var tumbID = "tumb" + (optionHandler.size-1);
 					visframes.addBasic(container,"item",tumbID,"tumbchart", chartyID);
-=======
-					visframes.addBasic(container,"item","tumb"+optionHandler.size-1,"tumbchart", chartyID);
->>>>>>> 0c089e8e7c6b18191eebf5cc58645a944976895f
 
 				optionHandler.updateOption(optionHandler.size-1,"matrix",copyMatrix(matrix));
 				optionHandler.updateOption(optionHandler.size-1,"orgmatrix",copyMatrix(matrix));
