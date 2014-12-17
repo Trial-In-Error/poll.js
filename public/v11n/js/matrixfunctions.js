@@ -316,4 +316,21 @@ function transformation(matrix,trans){
 		m = normalizeByRow(m);
 	}
 	return m;
+<<<<<<< HEAD
+}
+
+function normalizeRow(a){
+
+	var max = 0;
+	for (var i = 0; i < a.length; i++) {
+		if(max < a[i]){
+			max=a[i];
+		}
+	};
+	for (var i = 0; i < a.length; i++) {
+		a[i] = a[i]/max
+	};
+	return a;
+=======
+>>>>>>> 0c089e8e7c6b18191eebf5cc58645a944976895f
 }

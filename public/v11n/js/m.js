@@ -143,8 +143,11 @@ function functionName(fun) {
   return ret;
 }
 
+<<<<<<< HEAD
+=======
 function transformation(matrix,trans){
 	if(trans == "swap"){
 		
 	}
 }
+>>>>>>> 0c089e8e7c6b18191eebf5cc58645a944976895f
