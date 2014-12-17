@@ -2,12 +2,15 @@ vistool
 =======
 A small javascript library for visualizing, graphing, and charting!
 
+<<<<<<< HEAD
+=======
 ***NOTE: The username and password for authentication are not stored in the library. For authentication to work, please create the file config/config.js with the contents listed below:***
 
     var config = { user: someuser, password: somepassword }
 
 ***Then, concatenate config.js to v11n.js and v11n.min.js or use the grunt pass task (`grunt pass`) to concat for you.***
 
+>>>>>>> 0c089e8e7c6b18191eebf5cc58645a944976895f
 Example Use
 -------
 1. Serve the visualization library with the page:
