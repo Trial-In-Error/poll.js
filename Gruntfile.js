@@ -12,7 +12,7 @@ module.exports = function(grunt) {
 				dest: './public/dist/stylesheets/combined_style.css'
 			},
 			v11ndist: {
-				src: ['./public/v11n/js/lib/d3.min.js', './public/v11n/js/lib/c3.js',  './public/v11n/js/*.js'],
+				src: ['./public/v11n/js/lib/d3.min.js', './public/v11n/js/lib/c3.js', './public/v11n/simple-statistics-master/src/simple_statistics.js', './public/v11n/js/*.js'],
 				dest: './public/javascripts/v11n.js'
 			},
 		},
