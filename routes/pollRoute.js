@@ -12,6 +12,7 @@ function batchSanitize(items, db) {
 				return false;
 			}
 			if(items[tr].clean) {
+				items[tr] = items[tr].clean;
 				console.log('Used cached poll.');
 				continue;
 			}
