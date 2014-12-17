@@ -11,7 +11,7 @@ var masonryBig = 5;
 var sortOn;
 var pollList = [];
 var pollIndex = 1;
-var maggio = new visualizepolls();
+var maggio = new visualizeOpinerPoll();
 
 function redrawAll() {
 	parent.height(grandparent.height()).width(grandparent.width());
