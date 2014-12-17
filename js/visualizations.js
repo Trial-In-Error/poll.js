@@ -921,10 +921,8 @@ function sliderDonut(options){
 	
 }
 function heatmap(options){
-<<<<<<< HEAD
 	console.log("*******************HEATMAP***************************************" );
-=======
->>>>>>> 0c089e8e7c6b18191eebf5cc58645a944976895f
+
 	var m = options.matrix;
 	var head =  m[0].slice(1,m[0].length);
 	console.log(m);
