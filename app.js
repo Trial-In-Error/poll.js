@@ -247,6 +247,8 @@ passport.use('anonymous', new LocalStrategy(
 	}
 ));
 
+app.use(express.static(path.join(__dirname, 'public')));
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
@@ -270,8 +272,6 @@ app.use(session({
 		maxAge: 604800 //one week
 	}
 }));
-
-app.use(express.static(path.join(__dirname, 'public')));
 
 // WARN: THE API SERVER DOES SESSION-BASED AUTH!!!
 app.use(function(req, res, next) {
