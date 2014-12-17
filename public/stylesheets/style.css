@@ -28,6 +28,12 @@
     background:none;
     border:none;
 }
+/* Make the header's top border "invisible" (same as header background color) */
+/* Note that turning the header off (border-top-style: none or border-top-width: 0) breaks everything... */
+.ui-header {
+    border-top-color: rgb(255, 255, 255);
+}
+
 /* Button hover */
 .ui-page-theme-a .ui-btn:hover,
 html .ui-bar-a .ui-btn:hover,
