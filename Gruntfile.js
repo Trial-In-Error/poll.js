@@ -279,6 +279,6 @@ module.exports = function(grunt) {
 
 	// this task is linked to the npm postinstall script. don't run it locally.
 	// it does the same thing as 'default', except that it also deletes ALL console.log statements from app.js and ALL routes.
-	grunt.registerTask('heroku', ['clean', 'removelogging:dist', 'removelogging:routes', 'uglify:dist', 'cssmin:dist', 'concat:distcss', 'concat:v11ndist', 'uglify:v11ndist']);
+	grunt.registerTask('herokuDefault', ['clean', 'removelogging:dist', 'removelogging:routes', 'uglify:dist', 'cssmin:dist', 'concat:distcss', 'concat:v11ndist', 'uglify:v11ndist']);
 
 };

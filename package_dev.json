@@ -21,7 +21,7 @@
 		// Starts the server without the database
 		"godbless": "forever --minUptime 1000 --spinSleepTime 1000 -e ./logs/server_errors.log -l ./logs/forever.log -o ./logs/server_stdout.log -c node ./bin/server.js",
 		// Runs the grunt heroku task after being deployed to heroku
-		"postinstall": "echo postinstall time; ./node_modules/grunt-cli/bin/grunt heroku"
+		"postinstall": "echo postinstall time; ./node_modules/grunt-cli/bin/grunt herokuDefault"
 	},
 	"dependencies": {
 		// Fix the version numbers to specific releases
