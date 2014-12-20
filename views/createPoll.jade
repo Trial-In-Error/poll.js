@@ -25,6 +25,13 @@ block content
 					label(for='welcomeText') Introductory text:
 					input(type='text', name='welcomeText', id='welcomeText', value='')
 
+		form(id='outroForm', style='display:none; max-width: 600px; margin:0 auto;')
+			p(style='display: block !important;') Write a short conclusion to the poll. It should thank the user for their time.
+			fieldset(data-role='controlgroup', data-type='vertical', id='welcome')
+				div(class='ui-field-contain')
+					label(for='outroText') Conclusion text:
+					input(type='text', name='outroText', id='outroText', value='')
+
 		form(id='questionTypeForm', style='display:none; max-width: 600px; margin:0 auto;')
 			p(style='display: block !important;') Choose a question type.
 			fieldset(data-role='controlgroup', data-type='vertical', id='theme', style='margin:0 auto; text-align:center;')
@@ -117,7 +124,10 @@ block content
 						input(type='radio' name='textFieldRequired', id='textFieldRequiredFalse', value='on', checked='checked')
 
 	//-see line 727 if this doesn't work out
-	div(id='bottomButtons', data-role='controlgroup', data-type='horizontal', style='margin:0 auto; display:none; text-align:right; max-width: 600px;')
-		a(href='#', class='next', id='next', data-role='button', data-transition='slide', style='display:none;') Next
+	div(id='bottomButtons', style='margin:0 auto; display:none; max-width: 600px;')
+		div(style='text-align: left; width: 40%; float: left;')
+			a(href='#', class='closingSlide', id='closingSlide', data-role='button', data-transition='slide', style='display:none;') Finish
+		div(style='text-align: right; width: 40%; float: right;')
+			a(href='#', class='next', id='next', data-role='button', data-transition='slide', style='display:none;') Next
 
 	+serveJS('clientCreatePoll.js')

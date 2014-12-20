@@ -162,60 +162,56 @@ function verifyUser(res, req, answer) {
 router.post('/answerpoll', helper.reqAnswerRight, helper.ensureAuth, function(req, res) {
 	console.log('--------------------');
 	console.log('req.body: '+req.body);
-	try {
-		var db = req.db;
-		var tid = req.body._id;
-		delete req.body._id;
-		console.log(tid);
-		db.collection('polldb').findOne({_id: mongo.helper.toObjectID(tid)},
-			function(err, result) {
-				if(err) {
-					res.send({msg: err});
-					throw err;
-				}
-				console.log(result);
-				// For every question in the submitted poll
-				for (var question in req.body.question_list) {
-					// And every response for that question (there should be only 1, but...)
-					for (var response in req.body.question_list[question].type.response_list) {
-						// If it's been answered
-						if(typeof req.body.question_list[question].type.response_list[response].answers !== 'undefined'
-							&& typeof req.body.question_list[question].type.response_list[response].answers[0] !== 'undefined'
-							&& typeof req.body.question_list[question].type.response_list[response].answers[0].value !== 'undefined'
-							&& req.body.question_list[question].type.response_list[response].answers[0].value !== null) {
-							//console.log('Appended question '+question+' and response '+response+ '.');
-							//console.log('Appended: '+req.body.question_list[question].type.response_list[response].answers);
-							//console.log(result.question_list);
-							//console.log(req.body.question_list);
+	var db = req.db;
+	var tid = req.body._id;
+	delete req.body._id;
+	console.log(tid);
+	db.collection('polldb').findOne({_id: mongo.helper.toObjectID(tid)}, function(err, result) {
+		if(err) {
+			res.send({msg: err});
+			throw err;
+		}
+		console.log(result);
+		// For every question in the submitted poll
+		for (var question in req.body.question_list) {
+			console.log('BING! '+question);
+			// And every response for that question (there should be only 1, but...)
+			for (var response in req.body.question_list[question].type.response_list) {
+				// If it's been answered
+				if(typeof req.body.question_list[question].type.response_list[response].answers !== 'undefined'
+					&& typeof req.body.question_list[question].type.response_list[response].answers[0] !== 'undefined'
+					&& typeof req.body.question_list[question].type.response_list[response].answers[0].value !== 'undefined'
+					&& req.body.question_list[question].type.response_list[response].answers[0].value !== null) {
+					//console.log('Appended question '+question+' and response '+response+ '.');
+					//console.log('Appended: '+req.body.question_list[question].type.response_list[response].answers);
+					//console.log(result.question_list);
+					//console.log(req.body.question_list);
 
-							// I think this is never, ever, ever reached...
-							if(typeof result.question_list[question].type.response_list[response].answers === 'undefined') {
-								result.question_list[question].type.response_list[response].answers = [];
-							}
-							// Add the answer to the resulting poll
-							result.question_list[question].type.response_list[response].answers.push(
-								verifyUser(res, req, req.body.question_list[question].type.response_list[response].answers[0])
-								);
-							//console.log(result.question_list[question].type.response_list[response].answers);
-						}
+					if(typeof result.question_list[question].type.response_list === 'undefined') {
+						continue;
 					}
-				}
-				db.collection('polldb').update( {_id: mongo.helper.toObjectID(tid)}, result, function(err, result) {
-					if(err) {
-						res.send({msg: err});
-						console.log(err);
-					} else {
-						res.send((result === 1) ? { msg: '' } : { msg:'Database error: '+ err});
-					}
-				});
-					//console.log(JSON.stringify(result, null, 4));
-			});
 
-	} catch (err) {
-		console.log(req.body);
-		res.send({msg: 'Invalid JSON object!'});
-		throw err;
-	}
+					// I think this is never, ever, ever reached...
+					if(typeof result.question_list[question].type.response_list[response].answers === 'undefined') {
+						result.question_list[question].type.response_list[response].answers = [];
+					}
+
+					result.question_list[question].type.response_list[response].answers.push(
+						verifyUser(res, req, req.body.question_list[question].type.response_list[response].answers[0])
+						);
+					//console.log(result.question_list[question].type.response_list[response].answers);
+				}
+			}
+		}
+		db.collection('polldb').update( {_id: mongo.helper.toObjectID(tid)}, result, function(err, result) {
+			if(err) {
+				res.send({msg: err});
+				console.log(err);
+			} else {
+				res.send((result === 1) ? { msg: '' } : { msg:'Database error: '+ err});
+			}
+		});
+	});
 });
 
 router.options('/frequency/*', function(req, res, next) {

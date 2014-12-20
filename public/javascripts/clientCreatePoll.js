@@ -34,6 +34,7 @@ function submitPoll() {
 	.done(function (result) {
 		console.log(result);
 		if(result.success) {
+			window.onbeforeunload = function() {};
 			window.location.replace(result.redirect);
 		} else {
 			alert(result.msg);
@@ -49,8 +50,15 @@ function submitPoll() {
 function chooseQuestionType() {
 	document.body.scrollTop = document.documentElement.scrollTop = 0;
 	$('#questionTypeForm').show();
+	$('#closingSlide').show();
+	$('#closingSlide').on('click', function() {
+		$('#closingSlide').off();
+		$('#closingSlide').hide();
+		setupOutro();
+	});
 	$('#next').off();
 	$('#next').on('click', function() {
+		$('#closingSlide').hide();
 		if($('#informational').is(':checked')) {
 			console.log('Informational!');
 			$('#questionTypeForm').hide();
@@ -254,7 +262,7 @@ function setupInformational() {
 		if($('#informationalBody').val().length <= 0) {
 			alert('Please fill in all required fields!');
 		} else {
-			poll.question_list.push({body: $('#informationalForm').val(), type: {name: 'not_a_question'}});
+			poll.question_list.push({body: $('#informationalBody').val(), type: {name: 'not_a_question'}});
 			$('#informationalForm').hide();
 			chooseQuestionType();
 		}
@@ -387,6 +395,24 @@ function setupIntro() {
 			poll.question_list = [];
 			poll.question_list.push({body: $('#welcomeText').val(), type:{name: 'not_a_question'}, opening_slide: true});
 			chooseQuestionType();
+		}
+	});
+}
+
+function setupOutro() {
+	document.body.scrollTop = document.documentElement.scrollTop = 0;
+	$('#questionTypeForm').hide();
+	$('#outroForm').show();
+	$('#next').off();
+	$('#next').on('click', function() {
+		if ($('#outroText').val().length <= 0) {
+			alert('Please fill in the conclusion text!');
+			//setupPoll();
+			return;
+		} else {
+			$('#outroForm').hide();
+			poll.question_list.push({body: $('#outroText').val(), type:{name: 'not_a_question'}, closing_slide: true});
+			submitPoll();
 		}
 	});
 }
