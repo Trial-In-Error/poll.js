@@ -150,11 +150,11 @@ How are questions combined?
 -------
 Data from a maximum of two questions can be combined, how they are combined depends of the the question's type. 
 
-1. Two Order questions -> The score from each combination are sumed.
+1. Two Order questions -> The score from each combination are summed.
 2. One Order question and one radio/checkbox, the two questions are multiplied and then added.
-3. Two question of non Order, the frequency of respone is counted for each combination.
+3. Two question of non Order, the frequency of response is counted for each combination.
 
-For these functions can be overritten for customiaztion of data mangement. Names of functions in respective order,
+For these functions can be overwritten for customiaztion of data management. Names of functions in respective order,
 flashpoll.mergeOrder, flashpoll.mergeOneOrder and flashpoll.mergeNominal
 
 Example how to change
