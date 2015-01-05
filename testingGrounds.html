@@ -1,0 +1,65 @@
+<html>
+<head>
+	<meta name='viewport' content='width=device-width, initial-scale=1, minimal-ui'>
+	<script src='./public/javascripts/jquery_2_1_1.js'></script>
+	<script src='./public/javascripts/jquery_mobile_1_4_3.js'></script>
+	<link rel='stylesheet', href='./public/stylesheets/jquery.mobile-1.4.3.css'>
+	<link rel='stylesheet', href='./public/stylesheets/style.css'>
+	<style>
+		.item { background-color: #FEF9ED; height: 18vw; width: 18%;overflow: hidden; cursor: pointer;}
+
+		.item.big { background-color: #FFFFFD;width: 48%; height: 48vw; cursor: auto;}
+
+		.grid-sizer {width: 18%;}
+
+		@media screen and (min-width: 720px) {
+			.item { width: 8%; height: 8vw;}
+			.grid-sizer {width: 8%;}
+		}
+
+		.gutter-sizer {width: 2%;}
+
+		.container {margin: 0px;}
+
+		.item.highlighted {background-color: #9f9f9f}
+	</style>
+</head>
+
+<body class='ui-mobile-viewport ui-overlay-c' style='overflow-y: scroll;'>
+	<link rel='stylesheet', href='./public/v11n/css/c3.css'>
+	<link rel='stylesheet', href='./public/v11n/css/chart.css'>
+	<link rel='stylesheet', href='./public/stylesheets/roundList.css'>
+	<script src='./public/javascripts/spin.js'></script>
+	<script src='./public/javascripts/v11n.js'></script>
+	<script src='./public/javascripts/clientPollGrid.js'></script>
+	<script src='./public/javascripts/isotope.min.js'></script>
+	<script src='./public/javascripts/packery-mode.pkgd.min.js'></script>
+	<div data-role='page' id='frontpage'>
+		<div class='ui-header ui-bar-b', style='background-color: #fff !important;'>
+			<a href='/', id='headerAnchor', style='display: block;margin-left: auto !important;margin-right: auto !important;margin-top: 16px !important;margin-bottom: 16px !important; text-align:center; border: none;max-width: 405px; max-height: 94px', data-role= 'none', data-ajax='false', data-enhance='false'>
+				<img src='./public/images/Opiner_Logo.png', style='max-width: 405px; max-height: 94px;' data-role='none'>
+			</a>
+		</div>
+
+		<div data-role='content', class='ui-content', style="margin-bottom:42px;">
+			<div id='container' class='container'>
+				<div class='gutter-sizer'></div>
+				<div class='grid-sizer'></div>
+			</div>
+		</div>
+
+		<div data-role='panel' data-dismissible='false' data-animate='true' data-position='left' data-position-fixed='true' data-display='push' id='gridPanel'>
+			<h2 class="ui-bar ui-bar-a" id="pollTitle"/>
+			<div id='collapsibleSet' data-role='collapsibleset' data-mini='true' data-inset='false' style='max-width: 100%; margin:0 auto;'>
+				<div>
+					<a href='#', data-ajax='true' id='returnButton' class='ui-btn ui-corner-all', style='margin: 15px; padding: 15px;'> Share this dataset</a>
+				</div>
+			</div>
+		</div>
+
+		<div data-role='footer', data-visible-on-page-show="false", data-tap-toggle="false", class='ui-header ui-bar-b', style="height: 42px; position: absolute !important; bottom:0; width:100%">
+			<h4>'Forskning Pågår @ Tekniska Museet'</h4>
+		</div>
+	</div>
+</body>
+</html>

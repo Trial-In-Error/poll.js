@@ -123,9 +123,9 @@ $(window).load(function() {
 		var target = document.body;
 		var spinner = new Spinner(opts).spin(target);
 
-		var url = window.location.origin+'/pollroute/exportpolljson/'+window.location.pathname.split('grid/').pop();
+		var url = 'winter.json';
 
-		var array = [];
+		var array = [1,3];
 		var options = {tooltip : false, legend : false, axis : false};
 		var container = '#container';
 		visualizepolls.init(url, function() {
