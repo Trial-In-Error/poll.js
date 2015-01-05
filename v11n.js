@@ -7413,6 +7413,8 @@ init : function(ref,container,question,options){
 					optionHandler.updateOption(optionHandler.size-1,"info", chartTitle);
 					optionHandler.addOptions(optionHandler.size-1,options);
 					console.log(optionHandler.array[optionHandler.size-1].xlabel);
+					//Quick bug fix
+					$("#charty"  +(optionHandler.size) ).css('max-height','none');
 					var chart = visualizationTypes[i].types[u](optionHandler.getOption(optionHandler.size-1));
 					console.log(chart);
 					optionHandler.updateOption(optionHandler.size-1,"c3",chart);
@@ -8391,16 +8393,17 @@ var transformer = {
 				newHeight -= parseInt($('#relation'+index).css('padding-top'))
 				newHeight -= parseInt($('#relation'+index).css('padding-bottom'))
 			}
-			console.log(newHeight);
+			console.log("KOLLA HÄR >>>>>" + $("#tumb" + index).height());
+			console.log("KOLLA HÄR >>>>>" + newHeight);
 
 //-parseInt($('#btnswap' + index).css('padding-bottom'));
 // var newHeight = $("#charty" + ind).parent().width() - ($("#charty" + ind).parent().width() - $("#charty" + ind).height())
-console.log(newHeight);
 
 console.log(ind);
 $("#charty" + ind ).css('height',newHeight);
 $("#charty" + ind ).css('max-height','none');
 $("#charty" + ind ).css('width',$(id).width());
+
 if(optionHandler.array[index].classname == "tumbheat"){
 
 	d3.select("#tumbheat" + index).remove();

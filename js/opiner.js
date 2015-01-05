@@ -189,6 +189,8 @@ init : function(ref,container,question,options){
 					optionHandler.updateOption(optionHandler.size-1,"info", chartTitle);
 					optionHandler.addOptions(optionHandler.size-1,options);
 					console.log(optionHandler.array[optionHandler.size-1].xlabel);
+					//Quick bug fix
+					$("#charty"  +(optionHandler.size) ).css('max-height','none');
 					var chart = visualizationTypes[i].types[u](optionHandler.getOption(optionHandler.size-1));
 					console.log(chart);
 					optionHandler.updateOption(optionHandler.size-1,"c3",chart);
