@@ -159,10 +159,11 @@ return;
 
 	},
 	removeInfo : function(id){
-		/*$(".infoText").remove();
+		$(".infoText").remove();
 		$(".titleText").remove();
+		$(".share").remove();
 		$(".swap").remove();
-		$(".norm").remove();*/
+		$(".norm").remove();
 		console.log(id);
 		$(id+' :not(.tumbchart):not(.tumbchart *)').remove();
 

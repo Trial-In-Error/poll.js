@@ -151,7 +151,6 @@ setOptions : function(data,visualizationTypes,optionHandler){
 */
 init : function(ref,container,question,options){
 	var data = ref.dataHandler.polldata;
-	var optionHandler = ref.optionsdata;
 	// var performance = new Timetool();
 	console.log(ref);
 	// var matrixMemory = buildEmptyMatrix(data.question_list.length,data.question_list.length);
@@ -170,6 +169,7 @@ init : function(ref,container,question,options){
 
 				for (var u = 0; u < visualizationTypes[i].types.length; u++) {
 					var rnd = Math.floor(Math.random()*4);
+					console.log(optionHandler);
 					optionHandler.addGridChart("#charty"+(optionHandler.size));
 					var chartyID = optionHandler.chartID + (optionHandler.size-1);
 
