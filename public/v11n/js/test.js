@@ -1,1 +1,0 @@
-var mytest = "my_testfile";
