@@ -69,7 +69,7 @@ var transformer = {
 
 			var index = id.split("tumb").slice(-1)[0];
 			console.log(id);
-			var ind = parseInt(index)+1;
+			var ind = parseInt(index);
 
 			transformer.setTransButtons(optionHandler.array[index],index);
 			if(optionHandler.array[index].independence==false){
@@ -170,7 +170,7 @@ return;
 
 		var index = id.split("tumb").slice(-1)[0];
 
-		var ind = parseInt(index) + 1;
+		var ind = parseInt(index);
 		console.log(ind);
 		console.log("chart height: " + $("#charty"+ ind).height());
 		$("#charty" + ind ).css('max-height','none');

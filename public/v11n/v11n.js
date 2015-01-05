@@ -8359,7 +8359,7 @@ var transformer = {
 
 			var index = id.split("tumb").slice(-1)[0];
 			console.log(id);
-			var ind = parseInt(index)+1;
+			var ind = parseInt(index);
 
 			transformer.setTransButtons(optionHandler.array[index],index);
 			if(optionHandler.array[index].independence==false){
@@ -8460,7 +8460,7 @@ return;
 
 		var index = id.split("tumb").slice(-1)[0];
 
-		var ind = parseInt(index) + 1;
+		var ind = parseInt(index);
 		console.log(ind);
 		console.log("chart height: " + $("#charty"+ ind).height());
 		$("#charty" + ind ).css('max-height','none');
@@ -8736,7 +8736,7 @@ return;
 var visframes = {
 	container : null,
 	basicFrame : function(topclass,topid,chartclass,chartid){
-		return $("<div class='"+topclass+"' id='"+topid+"'></div>").append("<div class='"+chartclass+"'' id='"+chartid+"'></div>");
+		return $("<div class='"+topclass+"' id='"+topid+"' style='height:" + $('#grid-sizer').width() + "'; width='"  + $('#grid-sizer').width() + "'></div>").append("<div class='"+chartclass+"'' id='"+chartid+"'></div>");
 	},
 	addBasic: function(container,topclass,topid,chartclass,chartid){
 			$(container).append(visframes.basicFrame(topclass,topid,chartclass,chartid));
