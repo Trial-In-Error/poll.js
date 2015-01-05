@@ -103,16 +103,17 @@ var transformer = {
 				newHeight -= parseInt($('#relation'+index).css('padding-top'))
 				newHeight -= parseInt($('#relation'+index).css('padding-bottom'))
 			}
-			console.log(newHeight);
+			console.log("KOLLA HÄR >>>>>" + $("#tumb" + index).height());
+			console.log("KOLLA HÄR >>>>>" + newHeight);
 
 //-parseInt($('#btnswap' + index).css('padding-bottom'));
 // var newHeight = $("#charty" + ind).parent().width() - ($("#charty" + ind).parent().width() - $("#charty" + ind).height())
-console.log(newHeight);
 
 console.log(ind);
 $("#charty" + ind ).css('height',newHeight);
 $("#charty" + ind ).css('max-height','none');
 $("#charty" + ind ).css('width',$(id).width());
+
 if(optionHandler.array[index].classname == "tumbheat"){
 
 	d3.select("#tumbheat" + index).remove();
