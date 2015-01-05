@@ -2,7 +2,7 @@ var visualizeOpinerPoll = function(){
 	this.dataHandler = new dataHandler();
 	this.pollsetOptions;
 	this.supercontainer;
-	this.optionsdata = new optionHandler();
+	// this.optionsdata = new optionHandler();
 	console.log(this.optionsdata);
 	this.getDataHandler = function(){
 		return this.dataHandler;

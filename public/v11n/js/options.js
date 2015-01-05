@@ -2,7 +2,7 @@
 * optionHandler holds all the charts data and functions for
 * updating and adding options
 */
-var optionHandler = function(){
+var optionHandler2 = function(){
 	this.questionsMatrix  = [];
 	this.myDefault = null;
 	this.chartOptions = null;
