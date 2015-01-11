@@ -3,7 +3,7 @@ poll.js
 
 Installation
 ---------------------------------
-1. Clone repository (HOW??? ACTUAL COMMAND HERE).
+1. Clone repository (`git clone https://github.com/trial-in-error/poll.js`).
 2. Install [mongoDB](http://www.mongodb.org/downloads). Add mongodb/bin to the system path.
 3. Install [node.js](http://nodejs.org/download/). Add node.js/ to the system path.
 4. Install redis-server [for linux](https://github.com/antirez/redis) or [for windows](https://github.com/dmajkic/redis). Add redis-server/ to the system path. Note that this step is optional but **highly** recommended.
@@ -46,9 +46,8 @@ Deploying to Heroku
 5. Create a heroku project with `heroku create`.
 6. Deploy code with `git push heroku master`.
 7. Start one dyno (worker process) with `heroku ps:scale web=1`.
-8. REALLY MESSY MONGODB SETUP OH SHIT DOCUMENT THIS CRAP
-9. EVEN MESSIER SSL / HTTPS SETUP FIGURE THIS OUTTTTT
-10. THEN FIGURE OUT HOW TO DO REDIS GODDAMN MAN
+8. Find a SAAS (software as a service) provider for MongoDB [here](https://addons.heroku.com/). Follow their set-up process.
+10. Find a SAAS provider for Redis [at the same place](https://addons.heroku.com/). Follow their set-up process as well.
 11. Visit your app with `heroku open`!
 
 Heroku Cheatsheet
@@ -72,17 +71,17 @@ If the server can find a running redis-server, it will use that as the session m
 
 Hack This Thing
 ---------------------------------
-An overview of the whole system, detailed explanations of its parts, help with the development tools, warnings, etc., can all be found on the github wiki (HERE AT THIS ADDRESS). Good luck!
+An overview of the whole system, detailed explanations of its parts, help with the development tools, warnings, etc., can all be found [on the github wiki](https://github.com/Trial-In-Error/poll.js/wiki). Good luck!
 
 License Information
 ---------------------------------
-Everything included in this repository is permissively (e.g., MIT) licensed except for Isotope and Packery. If you wish to use the grid (/grid or /grid/:id), check to (HEREHEREHEREWEBADDRESS) to see if your use is fair use, or if you should buy a license.
+Everything included in this repository is permissively (e.g., MIT) licensed except for Isotope and Packery. If you wish to use the grid (/grid or /grid/:id), check ([here](http://isotope.metafizzy.co/license.html) and [here](http://packery.metafizzy.co/license.html) to see if your use is fair use, or if you should buy a license.
 
 Troubleshooting
 ---------------------------------
 * Skype defaults to listening on port 443, blocking server.js from starting the HTTPS server.
 * MongoDB under Mac OSX will not get as many file descriptors as it would like.
-	* See: http://docs.mongodb.org/manual/reference/ulimit/
+	* See [this note](http://docs.mongodb.org/manual/reference/ulimit/).
 * None of the HTTPS keys are packaged with the app. You can generate self-signed certificates like so:
 
 	`openssl genrsa -out polljs-key.pem 1024`
