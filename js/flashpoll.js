@@ -82,12 +82,12 @@ visualizeChart : function(ref,structure,data,frequency,question,chart,container,
 	console.log(data);
 	var matrix;
 	var dt = "frequency";
-	ref.optionsdata.addChart(container);
+	optionHandler.addChart(container);
 
 	if(question.length==1){
 		matrix =  flashpoll.getSingleMatrix(structure,frequency,question[0]);
-		ref.optionsdata.updateOption(ref.optionsdata.size-1,"title",structure.questions[question[0]].questionText)
-		ref.optionsdata.updateOption(ref.optionsdata.size-1,"ylabel","score")
+		optionHandler.updateOption(optionHandler.size-1,"title",structure.questions[question[0]].questionText)
+		optionHandler.updateOption(optionHandler.size-1,"ylabel","score")
 	}
 	else{
 		 matrix=flashpoll.getDoubleMatrix(structure,data,question);
@@ -100,28 +100,28 @@ visualizeChart : function(ref,structure,data,frequency,question,chart,container,
 			subtitle += structure.questions[question[i]].questionText;
 			subtitle += "<br/>"
 		}
-		ref.optionsdata.updateOption(ref.optionsdata.size-1,"xlabel",(structure.questions[question[0]].questionText).trunc(25))
-		ref.optionsdata.updateOption(ref.optionsdata.size-1,"ylabel",(structure.questions[question[1]].questionText).trunc(25))
+		optionHandler.updateOption(optionHandler.size-1,"xlabel",(structure.questions[question[0]].questionText).trunc(25))
+		optionHandler.updateOption(optionHandler.size-1,"ylabel",(structure.questions[question[1]].questionText).trunc(25))
 	}
 	matrix = transformation(matrix, options.transformation);
-	ref.optionsdata.updateOption(ref.optionsdata.size-1,"matrix",matrix);
+	optionHandler.updateOption(optionHandler.size-1,"matrix",matrix);
 
 
-	ref.optionsdata.updateOption(ref.optionsdata.size-1,"chart",chartNames[chart]);
-	ref.optionsdata.updateOption(ref.optionsdata.size-1,"color",1);
-	ref.optionsdata.updateOption(ref.optionsdata.size-1,"id",ref.optionsdata.size-1);
-		// ref.optionsdata.updateOption(ref.optionsdata.size-1,"answer",answer)
+	optionHandler.updateOption(optionHandler.size-1,"chart",chartNames[chart]);
+	optionHandler.updateOption(optionHandler.size-1,"color",1);
+	optionHandler.updateOption(optionHandler.size-1,"id",optionHandler.size-1);
+		// optionHandler.updateOption(optionHandler.size-1,"answer",answer)
 
-		ref.optionsdata.pointer = ref.optionsdata.size-1;
-		ref.optionsdata.array[ref.optionsdata.size-1] = visGenerator.addOptions(ref.optionsdata.array[ref.optionsdata.size-1],options);
+		optionHandler.pointer = optionHandler.size-1;
+		optionHandler.array[optionHandler.size-1] = visGenerator.addOptions(optionHandler.array[optionHandler.size-1],options);
 		
 
-		// ref.optionsdata.array[ref.optionsdata.size-1].chartOptions =  options.chartOptions;
-		ref.optionsdata.setSize(ref.optionsdata.size-1);
-		ref.optionsdata.checkTitle(ref.optionsdata.size-1);
-		console.log(ref.optionsdata.array)
-		var chart = chartNames[chart](ref.optionsdata.getOption(ref.optionsdata.size-1));
-		ref.optionsdata.updateOption(ref.optionsdata.size-1,"c3",chart);
+		// optionHandler.array[optionHandler.size-1].chartOptions =  options.chartOptions;
+		optionHandler.setSize(optionHandler.size-1);
+		optionHandler.checkTitle(optionHandler.size-1);
+		console.log(optionHandler.array)
+		var chart = chartNames[chart](optionHandler.getOption(optionHandler.size-1));
+		optionHandler.updateOption(optionHandler.size-1,"c3",chart);
 
 
 	},

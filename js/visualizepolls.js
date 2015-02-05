@@ -2,7 +2,7 @@ var visualizeFlashPoll = function(){
 	this.flashdata;
 	this.pollsetOptions;
 	this.supercontainer;
-	this.optionsdata = new optionHandler();
+	// this.optionsdata = new optionHandler();
 
 	this.init = function(url,callback){
 		this.flashdata = new flashdata();
@@ -29,7 +29,7 @@ var visualizeFlashPoll = function(){
 		this.flashdata.seturl(url);
 		var self = this;
 		this.flashdata.getDataLocal(function(){
-			flashpoll.setDataArray(self.flashdata.structure,self.flashdata.frequency,self.optionsdata);
+			flashpoll.setDataArray(self.flashdata.structure,self.flashdata.frequency);
 			callback();
 
 		});

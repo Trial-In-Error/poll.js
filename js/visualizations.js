@@ -38,7 +38,12 @@ function bar(options){
 		names.push(m[0][i]);
 	};
 	//Space between legend and chart depentent on length of axistext and rotation
-	options.legendMargin = xHeight(names,r);
+	if(!options.tumb){
+			options.legendMargin = xHeight(names,r);
+		}else{
+			options.legendMargin=0;
+		}
+
 	// options.legendMargin = textWidth(getArrayMaxElement(),)
 
 	//Specifications for the chart
@@ -112,7 +117,12 @@ function histogram(options){
 	var d=ma[0];
 	var names = d[0].slice(0);
 	//
+	if(options.xlabel != null){
 	d[0].unshift(options.xlabel);
+	}else{
+		options.xlabel = "interval"
+		d[0].unshift("interval");
+	}
 	var r = rotateText(names, options);
 
 	options.legendMargin = xHeight(names,70);
@@ -120,7 +130,7 @@ function histogram(options){
 		bindto: options.container,
 		interaction: { enabled:  options.interaction },
 		data: {
-			x: "Answer",
+			x: options.xlabel,
 			columns : d,
 			type: 'bar',
 			color: function (color, d) {
@@ -240,7 +250,7 @@ function line(options){
 			columns : options.matrix,
 			type: 'line',
 			color: function (color, d) {
-				return datacolors.getColor(d,names);
+				return datacolors.getColor(d,names,options);
 			}
 		},
 		tooltip: {
@@ -296,10 +306,7 @@ function scatter(options){
 	t[options.matrix[1][0]]=options.matrix[0][0];
 	title["label"] = options.matrix[1][0];
 
-	if(options.chartOptions != null){
-		settings = visGenerator.addOptions(settings,options.chartOptions);
-	}
-	var chart = c3.generate({
+var settings = {
 		bindto: options.container,
 		interaction: { enabled:  options.interaction },
 		data: {
@@ -343,7 +350,11 @@ function scatter(options){
 			r: function(d){return 4}
 		}
 		
-	});
+	};
+	if(options.chartOptions != null){
+		settings = visGenerator.addOptions(settings,options.chartOptions);
+	}
+	var chart = c3.generate(settings);
 	return chart;
 }
 /**
@@ -367,11 +378,7 @@ function regressionline(options){
 	var y = options.matrix[1][0];
 	var x = options.matrix[0][0];
 	title["label"] = options.matrix[1][0];
-
-	if(options.chartOptions != null){
-		settings = visGenerator.addOptions(settings,options.chartOptions);
-	}
-	var chart = c3.generate({
+var settings = {
 		bindto: options.container,
 		interaction: { enabled:  options.interaction },
 		data: {
@@ -380,7 +387,7 @@ function regressionline(options){
 			type: 'scatter',
 			color: function (color, d) {
 				console.log(d);
-				return datacolors.getColor(d,names);
+				return datacolors.getColor(d,names,options);
 			},
 			onclick: function (d, i) { 
 				console.log(toggle);
@@ -448,7 +455,11 @@ function regressionline(options){
 			r: function(d){return 4}
 		}
 		
-	});
+	};
+	if(options.chartOptions != null){
+		settings = visGenerator.addOptions(settings,options.chartOptions);
+	}
+	var chart = c3.generate(settings);
 
 
 return chart;
@@ -702,7 +713,9 @@ function stackedBar(options){
 		r= rotateText(options.matrix[0],names);
 	}
 	// var xMargin = xHeight(options);
-	options.legendMargin = xHeight(names2,r);
+	if(!options.tumb){
+			options.legendMargin = xHeight(names,r);
+	}
 	// matrix.unshift(header);
 	var settings = {
 		bindto: options.container,
@@ -753,9 +766,6 @@ function stackedBar(options){
 		legend : {
 			show : options.legend
 		},
-		padding : {
-			left : 100
-		}
 	};
 	if(options.chartOptions != null){
 		settings = visGenerator.addOptions(settings,options.chartOptions);
@@ -954,7 +964,7 @@ function heatmap(options){
 	var centerPadding = (w-(textLength + gridSize * columnlength))/2;
           //antal färger
 
-          var index = options.container.split("charty").slice(-1)[0]-1;
+          var index = options.container.split("charty").slice(-1)[0];
           buckets = 8;
           options.classname="tumbheat";
           var svg = d3.select(options.container).append("svg")
@@ -1059,8 +1069,8 @@ var colorScale = d3.scale.quantile()
 console.log(fontSize);*/
 var index = options.id;
 		// var h = $(options.container).parent().width() - ($(options.container).parent().width() - $(options.container).height())
-		// var h =nHeight;
-		var	h = $(options.container).parent().parent().height();
+		var h =nHeight;
+		// var	h = $(options.container).parent().parent().height();
 		var titleHight = getWordWidth2("T") * 3;
 		var topWord = getArrayMaxElement(dim_2,0).trunc(MAXWORDLENGHT);
 		var marginTop = getWordWidth2(topWord);
@@ -1068,7 +1078,7 @@ var index = options.id;
 		var textLength = getWordWidth2(longestElement);
 		// var gridSize = Math.floor((h-marginTop)/(maxSize+2));
 		var gridSize = Math.floor((w-textLength)/(maxSize+2));
-		var gridSize2 = Math.floor((h-marginTop-gridSize*2-titleHight)/(maxSize+2));
+		var gridSize2 = Math.floor((h-marginTop-titleHight)/(maxSize+2));
 		if(gridSize2<gridSize){
 			gridSize = gridSize2;
 		}
@@ -1090,9 +1100,9 @@ var index = options.id;
 		}
 
 
-		var centerPadding = ($(options.container).width()-(textLength + (gridSize * cc)))/2;
-	// var centerPadding = 0;
-	var index = options.container.split("charty").slice(-1)[0]-1;
+		// var centerPadding = (width-textLength - (gridSize * cc))/2;
+	var centerPadding = 0;
+	var index = options.container.split("charty").slice(-1)[0];
           //LEGEND RANGE
           var  buckets = getMatrixMax(options.matrix);
           var numberForm = textformat.numberShorten(buckets);

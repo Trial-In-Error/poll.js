@@ -21,7 +21,7 @@ var optionHandler = {
 	optionHandler.size++;
 	return optionHandler.array.length-1;
 },
-	addGridChart : function(container){
+addGridChart : function(container){
 	var c = JSON.parse(JSON.stringify(defaultOptions));
 	c.container = container;
 	optionHandler.array.push(c);
@@ -106,6 +106,7 @@ var defaultOptions = {
 	norm2 : false,
 	correlation : null,
 	independence: null,
-  	legendMargin : 0,
-   	swap: false,
+	legendMargin : 0,
+	swap: false,
+	tumb : true
 }
