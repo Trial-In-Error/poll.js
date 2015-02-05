@@ -117,9 +117,6 @@ $("#charty" + ind ).css('width',$(id).width());
 if(optionHandler.array[index].classname == "tumbheat"){
 
 	d3.select("#tumbheat" + index).remove();
-// console.log("tumbheat" + optionHandler.array[index].container);
-
-
 // transformer.setTransButtons(optionHandler.array[index],index);
 /*
 if(optionHandler.array[index].independence!=null){
@@ -152,7 +149,7 @@ return;
 		
 		// $(id).height($("#tumb" + index).height - $(".titleText").height() - $(".infoText").height() - - $(".infoText").height());
 		
-
+		optionHandler.array[index].tumb = false;
 		var chart = optionHandler.array[index].chart(optionHandler.array[index]);
 		optionHandler.array[index].c3 = chart;
 
@@ -169,7 +166,7 @@ return;
 		$(id+' :not(.tumbchart):not(.tumbchart *)').remove();
 
 		var index = id.split("tumb").slice(-1)[0];
-
+		console.log("this is the index " + index);
 		var ind = parseInt(index);
 		console.log(ind);
 		console.log("chart height: " + $("#charty"+ ind).height());
@@ -187,6 +184,7 @@ return;
 		optionHandler.array[index].tooltip = false;
 		optionHandler.array[index].axis = false;
 		optionHandler.array[index].interaction = false;
+		optionHandler.array[index].tumb = true;
 		optionHandler.array[index].matrix = copyMatrix(optionHandler.array[index].orgmatrix);
 		var chart = optionHandler.array[index].chart(optionHandler.array[index]);
 		optionHandler.array[index].c3 = chart;
@@ -198,7 +196,7 @@ return;
 	normalizeColumns : function(id){
 		console.log(id);
 		console.log("Normalizing columns");
-		var index = id.split("charty").slice(-1)[0]-1;
+		var index = id.split("charty").slice(-1)[0];
 		if(optionHandler.array[index].swap){
 			transformer.swapcategories(id);
 		}
@@ -252,7 +250,7 @@ return;
 				},
 				normalizeRows : function(id){
 					console.log(id);
-					var index = id.split("charty").slice(-1)[0]-1;
+					var index = id.split("charty").slice(-1)[0];
 					if(optionHandler.array[index].swap){
 						transformer.swapcategories(id);
 					}
@@ -264,7 +262,8 @@ return;
 						// optionHandler.array[index].c3.unload();
 						// optionHandler.array[index].c3.load({columns : copyMatrix(normalizeByRow(optionHandler.array[index].matrix)}));
 						if(optionHandler.array[index].norm == false){
-							optionHandler.array[index].matrix = copyMatrix(normalizeByRow(optionHandler.array[index].orgmatrix));
+							optionHandler.array[index].matrix = copyMatrix(optionHandler.array[index].orgmatrix);
+							optionHandler.array[index].matrix = normalizeByRow(optionHandler.array[index].matrix);
 							optionHandler.array[index].matrix = addToSideHeader(optionHandler.array[index].matrix," i %")
 							optionHandler.array[index].norm = true;
 						}else if(optionHandler.array[index].norm = true){
@@ -276,7 +275,8 @@ return;
 					}else{
 						$(id + " svg").remove();
 						if(optionHandler.array[index].norm == false){
-							optionHandler.array[index].matrix = copyMatrix(normalizeByRow(optionHandler.array[index].matrix));
+							optionHandler.array[index].matrix = copyMatrix(optionHandler.array[index].orgmatrix);
+							optionHandler.array[index].matrix = normalizeByRow(optionHandler.array[index].matrix);
 							optionHandler.array[index].norm = true;
 						}else if(optionHandler.array[index].norm = true){
 							optionHandler.array[index].matrix = copyMatrix(optionHandler.array[index].orgmatrix);
@@ -306,7 +306,7 @@ return;
 					}
 				},
 				normalizeMatrix : function(id){
-					var index = id.split("btnnormM").slice(-1)[0]-1;
+					var index = id.split("btnnormM").slice(-1)[0];
 					if(optionHandler.array[index].c3!=null){
 						optionHandler.array[index].c3.unload();
 						optionHandler.array[index].c3.load({columns : normalize(optionHandler.array[index].matrix,1)});
@@ -314,7 +314,7 @@ return;
 
 				},
 				swapcategories : function(id){
-					var index = id.split("charty").slice(-1)[0]-1;
+					var index = id.split("charty").slice(-1)[0];
 
 					if(optionHandler.array[index].norm){
 						transformer.normalizeRows(id);
@@ -416,7 +416,7 @@ return;
 				console.log("****SWAP***");
 				var i = event.currentTarget.id.split("btnswap").slice(-1)[0];
 				// $("#btnswap"+index).prop("value" ,"unnormalize first");
-				i++;
+				// i++;
 				transformer.swapcategories("#charty" + i);
 			});
 		},
@@ -427,7 +427,7 @@ return;
 				console.log("****norm*****");
 				var i = event.currentTarget.id.split("btnnorm").slice(-1)[0];
 				console.log(event);
-				i++;
+				// i++;
 				transformer.normalizeRows("#charty" + i);
 			});
 		},
@@ -438,7 +438,7 @@ return;
 				console.log("****norm*****");
 				var i = event.currentTarget.id.split("btnnorm2").slice(-1)[0];
 				console.log(event);
-				i++;
+				// i++;
 				transformer.normalizeColumns("#charty" + i);
 			});
 		}

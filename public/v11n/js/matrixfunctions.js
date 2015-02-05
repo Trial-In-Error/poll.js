@@ -299,7 +299,6 @@ function addToSideHeader(matrix,add){
 	} 
 		return matrix;
 }
-
 function transformation(matrix,trans){
 
 	if(trans == null){
@@ -317,7 +316,7 @@ function transformation(matrix,trans){
 	}
 	return m;
 }
-function normalizeRow(a){
+/*function normalizeRow(a){
 
 	var max = 0;
 	for (var i = 0; i < a.length; i++) {
@@ -329,4 +328,4 @@ function normalizeRow(a){
 		a[i] = a[i]/max
 	};
 	return a;
-}
+}*/

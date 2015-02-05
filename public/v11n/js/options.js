@@ -93,7 +93,7 @@ var defaultOptions = {
 	mobile:false,
 	legendOffset : 80,
 	visualization: null,
-	color:0,
+	color:1,
 	interaction : true,
 	transformation : null,
 	answer : null,

@@ -2,8 +2,8 @@ var visualizeOpinerPoll = function(){
 	this.dataHandler = new dataHandler();
 	this.pollsetOptions;
 	this.supercontainer;
-	// this.optionsdata = new optionHandler();
-	console.log(this.optionsdata);
+	// optionHandler = new optionHandler();
+	console.log(optionHandler);
 	this.getDataHandler = function(){
 		return this.dataHandler;
 	}
@@ -22,38 +22,47 @@ var visualizeOpinerPoll = function(){
 		opine.init(ref,container,questions,options);
 	}
 	this.createVis = function(questions,options,container){
-		opine.preparePoll(data,questions,container, self.optionsdata);
+		opine.preparePoll(data,questions,container);
 	}
 	this.visualizePoll = function(self,questions){
 		console.log(self.dataHandler);
-		opine.visAll(self.dataHandler.polldata,self.optionsdata,questions);
+		opine.visAll(self.dataHandler.polldata,questions);
 	}
 	this.visualizeChart = function(questions,vis,options,container){
-		var id = this.optionsdata.addChart(container);
+
+		var id = optionHandler.addChart(container);
+			if(options == null){
+			options = optionHandler.array[id];
+		}
 		console.log(this.dataHandler.polldata);
 		if(questions.length == 0 ){
 			alert("No data");
 		}
 		else if(questions.length > 1){
-			this.optionsdata.updateOption(id,"matrix",opine.getDoubleMatrix(this.dataHandler.polldata,questions));
+			optionHandler.updateOption(id,"matrix",opine.getDoubleMatrix(this.dataHandler.polldata,questions));
 
 		}else{
-			this.optionsdata.updateOption(id,"matrix",opine.getSingleMatrix(this.dataHandler.polldata,questions));
+			optionHandler.updateOption(id,"matrix",opine.getSingleMatrix(this.dataHandler.polldata,questions));
 
-			chartNames[vis](this.optionsdata.getOption(id));
+			chartNames[vis](optionHandler.getOption(id));
 		}
-		this.optionsdata.updateOption(id,"chart",chartNames[vis]);
-			this.optionsdata.updateOption(id,"color",1)
-			this.optionsdata.updateOption(id,"id",optionHandler.size-1)
-			// this.optionsdata.updateOption(this.optionsdata.size-1,"answer",answer)
-			this.optionsdata.updateOption(id,"xlabel","Something")
-			this.optionsdata.updateOption(id,"ylabel","frequency")
-			this.optionsdata.pointer = id;
-			this.optionsdata.array[this.optionsdata.size-1].chartOptions =  options.chartOptions;
-			this.optionsdata.array[this.optionsdata.size-1] = visGenerator.addOptions(this.optionsdata.array[this.optionsdata.size-1],options);
-			this.optionsdata.checkTitle(this.optionsdata.size-1);
-			
-		var chart = chartNames[vis](this.optionsdata.getOption(id));
-			this.optionsdata.updateOption(id,"c3",chart);
+			optionHandler.updateOption(id,"chart",chartNames[vis]);
+			optionHandler.updateOption(id,"color",1)
+			optionHandler.updateOption(id,"id",optionHandler.size-1)
+			// optionHandler.updateOption(optionHandler.size-1,"answer",answer)
+			optionHandler.updateOption(id,"xlabel","Something")
+			optionHandler.updateOption(id,"ylabel","frequency")
+			optionHandler.pointer = id;
+
+			optionHandler.array[optionHandler.size-1].chartOptions =  options.chartOptions;
+			optionHandler.array[optionHandler.size-1] = visGenerator.addOptions(optionHandler.array[optionHandler.size-1],options);
+			optionHandler.checkTitle(optionHandler.size-1);
+			if(vis=="heatmap"){
+				var chart = chartNames[vis](optionHandler.getOption(id),$(container).height());
+			}else{
+				var chart = chartNames[vis](optionHandler.getOption(id));
+			}
+		
+			optionHandler.updateOption(id,"c3",chart);
 	}
 }

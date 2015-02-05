@@ -190,7 +190,8 @@ init : function(ref,container,question,options){
 					optionHandler.addOptions(optionHandler.size-1,options);
 					console.log(optionHandler.array[optionHandler.size-1].xlabel);
 					//Quick bug fix
-					$("#charty"  +(optionHandler.size) ).css('max-height','none');
+					$("#charty"  +(optionHandler.size-1) ).css('height',$('.grid-sizer').width());
+					// $('.tumbchart').css('max-height','none');
 					var chart = visualizationTypes[i].types[u](optionHandler.getOption(optionHandler.size-1));
 					console.log(chart);
 					optionHandler.updateOption(optionHandler.size-1,"c3",chart);
@@ -225,6 +226,8 @@ init : function(ref,container,question,options){
 				optionHandler.array[optionHandler.size-1].questions.push(data.question_list[visualizationTypes[i].ids[0]].type.name);
 				optionHandler.array[optionHandler.size-1].questions.push(data.question_list[visualizationTypes[i].ids[1]].type.name);
 				optionHandler.addOptions(optionHandler.size-1,options);
+					//Quick bug fix
+					$("#charty"  +(optionHandler.size-1) ).css('height',$('.grid-sizer').width());
 				var chart = visualizationTypes[i].types[u](optionHandler.getOption(optionHandler.size-1));
 				optionHandler.updateOption(optionHandler.size-1,"c3",chart);
 
