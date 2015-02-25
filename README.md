@@ -75,7 +75,7 @@ An overview of the whole system, detailed explanations of its parts, help with t
 
 License Information
 ---------------------------------
-Everything included in this repository is permissively (e.g., MIT) licensed except for Isotope and Packery. If you wish to use the grid (/grid or /grid/:id), [check here](http://packery.metafizzy.co/license.html) to to see if your use is fair use, or if you should buy a license. If your use is not fair use, you will need two licenses, [one for packery](http://packery.metafizzy.co/license.html) and [a second for masonry](http://masonry.metafizzy.co/license.html).
+Everything included in this repository is permissively (e.g., MIT) licensed except for Isotope and Packery. If you wish to use the grid (/grid or /grid/:id), [check here](http://packery.metafizzy.co/license.html) to to see if your use is fair use, or if you should buy a license. If your use is not fair use, you will need two licenses, [one for packery](http://packery.metafizzy.co/license.html) and [a second for isotope](http://isotope.metafizzy.co/license.html).
 
 Notes
 ---------------------------------
