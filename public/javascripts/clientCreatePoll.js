@@ -433,6 +433,7 @@ function setupPoll() {
 			poll.name = $('#pollName').val();
 			poll.owner = $('#pollCreator').val();
 			poll.open = true;
+			poll.mediaURL = $('#mediaURL').val();
 			// STUB: ASSUMES SWEDISH
 			poll.language = 'swedish';
 			$('#metadataForm').hide();

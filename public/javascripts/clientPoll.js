@@ -766,8 +766,18 @@ function modifyCurrentQuestion() {
  */
 function renderCurrentQuestion() {
 	var temp = '';
-
-	$('#lead p').html(poll.question_list[current_question].body);
+	if(current_question === 0 && poll.mediaURL && $('iframe').length === 0) {
+		$('#lead p').html(poll.question_list[current_question].body);
+		if(poll.mediaURL.search('watch') !== -1) {
+			console.log(poll.mediaURL.split('watch?v=')[0]+'embed/'+poll.mediaURL.split('watch?v=')[1])
+			$('#lead p').before('<iframe style="display:block;margin-left:auto;margin-right:auto;" width="420" height="345" src="'+poll.mediaURL.split('watch?v=')[0]+'embed/'+poll.mediaURL.split('watch?v=')[1]+'"></iframe>');
+		} else {
+			console.log(poll.mediaURL);
+			$('#lead p').before('<iframe style="display:block;margin-left:auto;margin-right:auto;" width="420" height="345" src="'+poll.mediaURL+'"></iframe>');
+		}
+	} else {
+		$('#lead p').html(poll.question_list[current_question].body);	
+	}
 
 	if (poll.question_list[current_question].type.name === 'pick_n') {
 		temp += temp.concat(renderPickN(temp));
