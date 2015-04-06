@@ -19,8 +19,10 @@ Adding an Admin User
 1. Start the server with `npm run`. This will start a mongo database.
 2. Create a normal user via the web interface at /login.
 3. Access the database's shell from the `poll.js` directory with the command-line instruction `mongo`.
-4. Chooese the mongo database for this project with `use polljs`.
-5. Promote the user to an admin by `db.userdb.update({"type.login.username":<username>}, {$set: {"rights.<desiredRight>":true}})`. Note that you will have to do this for each right you wish to give to the admin.
+4. Choose the mongo database for this project with `use polljs`.
+5. Promote the user to an admin by `db.userdb.update({"type.login.username":"<username>"}, {$set: {"rights.<desiredRight>":true}})`. Note that you will have to do this for each right you wish to give to the admin.
+
+Documentation for the mongo CLI [can be found here.](http://docs.mongodb.org/manual/reference/mongo-shell/)
 
 Note that, because of the way session based authentication is done, the user will have to log back in after being promoted in order to have access to their new rights.
 
@@ -36,6 +38,12 @@ Adding a Poll via the Webapp
 1. Write a poll as a valid `.json` file, corresponding to the data model in `datamodel.md`.
 2. Log into the web app with an admin account (the app should be running at `localhost:3000/login` or `yourdeploymentname.herokuapp.com/login`).
 3. Navigate to `localhost:3000/importpoll` (or `yourdeploymentname.herokuapp.com/importpoll`), paste the `.json` file into the textfield, and hit submit.
+
+Creating a Poll via the Webapp
+---------------------------------
+1. Log into the web app with an admin account.
+2. Navigate to `localhost:3000/createpoll`.
+3. Follow the prompts. The create poll interface is not quite as robust as manually editing the JSON; for instance, manual editing allows for branching and forking polls, while the create poll interface does not.
 
 Deploying to Heroku
 ---------------------------------
