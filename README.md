@@ -22,7 +22,7 @@ Adding an Admin User
 4. Choose the mongo database for this project with `use polljs`.
 5. Promote the user to an admin by `db.userdb.update({"type.login.username":"<username>"}, {$set: {"rights.<desiredRight>":true}})`. Note that you will have to do this for each right you wish to give to the admin.
 
-Documentation for the mongo CLI [can be found here.](http://docs.mongodb.org/manual/reference/mongo-shell/)
+Documentation for the mongo CLI [can be found here.](http://docs.mongodb.org/manual/reference/mongo-shell/) The full set of rights can be added with `db.userdb.update({"type.login.username": "<username>"}, {$set: {"rights": { "answer": true, "delete": true, "openClose": true, "accessClosed": true, "getAnswers": true, "create": true}}})`.
 
 Note that, because of the way session based authentication is done, the user will have to log back in after being promoted in order to have access to their new rights.
 
