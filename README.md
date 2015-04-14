@@ -4,9 +4,9 @@ poll.js
 Installation
 ---------------------------------
 1. Clone the repository (`git clone https://github.com/Trial-In-Error/poll.js`) or download the repository's contents as a zip file.
-2. Install [mongoDB](http://www.mongodb.org/downloads). Add mongodb/bin to the system path.
-3. Install [node.js](http://nodejs.org/download/). Add node.js/ to the system path.
-4. Install redis-server [for linux](https://github.com/antirez/redis) or [for windows](https://github.com/dmajkic/redis). Add redis-server/ to the system path. Note that this step is optional but **highly** recommended.
+2. Install [mongoDB from here](http://www.mongodb.org/downloads) or with `sudo apt-get install mongoDB`. Add mongodb/bin to the system path. Opiner is known to work with version 3.0.2 of MongoDB.
+3. Install [node.js from here](http://nodejs.org/download/) or with `sudo apt-get install nodejs`. Add node.js/ to the system path. Opiner is known to work with version 0.12.2 of nodeJS.
+4. Install redis-server [for linux](https://github.com/antirez/redis) or [for windows](https://github.com/dmajkic/redis/downloads) or with `sudo apt-get install redis-server`. Add redis-server/ to the system path. Note that this step is optional but **highly** recommended. Opiner is known to work with version 2.4.5 of redis-server.
 5. From the repository's directory, `npm install`.
 6. Get a coffee while `npm` does all the hard work. (Note that if npm fails, re-running it will often cause the installation to proceed).
 7. Start the app from the repository's directory with `npm start`.
