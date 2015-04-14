@@ -1,17 +1,17 @@
 #!/usr/bin/env node
-if (process.env.NODE_ENV === 'development') {
-	require('nodetime').profile({
-		accountKey: 'b023cd76db5237236ddcad980a6f3bb6c02d500d',
-		appName: 'devFlashpoll',
-		//debug: true
-	});
-} else {
-	require('nodetime').profile({
-		accountKey: 'b023cd76db5237236ddcad980a6f3bb6c02d500d',
-		appName: 'productionFlashpoll',
-		//debug: true
-	});
-}
+//if (process.env.NODE_ENV === 'development') {
+//	require('nodetime').profile({
+//		accountKey: 'b023cd76db5237236ddcad980a6f3bb6c02d500d',
+//		appName: 'devFlashpoll',
+//		//debug: true
+//	});
+//} else {
+//	require('nodetime').profile({
+//		accountKey: 'b023cd76db5237236ddcad980a6f3bb6c02d500d',
+//		appName: 'productionFlashpoll',
+//		//debug: true
+//	});
+//}
 
 //require('look').start();
 var app = require('../app');

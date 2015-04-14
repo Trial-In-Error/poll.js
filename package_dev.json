@@ -26,31 +26,31 @@
 	"dependencies": {
 		// Fix the version numbers to specific releases
 		"express": "~4.2.0",
-		"express-session": "*",
-		"chance": "*",
+		"express-session": "~1.11.1",
+		"chance": "~0.7.3",
 		//"static-favicon": "~1.0.0",
-		"serve-favicon": "*",
+		"serve-favicon": "~2.2.0",
 		"morgan": "~1.0.0",
-		"look": "*",
+		"look": "~0.1.3",
 		"cookie-parser": "~1.0.1",
 		"body-parser": "~1.0.0",
-		"compression": "*",
+		"compression": "~1.4.3",
 		"debug": "~0.7.4",
 		"jade": "~1.3.0",
-		"mongodb": "*",
-		"mongoskin": "*",
-		"bcryptjs": "*",
-		"passport": "*",
-		"passport-local": "*",
-		"passport-http-bearer": "*",
-		"redis": "*",
+		"mongodb": "~1.4",
+		"mongoskin": "~1.4.13",
+		"bcryptjs": "~2.1.0",
+		"passport": "~0.2.1",
+		"passport-local": "~1.0.0",
+		"passport-http-bearer": "~1.0.1",
+		"redis": "~0.12.1",
 		// strictly optional c implementation of redis client; marginally faster
 		//"hiredis": "*", //does not work on windows, don't want to troubleshoot it now
-		"connect-redis": "*",
-		"nodetime": "*",
-		"superagent": "*",
-		"connect-flash": "*", //required for passport auth 'flashes'
-		"forever": "*", //forever-monitor version 1.2 is broken - use version 1.1 instead
+		"connect-redis": "~2.2.0",
+		//"nodetime": "*",
+		"superagent": "~1.2.0",
+		"connect-flash": "~0.1.1", //required for passport auth 'flashes'
+		"forever": "~0.14.1", //forever-monitor version 1.2 is broken - use version 1.1 instead
 		// alternatively, if you continue to get events.js:72 Error: spawn ENOENT
 		// see: https://github.com/metaskills/mocha-phantomjs/issues/53
 		// and try installing phantomjs
@@ -58,30 +58,30 @@
 
 		// These need to be in dependencies so that heroku installs them!
 		// Otherwise, they'd be in devDependencies.
-		"grunt": "*",
-		"grunt-cli": "*",
-		"load-grunt-tasks": "*",
-		"grunt-contrib-jshint": "*",
-		"grunt-lintspaces": "*",
-		"grunt-contrib-uglify": "*",
-		"grunt-contrib-nodeunit": "*",
-		"grunt-contrib-clean": "*",
-		"grunt-contrib-qunit": "*",
-		"grunt-contrib-watch": "*",
-		"grunt-contrib-concat": "*",
-		"grunt-contrib-cssmin": "*",
-		"grunt-strip-json-comments": "*",
-		"grunt-jsbeautifier": "^0.2.7",
-		"grunt-lineending": "^0.2.2",
-		"grunt-text-replace": "*",
-		"grunt-remove-logging": "*"
+		"grunt": "~0.4.5",
+		"grunt-cli": "~0.1.13",
+		"load-grunt-tasks": "~3.1.0",
+		"grunt-contrib-jshint": "~0.11.1",
+		"grunt-lintspaces": "~0.6.2",
+		"grunt-contrib-uglify": "~0.9.1",
+		"grunt-contrib-nodeunit": "~0.4.1",
+		"grunt-contrib-clean": "~0.6.0",
+		"grunt-contrib-qunit": "~0.7.0",
+		"grunt-contrib-watch": "~0.6.1",
+		"grunt-contrib-concat": "~0.5.1",
+		"grunt-contrib-cssmin": "~0.12.2",
+		"grunt-strip-json-comments": "~1.0.1",
+		"grunt-jsbeautifier": "~0.2.7",
+		"grunt-lineending": "~0.2.2",
+		"grunt-text-replace": "~0.4.0",
+		"grunt-remove-logging": "~0.2.0"
 	},
 	"devDependencies": {
-		"should": "*",
-		"mocha": "*",
-		"istanbul": "*",
-		"supertest": "*",
-		"selenium-webdriver": "*",
-		"loadtest": "*"
+		"should": "~5.2.0",
+		"mocha": "~2.2.4",
+		"istanbul": "~0.3.13",
+		"supertest": "~0.15.0",
+		"selenium-webdriver": "~2.45.1",
+		"loadtest": "~1.2.10"
 	}
 }
